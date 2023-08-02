@@ -1,0 +1,18 @@
+import { Schema } from 'mongoose';
+
+export const defaultSchemaProps = {
+  createdAt: { type: Date, default: Date.now },
+  updatedAt: { type: Date, default: Date.now },
+  createdBy: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+  updatedBy: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+};
+
+function _updatedAt(next) {
+  this.set({ updatedAt: new Date() });
+  next();
+}
+
+export function triggers(schema: Schema) {
+  schema.pre('save', _updatedAt);
+  schema.pre('findOneAndUpdate', _updatedAt);
+}

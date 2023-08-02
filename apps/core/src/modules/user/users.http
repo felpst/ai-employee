@@ -1,0 +1,53 @@
+@baseUrl=http://localhost:3000
+@apiRoute=users
+
+### login
+
+# @name LoginAPI
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{ "email": "{{email}}", "password": "{{password}}" }
+
+### authToken
+
+@$authToken = {{LoginAPI.response.headers.X-Auth-Token}}
+
+### Create ###
+
+POST {{baseUrl}}/{{apiRoute}}
+Content-Type: application/json
+Authorization: Bearer {{$authToken}}
+
+{
+  "name": "Teste",
+  "email": "linecker3@quaq.me",
+  "password": "teste"
+}
+
+### Get all ###
+# @name ListAPI
+
+GET {{baseUrl}}/{{apiRoute}}
+Authorization: Bearer {{$authToken}}
+
+### Get a Task by ID ###
+@id = {{ListAPI.response.body.0._id}}
+
+GET {{baseUrl}}/{{apiRoute}}/{{id}}
+Authorization: Bearer {{$authToken}}
+
+### Update a Task ###
+
+PUT {{baseUrl}}/{{apiRoute}}/{{id}}
+Content-Type: application/json
+Authorization: Bearer {{$authToken}}
+
+{
+  "name": "Linecker"
+}
+
+### Delete ###
+
+DELETE {{baseUrl}}/{{apiRoute}}/{{id}}
+Authorization: Bearer {{$authToken}}

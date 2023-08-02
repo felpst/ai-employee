@@ -1,0 +1,23 @@
+### login
+
+# @name LoginAPI
+POST http://localhost:3000/auth/login
+Content-Type: application/json
+
+{ "email": "{{email}}", "password": "{{password}}" }
+
+### authToken
+
+@$authToken = {{LoginAPI.response.headers.X-Auth-Token}}
+
+### Check token
+POST http://localhost:3000/auth/token
+Content-Type: application/json
+# Authorization: Bearer {{$authToken}}
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2NGE0NjU2ZGU0MzFkYTRmMGQ2NzhkYmMiLCJpYXQiOjE2OTA0NjU3MjQsImV4cCI6MTY5MDQ2NTc4NH0.hFZ92cOZiWNZK798vmgo7OlPJDsXxqJY_vUMTMOh0Yc
+
+### get user
+
+GET http://localhost:3000/auth/user
+Content-Type: application/json
+Authorization: Bearer {{$authToken}}

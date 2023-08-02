@@ -1,0 +1,48 @@
+@baseUrl=http://localhost:3000
+@apiRoute=users
+
+### login
+
+# @name LoginAPI
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+Authorization: Bearer {{$authToken}}
+
+{ "email": "{{email}}", "password": "{{password}}" }
+
+### authToken
+
+@$authToken = {{LoginAPI.response.headers.X-Auth-Token}}
+
+### create
+POST {{baseUrl}}/chats
+Content-Type: application/json
+Authorization: Bearer {{$authToken}}
+
+{
+  "company": "649dc975d95e431d238afa65"
+}
+
+### find all
+GET {{baseUrl}}/chats?sort=-createdAt
+Authorization: Bearer {{$authToken}}
+
+### find one by id
+GET {{baseUrl}}/chats/649dc975d95e431d238afa65
+Authorization: Bearer {{$authToken}}
+
+### update
+
+PUT {{baseUrl}}/chats/649dc975d95e431d238afa65
+Content-Type: application/json
+Authorization: Bearer {{$authToken}}
+
+{
+  "content": "Hello, this is a test chat",
+  "project": "60e9c1ab9f1a7c0c28a30d10"
+}
+
+### delete
+DELETE {{baseUrl}}/chats/64c59ab90dbdfc18d8e34317
+Authorization: Bearer {{$authToken}}
+

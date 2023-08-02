@@ -1,0 +1,69 @@
+<div class="background">
+  <div class="login-container">
+    <div class="logo font-outfit">
+      <mat-icon svgIcon="cognum"></mat-icon>
+      COGNUM
+    </div>
+
+    <div class="form">
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+        <table>
+          <tr>
+            <td><label for="email">Email</label></td>
+            <td>
+              <input type="text" id="email" formControlName="email" />
+              <div
+                *ngIf="
+                  loginForm.get('email')?.invalid &&
+                  loginForm.get('email')?.touched
+                "
+              >
+                <small
+                  class="error"
+                  *ngIf="loginForm.get('email')?.errors?.['required']"
+                  >Email is required.</small
+                >
+                <small
+                  class="error"
+                  *ngIf="loginForm.get('email')?.errors?.['email']"
+                  >Email is invalid.</small
+                >
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <label for="password">Password</label>
+            </td>
+            <td>
+              <input type="password" id="password" formControlName="password" />
+              <div
+                *ngIf="
+                  loginForm.get('password')?.invalid &&
+                  loginForm.get('password')?.touched
+                "
+              >
+                <small
+                  class="error"
+                  *ngIf="loginForm.get('password')?.errors?.['required']"
+                  >Password is required.</small
+                >
+                <small
+                  class="error"
+                  *ngIf="loginForm.get('password')?.errors?.['minlength']"
+                >
+                  Password must be at least 6 characters long.
+                </small>
+              </div>
+              <div class="error" *ngIf="showLoginError">
+                Email or password is incorrect.
+              </div>
+            </td>
+          </tr>
+        </table>
+
+        <button type="submit" [disabled]="loginForm.invalid">Login</button>
+      </form>
+    </div>
+  </div>
+</div>

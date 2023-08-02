@@ -1,0 +1,49 @@
+@baseUrl=http://localhost:3000
+@apiRoute=users
+
+### login
+
+# @name LoginAPI
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+Authorization: Bearer {{$authToken}}
+
+{ "email": "{{email}}", "password": "{{password}}" }
+
+### authToken
+
+@$authToken = {{LoginAPI.response.headers.X-Auth-Token}}
+
+### create
+POST {{baseUrl}}/companies
+Content-Type: application/json
+Authorization: Bearer {{$authToken}}
+
+{
+  "name": "Project Test",
+  "description": "This is a test project"
+}
+
+### find all
+GET {{baseUrl}}/companies
+Authorization: Bearer {{$authToken}}
+
+### find one by id
+GET {{baseUrl}}/companies/649dc975d95e431d238afa65
+Authorization: Bearer {{$authToken}}
+
+### update
+
+PUT {{baseUrl}}/companies/649dc975d95e431d238afa65
+Content-Type: application/json
+Authorization: Bearer {{$authToken}}
+
+{
+  "name": "Updated Project Test",
+  "description": "This project has been updated"
+}
+
+### delete
+DELETE {{baseUrl}}/companies/{companyId}
+Authorization: Bearer {{$authToken}}
+

@@ -1,0 +1,62 @@
+<div class="menu">
+  <div class="top-items">
+    <div class="item">
+      <button mat-icon-button matTooltip="Cognum" matTooltipPosition="right">
+        <mat-icon svgIcon="cognum"></mat-icon>
+      </button>
+    </div>
+    <div class="item">
+      <button mat-icon-button matTooltip="Dashboard" matTooltipPosition="right">
+        <span class="material-symbols-outlined"> monitoring </span>
+      </button>
+    </div>
+    <div class="item">
+      <button mat-icon-button matTooltip="Projects" matTooltipPosition="right">
+        <span class="material-symbols-outlined"> account_tree </span>
+      </button>
+    </div>
+    <div class="item">
+      <button
+        (click)="onLink('chats/')"
+        mat-icon-button
+        matTooltip="Chats"
+        matTooltipPosition="right"
+      >
+        <span class="material-symbols-outlined"> chat </span>
+      </button>
+    </div>
+    <div class="item">
+      <button
+        mat-icon-button
+        matTooltip="Data Sources"
+        matTooltipPosition="right"
+      >
+        <span class="material-symbols-outlined"> database </span>
+      </button>
+    </div>
+    <div class="item">
+      <button mat-icon-button matTooltip="Actions" matTooltipPosition="right">
+        <span class="material-symbols-outlined"> flowsheet </span>
+      </button>
+    </div>
+  </div>
+
+  <div class="bottom-items">
+    <div class="item">
+      <mat-menu #accountMenu="matMenu">
+        <button (click)="onLogout()" mat-menu-item>
+          <mat-icon>logout</mat-icon>
+          <span>Logout</span>
+        </button>
+      </mat-menu>
+      <button
+        [matMenuTriggerFor]="accountMenu"
+        mat-icon-button
+        matTooltip="Account"
+        matTooltipPosition="right"
+      >
+        <span class="material-symbols-outlined"> account_circle </span>
+      </button>
+    </div>
+  </div>
+</div>

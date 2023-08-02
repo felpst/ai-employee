@@ -14,7 +14,12 @@
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
-    "paths": {}
+    "paths": {
+      "@cognum/auth": ["libs/auth/src/index.ts"],
+      "@cognum/helpers": ["libs/helpers/src/index.ts"],
+      "@cognum/interfaces": ["libs/interfaces/src/index.ts"],
+      "@cognum/models": ["libs/models/src/index.ts"]
+    }
   },
   "exclude": ["node_modules", "tmp"]
 }

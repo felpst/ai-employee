@@ -1,0 +1,48 @@
+@baseUrl=http://localhost:3000
+@apiRoute=users
+
+### login
+
+# @name LoginAPI
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+Authorization: Bearer {{$authToken}}
+
+{ "email": "{{email}}", "password": "{{password}}" }
+
+### authToken
+
+@$authToken = {{LoginAPI.response.headers.X-Auth-Token}}
+
+### create
+POST {{baseUrl}}/messages
+Content-Type: application/json
+Authorization: Bearer {{$authToken}}
+
+{
+  "content": "Hello, this is a test message",
+  "project": "60e9c1ab9f1a7c0c28a30d10" 
+}
+### find all
+GET {{baseUrl}}/messages
+Authorization: Bearer {{$authToken}}
+
+### find one by id
+GET {{baseUrl}}/messages/649dc975d95e431d238afa65
+Authorization: Bearer {{$authToken}}
+
+### update
+
+PUT {{baseUrl}}/messages/649dc975d95e431d238afa65
+Content-Type: application/json
+Authorization: Bearer {{$authToken}}
+
+{
+  "content": "Hello, this is a test message",
+  "project": "60e9c1ab9f1a7c0c28a30d10" 
+}
+
+### delete
+DELETE {{baseUrl}}/messages/{companyId}
+Authorization: Bearer {{$authToken}}
+
