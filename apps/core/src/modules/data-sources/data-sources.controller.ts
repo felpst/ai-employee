@@ -7,6 +7,7 @@ import fs from 'fs';
 import multer from 'multer';
 import os from 'os';
 import path from 'path';
+import ModelController from '../../controllers/model.controller';
 
 const gc = new Storage({
   keyFilename: 'cognum.secrets.json',
@@ -15,7 +16,11 @@ const gc = new Storage({
 
 const googleStorageBucket = gc.bucket('cognum-data-sources');
 
-export class DataSourcesController {
+export class DataSourcesController extends ModelController<typeof DataSource> {
+  constructor() {
+    super(DataSource);
+  }
+
   get middleware() {
     const storage = multer.diskStorage({
       destination: function (req, file, cb) {

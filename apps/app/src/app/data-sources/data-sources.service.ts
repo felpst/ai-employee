@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { IChat } from '@cognum/interfaces';
+import { IDataSource } from '@cognum/interfaces';
 import { Observable } from 'rxjs';
 import { CoreApiService } from '../services/apis/core-api.service';
 
@@ -7,8 +7,8 @@ import { CoreApiService } from '../services/apis/core-api.service';
   providedIn: 'root',
 })
 export class DataSourcesService {
-  selectedChat: string | null = null;
-  dataSources: Map<string, IChat> = new Map<string, IChat>();
+  selectedDataSource: string | null = null;
+  dataSources: Map<string, IDataSource> = new Map<string, IDataSource>();
 
   constructor(private coreApiService: CoreApiService) {}
 
@@ -22,5 +22,30 @@ export class DataSourcesService {
         },
       });
     });
+  }
+
+  list(): Observable<Map<string, IDataSource>> {
+    return new Observable((observer) => {
+      (
+        this.coreApiService.get('data-sources?sort=-createdAt') as Observable<
+          IDataSource[]
+        >
+      ).subscribe({
+        next: (dataSources: IDataSource[]) => {
+          dataSources.forEach((dataSource) =>
+            this.dataSources.set(dataSource._id, dataSource)
+          );
+          observer.next(this.dataSources);
+        },
+      });
+    });
+  }
+
+  listFrom(
+    parent: string | IDataSource | undefined = undefined
+  ): IDataSource[] {
+    return Array.from(this.dataSources.values()).filter(
+      (dataSource) => dataSource.parent === parent
+    );
   }
 }

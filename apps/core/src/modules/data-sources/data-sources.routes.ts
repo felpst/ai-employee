@@ -10,5 +10,10 @@ router.post(
   dataSourcesController.middleware.single('file'),
   dataSourcesController.upload
 );
+router.post('/', authMiddleware, dataSourcesController.create);
+router.get('/', authMiddleware, dataSourcesController.find);
+router.get('/:id', authMiddleware, dataSourcesController.getById);
+router.put('/:id', authMiddleware, dataSourcesController.update);
+router.delete('/:id', authMiddleware, dataSourcesController.delete);
 
 export default router;

@@ -1,4 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { IDataSource } from '@cognum/interfaces';
+import { AuthService } from '../auth/auth.service';
 import { DataSourcesService } from './data-sources.service';
 
 @Component({
@@ -6,23 +8,49 @@ import { DataSourcesService } from './data-sources.service';
   templateUrl: './data-sources.component.html',
   styleUrls: ['./data-sources.component.scss'],
 })
-export class DataSourcesComponent {
+export class DataSourcesComponent implements OnInit {
   selectedFile: File | null = null;
+  dataSourcesTree: Partial<IDataSource>[] | any[] = [];
 
-  constructor(private dataSourcesService: DataSourcesService) {}
+  constructor(
+    private dataSourcesService: DataSourcesService,
+    private authService: AuthService
+  ) {}
 
-  onNew() {
-    console.log('new');
+  ngOnInit() {
+    this.loadDataSources();
+  }
+
+  loadDataSources() {
+    this.dataSourcesTree = [];
+    this.dataSourcesService.list().subscribe(() => {
+      const root: Partial<IDataSource> | any = {
+        name: this.authService.company?.name,
+        type: 'folder',
+        children: this.dataSourcesService.listFrom(),
+        metadata: {
+          opened: true,
+        },
+      };
+      console.log(root);
+
+      this.dataSourcesTree.push(root);
+    });
+  }
+
+  get selectedDataSource() {
+    return this.dataSourcesService.selectedDataSource;
+  }
+
+  onDataSourceSelected(dataSourceId: string | null = null) {
+    this.dataSourcesService.selectedDataSource = dataSourceId;
   }
 
   onFileSelected(event: any) {
-    this.selectedFile = <File>event.target.files[0];
-  }
-
-  onSubmit() {
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    this.dataSourcesService.upload(this.selectedFile!).subscribe((response) => {
+    const file = <File>event.target.files[0];
+    this.dataSourcesService.upload(file).subscribe((response) => {
       console.log(response);
+      this.loadDataSources();
     });
   }
 }

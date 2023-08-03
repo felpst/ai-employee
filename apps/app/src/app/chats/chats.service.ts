@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { IChat, ICompany } from '@cognum/interfaces';
+import { IChat } from '@cognum/interfaces';
 import { Observable } from 'rxjs';
 import { AuthService } from '../auth/auth.service';
 import { CoreApiService } from '../services/apis/core-api.service';
@@ -17,9 +17,7 @@ export class ChatsService {
   ) {}
 
   create(): Observable<IChat> {
-    const company =
-      (this.authService.user?.company as ICompany)._id ||
-      this.authService.user?.company;
+    const company = this.authService.company?._id;
     return this.coreApiService.post('chats', { company }) as Observable<IChat>;
   }
 
