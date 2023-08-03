@@ -8,6 +8,7 @@ import multer from 'multer';
 import os from 'os';
 import path from 'path';
 import ModelController from '../../controllers/model.controller';
+import { BigQueryHelper } from '../../helpers/big-query.helper';
 
 const gc = new Storage({
   keyFilename: 'cognum.secrets.json',
@@ -81,6 +82,10 @@ export class DataSourcesController extends ModelController<typeof DataSource> {
         fs.unlinkSync(filePath);
 
         // TODO ETL process (files, urls, apis, dbs): bigquery, vector storage, etc.
+        if (req.file.mimetype === 'text/csv') {
+          // TODO
+          BigQueryHelper.fromCSV();
+        }
 
         // TODO update data source ETL metadata
 
