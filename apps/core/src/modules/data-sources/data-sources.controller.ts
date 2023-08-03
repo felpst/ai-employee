@@ -82,8 +82,13 @@ export class DataSourcesController extends ModelController<typeof DataSource> {
 
         // TODO ETL process (files, urls, apis, dbs): bigquery, vector storage, etc.
         if (req.file.mimetype === 'text/csv') {
-          // TODO
-          BigQueryHelper.fromCSV();
+          const bigQueryHelper = new BigQueryHelper('quaq-plataform');
+
+          bigQueryHelper.fromCSV({
+            csvFilePath: filePath,
+            datasetId: 'vendas',
+            tableId: 'clientes',
+          });
         }
 
         if (req.file.mimetype === 'application/pdf') {
