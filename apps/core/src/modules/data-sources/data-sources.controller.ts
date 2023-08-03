@@ -10,6 +10,7 @@ import os from 'os';
 import path from 'path';
 import ModelController from '../../controllers/model.controller';
 import { BigQueryHelper } from '../../helpers/big-query.helper';
+import { Unstructured } from '../../helpers/unstructured.helper';
 
 const gc = new Storage({
   keyFilename: 'cognum.secrets.json',
@@ -110,6 +111,12 @@ export class DataSourcesController extends ModelController<typeof DataSource> {
         console.log(err);
         res.status(500).send(err);
       });
+  }
+
+  async teste(req: Request, res: Response) {
+    const unstructured = new Unstructured();
+    await unstructured.loader();
+    res.send(200);
   }
 }
 

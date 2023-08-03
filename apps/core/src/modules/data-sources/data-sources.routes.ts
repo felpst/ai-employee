@@ -15,5 +15,6 @@ router.get('/', authMiddleware, dataSourcesController.find);
 router.get('/:id', authMiddleware, dataSourcesController.getById);
 router.put('/:id', authMiddleware, dataSourcesController.update);
 router.delete('/:id', authMiddleware, dataSourcesController.delete);
+router.post('/teste', authMiddleware, dataSourcesController.teste);
 
 export default router;

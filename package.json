@@ -29,6 +29,7 @@
     "express": "~4.18.1",
     "faiss-node": "^0.2.2",
     "fs": "^0.0.1-security",
+    "hnswlib-node": "^1.4.2",
     "jsonwebtoken": "^9.0.1",
     "langchain": "^0.0.120",
     "mongoose": "^7.4.1",
