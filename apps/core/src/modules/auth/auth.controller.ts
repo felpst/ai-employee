@@ -75,7 +75,8 @@ export class AuthController {
     res.cookie('token', token, {
       httpOnly: process.env.PROD === 'true',
       secure: true,
-      sameSite: process.env.PROD === 'true' ? 'strict' : 'none',
+      sameSite: 'none',
+      // sameSite: process.env.PROD === 'true' ? 'strict' : 'none',
       expires,
     });
   }
