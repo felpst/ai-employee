@@ -1,14 +1,15 @@
-import { IDataSource } from '@cognum/interfaces'
-import { DataSource } from '@cognum/models'
-import { Storage } from '@google-cloud/storage'
-import crypto from 'crypto'
-import { Request, Response } from 'express'
-import fs from 'fs'
-import multer from 'multer'
-import os from 'os'
-import path from 'path'
-import ModelController from '../../controllers/model.controller'
-import { BigQueryHelper } from '../../helpers/big-query.helper'
+import { DataConnection } from '@cognum/data-connection';
+import { IDataSource } from '@cognum/interfaces';
+import { DataSource } from '@cognum/models';
+import { Storage } from '@google-cloud/storage';
+import crypto from 'crypto';
+import { Request, Response } from 'express';
+import fs from 'fs';
+import multer from 'multer';
+import os from 'os';
+import path from 'path';
+import ModelController from '../../controllers/model.controller';
+import { BigQueryHelper } from '../../helpers/big-query.helper';
 
 const gc = new Storage({
   keyFilename: 'cognum.secrets.json',
@@ -72,14 +73,12 @@ export class DataSourcesController extends ModelController<typeof DataSource> {
             publicUrl: `https://storage.googleapis.com/${googleStorageBucket.name}/${destinationPath}`,
             mimeType: req.file.mimetype,
             originalName: req.file.originalname,
+            filePath,
           },
           createdBy: (req as any).userId,
           updatedBy: (req as any).userId,
         };
         const doc = await DataSource.create(dataSource);
-
-        // delete file from local storage
-        fs.unlinkSync(filePath);
 
         // TODO ETL process (files, urls, apis, dbs): bigquery, vector storage, etc.
         if (req.file.mimetype === 'text/csv') {
@@ -92,9 +91,17 @@ export class DataSourcesController extends ModelController<typeof DataSource> {
           });
         }
 
+        if (req.file.mimetype === 'application/pdf') {
+          const dataConnection = new DataConnection();
+          await dataConnection.ETL(doc);
+        }
+
         // TODO update data source ETL metadata
 
         // TODO create data source summary
+
+        // delete file from local storage
+        fs.unlinkSync(filePath);
 
         // return created document
         res.status(200).send(doc);
