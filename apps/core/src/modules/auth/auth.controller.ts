@@ -23,7 +23,7 @@ export class AuthController {
       }
 
       const token = jwt.sign(
-        { userId: user._id },
+        { userId: user._id, companyId: user.company },
         process.env.AUTH_SECRET_KEY,
         { expiresIn: '14d' }
       );

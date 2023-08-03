@@ -1,0 +1,25 @@
+@baseUrl=http://localhost:3000
+@apiRoute=users
+
+### login
+
+# @name LoginAPI
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+Authorization: Bearer {{$authToken}}
+
+{ "email": "{{email}}", "password": "{{password}}" }
+
+### authToken
+
+@$authToken = {{LoginAPI.response.headers.X-Auth-Token}}
+
+### upload
+POST {{baseUrl}}/data-sources/upload
+Content-Type: application/json
+Authorization: Bearer {{$authToken}}
+
+{
+  "name": "Project Test",
+  "description": "This is a test project"
+}
