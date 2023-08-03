@@ -1,14 +1,14 @@
-import { IDataSource } from '@cognum/interfaces';
-import { DataSource } from '@cognum/models';
-import { Storage } from '@google-cloud/storage';
-import crypto from 'crypto';
-import { Request, Response } from 'express';
-import fs from 'fs';
-import multer from 'multer';
-import os from 'os';
-import path from 'path';
-import ModelController from '../../controllers/model.controller';
-import { BigQueryHelper } from '../../helpers/big-query.helper';
+import { IDataSource } from '@cognum/interfaces'
+import { DataSource } from '@cognum/models'
+import { Storage } from '@google-cloud/storage'
+import crypto from 'crypto'
+import { Request, Response } from 'express'
+import fs from 'fs'
+import multer from 'multer'
+import os from 'os'
+import path from 'path'
+import ModelController from '../../controllers/model.controller'
+import { BigQueryHelper } from '../../helpers/big-query.helper'
 
 const gc = new Storage({
   keyFilename: 'cognum.secrets.json',
@@ -83,8 +83,13 @@ export class DataSourcesController extends ModelController<typeof DataSource> {
 
         // TODO ETL process (files, urls, apis, dbs): bigquery, vector storage, etc.
         if (req.file.mimetype === 'text/csv') {
-          // TODO
-          BigQueryHelper.fromCSV();
+          const bigQueryHelper = new BigQueryHelper('quaq-plataform');
+
+          bigQueryHelper.fromCSV({
+            csvFilePath: filePath,
+            datasetId: 'vendas',
+            tableId: 'clientes',
+          });
         }
 
         // TODO update data source ETL metadata
