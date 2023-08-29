@@ -29,5 +29,6 @@
   "prettier.semi": true,
   "prettier.bracketSpacing": true,
   "prettier.jsxSingleQuote": false,
-  "prettier.arrowParens": "avoid"
+  "prettier.arrowParens": "avoid",
+  "cSpell.words": ["bigquery"]
 }

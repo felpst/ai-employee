@@ -21,6 +21,13 @@ const routes: Routes = [
         loadChildren: () =>
           import('./chats/chats.module').then((m) => m.ChatsModule),
       },
+      {
+        path: 'data-sources',
+        loadChildren: () =>
+          import('./data-sources/data-sources.module').then(
+            (m) => m.DataSourcesModule
+          ),
+      },
       { path: '**', redirectTo: 'chats', pathMatch: 'full' },
     ],
   },

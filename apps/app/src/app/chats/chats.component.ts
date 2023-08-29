@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { IChat } from '@cognum/interfaces';
-import { AuthService } from '../auth/auth.service';
 import { DialogComponent } from '../shared/dialog/dialog.component';
 import { ChatsService } from './chats.service';
 
@@ -15,7 +14,6 @@ export class ChatsComponent implements OnInit {
   selected: IChat | null = null;
 
   constructor(
-    private authService: AuthService,
     private router: Router,
     private chatsService: ChatsService,
     private dialog: MatDialog

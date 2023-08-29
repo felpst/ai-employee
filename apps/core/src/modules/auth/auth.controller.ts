@@ -1,4 +1,4 @@
-import { User } from '@cognum/models';
+import { Company, User } from '@cognum/models';
 import bcrypt from 'bcrypt';
 import { Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
@@ -23,7 +23,7 @@ export class AuthController {
       }
 
       const token = jwt.sign(
-        { userId: user._id },
+        { userId: user._id, companyId: user.company },
         process.env.AUTH_SECRET_KEY,
         { expiresIn: '14d' }
       );
@@ -50,15 +50,22 @@ export class AuthController {
       }
 
       const decodedToken: any = jwt.verify(token, process.env.AUTH_SECRET_KEY);
-      const userId = decodedToken.userId;
 
-      const user = await User.findById(userId).select('-password');
+      const userId = decodedToken.userId;
+      const user = await User.findById(userId).select('name email');
       if (!user) {
         res.status(404).json({ error: 'User not found' });
         return;
       }
 
-      res.json({ user, token });
+      const companyId = decodedToken.companyId;
+      const company = await Company.findById(companyId).select('name');
+      if (!company) {
+        res.status(404).json({ error: 'company not found' });
+        return;
+      }
+
+      res.json({ user, company, token });
     } catch (error) {
       res.status(403).json({ error: 'Invalid token' });
     }
@@ -68,7 +75,8 @@ export class AuthController {
     res.cookie('token', token, {
       httpOnly: process.env.PROD === 'true',
       secure: true,
-      sameSite: process.env.PROD === 'true' ? 'strict' : 'none',
+      sameSite: 'none',
+      // sameSite: process.env.PROD === 'true' ? 'strict' : 'none',
       expires,
     });
   }

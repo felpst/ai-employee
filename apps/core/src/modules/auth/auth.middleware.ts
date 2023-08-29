@@ -20,6 +20,7 @@ export function authMiddleware(
 
     // set request userId
     (req as any).userId = (decodedToken as any).userId;
+    (req as any).companyId = (decodedToken as any).companyId;
 
     next();
   } catch (error) {
