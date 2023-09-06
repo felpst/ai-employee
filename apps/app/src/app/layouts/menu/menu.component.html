@@ -1,6 +1,6 @@
 <div class="menu">
   <div class="top-items">
-    <div class="item">
+    <!-- <div class="item">
       <button mat-icon-button matTooltip="Cognum" matTooltipPosition="right">
         <mat-icon svgIcon="cognum"></mat-icon>
       </button>
@@ -14,7 +14,7 @@
       <button mat-icon-button matTooltip="Projects" matTooltipPosition="right">
         <span class="material-symbols-outlined"> account_tree </span>
       </button>
-    </div>
+    </div> -->
     <div class="item">
       <button
         (click)="onLink('chats/')"
@@ -26,6 +26,16 @@
       </button>
     </div>
     <div class="item">
+      <button
+        (click)="onLink('knowledge-base/')"
+        mat-icon-button
+        matTooltip="Knowledge Base"
+        matTooltipPosition="right"
+      >
+        <span class="material-symbols-outlined"> database </span>
+      </button>
+    </div>
+    <!-- <div class="item">
       <button
         mat-icon-button
         (click)="onLink('data-sources/')"
@@ -39,7 +49,7 @@
       <button mat-icon-button matTooltip="Actions" matTooltipPosition="right">
         <span class="material-symbols-outlined"> flowsheet </span>
       </button>
-    </div>
+    </div> -->
   </div>
 
   <div class="bottom-items">

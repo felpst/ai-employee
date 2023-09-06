@@ -1,0 +1,15 @@
+<form [formGroup]="form">
+  <label for="dataInput">Data:</label>
+  <input id="dataInput" formControlName="data" />
+  <button type="submit" (click)="onSubmit()">Enviar</button>
+</form>
+
+<div class="list">
+  <div class="list-item" *ngFor="let item of knowledgeBase">
+    <div class="list-item__title">
+      <input type="text" name="data" [(ngModel)]="item.data" />
+      <button (click)="onEdit(item)">Save</button>
+      <button (click)="onDelete(item)">Delete</button>
+    </div>
+  </div>
+</div>
