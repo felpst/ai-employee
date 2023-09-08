@@ -10,6 +10,7 @@ import {
   AIEmployeePromptTemplate,
 } from '../helpers/prompts.helper';
 import { AIEmployeeMemory } from '../memories/ai_employee.memory';
+import { DatabaseConnect } from '../tools/database-connect';
 import { KnowledgeBaseTool } from '../tools/knowledge-base';
 
 export class AIEmployee {
@@ -65,6 +66,7 @@ export class AIEmployee {
       // new ChatHistoryTool(this.memory),
       // new ZapierTool(),
       new KnowledgeBaseTool(),
+      new DatabaseConnect(),
     ];
 
     this._chain = new LLMChain({
