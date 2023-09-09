@@ -1,7 +1,15 @@
 <div class="chat">
   <div class="messages" #chatContent>
     <div class="messages-wrapper">
-      <div class="message-wrapper" *ngFor="let message of chatService.messages">
+      <div
+        class="message-wrapper"
+        [ngClass]="{
+          ai: message.role === 'AI',
+          human: message.role === 'HUMAN',
+          system: message.role === 'SYSTEM'
+        }"
+        *ngFor="let message of chatService.messages"
+      >
         <div
           class="message"
           [ngClass]="{
@@ -48,6 +56,20 @@
             </div>
           </div>
         </div>
+
+        <!-- Rating space -->
+        <div class="rating-wrapper" *ngIf="message.role === 'AI'">
+          <i
+            class="rating-icon like fa fa-thumbs-o-up"
+            aria-hidden="true"
+            (click)="$event.stopPropagation(); onApprove(message._id)"
+          ></i>
+          <i
+            class="rating-icon unlike fa fa-thumbs-o-down"
+            aria-hidden="true"
+            (click)="$event.stopPropagation(); onReprove(message._id)"
+          ></i>
+        </div>
       </div>
 
       <!-- No messages -->
@@ -72,6 +94,48 @@
           </div>
         </div>
       </div>
+    </div>
+  </div>
+
+  <!-- Feedback Modal -->
+  <div id="feedback-modal" class="modal fade" tabindex="-1">
+    <div class="form">
+      <form [formGroup]="formGroup" (ngSubmit)="onSuggest()">
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+            <div class="modal-header">
+              <div class="header-description">
+                <i
+                  id="feedback-icon"
+                  class="feedback-icon like fa"
+                  aria-hidden="true"
+                ></i>
+                <strong class="modal-title">Provide additional feedback</strong>
+              </div>
+              <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+              ></button>
+            </div>
+            <div class="modal-body">
+              <input type="hidden" name="rating" id="rating" />
+              <textarea
+                type="text"
+                class="suggest-style"
+                placeholder="What do you like about the response?"
+                formControlName="suggestions"
+              ></textarea>
+            </div>
+            <div class="modal-footer">
+              <button type="submit" class="btn btn-primary suggest-button">
+                Submit feedback
+              </button>
+            </div>
+          </div>
+        </div>
+      </form>
     </div>
   </div>
 

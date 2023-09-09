@@ -7,6 +7,8 @@ export type MessageRole = 'HUMAN' | 'AI';
 
 export interface IMessage extends DefaultModel {
   content: string;
+  rating?: string;
+  suggestions?: string;
   role: MessageRole;
   user: Schema.Types.ObjectId | IUser;
   chat: Schema.Types.ObjectId | IChat;

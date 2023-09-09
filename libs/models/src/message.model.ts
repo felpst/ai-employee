@@ -3,10 +3,13 @@ import mongoose, { Schema } from 'mongoose';
 import { defaultSchemaProps, triggers } from './default.model';
 
 export type MessageRole = 'HUMAN' | 'AI';
+export type RatingRole = 'THUMBSUP' | 'THUMBSDOWN';
 
 const schema: Schema = new Schema({
   content: { type: String, required: true },
   role: { type: String, required: true, enum: ['HUMAN', 'AI'] },
+  rating: { type: String, required: false, enum: ['THUMBSUP', 'THUMBSDOWN'] },
+  suggestions: { type: String, required: false },
   user: { type: Schema.Types.ObjectId, ref: 'User' },
   chat: { type: Schema.Types.ObjectId, ref: 'Chat', required: true },
   question: { type: Schema.Types.ObjectId, ref: 'Message' },
