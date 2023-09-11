@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
 import { IKnowledge } from '@cognum/interfaces';
 import { KnowledgeBaseService } from './knowledge-base.service';
+import { KnowledgeFormComponent } from './knowledge-form/knowledge-form.component';
 
 @Component({
   selector: 'cognum-knowledge-base',
@@ -10,45 +11,44 @@ import { KnowledgeBaseService } from './knowledge-base.service';
 })
 export class KnowledgeBaseComponent implements OnInit {
   knowledgeBase: IKnowledge[] = [];
-  form: FormGroup;
+  knowledgeBaseFiltered: IKnowledge[] = [];
+  searchText = '';
 
   constructor(
-    private formBuilder: FormBuilder,
-    private knowledgeBaseService: KnowledgeBaseService
-  ) {
-    this.form = this.formBuilder.group({
-      data: [''],
-    });
-  }
+    private knowledgeBaseService: KnowledgeBaseService,
+    private dialog: MatDialog
+  ) {}
 
   ngOnInit(): void {
-    this.loadKnwoledgeBase();
+    this.loadKnowledgeBase();
   }
 
-  loadKnwoledgeBase() {
+  onForm(knowledge?: IKnowledge) {
+    const dialogRef = this.dialog.open(KnowledgeFormComponent, {
+      width: '640px',
+      data: { knowledge },
+    });
+    dialogRef.afterClosed().subscribe((res) => {
+      this.loadKnowledgeBase();
+    });
+  }
+
+  onSearch(event: any) {
+    this.searchText = event.target.value;
+    this.knowledgeBaseFiltered = this.knowledgeBase.filter((knowledge) => {
+      return knowledge.data.includes(this.searchText);
+    });
+  }
+
+  clearSearch() {
+    this.searchText = '';
+    this.knowledgeBaseFiltered = this.knowledgeBase;
+  }
+
+  loadKnowledgeBase() {
     this.knowledgeBaseService.list().subscribe((res) => {
       this.knowledgeBase = res;
-    });
-  }
-
-  onSubmit() {
-    const data = this.form.value;
-    this.knowledgeBaseService.create(data).subscribe((res) => {
-      console.log(res);
-      this.loadKnwoledgeBase();
-    });
-  }
-
-  onEdit(item: IKnowledge) {
-    this.knowledgeBaseService.update(item).subscribe((res) => {
-      console.log('[UPDATED]', res);
-    });
-  }
-
-  onDelete(item: IKnowledge) {
-    this.knowledgeBaseService.delete(item).subscribe((res) => {
-      console.log('[DELETED]', res);
-      this.loadKnwoledgeBase();
+      this.clearSearch();
     });
   }
 }
