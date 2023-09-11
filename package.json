@@ -41,6 +41,7 @@
     "ngx-cookie-service": "^16.0.0",
     "ngx-markdown": "^16.0.0",
     "ngx-markdown-editor": "^5.3.3",
+    "ngx-skeleton-loader": "^8.0.1",
     "pdf-parse": "^1.1.1",
     "peggy": "^3.0.2",
     "rxjs": "~7.8.0",

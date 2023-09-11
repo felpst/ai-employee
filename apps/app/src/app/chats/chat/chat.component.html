@@ -57,8 +57,11 @@
           </div>
         </div>
 
-        <!-- Rating space -->
-        <div class="rating-wrapper" *ngIf="message.role === 'AI'">
+        <!-- Unrated message -->
+        <div
+          class="rating-wrapper"
+          *ngIf="message.role === 'AI' && !message.rating; else ratedMessage"
+        >
           <i
             class="rating-icon like fa fa-thumbs-o-up"
             aria-hidden="true"
@@ -70,10 +73,43 @@
             (click)="$event.stopPropagation(); onReprove(message._id)"
           ></i>
         </div>
+
+        <!-- Rated message -->
+        <ng-template #ratedMessage>
+          <div class="rating-wrapper">
+            <i
+              class="rated-icon liked fa fa-thumbs-o-up"
+              aria-hidden="true"
+              *ngIf="message.role === 'AI' && message.rating === 'THUMBSUP'"
+            ></i>
+            <i
+              class="rated-icon unliked fa fa-thumbs-o-down"
+              aria-hidden="true"
+              *ngIf="message.role === 'AI' && message.rating === 'THUMBSDOWN'"
+            ></i>
+          </div>
+        </ng-template>
+      </div>
+
+      <!-- Skeleton loader -->
+      <div class="skeleton" *ngIf="chatService.loadingMessages">
+        <ng-container *ngFor="let _ of [].constructor(15)">
+          <ngx-skeleton-loader
+            class="message"
+            style="height: 40px; width: 95%; padding: 10px"
+            appearance="line"
+            animation="pulse"
+          />
+        </ng-container>
       </div>
 
       <!-- No messages -->
-      <div class="no-messages" *ngIf="chatService.messages.length === 0">
+      <div
+        class="no-messages"
+        *ngIf="
+          !chatService.loadingMessages && chatService.messages.length === 0
+        "
+      >
         No messages yet. Start a conversation by typing a message below.
       </div>
 
@@ -94,48 +130,6 @@
           </div>
         </div>
       </div>
-    </div>
-  </div>
-
-  <!-- Feedback Modal -->
-  <div id="feedback-modal" class="modal fade" tabindex="-1">
-    <div class="form">
-      <form [formGroup]="formGroup" (ngSubmit)="onSuggest()">
-        <div class="modal-dialog modal-dialog-centered">
-          <div class="modal-content">
-            <div class="modal-header">
-              <div class="header-description">
-                <i
-                  id="feedback-icon"
-                  class="feedback-icon like fa"
-                  aria-hidden="true"
-                ></i>
-                <strong class="modal-title">Provide additional feedback</strong>
-              </div>
-              <button
-                type="button"
-                class="btn-close"
-                data-bs-dismiss="modal"
-                aria-label="Close"
-              ></button>
-            </div>
-            <div class="modal-body">
-              <input type="hidden" name="rating" id="rating" />
-              <textarea
-                type="text"
-                class="suggest-style"
-                placeholder="What do you like about the response?"
-                formControlName="suggestions"
-              ></textarea>
-            </div>
-            <div class="modal-footer">
-              <button type="submit" class="btn btn-primary suggest-button">
-                Submit feedback
-              </button>
-            </div>
-          </div>
-        </div>
-      </form>
     </div>
   </div>
 

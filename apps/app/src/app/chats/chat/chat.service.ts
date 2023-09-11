@@ -22,11 +22,19 @@ export class ChatService {
     thought: '',
     answer: '',
   };
+  loadingMessages = true;
 
   constructor(
     private authService: AuthService,
     private chatsService: ChatsService
   ) {}
+
+  public updateMessageData(_id: string, data: any) {
+    const updated = this.messages.map((message) =>
+      message._id === _id ? { ...message, ...data } : message
+    );
+    this.messages = updated;
+  }
 
   get chat() {
     if (!this.chatsService.selectedChat) return null;
@@ -39,6 +47,7 @@ export class ChatService {
 
   private onClose(event: any) {
     console.log('Disconnected from WebSocket server.');
+    this.loadingMessages = false;
   }
 
   private onMessage(event: any) {
@@ -51,6 +60,7 @@ export class ChatService {
     return {
       connection: (data: any) => {
         if (data.isConnected) {
+          this.loadingMessages = true;
           this.send({
             type: 'auth',
             content: {
@@ -64,6 +74,7 @@ export class ChatService {
         this.messages = data.messages;
         this.user = data.user;
         this.aiEmployee = data.aiEmployee;
+        this.loadingMessages = false;
       },
       message: (data: any) => {
         console.log('New message received');

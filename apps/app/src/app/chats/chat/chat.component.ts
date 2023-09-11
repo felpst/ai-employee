@@ -4,13 +4,20 @@ import {
   ElementRef,
   ViewChild,
 } from '@angular/core';
-import { FormControl, FormGroup, NgForm } from '@angular/forms';
+import { NgForm } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
-import * as bootstrap from 'bootstrap';
 import { MessagesService } from '../../services/messages/messages.service';
 import { NotificationsService } from '../../services/notifications/notifications.service';
 import { ChatsService } from '../chats.service';
 import { ChatService } from './chat.service';
+import { FeedbackFormComponent } from './feedback-form/feedback-form.component';
+
+type MessageUpdate = {
+  _id: string;
+  rating: string;
+  suggestions?: string;
+};
 
 @Component({
   selector: 'cognum-chat',
@@ -21,7 +28,6 @@ export class ChatComponent implements AfterViewChecked {
   @ViewChild('chatContent', { static: true }) private chatContent!: ElementRef;
   @ViewChild('inputMessage', { static: true })
   private inputMessage!: ElementRef;
-  formGroup = new FormGroup({ suggestions: new FormControl('', []) });
   status = 'Ready';
 
   constructor(
@@ -29,7 +35,8 @@ export class ChatComponent implements AfterViewChecked {
     private route: ActivatedRoute,
     private chatsService: ChatsService,
     private messagesService: MessagesService,
-    private notificationsService: NotificationsService
+    private notificationsService: NotificationsService,
+    private dialog: MatDialog
   ) {
     route.params.subscribe((params) => {
       this.chatsService.selectedChat = params['id'];
@@ -58,45 +65,29 @@ export class ChatComponent implements AfterViewChecked {
 
   onApprove(messageId: string): void {
     const message = { _id: messageId, rating: 'THUMBSUP' };
-    console.log({ message });
     this.updateMessage(message);
+    this.openModal(message);
   }
 
   onReprove(messageId: string): void {
     const message = { _id: messageId, rating: 'THUMBSDOWN' };
-    console.log({ message });
     this.updateMessage(message);
+    this.openModal(message);
   }
 
-  onSuggest(): void {
-    const values = this.formGroup.value;
-    console.log({ values });
-  }
-
-  private updateMessage(message: {
-    _id: string;
-    rating: string;
-    suggestions?: string;
-  }) {
-    return this.messagesService.update(message).subscribe((res) => {
+  private updateMessage(message: MessageUpdate) {
+    return this.messagesService.update(message).subscribe((_) => {
+      this.chatService.updateMessageData(message._id, message);
       this.notificationsService.show('Feedback sent!');
-      this.openModal(res.rating);
     });
   }
 
-  private openModal(rating: string = ''): void {
-    const feedbackModal = new bootstrap.Modal('#feedback-modal', {});
-    if (feedbackModal) {
-      const feedbackIcon = document.getElementById('feedback-icon');
-      const _rating = document.getElementById('rating');
-      const styles =
-        rating === 'THUMBSUP'
-          ? ['fa-thumbs-o-up', 'feedback-up']
-          : ['fa-thumbs-o-down', 'feedback-down'];
-      if (feedbackIcon) feedbackIcon.classList.add(...styles);
-      if (_rating) _rating.setAttribute('value', rating);
-      feedbackModal.show();
-    }
+  private openModal(message: MessageUpdate): void {
+    const dialogRef = this.dialog.open(FeedbackFormComponent, {
+      width: '600px',
+      data: { message },
+    });
+    dialogRef.afterClosed().subscribe((res) => res);
   }
 
   private scrollToBottom(): void {

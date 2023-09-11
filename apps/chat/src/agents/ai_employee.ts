@@ -3,15 +3,18 @@ import { AgentExecutor, LLMSingleActionAgent } from 'langchain/agents';
 import { LLMChain } from 'langchain/chains';
 import { ChatOpenAI } from 'langchain/chat_models/openai';
 import { Callbacks } from 'langchain/dist/callbacks';
-import { Tool } from 'langchain/tools';
+import { SerpAPI, Tool } from 'langchain/tools';
+import { Calculator } from 'langchain/tools/calculator';
 import {
   AIEmployeeIdentity,
   AIEmployeeOutputParser,
   AIEmployeePromptTemplate,
 } from '../helpers/prompts.helper';
 import { AIEmployeeMemory } from '../memories/ai_employee.memory';
+import { ChatHistoryTool } from '../tools/chat-history';
 import { DatabaseConnect } from '../tools/database-connect';
 import { KnowledgeBaseTool } from '../tools/knowledge-base';
+import { ZapierTool } from '../tools/zapier.tool';
 
 export class AIEmployee {
   private _chat: IChat;
@@ -61,10 +64,10 @@ export class AIEmployee {
 
     // Tools
     this._tools = [
-      // new SerpAPI(process.env.SERPAPI_API_KEY),
-      // new Calculator(),
-      // new ChatHistoryTool(this.memory),
-      // new ZapierTool(),
+      new SerpAPI(process.env.SERPAPI_API_KEY),
+      new Calculator(),
+      new ChatHistoryTool(this.memory),
+      new ZapierTool(),
       new KnowledgeBaseTool(),
       new DatabaseConnect(),
     ];
@@ -138,6 +141,8 @@ export class AIEmployee {
       _id: message._id,
       content: message.content,
       role: message.role,
+      rating: message.rating,
+      suggestions: message.suggestions,
       createdBy: message.createdBy,
       createdAt: message.createdAt,
     }));
