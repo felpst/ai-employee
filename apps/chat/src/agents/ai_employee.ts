@@ -10,6 +10,10 @@ import {
   AIEmployeePromptTemplate,
 } from '../helpers/prompts.helper';
 import { AIEmployeeMemory } from '../memories/ai_employee.memory';
+import { ChatHistoryTool } from '../tools/chat-history';
+import { DatabaseConnect } from '../tools/database-connect';
+import { KnowledgeBaseTool } from '../tools/knowledge-base';
+import { ZapierTool } from '../tools/zapier.tool';
 import { KnowledgeBaseTool } from '../tools/knowledge-base';
 
 export class AIEmployee {
@@ -60,6 +64,7 @@ export class AIEmployee {
 
     // Tools
     this._tools = [
+      // new DatabaseConnect(),
       // new SerpAPI(process.env.SERPAPI_API_KEY),
       // new Calculator(),
       // new ChatHistoryTool(this.memory),
@@ -136,6 +141,8 @@ export class AIEmployee {
       _id: message._id,
       content: message.content,
       role: message.role,
+      rating: message.rating,
+      suggestions: message.suggestions,
       createdBy: message.createdBy,
       createdAt: message.createdAt,
     }));

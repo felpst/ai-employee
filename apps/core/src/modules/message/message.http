@@ -28,12 +28,12 @@ GET {{baseUrl}}/messages
 Authorization: Bearer {{$authToken}}
 
 ### find one by id
-GET {{baseUrl}}/messages/649dc975d95e431d238afa65
+GET {{baseUrl}}/messages/64fb54f8b796144cb4d98e58
 Authorization: Bearer {{$authToken}}
 
 ### update
 
-PUT {{baseUrl}}/messages/649dc975d95e431d238afa65
+PUT {{baseUrl}}/messages/64fb54f8b796144cb4d98e58
 Content-Type: application/json
 Authorization: Bearer {{$authToken}}
 

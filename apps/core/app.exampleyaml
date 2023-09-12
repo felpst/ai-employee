@@ -1,0 +1,15 @@
+runtime: nodejs20
+service: default
+entrypoint: node main.js
+
+env_variables:
+  PROD: 'true'
+  OPEN_AI_KEY: ''
+  MONGO_URL: ''
+  AUTH_SECRET_KEY: ''
+  CORS_ORIGIN: '["https://cognum.web.app", "wss://chat-dot-cognum.uc.r.appspot.com"]'
+
+automatic_scaling:
+  target_cpu_utilization: 0.65
+  min_instances: 0
+  max_instances: 3

@@ -1,0 +1,17 @@
+runtime: nodejs
+env: flex
+service: chat
+entrypoint: node main.js
+
+runtime_config:
+  operating_system: 'ubuntu22'
+  runtime_version: 20
+
+network:
+  session_affinity: true
+
+env_variables:
+  AUTH_SECRET_KEY: ''
+  MONGO_URL: ''
+  OPENAI_API_KEY: ''
+  SERPAPI_API_KEY: ''
