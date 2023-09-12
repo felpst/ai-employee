@@ -3,8 +3,7 @@ import { AgentExecutor, LLMSingleActionAgent } from 'langchain/agents';
 import { LLMChain } from 'langchain/chains';
 import { ChatOpenAI } from 'langchain/chat_models/openai';
 import { Callbacks } from 'langchain/dist/callbacks';
-import { SerpAPI, Tool } from 'langchain/tools';
-import { Calculator } from 'langchain/tools/calculator';
+import { Tool } from 'langchain/tools';
 import {
   AIEmployeeIdentity,
   AIEmployeeOutputParser,
@@ -15,6 +14,7 @@ import { ChatHistoryTool } from '../tools/chat-history';
 import { DatabaseConnect } from '../tools/database-connect';
 import { KnowledgeBaseTool } from '../tools/knowledge-base';
 import { ZapierTool } from '../tools/zapier.tool';
+import { KnowledgeBaseTool } from '../tools/knowledge-base';
 
 export class AIEmployee {
   private _chat: IChat;
@@ -64,12 +64,12 @@ export class AIEmployee {
 
     // Tools
     this._tools = [
-      new SerpAPI(process.env.SERPAPI_API_KEY),
-      new Calculator(),
-      new ChatHistoryTool(this.memory),
-      new ZapierTool(),
+      // new DatabaseConnect(),
+      // new SerpAPI(process.env.SERPAPI_API_KEY),
+      // new Calculator(),
+      // new ChatHistoryTool(this.memory),
+      // new ZapierTool(),
       new KnowledgeBaseTool(),
-      new DatabaseConnect(),
     ];
 
     this._chain = new LLMChain({
