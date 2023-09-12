@@ -10,10 +10,6 @@ import {
   AIEmployeePromptTemplate,
 } from '../helpers/prompts.helper';
 import { AIEmployeeMemory } from '../memories/ai_employee.memory';
-import { ChatHistoryTool } from '../tools/chat-history';
-import { DatabaseConnect } from '../tools/database-connect';
-import { KnowledgeBaseTool } from '../tools/knowledge-base';
-import { ZapierTool } from '../tools/zapier.tool';
 import { KnowledgeBaseTool } from '../tools/knowledge-base';
 
 export class AIEmployee {
