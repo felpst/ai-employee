@@ -8,7 +8,7 @@ POST {{baseUrl}}/auth/login
 Content-Type: application/json
 Authorization: Bearer {{$authToken}}
 
-{ "email": "{{email}}", "password": "{{password}}" }
+{ "email": "linecker3@quaq.me", "password": "{{password}}" }
 
 ### authToken
 
@@ -21,7 +21,7 @@ Authorization: Bearer {{$authToken}}
 
 {
   "content": "Hello, this is a test message",
-  "project": "60e9c1ab9f1a7c0c28a30d10" 
+  "project": "60e9c1ab9f1a7c0c28a30d10"
 }
 ### find all
 GET {{baseUrl}}/messages
@@ -33,13 +33,22 @@ Authorization: Bearer {{$authToken}}
 
 ### update
 
-PUT {{baseUrl}}/messages/64fb54f8b796144cb4d98e58
+PUT {{baseUrl}}/messages/64fca902ba2921a6bd2f9aba
 Content-Type: application/json
 Authorization: Bearer {{$authToken}}
 
 {
-  "content": "Hello, this is a test message",
-  "project": "60e9c1ab9f1a7c0c28a30d10" 
+  "feedbacks": { "isPositive": false }
+}
+
+### add feedback on message
+
+PUT  {{baseUrl}}/messages/64fca902ba2921a6bd2f9aba/feedback/6501ea9c27e2ed46aaad990f
+Content-Type: application/json
+Authorization: Bearer {{$authToken}}
+
+{
+  "isPositive": false, "comment": "Adição de comentários no feedback"
 }
 
 ### delete

@@ -8,13 +8,15 @@ import {
 } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { IFeedback } from '@cognum/interfaces';
 import { MessagesService } from '../../../services/messages/messages.service';
 import { NotificationsService } from '../../../services/notifications/notifications.service';
 
-type MessageUpdate = {
+type UpdateFeedback = {
   _id: string;
-  rating: string;
-  suggestions?: string;
+  messageId: string;
+  isPositive: boolean;
+  comment?: string;
 };
 
 @Component({
@@ -33,7 +35,7 @@ export class FeedbackFormComponent implements OnInit, AfterViewChecked {
     private notificationsService: NotificationsService,
     private messagesService: MessagesService,
     @Inject(MAT_DIALOG_DATA)
-    private data: { message: MessageUpdate }
+    private data: { feedback: IFeedback; messageId: string }
   ) {
     this.form = new FormGroup({
       suggestions: new FormControl(this.suggestions, []),
@@ -43,8 +45,8 @@ export class FeedbackFormComponent implements OnInit, AfterViewChecked {
     this.inputSuggestions.nativeElement.focus();
   }
   ngOnInit(): void {
-    const { message } = this.data;
-    this.fillFeedbackModal(message);
+    const { feedback } = this.data;
+    this.fillFeedbackModal(feedback);
   }
 
   onSubmit() {
@@ -52,28 +54,29 @@ export class FeedbackFormComponent implements OnInit, AfterViewChecked {
     if (!valid) return;
     const { suggestions } = value;
     const {
-      message: { _id, rating },
+      feedback: { isPositive, _id },
+      messageId,
     } = this.data;
-    if (suggestions) this.updateMessage({ _id, rating, suggestions });
+    if (suggestions)
+      this.updateMessage({ _id, isPositive, messageId, comment: suggestions });
     this.dialogRef.close();
     this.notificationsService.show('Feedback sent!');
   }
 
-  private fillFeedbackModal(message: MessageUpdate): void {
-    const { rating } = message;
+  private fillFeedbackModal(message: IFeedback): void {
+    const { isPositive } = message;
     const feedbackIcon = document.getElementById('feedback-icon');
     if (feedbackIcon) {
       feedbackIcon.className = '';
       const common = ['feedback-icon', 'like', 'fa'];
-      const styles =
-        rating === 'THUMBSUP'
-          ? ['fa-thumbs-o-up', 'feedback-up']
-          : ['fa-thumbs-o-down', 'feedback-down'];
+      const styles = isPositive
+        ? ['fa-thumbs-o-up', 'feedback-up']
+        : ['fa-thumbs-o-down', 'feedback-down'];
       feedbackIcon.classList.add(...common, ...styles);
     }
   }
 
-  private updateMessage(message: MessageUpdate) {
-    return this.messagesService.update(message).subscribe((_) => _);
+  private updateMessage(message: UpdateFeedback) {
+    return this.messagesService.updateFeedback(message).subscribe((_) => _);
   }
 }
