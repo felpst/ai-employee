@@ -64,6 +64,7 @@ export class AuthController {
         res.status(404).json({ error: 'company not found' });
         return;
       }
+      user.company = companyId;
 
       res.json({ user, company, token });
     } catch (error) {

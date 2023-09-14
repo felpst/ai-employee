@@ -20,7 +20,7 @@ export class AuthService {
     return new Observable((observer) => {
       this.coreApiService.post('auth/login', userCredentials).subscribe({
         next: (response) => {
-          this.user = response.body as IUser;
+          this.user = response as IUser;
           observer.next(this.user);
         },
         error: (error) => {
