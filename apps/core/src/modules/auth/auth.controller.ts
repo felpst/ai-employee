@@ -23,7 +23,7 @@ export class AuthController {
       }
 
       const token = jwt.sign(
-        { userId: user._id, companyId: user.company },
+        { userId: user._id, companyId: user?.company || null },
         process.env.AUTH_SECRET_KEY,
         { expiresIn: '14d' }
       );
@@ -59,11 +59,10 @@ export class AuthController {
       }
 
       const companyId = decodedToken.companyId;
-      const company = await Company.findById(companyId).select('name');
-      if (!company) {
-        res.status(404).json({ error: 'company not found' });
-        return;
-      }
+      user.company = companyId;
+      const company = companyId
+        ? await Company.findById(companyId).select('name')
+        : null;
 
       res.json({ user, company, token });
     } catch (error) {
@@ -99,6 +98,28 @@ export class AuthController {
       }
 
       delete user.password;
+
+      res.json(user);
+    } catch (error) {
+      res.status(500).json({ error: 'Error retrieving user' });
+    }
+  }
+
+  public async getUserByEmail(req: Request, res: Response): Promise<void> {
+    try {
+      const { email } = req.query;
+
+      if (!email) {
+        res.status(400).json({ error: 'No email sent' });
+        return;
+      }
+
+      const user = await User.findOne({ email }).select('email');
+
+      if (!user) {
+        res.status(404).json({ error: 'No user registered with email' });
+        return;
+      }
 
       res.json(user);
     } catch (error) {

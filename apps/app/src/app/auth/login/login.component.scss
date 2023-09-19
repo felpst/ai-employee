@@ -29,12 +29,16 @@
   }
 }
 
-form {
-  padding: 20px;
+.form-container {
   border-radius: 4px;
   background-color: #fff;
+}
+
+form {
+  padding: 20px;
   display: flex;
   flex-direction: column;
+  gap: 8px;
 }
 
 table {
@@ -68,4 +72,26 @@ button:disabled {
 .error {
   color: red;
   font-size: 12px;
+}
+
+.form-bottom {
+  display: grid;
+  grid-template-rows: 1fr auto;
+  gap: 16px;
+
+  text-align: center;
+
+  a {
+    background-color: #fff;
+    color: var(--bs-body-color);
+    padding: 4px;
+    cursor: pointer;
+    text-decoration: none;
+    text-transform: initial;
+  }
+
+  a:hover {
+    color: blue;
+    text-decoration: underline;
+  }
 }

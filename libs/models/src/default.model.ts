@@ -7,6 +7,13 @@ export const defaultSchemaProps = {
   updatedBy: { type: Schema.Types.ObjectId, ref: 'User', required: true },
 };
 
+export const feedbackSchemaProps = {
+  isPositive: { type: Boolean, required: false },
+  comment: { type: String, required: false },
+  createdAt: { type: Date, default: Date.now },
+  createdBy: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+};
+
 function _updatedAt(next) {
   this.set({ updatedAt: new Date() });
   next();

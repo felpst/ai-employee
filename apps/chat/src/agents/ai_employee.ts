@@ -12,6 +12,8 @@ import {
 } from '../helpers/prompts.helper';
 import { AIEmployeeMemory } from '../memories/ai_employee.memory';
 import { ChatHistoryTool } from '../tools/chat-history';
+import { DatabaseConnect } from '../tools/database-connect';
+import { KnowledgeBaseTool } from '../tools/knowledge-base';
 import { ZapierTool } from '../tools/zapier.tool';
 
 export class AIEmployee {
@@ -66,6 +68,8 @@ export class AIEmployee {
       new Calculator(),
       new ChatHistoryTool(this.memory),
       new ZapierTool(),
+      new KnowledgeBaseTool(),
+      new DatabaseConnect(),
     ];
 
     this._chain = new LLMChain({
@@ -137,6 +141,7 @@ export class AIEmployee {
       _id: message._id,
       content: message.content,
       role: message.role,
+      feedbacks: message.feedbacks,
       createdBy: message.createdBy,
       createdAt: message.createdAt,
     }));

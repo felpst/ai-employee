@@ -2,14 +2,15 @@ import { IUser } from '@cognum/interfaces';
 import * as bcrypt from 'bcrypt';
 import { Model, Schema, model } from 'mongoose';
 import Company from './company.model';
-import { defaultSchemaProps, triggers } from './default.model';
+import { triggers } from './default.model';
 
 const schema = new Schema<IUser>({
   name: { type: String, required: false },
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
   company: { type: Schema.Types.ObjectId, ref: 'Company', required: false },
-  ...defaultSchemaProps,
+  createdAt: { type: Date, default: Date.now },
+  updatedAt: { type: Date, default: Date.now },
 });
 triggers(schema);
 

@@ -25,6 +25,20 @@ export class CoreApiService {
     });
   }
 
+  put(path: string, data: any, options?: any): Observable<any> {
+    return this.http.put(`${this._url}/${path}`, data, {
+      withCredentials: true,
+      ...options,
+    });
+  }
+
+  patch(path: string, data: any, options?: any): Observable<any> {
+    return this.http.patch(`${this._url}/${path}`, data, {
+      withCredentials: true,
+      ...options,
+    });
+  }
+
   delete(path: string, options?: any): Observable<any> {
     return this.http.delete(`${this._url}/${path}`, {
       withCredentials: true,
