@@ -43,6 +43,7 @@
     "ngx-markdown-editor": "^5.3.3",
     "ngx-skeleton-loader": "^8.0.1",
     "nodemailer": "^6.9.5",
+    "ngx-skeleton-loader": "^8.1.0",
     "pdf-parse": "^1.1.1",
     "peggy": "^3.0.2",
     "rxjs": "~7.8.0",
