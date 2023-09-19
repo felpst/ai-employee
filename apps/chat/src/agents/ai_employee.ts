@@ -138,8 +138,7 @@ export class AIEmployee {
       _id: message._id,
       content: message.content,
       role: message.role,
-      rating: message.rating,
-      suggestions: message.suggestions,
+      feedbacks: message.feedbacks,
       createdBy: message.createdBy,
       createdAt: message.createdAt,
     }));

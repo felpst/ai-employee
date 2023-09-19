@@ -1,0 +1,168 @@
+<div class="background">
+  <div class="login-container">
+    <div class="logo font-outfit">
+      <mat-icon svgIcon="cognum"></mat-icon>
+      COGNUM
+    </div>
+
+    <div class="form-container">
+      <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+        <table>
+          <tr>
+            <td><label for="name">Name</label></td>
+            <td>
+              <input
+                type="text"
+                id="name"
+                formControlName="name"
+                placeholder="Your full name"
+              />
+              <div
+                *ngIf="
+                  registerForm.get('name')?.invalid &&
+                  registerForm.get('name')?.touched
+                "
+              >
+                <small
+                  class="error"
+                  *ngIf="registerForm.get('name')?.errors?.['required']"
+                  >Name is required.</small
+                >
+                <small
+                  class="error"
+                  *ngIf="registerForm.get('name')?.errors?.['minlength']"
+                  >Name must be at least 6 characters long.</small
+                >
+              </div>
+            </td>
+          </tr>
+
+          <tr>
+            <td><label for="email">Email</label></td>
+            <td>
+              <input
+                type="text"
+                id="email"
+                formControlName="email"
+                placeholder="Your best email"
+              />
+              <div
+                *ngIf="
+                  registerForm.get('email')?.invalid &&
+                  registerForm.get('email')?.touched
+                "
+              >
+                <small
+                  class="error"
+                  *ngIf="registerForm.get('email')?.errors?.['required']"
+                  >Email is required.</small
+                >
+                <small
+                  class="error"
+                  *ngIf="registerForm.get('email')?.errors?.['email'] || registerForm.get('email')?.errors?.['pattern']"
+                  >Email is invalid.</small
+                >
+                <small
+                  class="error"
+                  *ngIf="registerForm.get('email')?.errors?.['emailAlreadyExists']"
+                  >Email already registered.</small
+                >
+              </div>
+            </td>
+          </tr>
+
+          <tr>
+            <td>
+              <label for="password">Password</label>
+            </td>
+            <td>
+              <input
+                type="password"
+                id="password"
+                formControlName="password"
+                placeholder="Must be a strong password"
+              />
+              <div
+                *ngIf="
+                  registerForm.get('password')?.invalid &&
+                  registerForm.get('password')?.touched
+                "
+              >
+                <small
+                  class="error"
+                  *ngIf="registerForm.get('password')?.errors?.['required']"
+                  >Password is required.</small
+                >
+                <small
+                  class="error"
+                  *ngIf="registerForm.get('password')?.errors?.['minlength']"
+                >
+                  Password must be at least 8 characters long.
+                </small>
+                <small
+                  class="error"
+                  *ngIf="!registerForm.get('password')?.errors?.['minlength'] && registerForm.get('password')?.errors?.['pattern']"
+                >
+                  Must contain lowercase and uppercase letters, numbers and
+                  special characters (!@#$*.,).
+                </small>
+              </div>
+            </td>
+          </tr>
+
+          <tr>
+            <td>
+              <label for="confirm">Confirm</label>
+            </td>
+            <td>
+              <input
+                type="password"
+                id="confirm"
+                formControlName="confirm"
+                placeholder="Must be the same as password"
+              />
+              <div
+                *ngIf="
+                  registerForm.get('confirm')?.invalid &&
+                  registerForm.get('confirm')?.touched
+                "
+              >
+                <small
+                  class="error"
+                  *ngIf="registerForm.get('confirm')?.errors?.['required']"
+                  >Confirm password is required.</small
+                >
+                <small
+                  class="error"
+                  *ngIf="registerForm.get('confirm')?.errors?.['match_error']"
+                >
+                  Password and confirm fields must be equals.
+                </small>
+              </div>
+              <div class="error" *ngIf=""></div>
+            </td>
+          </tr>
+        </table>
+
+        <div *ngIf="showRegisterError" class="registerError">
+          <span class="error bold">
+            Some errors occurred when registering the user.
+          </span>
+          <ul>
+            <li *ngFor="let error of errors">
+              <span class="error">{{ error }}</span>
+            </li>
+          </ul>
+        </div>
+
+        <button type="submit" [disabled]="registerForm.invalid || submitting">
+          Register
+        </button>
+      </form>
+
+      <div class="form-bottom">
+        <a href="/auth/login">Back to login</a>
+      </div>
+    </div>
+  </div>
+</div>

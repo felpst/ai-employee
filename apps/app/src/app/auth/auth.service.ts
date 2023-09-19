@@ -20,7 +20,7 @@ export class AuthService {
     return new Observable((observer) => {
       this.coreApiService.post('auth/login', userCredentials).subscribe({
         next: (response) => {
-          this.user = response.body as IUser;
+          this.user = response as IUser;
           observer.next(this.user);
         },
         error: (error) => {
@@ -38,6 +38,19 @@ export class AuthService {
         },
         error: () => {
           observer.error(false);
+        },
+      });
+    });
+  }
+
+  checkEmailRegistered(email: string): Observable<IUser> {
+    return new Observable((observer) => {
+      this.coreApiService.get('auth/email', { params: { email } }).subscribe({
+        next: (response) => {
+          observer.next(response);
+        },
+        error: (error) => {
+          observer.error(error);
         },
       });
     });

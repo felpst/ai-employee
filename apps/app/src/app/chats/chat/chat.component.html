@@ -60,7 +60,10 @@
         <!-- Unrated message -->
         <div
           class="rating-wrapper"
-          *ngIf="message.role === 'AI' && !message.rating; else ratedMessage"
+          *ngIf="
+            message.role === 'AI' && isUnratedMessage(message._id);
+            else ratedMessage
+          "
         >
           <i
             class="rating-icon like fa fa-thumbs-o-up"
@@ -80,12 +83,12 @@
             <i
               class="rated-icon liked fa fa-thumbs-o-up"
               aria-hidden="true"
-              *ngIf="message.role === 'AI' && message.rating === 'THUMBSUP'"
+              *ngIf="message.role === 'AI' && getMessageFeedback(message._id)"
             ></i>
             <i
               class="rated-icon unliked fa fa-thumbs-o-down"
               aria-hidden="true"
-              *ngIf="message.role === 'AI' && message.rating === 'THUMBSDOWN'"
+              *ngIf="message.role === 'AI' && !getMessageFeedback(message._id)"
             ></i>
           </div>
         </ng-template>

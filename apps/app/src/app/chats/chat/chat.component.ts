@@ -7,6 +7,8 @@ import {
 import { NgForm } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
+import { IFeedback } from '@cognum/interfaces';
+import { AuthService } from '../../auth/auth.service';
 import { MessagesService } from '../../services/messages/messages.service';
 import { NotificationsService } from '../../services/notifications/notifications.service';
 import { ChatsService } from '../chats.service';
@@ -15,8 +17,8 @@ import { FeedbackFormComponent } from './feedback-form/feedback-form.component';
 
 type MessageUpdate = {
   _id: string;
-  rating: string;
-  suggestions?: string;
+  isPositive: boolean;
+  comment?: string;
 };
 
 @Component({
@@ -33,6 +35,7 @@ export class ChatComponent implements AfterViewChecked {
   constructor(
     public chatService: ChatService,
     private route: ActivatedRoute,
+    private authService: AuthService,
     private chatsService: ChatsService,
     private messagesService: MessagesService,
     private notificationsService: NotificationsService,
@@ -64,28 +67,55 @@ export class ChatComponent implements AfterViewChecked {
   }
 
   onApprove(messageId: string): void {
-    const message = { _id: messageId, rating: 'THUMBSUP' };
+    const message = { _id: messageId, isPositive: true };
     this.updateMessage(message);
-    this.openModal(message);
   }
 
   onReprove(messageId: string): void {
-    const message = { _id: messageId, rating: 'THUMBSDOWN' };
+    const message = { _id: messageId, isPositive: false };
     this.updateMessage(message);
-    this.openModal(message);
+  }
+
+  isUnratedMessage(messageId: string) {
+    const message = this.chatService.messages.find(
+      ({ _id }) => _id === messageId
+    );
+    if (!message) return false;
+    const { feedbacks } = message;
+    return !feedbacks
+      .map(({ createdBy }: any) => createdBy)
+      .includes(this.authService.user?._id);
+  }
+
+  getMessageFeedback(messageId: string) {
+    const message = this.chatService.messages.find(
+      ({ _id }) => _id === messageId
+    );
+    if (!message) return false;
+    const { feedbacks } = message;
+    const feedback = feedbacks.find(
+      ({ createdBy }: any) => createdBy === this.authService.user?._id
+    );
+    return feedback ? feedback.isPositive : false;
   }
 
   private updateMessage(message: MessageUpdate) {
-    return this.messagesService.update(message).subscribe((_) => {
-      this.chatService.updateMessageData(message._id, message);
+    return this.messagesService.addFeedback(message).subscribe((result) => {
+      const feedback = result.feedbacks.find(
+        ({ createdBy }) => createdBy === this.authService.user?._id
+      );
+      this.chatService.updateMessageData(message._id, {
+        feedbacks: result.feedbacks,
+      });
       this.notificationsService.show('Feedback sent!');
+      if (feedback) this.openModal(message._id, feedback);
     });
   }
 
-  private openModal(message: MessageUpdate): void {
+  private openModal(messageId: string, feedback: IFeedback): void {
     const dialogRef = this.dialog.open(FeedbackFormComponent, {
       width: '600px',
-      data: { message },
+      data: { feedback, messageId },
     });
     dialogRef.afterClosed().subscribe((res) => res);
   }

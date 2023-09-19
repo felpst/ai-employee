@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ICompany, IKnowledge } from '@cognum/interfaces';
+import { IKnowledge } from '@cognum/interfaces';
 import { Observable } from 'rxjs';
 import { AuthService } from '../auth/auth.service';
 import { CoreApiService } from '../services/apis/core-api.service';
@@ -16,9 +16,8 @@ export class KnowledgeBaseService {
   ) {}
 
   create(data: Partial<IKnowledge>): Observable<IKnowledge> {
-    data.company =
-      (this.authService.user?.company as ICompany)._id ||
-      this.authService.user?.company;
+    const { company, user } = this.authService;
+    data.company = company?._id || user?.company;
     return this.coreApiService.post(this.route, data) as Observable<IKnowledge>;
   }
 

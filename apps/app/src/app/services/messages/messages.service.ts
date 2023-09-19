@@ -16,4 +16,17 @@ export class MessagesService {
       item
     ) as Observable<IMessage>;
   }
+
+  addFeedback({ _id, ...rest }: any): Observable<IMessage> {
+    return this.coreApiService.patch(`${this.route}/${_id}`, {
+      feedbacks: rest,
+    }) as Observable<IMessage>;
+  }
+
+  updateFeedback({ messageId, _id, ...rest }: any): Observable<IMessage> {
+    return this.coreApiService.put(
+      `${this.route}/${messageId}/feedback/${_id}`,
+      { ...rest }
+    ) as Observable<IMessage>;
+  }
 }
