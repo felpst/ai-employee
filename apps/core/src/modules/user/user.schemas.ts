@@ -8,9 +8,9 @@ export const addUserSchema = yup.object({
       password: yup
         .string()
         .required()
-        .min(8, 'Password must be at least 8 characters long')
+        .min(6, 'Password must be at least 6 characters long')
         .matches(
-          /^(?=.*[A-Z])(?=.*[!@#$&*.,])(?=.*[0-9])(?=.*[a-z]).{8,}$/,
+          /^(?=.*[A-Z])(?=.*[!@#$&*.,])(?=.*[0-9])(?=.*[a-z]).{6,}$/,
           'The password must contain lowercase and uppercase letters, numbers and special characters (!@#$*.,)'
         ),
     })

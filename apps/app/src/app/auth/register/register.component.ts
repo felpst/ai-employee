@@ -23,9 +23,9 @@ export class RegisterComponent {
       '',
       [
         Validators.required,
-        Validators.minLength(8),
+        Validators.minLength(6),
         Validators.pattern(
-          /^(?=.*[A-Z])(?=.*[!@#$&*.,])(?=.*[0-9])(?=.*[a-z]).{8,}$/
+          /^(?=.*[A-Z])(?=.*[!@#$&*.,])(?=.*[0-9])(?=.*[a-z]).{6,}$/
         ),
       ],
     ],

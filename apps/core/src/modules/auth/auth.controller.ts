@@ -28,11 +28,12 @@ export class AuthController {
         { expiresIn: '14d' }
       );
 
+      const { password: passwd, ..._user } = user.toObject();
       const expires = new Date();
       expires.setDate(expires.getDate() + 14);
       AuthController._setTokenCookie(res, token, expires);
       res.setHeader('X-Auth-Token', token);
-      res.json(user);
+      res.json(_user);
     } catch (error) {
       console.log(error);
 
