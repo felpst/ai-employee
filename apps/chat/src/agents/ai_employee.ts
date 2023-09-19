@@ -4,6 +4,7 @@ import { LLMChain } from 'langchain/chains';
 import { ChatOpenAI } from 'langchain/chat_models/openai';
 import { Callbacks } from 'langchain/dist/callbacks';
 import { Tool } from 'langchain/tools';
+import { Calculator } from 'langchain/tools/calculator';
 import {
   AIEmployeeIdentity,
   AIEmployeeOutputParser,
@@ -62,7 +63,7 @@ export class AIEmployee {
     this._tools = [
       // new DatabaseConnect(),
       // new SerpAPI(process.env.SERPAPI_API_KEY),
-      // new Calculator(),
+      new Calculator(),
       // new ChatHistoryTool(this.memory),
       // new ZapierTool(),
       new KnowledgeBaseTool(),
