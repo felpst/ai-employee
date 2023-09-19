@@ -1,0 +1,101 @@
+<div class="columns">
+  <div class="list">
+    <div style="padding: 16px">
+      <h2>Data Sources</h2>
+
+      <div>
+        <button
+          class="new"
+          (click)="fileUpload.click()"
+          mat-stroked-button
+          color="primary"
+        >
+          <mat-icon>add</mat-icon>
+          New Data Source
+        </button>
+
+        <form class="uploadForm">
+          <input type="file" (change)="onFileSelected($event)" #fileUpload />
+        </form>
+      </div>
+    </div>
+
+    <div class="items">
+      <pre>selected: {{ selectedDataSource | json }} </pre>
+
+      <div
+        class="data-source parent"
+        *ngFor="let dataSource of dataSourcesTree"
+      >
+        <!-- ROOT -->
+        <div
+          class="content"
+          (click)="
+            selectedDataSource !== null
+              ? onDataSourceSelected()
+              : (dataSource.metadata.opened = !dataSource.metadata.opened)
+          "
+          [ngClass]="{ selected: selectedDataSource === null }"
+        >
+          <div class="icon">
+            <span
+              class="material-symbols-outlined"
+              *ngIf="
+                dataSource.type === 'folder' && !dataSource.metadata.opened
+              "
+            >
+              folder
+            </span>
+            <span
+              class="material-symbols-outlined"
+              *ngIf="dataSource.type === 'folder' && dataSource.metadata.opened"
+            >
+              folder_open
+            </span>
+          </div>
+          <div class="dataSource__name">{{ dataSource.name }}</div>
+        </div>
+
+        <!-- CHILDREN -->
+        <div class="children" *ngIf="dataSource.metadata.opened">
+          <div
+            class="content"
+            [ngClass]="{ selected: selectedDataSource === child._id }"
+            *ngFor="let child of dataSource.children"
+            (click)="onDataSourceSelected(child._id)"
+            [ngStyle]="{ 'padding-left': '48px' }"
+          >
+            <div class="icon">
+              <span class="material-symbols-outlined"> draft </span>
+            </div>
+            <div class="dataSource__name">{{ child.name }}</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- <mat-action-list *ngFor="let chat of chats">
+        <button
+          mat-list-item
+          (click)="onChat(chat)"
+          class="chat-item"
+          [ngClass]="{ selected: selectedChat === chat._id }"
+        >
+          <div class="button-content">
+            <mat-icon class="icon">chat</mat-icon>
+            <div class="text">{{ chat.name || 'New chat' }}</div>
+            <span
+              class="delete material-symbols-outlined"
+              (click)="$event.stopPropagation(); onDelete(chat)"
+            >
+              delete
+            </span>
+          </div>
+        </button>
+      </mat-action-list> -->
+    </div>
+  </div>
+
+  <div class="data-source">
+    <router-outlet></router-outlet>
+  </div>
+</div>

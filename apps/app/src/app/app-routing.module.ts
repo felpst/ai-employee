@@ -21,6 +21,13 @@ const routes: Routes = [
         loadChildren: () =>
           import('./chats/chats.module').then((m) => m.ChatsModule),
       },
+      {
+        path: 'knowledge-base',
+        loadChildren: () =>
+          import('./knowledge-base/knowledge-base.module').then(
+            (m) => m.KnowledgeBaseModule
+          ),
+      },
       { path: '**', redirectTo: 'chats', pathMatch: 'full' },
     ],
   },

@@ -3,6 +3,7 @@
 # compiled output
 dist
 tmp
+stores
 /out-tsc
 
 # dependencies
@@ -41,3 +42,6 @@ Thumbs.db
 .angular
 .env
 *.yaml
+cognum.secrets.json
+credentials.json
+docs

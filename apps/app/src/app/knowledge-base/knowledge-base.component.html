@@ -1,0 +1,46 @@
+<div class="main">
+  <div class="header">
+    <h2>Knowledge Base</h2>
+
+    <mat-form-field class="search-bar">
+      <mat-label>Search</mat-label>
+      <input
+        matInput
+        type="text"
+        [(ngModel)]="searchText"
+        (keyup)="onSearch($event)"
+        placeholder="Search..."
+      />
+      <button
+        *ngIf="searchText"
+        matSuffix
+        mat-icon-button
+        aria-label="Clear"
+        (click)="clearSearch()"
+      >
+        <mat-icon>close</mat-icon>
+      </button>
+    </mat-form-field>
+
+    <button mat-raised-button color="primary" (click)="onForm()">
+      <mat-icon>add</mat-icon>
+      New
+    </button>
+  </div>
+
+  <div class="knowledges">
+    <div
+      class="knowledge"
+      *ngFor="let knowledge of knowledgeBaseFiltered"
+      (click)="onForm(knowledge)"
+    >
+      <div class="knowledge__content">
+        <p [innerHTML]="knowledge.data | markdown"></p>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="knowledgeBaseFiltered.length === 0">
+    <p style="text-align: center">No knowledge found</p>
+  </div>
+</div>

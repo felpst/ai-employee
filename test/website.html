@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <link rel="stylesheet" href="/style.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.21.0/themes/prism-tomorrow.min.css"
+    />
+    <title>JSONPlaceholder - Guide</title>
+
+    <script
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-E3C3GCQVBN"
+    ></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag('js', new Date());
+
+      gtag('config', 'G-E3C3GCQVBN');
+    </script>
+    <script
+      defer
+      data-domain="jsonplaceholder.typicode.com"
+      src="https://plausible.io/js/script.js"
+    ></script>
+  </head>
+  <body class="px-2">
+    <header
+      class="container mx-auto max-w-4xl flex flex-col md:flex-row justify-between py-one mb-three"
+    >
+      <h1>
+        <a href="/" class="font-bold no-underline">JSONPlaceholder</a>
+      </h1>
+      <nav>
+        <ul class="flex">
+          <li><a href="/guide" class="mr-4 no-underline">Guide</a></li>
+          <li>
+            <a
+              href="https://github.com/sponsors/typicode"
+              class="mr-4 no-underline"
+              >Sponsor this project</a
+            >
+          </li>
+          <li>
+            <a href="https://blog.typicode.com" class="mr-4 no-underline"
+              >Blog</a
+            >
+          </li>
+          <li>
+            <a href="https://my-json-server.typicode.com" class="no-underline"
+              >My JSON Server</a
+            >
+          </li>
+        </ul>
+      </nav>
+    </header>
+    <div>
+      <main class="container mx-auto max-w-4xl">
+        <h2>Guide</h2>
+        <p>
+          Below you'll find examples using
+          <a href="https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API"
+            >Fetch API</a
+          >
+          but you can JSONPlaceholder with any other language.
+        </p>
+        <p>
+          You can copy paste the code in your browser console to quickly test
+          JSONPlaceholder.
+        </p>
+        <div id="crbn"></div>
+        <h3>Getting a resource</h3>
+        <pre><code class="language-js">fetch('https://jsonplaceholder.typicode.com/posts/1')
+  .then((response) =&gt; response.json())
+  .then((json) =&gt; console.log(json));
+</code></pre>
+        <p>👇 <em>Output</em></p>
+        <pre><code class="language-js">{
+  id: 1,
+  title: '...',
+  body: '...',
+  userId: 1
+}
+</code></pre>
+        <h3>Listing all resources</h3>
+        <pre><code class="language-js">fetch('https://jsonplaceholder.typicode.com/posts')
+  .then((response) =&gt; response.json())
+  .then((json) =&gt; console.log(json));
+</code></pre>
+        <p>👇 <em>Output</em></p>
+        <pre><code class="language-js">[
+  { id: 1, title: '...' /* ... */ },
+  { id: 2, title: '...' /* ... */ },
+  { id: 3, title: '...' /* ... */ },
+  /* ... */
+  { id: 100, title: '...' /* ... */ },
+];
+</code></pre>
+        
+
+    <footer class="container mx-auto max-w-4xl mt-four">
+      <div class="mb-one">
+        <a href="https://github.com/users/typicode/sponsorship">
+          <strong>You can sponsor this project (and others) on GitHub</strong>
+        </a>
+      </div>
+      <div class="mb-one">
+        Coded and maintained with ❤️ by
+        <a href="https://github.com/typicode">typicode</a> © 2022
+      </div>
+    </footer>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.21.0/prism.min.js"></script>
+    <script src="/script.js"></script>
+    <script
+      defer
+      src="https://static.cloudflareinsights.com/beacon.min.js/v8b253dfea2ab4077af8c6f58422dfbfd1689876627854"
+      integrity="sha512-bjgnUKX4azu3dLTVtie9u6TKqgx29RBwfj3QXYt5EKfWM/9hPSAI/4qcV5NACjwAo8UtTeWefx6Zq5PHcMm7Tg=="
+      data-cf-beacon='{"rayId":"7f69a11e9dbfda17","version":"2023.8.0","r":1,"b":1,"token":"2f059cbf58a24e59854ee0884c97b166","si":100}'
+      crossorigin="anonymous"
+    ></script>
+  </body>
+</html>

@@ -40,6 +40,47 @@
       width: 100%;
     }
 
+    .message-wrapper {
+      &.ai {
+        display: flex;
+        flex: 1;
+        align-items: flex-start;
+        gap: 15px;
+      }
+
+      .rating-wrapper {
+        display: none;
+
+        .rating-icon {
+          cursor: pointer;
+        }
+
+        .rated-icon {
+          cursor: default;
+        }
+
+        .like:hover,
+        .liked {
+          color: green;
+        }
+
+        .unlike:hover,
+        .unliked {
+          color: red;
+        }
+      }
+
+      &.ai:hover {
+        .rating-wrapper {
+          display: flex;
+          flex: 1;
+          align-items: center;
+          gap: 0.75rem;
+          padding: 5px;
+        }
+      }
+    }
+
     .message {
       display: inline-block;
 

@@ -1,7 +1,15 @@
 <div class="chat">
   <div class="messages" #chatContent>
     <div class="messages-wrapper">
-      <div class="message-wrapper" *ngFor="let message of chatService.messages">
+      <div
+        class="message-wrapper"
+        [ngClass]="{
+          ai: message.role === 'AI',
+          human: message.role === 'HUMAN',
+          system: message.role === 'SYSTEM'
+        }"
+        *ngFor="let message of chatService.messages"
+      >
         <div
           class="message"
           [ngClass]="{
@@ -48,10 +56,60 @@
             </div>
           </div>
         </div>
+
+        <!-- Unrated message -->
+        <div
+          class="rating-wrapper"
+          *ngIf="message.role === 'AI' && !message.rating; else ratedMessage"
+        >
+          <i
+            class="rating-icon like fa fa-thumbs-o-up"
+            aria-hidden="true"
+            (click)="$event.stopPropagation(); onApprove(message._id)"
+          ></i>
+          <i
+            class="rating-icon unlike fa fa-thumbs-o-down"
+            aria-hidden="true"
+            (click)="$event.stopPropagation(); onReprove(message._id)"
+          ></i>
+        </div>
+
+        <!-- Rated message -->
+        <ng-template #ratedMessage>
+          <div class="rating-wrapper">
+            <i
+              class="rated-icon liked fa fa-thumbs-o-up"
+              aria-hidden="true"
+              *ngIf="message.role === 'AI' && message.rating === 'THUMBSUP'"
+            ></i>
+            <i
+              class="rated-icon unliked fa fa-thumbs-o-down"
+              aria-hidden="true"
+              *ngIf="message.role === 'AI' && message.rating === 'THUMBSDOWN'"
+            ></i>
+          </div>
+        </ng-template>
+      </div>
+
+      <!-- Skeleton loader -->
+      <div class="skeleton" *ngIf="chatService.loadingMessages">
+        <ng-container *ngFor="let _ of [].constructor(15)">
+          <ngx-skeleton-loader
+            class="message"
+            style="height: 40px; width: 95%; padding: 10px"
+            appearance="line"
+            animation="pulse"
+          />
+        </ng-container>
       </div>
 
       <!-- No messages -->
-      <div class="no-messages" *ngIf="chatService.messages.length === 0">
+      <div
+        class="no-messages"
+        *ngIf="
+          !chatService.loadingMessages && chatService.messages.length === 0
+        "
+      >
         No messages yet. Start a conversation by typing a message below.
       </div>
 
