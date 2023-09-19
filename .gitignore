@@ -3,7 +3,6 @@
 # compiled output
 dist
 tmp
-stores
 /out-tsc
 
 # dependencies
@@ -34,6 +33,7 @@ npm-debug.log
 yarn-error.log
 testem.log
 /typings
+/stores/
 
 # System Files
 .DS_Store
