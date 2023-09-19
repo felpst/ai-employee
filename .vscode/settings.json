@@ -29,7 +29,5 @@
   "prettier.semi": true,
   "prettier.bracketSpacing": true,
   "prettier.jsxSingleQuote": false,
-  "prettier.arrowParens": "avoid",
-  "cSpell.words": ["bigquery"],
-  "peacock.remoteColor": "#cc0000"
+  "prettier.arrowParens": "avoid"
 }

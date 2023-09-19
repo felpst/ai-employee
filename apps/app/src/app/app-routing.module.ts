@@ -22,10 +22,10 @@ const routes: Routes = [
           import('./chats/chats.module').then((m) => m.ChatsModule),
       },
       {
-        path: 'data-sources',
+        path: 'knowledge-base',
         loadChildren: () =>
-          import('./data-sources/data-sources.module').then(
-            (m) => m.DataSourcesModule
+          import('./knowledge-base/knowledge-base.module').then(
+            (m) => m.KnowledgeBaseModule
           ),
       },
       { path: '**', redirectTo: 'chats', pathMatch: 'full' },

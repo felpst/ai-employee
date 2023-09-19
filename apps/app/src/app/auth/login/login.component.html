@@ -5,7 +5,7 @@
       COGNUM
     </div>
 
-    <div class="form">
+    <div class="form-container">
       <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
         <table>
           <tr>
@@ -64,6 +64,11 @@
 
         <button type="submit" [disabled]="loginForm.invalid">Login</button>
       </form>
+
+      <div class="form-bottom">
+        <span aria-level="5">New to Cognum?</span>
+        <a href="/auth/register">Register</a>
+      </div>
     </div>
   </div>
 </div>

@@ -25,7 +25,9 @@ const formatIdentity = (identity: AIEmployeeIdentity) =>
   }.`;
 
 const formatPrefix = (user: IUser, company: ICompany) =>
-  `You are talking to "${user.name}", and you work at company "${company.name}".
+  `You are talking to "${user?.name || ''}", and you work at company "${
+    company?.name || ''
+  }".
 The following is a friendly conversation between a human and an AI. The AI is talkative and provides lots of specific details from its context.
 You can get informations in summary or history conversation without tools or use tools to get new informations.
 Answer the following questions as best you can. You have access to the following tools:`;
