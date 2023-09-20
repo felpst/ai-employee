@@ -102,7 +102,7 @@ export class RegisterComponent {
     const { confirm, ...rest } = this.registerForm.value;
 
     // Process register
-    this.usersService.createCommon({ ...rest }).subscribe({
+    this.usersService.register({ ...rest }).subscribe({
       next: () => {
         const { email, password } = rest;
         // Process login

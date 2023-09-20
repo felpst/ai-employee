@@ -7,9 +7,9 @@ import { addUserSchema } from './user.schemas';
 const router: Router = express.Router();
 
 router.post(
-  '/common',
+  '/register',
   YupValidatorMiddleware(addUserSchema),
-  userController.createCommonUser
+  userController.register
 );
 router.post('/', authMiddleware, userController.create);
 router.get('/', authMiddleware, userController.find);

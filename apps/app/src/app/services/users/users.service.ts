@@ -14,9 +14,9 @@ export class UsersService {
     return this.coreApiService.post(`${this.route}`, item) as Observable<IUser>;
   }
 
-  createCommon(item: Partial<IUser>): Observable<IUser> {
+  register(item: Partial<IUser>): Observable<IUser> {
     return this.coreApiService.post(
-      `${this.route}/common`,
+      `${this.route}/register`,
       item
     ) as Observable<IUser>;
   }
