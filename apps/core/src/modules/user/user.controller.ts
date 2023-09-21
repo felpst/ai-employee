@@ -1,7 +1,7 @@
 import { User } from '@cognum/models';
 import { NextFunction, Request, Response } from 'express';
 import ModelController from '../../controllers/model.controller';
-import EmailUtils from '../../utils/email.utils';
+import emailEmitter from '../../utils/email.utils';
 
 export class UserController extends ModelController<typeof User> {
   constructor() {
@@ -35,7 +35,7 @@ export class UserController extends ModelController<typeof User> {
         email,
         password,
       });
-      await EmailUtils.sendMail({
+      emailEmitter.emit('sendEmail', {
         to: email,
         subject: 'Welcome to Cognum!',
         text: "Welcome to COGNUM. Let's go together in search of a promising future with AI's. This is an automatic email from the system, you do not need to respond to it.",
