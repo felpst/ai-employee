@@ -1,0 +1,45 @@
+<div class="columns">
+  <div class="list">
+    <div style="padding: 16px">
+      <h2>Workspaces</h2>
+
+      <div>
+        <button
+          class="new"
+          (click)="onNewWorkspace()"
+          mat-stroked-button
+          color="primary"
+        >
+          <mat-icon>add</mat-icon>
+          New Workspace
+        </button>
+      </div>
+    </div>
+
+    <div class="items">
+      <mat-action-list *ngFor="let workspace of workspaces">
+        <button
+          mat-list-item
+          (click)="onWorkspace(workspace)"
+          class="workspace-item"
+          [ngClass]="{ selected: selectedWorkspace === workspace._id }"
+        >
+          <div class="button-content">
+            <mat-icon class="icon">workspace</mat-icon>
+            <div class="text">{{ workspace.name || 'New workspace' }}</div>
+            <span
+              class="delete material-symbols-outlined"
+              (click)="$event.stopPropagation(); onDelete(workspace)"
+            >
+              delete
+            </span>
+          </div>
+        </button>
+      </mat-action-list>
+    </div>
+  </div>
+
+  <div class="workspace">
+    <router-outlet></router-outlet>
+  </div>
+</div>

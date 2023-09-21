@@ -16,8 +16,6 @@ export class KnowledgeBaseService {
   ) {}
 
   create(data: Partial<IKnowledge>): Observable<IKnowledge> {
-    const { company, user } = this.authService;
-    data.company = company?._id || user?.company;
     return this.coreApiService.post(this.route, data) as Observable<IKnowledge>;
   }
 

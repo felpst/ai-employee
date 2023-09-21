@@ -17,6 +17,13 @@ const routes: Routes = [
     canActivate: [AuthGuard],
     children: [
       {
+        path: 'workspaces',
+        loadChildren: () =>
+          import('./workspaces/workspaces.module').then(
+            (m) => m.WorkspacesModule
+          ),
+      },
+      {
         path: 'chats',
         loadChildren: () =>
           import('./chats/chats.module').then((m) => m.ChatsModule),

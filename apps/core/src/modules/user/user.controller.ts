@@ -8,6 +8,20 @@ export class UserController extends ModelController<typeof User> {
     super(User);
   }
 
+  public async find(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const sort = (req.query.sort as string) || [];
+      const list = await User.find().sort(sort).select('-password');
+      res.json(list);
+    } catch (error) {
+      next(error);
+    }
+  }
+
   public async register(
     req: Request,
     res: Response,

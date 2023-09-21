@@ -10,6 +10,10 @@ export class UsersService {
   private route = 'users';
   constructor(private coreApiService: CoreApiService) {}
 
+  list(): Observable<IUser[]> {
+    return this.coreApiService.get(`${this.route}`) as Observable<IUser[]>;
+  }
+
   create(item: Partial<IUser>): Observable<IUser> {
     return this.coreApiService.post(`${this.route}`, item) as Observable<IUser>;
   }
