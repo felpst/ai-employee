@@ -1,10 +1,10 @@
-import { User, Workspace } from '@cognum/models';
+import { AIEmployee, Workspace } from '@cognum/models';
 import { NextFunction, Request, Response } from 'express';
 import ModelController from '../../controllers/model.controller';
 
-export class WorkspaceController extends ModelController<typeof Workspace> {
+export class AiEmployeeController extends ModelController<typeof AIEmployee> {
   constructor() {
-    super(Workspace);
+    super(AIEmployee);
   }
 
   public async create(
@@ -17,16 +17,21 @@ export class WorkspaceController extends ModelController<typeof Workspace> {
       const userId = req['userId'];
       const docs = [];
       for (const data of dataset) {
-        const { users } = data;
-        const arrayUsers = Array.isArray(users) ? [...users] : [users];
+        const { workspaces } = data;
+        const arrayWorkspaces = Array.isArray(workspaces)
+          ? [...workspaces]
+          : [workspaces];
         if (!data.createdBy) {
           data.createdBy = userId;
         }
         data.updatedBy = userId;
-        const _users = await User.find({
-          _id: { $in: [...arrayUsers, userId] },
+        const _workspaces = await Workspace.find({
+          _id: { $in: arrayWorkspaces },
         });
-        const doc = await Workspace.create({ ...data, users: _users });
+        const doc = await AIEmployee.create({
+          ...data,
+          workspaces: _workspaces,
+        });
         docs.push(doc);
       }
       res.status(201).json(docs.length > 1 ? docs : docs[0]);
@@ -36,4 +41,4 @@ export class WorkspaceController extends ModelController<typeof Workspace> {
   }
 }
 
-export default new WorkspaceController();
+export default new AiEmployeeController();

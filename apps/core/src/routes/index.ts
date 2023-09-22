@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import employeeRoutes from '../modules/ai-employee/ai-employee.routes';
 import authRoutes from '../modules/auth/auth.routes';
 import chatsRoutes from '../modules/chat/chat.routes';
 import companyRoutes from '../modules/company/company.routes';
@@ -9,6 +10,7 @@ import workspaceRoutes from '../modules/workspace/workspace.routes';
 
 const router = Router();
 
+router.use('/employees', employeeRoutes);
 router.use('/companies', companyRoutes);
 router.use('/chats', chatsRoutes);
 router.use('/messages', messagesRoutes);

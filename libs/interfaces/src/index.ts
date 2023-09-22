@@ -1,3 +1,4 @@
+export * from './ai-employee.interface';
 export * from './chat.interface';
 export * from './company.interface';
 export * from './data-source.interface';
