@@ -5,6 +5,9 @@ import { defaultSchemaProps, triggers } from './default.model';
 const schema = new Schema<IKnowledge>({
   data: { type: String },
   workspace: { type: Schema.Types.ObjectId, ref: 'Workspace', required: true },
+  employees: [
+    { type: Schema.Types.ObjectId, ref: 'AIEmployee', required: false },
+  ],
   ...defaultSchemaProps,
 });
 triggers(schema);
