@@ -1,5 +1,5 @@
 <div class="workspace">
-  <h3 *ngIf="!!workspace; else loading">{{ workspace.name | uppercase }}</h3>
+  <h3 *ngIf="!isLoading; else loading">{{ workspace.name | uppercase }}</h3>
 
   <ng-template #loading>
     <strong> Loading. . . </strong>
