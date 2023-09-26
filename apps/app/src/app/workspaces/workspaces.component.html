@@ -27,18 +27,28 @@
           <div class="button-content">
             <mat-icon class="icon">workspace</mat-icon>
             <div class="text">{{ workspace.name || 'New workspace' }}</div>
-            <span
-              class="edit material-symbols-outlined"
-              (click)="$event.stopPropagation(); onEdit(workspace)"
-            >
-              edit
-            </span>
-            <span
-              class="delete material-symbols-outlined"
-              (click)="$event.stopPropagation(); onDelete(workspace)"
-            >
-              delete
-            </span>
+            <div class="actions">
+              <span
+                class="chat material-symbols-outlined"
+                (click)="$event.stopPropagation(); onChat(workspace)"
+              >
+                chat
+              </span>
+
+              <span
+                class="edit material-symbols-outlined"
+                (click)="$event.stopPropagation(); onEdit(workspace)"
+              >
+                edit
+              </span>
+
+              <span
+                class="delete material-symbols-outlined"
+                (click)="$event.stopPropagation(); onDelete(workspace)"
+              >
+                delete
+              </span>
+            </div>
           </div>
         </button>
       </mat-action-list>

@@ -35,7 +35,7 @@ const routes: Routes = [
             (m) => m.KnowledgeBaseModule
           ),
       },
-      { path: '**', redirectTo: 'chats', pathMatch: 'full' },
+      { path: '**', redirectTo: 'workspaces', pathMatch: 'full' },
     ],
   },
   { path: '**', redirectTo: 'auth', pathMatch: 'full' },

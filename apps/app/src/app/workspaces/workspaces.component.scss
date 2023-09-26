@@ -41,7 +41,8 @@
 
       .workspace-item {
         .delete,
-        .edit {
+        .edit,
+        .chat {
           visibility: hidden;
           float: right;
           color: #737373;
@@ -55,6 +56,10 @@
         &:hover .edit {
           visibility: visible;
         }
+
+        &:hover .chat {
+          visibility: visible;
+        }
       }
 
       .button-content {
@@ -65,6 +70,15 @@
           flex: 1;
           max-width: 80%;
           overflow-x: hidden;
+        }
+
+        .actions {
+          display: flex;
+          flex-direction: row;
+          flex: 1;
+          justify-content: space-around;
+          align-items: center;
+          max-width: 30%;
         }
       }
     }

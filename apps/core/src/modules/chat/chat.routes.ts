@@ -7,6 +7,11 @@ const router: Router = express.Router();
 router.post('/', authMiddleware, chatController.create);
 router.get('/', authMiddleware, chatController.find);
 router.get('/:id', authMiddleware, chatController.getById);
+router.get(
+  '/workspaces/:workspaceId',
+  authMiddleware,
+  chatController.getAllFromWorkspace
+);
 router.put('/:id', authMiddleware, chatController.update);
 router.delete('/:id', authMiddleware, chatController.delete);
 
