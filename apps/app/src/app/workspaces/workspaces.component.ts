@@ -57,6 +57,17 @@ export class WorkspacesComponent implements OnInit {
     this.router.navigate(['/workspaces', workspace._id]);
   }
 
+  onEdit(workspace: IWorkspace) {
+    const dialogRef = this.dialog.open(CreateWorkspaceFormComponent, {
+      width: '600px',
+      data: { workspace },
+    });
+    dialogRef.afterClosed().subscribe((res) => {
+      this.onLoadList();
+      this.router.navigate(['/workspaces']);
+    });
+  }
+
   onDelete(workspace: IWorkspace) {
     this.dialog
       .open(DialogComponent, {

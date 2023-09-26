@@ -40,7 +40,8 @@
       height: 100%;
 
       .workspace-item {
-        .delete {
+        .delete,
+        .edit {
           visibility: hidden;
           float: right;
           color: #737373;
@@ -48,6 +49,10 @@
         }
 
         &:hover .delete {
+          visibility: visible;
+        }
+
+        &:hover .edit {
           visibility: visible;
         }
       }

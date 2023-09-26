@@ -28,6 +28,12 @@
             <mat-icon class="icon">workspace</mat-icon>
             <div class="text">{{ workspace.name || 'New workspace' }}</div>
             <span
+              class="edit material-symbols-outlined"
+              (click)="$event.stopPropagation(); onEdit(workspace)"
+            >
+              edit
+            </span>
+            <span
               class="delete material-symbols-outlined"
               (click)="$event.stopPropagation(); onDelete(workspace)"
             >

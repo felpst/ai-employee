@@ -1,7 +1,9 @@
 <div mat-dialog-title class="header">
   <div class="header-description">
     <i class="fa fa-briefcase" aria-hidden="true"></i>
-    <strong class="modal-title">Create a new workspace</strong>
+    <strong class="modal-title"
+      >{{ !!workspace ? 'Edit' : 'Create' }} workspace</strong
+    >
   </div>
 </div>
 
@@ -115,7 +117,7 @@
       type="submit"
       [disabled]="form.invalid || submitting"
     >
-      Create workspace
+      {{ !!workspace ? 'Edit' : 'Create' }} workspace
     </button>
   </mat-dialog-actions>
 </form>
