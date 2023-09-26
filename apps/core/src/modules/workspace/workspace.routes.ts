@@ -13,6 +13,7 @@ router.post(
   workspaceController.create
 );
 router.get('/', authMiddleware, workspaceController.find);
+router.get('/user', authMiddleware, workspaceController.findByUser);
 router.get('/:id', authMiddleware, workspaceController.getById);
 router.put('/:id', authMiddleware, workspaceController.update);
 router.delete('/:id', authMiddleware, workspaceController.delete);

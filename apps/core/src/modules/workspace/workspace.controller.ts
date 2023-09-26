@@ -34,6 +34,23 @@ export class WorkspaceController extends ModelController<typeof Workspace> {
       next(error);
     }
   }
+
+  public async findByUser(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const userId = req['userId'];
+      const sort = (req.query.sort as string) || [];
+      const list = await Workspace.find({ users: { $in: [userId] } }).sort(
+        sort
+      );
+      res.json(list);
+    } catch (error) {
+      next(error);
+    }
+  }
 }
 
 export default new WorkspaceController();

@@ -36,9 +36,9 @@ export class WorkspacesService {
   list(): Observable<Map<string, IWorkspace>> {
     return new Observable((observer) => {
       (
-        this.coreApiService.get(`${this.route}?sort=-createdAt`) as Observable<
-          IWorkspace[]
-        >
+        this.coreApiService.get(`${this.route}/user`, {
+          params: { sort: '-createdAt' },
+        }) as Observable<IWorkspace[]>
       ).subscribe({
         next: (workspaces: IWorkspace[]) => {
           workspaces.forEach((chat) => this.workspaces.set(chat._id, chat));
