@@ -1,0 +1,123 @@
+<div mat-dialog-title class="header">
+  <div class="header-description">
+    <i class="fa fa-briefcase" aria-hidden="true"></i>
+    <strong class="modal-title"
+      >{{ !!workspace ? 'Edit' : 'Create' }} workspace</strong
+    >
+  </div>
+</div>
+
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+  <mat-dialog-content class="container">
+    <div>
+      <table>
+        <tr>
+          <td><label for="name">Name</label></td>
+          <td>
+            <input
+              type="text"
+              id="name"
+              formControlName="name"
+              placeholder="Name of your workspace"
+            />
+            <div *ngIf="form.get('name')?.invalid && form.get('name')?.touched">
+              <small
+                class="error"
+                *ngIf="form.get('name')?.errors?.['required']"
+                >Name is required.</small
+              >
+              <small
+                class="error"
+                *ngIf="form.get('name')?.errors?.['minlength']"
+                >Name must be at least 6 characters long.</small
+              >
+            </div>
+          </td>
+        </tr>
+
+        <tr>
+          <td><label for="description">Description</label></td>
+          <td>
+            <textarea
+              name="description"
+              id="description"
+              type="text"
+              class="description-style"
+              placeholder="A succinct description of what your work environment is about, providing important information about the business"
+              formControlName="description"
+            ></textarea>
+            <div
+              *ngIf="
+                form.get('description')?.invalid &&
+                form.get('description')?.touched
+              "
+            >
+              <small
+                class="error"
+                *ngIf="form.get('description')?.errors?.['required']"
+                >Description is required.</small
+              >
+              <small
+                class="error"
+                *ngIf="form.get('description')?.errors?.['description']"
+                >Description is invalid.</small
+              >
+            </div>
+          </td>
+        </tr>
+
+        <tr *ngIf="users.length">
+          <td>
+            <label for="users">Users</label>
+          </td>
+          <td>
+            <select formControlName="selected" (change)="onSelectUser($event)">
+              <option value=""></option>
+              <option *ngFor="let user of users" [value]="user._id">
+                {{ user.name | uppercase }}
+              </option>
+            </select>
+          </td>
+        </tr>
+      </table>
+
+      <div *ngIf="showCreateError" class="registerError">
+        <span class="error bold">
+          There were some errors when registering your workspace...
+        </span>
+        <ul>
+          <li *ngFor="let error of errors">
+            <span class="error">{{ error }}</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div *ngIf="selected.length">
+      <span class="bold">Users selected</span>
+      <ul>
+        <li *ngFor="let user of selected" class="selectedUsers">
+          <span>{{ user.name | uppercase }}</span>
+          <i
+            class="fa fa-trash trash"
+            aria-hidden="true"
+            (click)="onUnmarkingUser(user._id)"
+            title="Remove user"
+          ></i>
+        </li>
+      </ul>
+    </div>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close>Cancel</button>
+    <button
+      mat-raised-button
+      color="primary"
+      type="submit"
+      [disabled]="form.invalid || submitting"
+    >
+      {{ !!workspace ? 'Edit' : 'Create' }} workspace
+    </button>
+  </mat-dialog-actions>
+</form>
