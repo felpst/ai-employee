@@ -10,7 +10,8 @@ const schema = new Schema<IChat>({
   summary: {
     type: String,
   },
-  company: { type: Schema.Types.ObjectId, ref: 'Company', required: true },
+  company: { type: Schema.Types.ObjectId, ref: 'Company', required: false },
+  workspace: { type: Schema.Types.ObjectId, ref: 'Workspace', required: true },
   ...defaultSchemaProps,
 });
 triggers(schema);

@@ -1,6 +1,29 @@
 <div class="chat">
   <div class="messages" #chatContent>
     <div class="messages-wrapper">
+      <!-- Skeleton loader -->
+      <div class="skeleton" *ngIf="chatService.loadingMessages">
+        <ng-container *ngFor="let _ of [].constructor(15)">
+          <ngx-skeleton-loader
+            class="message"
+            style="height: 40px; width: 95%; padding: 10px"
+            appearance="line"
+            animation="pulse"
+          />
+        </ng-container>
+      </div>
+
+      <!-- No messages -->
+      <div
+        class="no-messages"
+        *ngIf="
+          !chatService.loadingMessages && chatService.messages.length === 0
+        "
+      >
+        No messages yet. Start a conversation by typing a message below.
+      </div>
+
+      <!-- Messages -->
       <div
         class="message-wrapper"
         [ngClass]="{
@@ -92,28 +115,6 @@
             ></i>
           </div>
         </ng-template>
-      </div>
-
-      <!-- Skeleton loader -->
-      <div class="skeleton" *ngIf="chatService.loadingMessages">
-        <ng-container *ngFor="let _ of [].constructor(15)">
-          <ngx-skeleton-loader
-            class="message"
-            style="height: 40px; width: 95%; padding: 10px"
-            appearance="line"
-            animation="pulse"
-          />
-        </ng-container>
-      </div>
-
-      <!-- No messages -->
-      <div
-        class="no-messages"
-        *ngIf="
-          !chatService.loadingMessages && chatService.messages.length === 0
-        "
-      >
-        No messages yet. Start a conversation by typing a message below.
       </div>
 
       <!-- Tokens -->

@@ -16,15 +16,34 @@ export class ChatsService {
     private authService: AuthService
   ) {}
 
-  create(): Observable<IChat> {
+  create(workspaceId: string): Observable<IChat> {
     const company = this.authService.company?._id;
-    return this.coreApiService.post('chats', { company }) as Observable<IChat>;
+    const workspace = workspaceId;
+    return this.coreApiService.post('chats', {
+      company,
+      workspace,
+    }) as Observable<IChat>;
   }
 
   list(): Observable<Map<string, IChat>> {
     return new Observable((observer) => {
       (
         this.coreApiService.get('chats?sort=-createdAt') as Observable<IChat[]>
+      ).subscribe({
+        next: (chats: IChat[]) => {
+          chats.forEach((chat) => this.chats.set(chat._id, chat));
+          observer.next(this.chats);
+        },
+      });
+    });
+  }
+
+  getAllFromWorkspace(workspaceId: string): Observable<Map<string, IChat>> {
+    return new Observable((observer) => {
+      (
+        this.coreApiService.get(
+          `chats/workspaces/${workspaceId}`
+        ) as Observable<IChat[]>
       ).subscribe({
         next: (chats: IChat[]) => {
           chats.forEach((chat) => this.chats.set(chat._id, chat));
