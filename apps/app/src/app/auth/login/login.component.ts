@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { CookieService } from 'ngx-cookie-service';
+import { NotificationsService } from '../../services/notifications/notifications.service';
 import { AuthService } from '../auth.service';
 
 @Component({
@@ -19,6 +20,7 @@ export class LoginComponent {
   constructor(
     private formBuilder: FormBuilder,
     private authService: AuthService,
+    private notificationsService: NotificationsService,
     private router: Router,
     cookieService: CookieService
   ) {
@@ -42,8 +44,9 @@ export class LoginComponent {
 
     // Process login
     this.authService.login(this.loginForm.value).subscribe({
-      next: () => {
+      next: ({ name }) => {
         this.router.navigate(['/']);
+        this.notificationsService.show(`Welcome, ${name}!`);
       },
       error: () => {
         this.loginForm.reset();

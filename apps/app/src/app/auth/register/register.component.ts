@@ -23,9 +23,9 @@ export class RegisterComponent {
       '',
       [
         Validators.required,
-        Validators.minLength(8),
+        Validators.minLength(6),
         Validators.pattern(
-          /^(?=.*[A-Z])(?=.*[!@#$&*.,])(?=.*[0-9])(?=.*[a-z]).{8,}$/
+          /^(?=.*[A-Z])(?=.*[!@#$&*.,])(?=.*[0-9])(?=.*[a-z]).{6,}$/
         ),
       ],
     ],
@@ -102,7 +102,7 @@ export class RegisterComponent {
     const { confirm, ...rest } = this.registerForm.value;
 
     // Process register
-    this.usersService.createCommon({ ...rest }).subscribe({
+    this.usersService.register({ ...rest }).subscribe({
       next: () => {
         const { email, password } = rest;
         // Process login

@@ -14,8 +14,6 @@ export class EmailUtils {
       ...mailOptions,
       from: credentials.user,
       replyTo: credentials.user,
-      subject: 'Welcome to Cognum!',
-      text: "Welcome to COGNUM. Let's go together in search of a promising future with AI's. This is an automatic email from the system, you do not need to respond to it.",
     };
     return await transporter.sendMail(options);
   }
