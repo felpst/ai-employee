@@ -6,6 +6,11 @@ const router: Router = express.Router();
 
 router.post('/', authMiddleware, knowledgeController.create);
 router.get('/', authMiddleware, knowledgeController.find);
+router.get(
+  '/workspaces/:workspaceId',
+  authMiddleware,
+  knowledgeController.getAllFromWorkspace
+);
 router.get('/:id', authMiddleware, knowledgeController.getById);
 router.put('/:id', authMiddleware, knowledgeController.update);
 router.delete('/:id', authMiddleware, knowledgeController.delete);

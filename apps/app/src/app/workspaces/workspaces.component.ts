@@ -62,6 +62,11 @@ export class WorkspacesComponent implements OnInit {
     this.router.navigate(['/chats', _id]);
   }
 
+  onKnowledge(workspace: IWorkspace) {
+    const { _id } = workspace;
+    this.router.navigate(['/knowledge-base', _id]);
+  }
+
   onEdit(workspace: IWorkspace) {
     const dialogRef = this.dialog.open(CreateWorkspaceFormComponent, {
       width: '600px',

@@ -26,18 +26,30 @@
         >
           <div class="button-content">
             <mat-icon class="icon">workspace</mat-icon>
-            <div class="text">{{ workspace.name || 'New workspace' }}</div>
+            <div class="text" title="{{ workspace.name }}">
+              {{ workspace.name || 'New workspace' }}
+            </div>
             <div class="actions">
               <span
                 class="chat material-symbols-outlined"
                 (click)="$event.stopPropagation(); onChat(workspace)"
+                title="Chats"
               >
                 chat
               </span>
 
               <span
+                class="database material-symbols-outlined"
+                (click)="$event.stopPropagation(); onKnowledge(workspace)"
+                title="Knowledge base"
+              >
+                database
+              </span>
+
+              <span
                 class="edit material-symbols-outlined"
                 (click)="$event.stopPropagation(); onEdit(workspace)"
+                title="Edit"
               >
                 edit
               </span>
@@ -45,6 +57,7 @@
               <span
                 class="delete material-symbols-outlined"
                 (click)="$event.stopPropagation(); onDelete(workspace)"
+                title="Delete"
               >
                 delete
               </span>
