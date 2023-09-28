@@ -43,6 +43,8 @@ export class ChatService {
 
   private onOpen(event: any) {
     console.log('Connected to WebSocket server.');
+    this.loadingMessages = true;
+    this.messages = [];
   }
 
   private onClose(event: any) {

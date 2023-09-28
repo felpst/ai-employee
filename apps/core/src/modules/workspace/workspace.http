@@ -1,0 +1,57 @@
+@baseUrl=http://localhost:3000
+@apiRoute=workspaces
+
+### login
+
+# @name LoginAPI
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{ "email": "{{email}}", "password": "{{password}}" }
+
+### authToken
+
+@$authToken = {{LoginAPI.response.headers.X-Auth-Token}}
+
+### Create ###
+
+POST {{baseUrl}}/{{apiRoute}}
+Content-Type: application/json
+Authorization: Bearer {{$authToken}}
+
+{
+  "name": "Name Test",
+  "description": "Description Test",
+  "users": [
+    "64f639468e8b9083fd223d47",
+    "6508b5f675f3ccdaa673fd76",
+    "650b1420991ef2750435cf05"
+  ]
+}
+
+### Get all ###
+# @name ListAPI
+
+GET {{baseUrl}}/{{apiRoute}}
+Authorization: Bearer {{$authToken}}
+
+### Get a Workspace by ID ###
+@id = {{ListAPI.response.body.0._id}}
+
+GET {{baseUrl}}/{{apiRoute}}/{{id}}
+Authorization: Bearer {{$authToken}}
+
+### Update a Workspace ###
+
+PUT {{baseUrl}}/{{apiRoute}}/{{id}}
+Content-Type: application/json
+Authorization: Bearer {{$authToken}}
+
+{
+  "description": "Description Test - Edited"
+}
+
+### Delete ###
+
+DELETE {{baseUrl}}/{{apiRoute}}/{{id}}
+Authorization: Bearer {{$authToken}}

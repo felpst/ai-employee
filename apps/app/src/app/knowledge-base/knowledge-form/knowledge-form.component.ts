@@ -5,7 +5,7 @@ import {
   MatDialog,
   MatDialogRef,
 } from '@angular/material/dialog';
-import { IKnowledge } from '@cognum/interfaces';
+import { IKnowledge, IWorkspace } from '@cognum/interfaces';
 import { NotificationsService } from '../../services/notifications/notifications.service';
 import { DialogComponent } from '../../shared/dialog/dialog.component';
 import { KnowledgeBaseService } from '../knowledge-base.service';
@@ -31,6 +31,7 @@ export class KnowledgeFormComponent {
     @Inject(MAT_DIALOG_DATA)
     private data: {
       knowledge: IKnowledge;
+      workspace: IWorkspace;
     }
   ) {
     this.form = this.formBuilder.group({
@@ -52,10 +53,13 @@ export class KnowledgeFormComponent {
       });
     } else {
       const data = this.form.value;
-      this.knowledgeBaseService.create(data).subscribe((res) => {
-        this.notificationsService.show('Knowledge created!');
-        this.dialogRef.close(res);
-      });
+      const { _id } = this.data.workspace;
+      this.knowledgeBaseService
+        .create({ ...data, workspace: _id })
+        .subscribe((res) => {
+          this.notificationsService.show('Knowledge created!');
+          this.dialogRef.close(res);
+        });
     }
   }
 

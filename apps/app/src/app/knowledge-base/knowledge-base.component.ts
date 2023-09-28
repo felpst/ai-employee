@@ -1,6 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { IKnowledge } from '@cognum/interfaces';
+import { ActivatedRoute } from '@angular/router';
+import { IKnowledge, IWorkspace } from '@cognum/interfaces';
+import { WorkspacesService } from '../workspaces/workspaces.service';
 import { KnowledgeBaseService } from './knowledge-base.service';
 import { KnowledgeFormComponent } from './knowledge-form/knowledge-form.component';
 
@@ -9,27 +11,37 @@ import { KnowledgeFormComponent } from './knowledge-form/knowledge-form.componen
   templateUrl: './knowledge-base.component.html',
   styleUrls: ['./knowledge-base.component.scss'],
 })
-export class KnowledgeBaseComponent implements OnInit {
+export class KnowledgeBaseComponent {
+  workspace!: IWorkspace;
   knowledgeBase: IKnowledge[] = [];
   knowledgeBaseFiltered: IKnowledge[] = [];
   searchText = '';
 
   constructor(
+    private route: ActivatedRoute,
     private knowledgeBaseService: KnowledgeBaseService,
+    private workspacesService: WorkspacesService,
     private dialog: MatDialog
-  ) {}
+  ) {
+    this.route.params.subscribe((params) => {
+      this.getWorkspace(params['workspaceId']);
+      this.loadKnowledgeBase(params['workspaceId']);
+    });
+  }
 
-  ngOnInit(): void {
-    this.loadKnowledgeBase();
+  getWorkspace(workspaceId: string) {
+    this.workspacesService
+      .get(workspaceId)
+      .subscribe((workspace) => (this.workspace = workspace));
   }
 
   onForm(knowledge?: IKnowledge) {
     const dialogRef = this.dialog.open(KnowledgeFormComponent, {
       width: '640px',
-      data: { knowledge },
+      data: { knowledge, workspace: this.workspace },
     });
     dialogRef.afterClosed().subscribe((res) => {
-      this.loadKnowledgeBase();
+      this.loadKnowledgeBase(this.workspace._id);
     });
   }
 
@@ -45,10 +57,12 @@ export class KnowledgeBaseComponent implements OnInit {
     this.knowledgeBaseFiltered = this.knowledgeBase;
   }
 
-  loadKnowledgeBase() {
-    this.knowledgeBaseService.list().subscribe((res) => {
-      this.knowledgeBase = res;
-      this.clearSearch();
-    });
+  loadKnowledgeBase(workspaceId: string) {
+    return this.knowledgeBaseService
+      .getAllFromWorkspace(workspaceId)
+      .subscribe((knowledges) => {
+        this.knowledgeBase = knowledges;
+        this.clearSearch();
+      });
   }
 }
