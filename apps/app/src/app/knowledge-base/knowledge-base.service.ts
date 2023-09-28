@@ -33,6 +33,12 @@ export class KnowledgeBaseService {
     });
   }
 
+  getAllFromWorkspace(workspaceId: string): Observable<IKnowledge[]> {
+    return this.coreApiService.get(
+      `${this.route}/workspaces/${workspaceId}`
+    ) as Observable<IKnowledge[]>;
+  }
+
   update(item: IKnowledge): Observable<IKnowledge> {
     return this.coreApiService.put(
       `${this.route}/${item._id}`,

@@ -4,7 +4,7 @@ import { KnowledgeBaseComponent } from './knowledge-base.component';
 
 const routes: Routes = [
   {
-    path: '',
+    path: ':workspaceId',
     component: KnowledgeBaseComponent,
   },
 ];
