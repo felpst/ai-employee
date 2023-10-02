@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class CoreApiService {
-  private _url: string = env.apis.core.url;
+  private _url = env.apis.core.url;
 
   constructor(private http: HttpClient) {}
 
