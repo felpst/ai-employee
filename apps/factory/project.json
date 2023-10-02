@@ -68,7 +68,12 @@
           "browserTarget": "factory:build:development"
         }
       },
-      "defaultConfiguration": "development"
+      "defaultConfiguration": "development",
+      "options": {
+        "ssl": true,
+        "sslKey": "apps/factory/.ionic/ssl/key.pem",
+        "sslCert": "apps/factory/.ionic/ssl/cert.pem"
+      }
     },
     "extract-i18n": {
       "executor": "@angular-devkit/build-angular:extract-i18n",
