@@ -1,6 +1,8 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
+import { AuthService } from '../../core/services';
 
 @Component({
   selector: 'cognum-login',
@@ -16,7 +18,11 @@ export class LoginPage implements AfterViewInit {
   });
   showLoginError = false;
 
-  constructor(private formBuilder: FormBuilder) {
+  constructor(
+    private formBuilder: FormBuilder,
+    private authService: AuthService,
+    private router: Router
+  ) {
     this.loginForm.valueChanges.subscribe(() => {
       this.showLoginError = false;
     });
@@ -31,8 +37,16 @@ export class LoginPage implements AfterViewInit {
   // Function to handle form submission
   onSubmit() {
     if (!this.loginForm.valid) return;
-    const values = this.loginForm.value;
-    console.log({ values });
-    this.showLoginError = true;
+    return this.authService.login(this.loginForm.value).subscribe({
+      next: ({ name }) => {
+        console.log({ name });
+        this.router.navigate(['/']);
+        // this.notificationsService.show(`Welcome, ${name}!`);
+      },
+      error: () => {
+        this.loginForm.reset();
+        this.showLoginError = true;
+      },
+    });
   }
 }
