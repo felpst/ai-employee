@@ -25,7 +25,7 @@ export class AuthGuard {
         },
         error: () => {
           console.error('Invalid token');
-          this.router.navigate(['auth']);
+          this.router.navigate(['login']);
           observer.next(false);
         },
       });
