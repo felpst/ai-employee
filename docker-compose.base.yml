@@ -1,0 +1,22 @@
+version: '3'
+
+services:
+  nx-app-base:
+    restart: always
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - DEV_PLATFORM=DOCKER
+      - AUTH_SECRET_KEY="***REMOVED***"
+      - MONGO_URL="mongodb+srv://cognum:***REMOVED***@cluster-core.rm4n7rx.mongodb.net/?retryWrites=true&w=majority"
+      - OPENAI_API_KEY="***REMOVED***"
+      - SERPAPI_API_KEY="***REMOVED***"
+      - PROD="false"
+      - PORT=3000
+      - CORS_ORIGIN='["https://localhost:4200"]'
+      - EMAIL_USER=""
+      - EMAIL_PASSWORD=""
+    volumes:
+      - ./:/app
+      - mono-node-modules:/app/node_modules

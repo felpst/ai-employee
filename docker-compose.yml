@@ -1,0 +1,30 @@
+version: "3"
+
+services:
+
+  frontend:
+    extends:
+      file: docker-compose.base.yml
+      service: nx-app-base
+    command: npm run serve:app
+    ports:
+      - 3031:3000
+
+  core:
+    extends:
+      file: docker-compose.base.yml
+      service: nx-app-base
+    command: npm run serve:core      
+    ports:
+      - 3032:3000
+
+  chat:
+    extends:
+      file: docker-compose.base.yml
+      service: nx-app-base
+    command: npm run serve:chat
+    ports:
+      - 3033:3000
+  
+volumes:
+  mono-node-modules: null

@@ -7,7 +7,10 @@
     "core:build": "nx build core --prod --generatePackageJson && xcopy .\\apps\\core\\app.yaml .\\dist\\apps\\core\\app.yaml /F /Y",
     "core:deploy": "npm run core:build && gcloud app deploy dist/apps/core/app.yaml",
     "chat:build": "nx build chat --prod --generatePackageJson && xcopy .\\apps\\chat\\chat.yaml .\\dist\\apps\\chat\\chat.yaml /F /Y",
-    "chat:deploy": "npm run chat:build && gcloud app deploy dist/apps/chat/chat.yaml"
+    "chat:deploy": "npm run chat:build && gcloud app deploy dist/apps/chat/chat.yaml",
+    "serve:chat": "nx serve chat --host=0.0.0.0",
+    "serve:core": "nx serve core --host=0.0.0.0",
+    "serve:app": "nx serve app --host=0.0.0.0"
   },
   "private": true,
   "dependencies": {
