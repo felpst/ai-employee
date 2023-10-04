@@ -1,74 +1,81 @@
-<div class="background">
-  <div class="login-container">
-    <div class="logo font-outfit">
-      <mat-icon svgIcon="cognum"></mat-icon>
-      COGNUM
+<div class="signin-container">
+  <div class="form-container">
+    <div class="margin">
+      <div class="title-container">
+        <img
+          src="../../../assets/icons/cognum_filled.svg"
+          alt="Cognum"
+          class="logo"
+        />
+        <label class="company-style">cognum</label>
+      </div>
+
+      <div class="help-container">
+        <p>Sign in to Cognum</p>
+
+        <small>We suggest using the email address you use at work</small>
+      </div>
     </div>
 
-    <div class="form-container">
-      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-        <table>
-          <tr>
-            <td><label for="email">Email</label></td>
-            <td>
-              <input type="text" id="email" formControlName="email" />
-              <div
-                *ngIf="
-                  loginForm.get('email')?.invalid &&
-                  loginForm.get('email')?.touched
-                "
-              >
-                <small
-                  class="error"
-                  *ngIf="loginForm.get('email')?.errors?.['required']"
-                  >Email is required.</small
-                >
-                <small
-                  class="error"
-                  *ngIf="loginForm.get('email')?.errors?.['email']"
-                  >Email is invalid.</small
-                >
-              </div>
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <label for="password">Password</label>
-            </td>
-            <td>
-              <input type="password" id="password" formControlName="password" />
-              <div
-                *ngIf="
-                  loginForm.get('password')?.invalid &&
-                  loginForm.get('password')?.touched
-                "
-              >
-                <small
-                  class="error"
-                  *ngIf="loginForm.get('password')?.errors?.['required']"
-                  >Password is required.</small
-                >
-                <small
-                  class="error"
-                  *ngIf="loginForm.get('password')?.errors?.['minlength']"
-                >
-                  Password must be at least 6 characters long.
-                </small>
-              </div>
-              <div class="error" *ngIf="showLoginError">
-                Email or password is incorrect.
-              </div>
-            </td>
-          </tr>
-        </table>
-
-        <button type="submit" [disabled]="loginForm.invalid">Login</button>
-      </form>
-
-      <div class="form-bottom">
-        <span aria-level="5">New to Cognum?</span>
-        <a href="/auth/register">Register</a>
+    <form class="login-form" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+      <div class="mat-item-wrap">
+        <mat-form-field class="mat-input-style">
+          <mat-label>Email</mat-label>
+          <input
+            type="email"
+            matInput
+            formControlName="email"
+            placeholder="name@work-email.com"
+            #inputEmail
+          />
+          <mat-error *ngIf="hasInputError('email', 'required')">
+            Email is required.
+          </mat-error>
+          <mat-error *ngIf="hasInputError('email', 'email')">
+            Email is <strong>invalid</strong>
+          </mat-error>
+        </mat-form-field>
       </div>
+
+      <div class="mat-item-wrap">
+        <mat-form-field class="mat-input-style">
+          <mat-label>Password</mat-label>
+          <input
+            type="password"
+            matInput
+            formControlName="password"
+            placeholder="Your password"
+          />
+          <mat-error *ngIf="hasInputError('password', 'required')">
+            Password is required.
+          </mat-error>
+          <mat-error *ngIf="hasInputError('password', 'minlength')">
+            Password must be at <strong>least 6 characters long.</strong>
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <div slot="error" class="errorContainer" *ngIf="showLoginError">
+        <small>Email or password is incorrect.</small>
+      </div>
+
+      <button
+        type="submit"
+        expand="full"
+        color="#f0f0f0"
+        class="font button-submit"
+        [disabled]="loginForm.invalid"
+      >
+        Sign In with Email
+      </button>
+    </form>
+
+    <div class="footer">
+      <label>
+        By clicking “Continue with Apple/Google/Email/SAML” above, you
+        acknowledge that you have read and understood, and agree to Notion's
+        Terms & Conditions and Privacy Policy.
+      </label>
     </div>
   </div>
 </div>
