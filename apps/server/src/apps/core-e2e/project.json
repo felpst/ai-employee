@@ -1,6 +1,6 @@
 {
   "name": "core-e2e",
-  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "$schema": "../../../../../node_modules/nx/schemas/project-schema.json",
   "implicitDependencies": ["core"],
   "targets": {
     "e2e": {

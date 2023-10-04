@@ -1,7 +1,7 @@
 /* eslint-disable */
 export default {
   displayName: 'chat-e2e',
-  preset: '../..//jest.preset.js',
+  preset: '../../../../..//jest.preset.js',
   setupFiles: ['<rootDir>/src/test-setup.ts'],
   testEnvironment: 'node',
   transform: {
