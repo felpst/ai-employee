@@ -19,17 +19,11 @@ services:
     command: npm run serve:core
     ports:
       - 3000:3000
-    environment:
-      - PROD="false"
-      - PORT=3000
-      - OPENAI_API_KEY="***REMOVED***"
-      - MONGO_URL="mongodb+srv://cognum:***REMOVED***@cluster-core.rm4n7rx.mongodb.net/?retryWrites=true&w=majority"
-      - AUTH_SECRET_KEY="***REMOVED***"
-      - CORS_ORIGIN=["https://localhost:4200", "https://localhost:3000", "https://localhost:27017"]
-      - EMAIL_USER=""
-      - EMAIL_PASSWORD=""
+    depends_on:
+      - mongodb
     networks:
       - cognum_network
+      
 
   chat:
     extends:
@@ -38,11 +32,8 @@ services:
     command: npm run serve:chat
     ports:
       - 3033:3033
-    environment:
-      - AUTH_SECRET_KEY="***REMOVED***"
-      - MONGO_URL="mongodb+srv://cognum:***REMOVED***@cluster-core.rm4n7rx.mongodb.net/?retryWrites=true&w=majority"
-      - OPENAI_API_KEY="***REMOVED***"
-      - SERPAPI_API_KEY="***REMOVED***"
+    depends_on:
+      - mongodb      
     networks:
       - cognum_network
 
@@ -50,10 +41,6 @@ services:
     image: mongo:7-jammy
     ports:
       - 27017:27017
-    environment:
-      - MONGO_URL="mongodb+srv://cognum:***REMOVED***@cluster-core.rm4n7rx.mongodb.net/?retryWrites=true&w=majority"
-      - EMAIL_USER=""
-      - EMAIL_PASSWORD=""
     networks:
       - cognum_network
 
