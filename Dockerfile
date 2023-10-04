@@ -15,4 +15,14 @@ RUN npm install
 
 EXPOSE 3000
 
-
+ENV PROD="false"
+ENV PORT=3000
+ENV OPENAI_API_KEY="***REMOVED***"
+ENV MONGO_URL="mongodb+srv://cognum:***REMOVED***@cluster-core.rm4n7rx.mongodb.net/?retryWrites=true&w=majority"
+ENV AUTH_SECRET_KEY="***REMOVED***"
+ENV CORS_ORIGIN=["https://localhost:4200"]
+ENV EMAIL_USER=""
+ENV EMAIL_PASSWORD=""
+ENV SERPAPI_API_KEY="***REMOVED***"
+ENV DB_NAME="Cluster-core"
+ENV DB_PASSWORD="***REMOVED***"
