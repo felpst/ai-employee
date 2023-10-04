@@ -38,6 +38,14 @@ export class LoginComponent {
     }
   }
 
+  hasInputError(inputName: string, errorName: string) {
+    return (
+      this.loginForm.get(inputName)?.invalid &&
+      this.loginForm.get(inputName)?.touched &&
+      this.loginForm.get(inputName)?.hasError(errorName)
+    );
+  }
+
   // Function to handle form submission
   onSubmit() {
     if (!this.loginForm.valid) return;
