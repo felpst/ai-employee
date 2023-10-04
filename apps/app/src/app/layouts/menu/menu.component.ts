@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Router } from '@angular/router';
+import { CookieService } from 'ngx-cookie-service';
 import { AuthService } from '../../auth/auth.service';
 
 @Component({
@@ -14,7 +15,8 @@ export class MenuComponent {
     iconRegistry: MatIconRegistry,
     sanitizer: DomSanitizer,
     private router: Router,
-    private authService: AuthService
+    private authService: AuthService,
+    private cookieService: CookieService
   ) {
     iconRegistry.addSvgIcon(
       'cognum',
@@ -30,6 +32,7 @@ export class MenuComponent {
     this.authService.logout().subscribe({
       next: () => {
         this.router.navigate(['/auth']);
+        this.cookieService.delete('token');
       },
     });
   }
