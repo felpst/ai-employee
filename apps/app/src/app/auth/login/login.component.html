@@ -38,7 +38,7 @@
       </div>
 
       <div class="mat-item-wrap">
-        <mat-form-field class="mat-input-style">
+        <mat-form-field class="mat-input-style remove-bottom">
           <mat-label>Password</mat-label>
           <input
             type="password"
@@ -53,6 +53,14 @@
             Password must be at <strong>least 6 characters long.</strong>
           </mat-error>
         </mat-form-field>
+        <div class="remember-container">
+          <mat-checkbox formControlName="remember" color="primary"
+            ><label class="font">Remember me</label></mat-checkbox
+          >
+          <span class="font forgot" (click)="onForgot()"
+            >Forgot your password? Click here</span
+          >
+        </div>
       </div>
 
       <div slot="error" class="errorContainer" *ngIf="showLoginError">
@@ -61,13 +69,15 @@
 
       <button
         type="submit"
-        expand="full"
-        color="#f0f0f0"
         class="font button-submit"
         [disabled]="loginForm.invalid"
       >
         Sign In with Email
       </button>
+
+      <span class="font register" (click)="onRegister()"
+        >New here? Register!</span
+      >
     </form>
 
     <div class="footer">
