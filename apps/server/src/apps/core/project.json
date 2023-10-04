@@ -1,7 +1,7 @@
 {
   "name": "core",
   "$schema": "../../../../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "apps/core/src",
+  "sourceRoot": "apps/server/src/apps/core/src",
   "projectType": "application",
   "targets": {
     "build": {
@@ -10,12 +10,12 @@
       "defaultConfiguration": "production",
       "options": {
         "platform": "node",
-        "outputPath": "dist/apps/core",
+        "outputPath": "dist/apps/server/src/apps/core",
         "format": ["cjs"],
         "bundle": false,
-        "main": "apps/core/src/main.ts",
-        "tsConfig": "apps/core/tsconfig.app.json",
-        "assets": ["apps/core/src/assets"],
+        "main": "apps/server/src/apps/core/src/main.ts",
+        "tsConfig": "apps/server/src/apps/core/tsconfig.app.json",
+        "assets": ["apps/server/src/apps/core/src/assets"],
         "generatePackageJson": true,
         "esbuildOptions": {
           "sourcemap": true,
@@ -55,14 +55,14 @@
       "executor": "@nx/linter:eslint",
       "outputs": ["{options.outputFile}"],
       "options": {
-        "lintFilePatterns": ["apps/core/**/*.ts"]
+        "lintFilePatterns": ["apps/src/apps/server/core/**/*.ts"]
       }
     },
     "test": {
       "executor": "@nx/jest:jest",
       "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
       "options": {
-        "jestConfig": "apps/core/jest.config.ts",
+        "jestConfig": "apps/server/src/apps/core/jest.config.ts",
         "passWithNoTests": true
       },
       "configurations": {
