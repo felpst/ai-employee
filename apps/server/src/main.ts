@@ -1,14 +1,72 @@
-import express from 'express';
+import { DatabaseHelper } from '@cognum/helpers';
+import cookieParser from 'cookie-parser';
+import cors from 'cors';
+import 'dotenv/config';
+import express, { Application, Request, Response } from 'express';
+import errorHandler from './middlewares/error.handler';
+import router from './routes';
+import { ChatServer } from './chat/servers/chat.server';
 
-const host = process.env.HOST ?? 'localhost';
-const port = process.env.PORT ? Number(process.env.PORT) : 3000;
+class App {
+  private app: Application;
+  private port: string;
 
-const app = express();
+  constructor(port: string) {
+    this.app = express();
+    this.port = port;
+    this.configureMiddlewares();
+    this.configureRoutes();
+    this.handleNotFoundRoutes();
+    this.handleErrors();
+  }
 
-app.get('/', (req, res) => {
-  res.send({ message: 'Hello API' });
-});
+  private configureMiddlewares(): void {
+    this.app.use(express.json());
+    const corsOptions = {
+      origin: JSON.parse(process.env.CORS_ORIGIN || '[]'),
+      credentials: true,
+    };
+    this.app.use(cors(corsOptions));
+    this.app.use(cookieParser());
+    this.app.use(express.raw({ type: 'image/*', limit: '10mb' }));
+  }
 
-app.listen(port, host, () => {
-  console.log(`[ ready ] http://${host}:${port}`);
-});
+  private configureRoutes(): void {
+    this.app.use(router);
+  }
+
+  private handleNotFoundRoutes(): void {
+    this.app.use((_req: Request, res: Response) => {
+      res.status(404).json({ error: 'Route not found' });
+    });
+  }
+
+  private handleErrors(): void {
+    this.app.use(errorHandler);
+  }
+
+  public start(): void {
+    // Initialize database connection
+    DatabaseHelper.connect()
+      .then(() => {
+        // Database connection successful, start the server
+        const chatServer = new ChatServer();
+        chatServer.run();
+
+        this.app.listen(this.port, () => {
+          console.log(`Server is running on port ${this.port}`);
+        });
+      })
+      .catch((error) => {
+        // Database connection failed, log the error and exit the application
+        console.error('Failed to connect to the database:', error);
+        process.exit(1);
+      });
+  }
+}
+
+const port: string = process.env.PORT;
+const app = new App(port);
+app.start();
+
+export default app;
