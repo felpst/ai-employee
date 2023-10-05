@@ -51,6 +51,8 @@ class ModelController<T extends Model<any>> {
         const doc = await this.model.create(data);
         docs.push(doc);
       }
+      res.locals.data = docs
+
       res.status(201).json(docs.length > 1 ? docs : docs[0]);
     } catch (error) {
       next(error);
@@ -106,6 +108,7 @@ class ModelController<T extends Model<any>> {
         returnDocument: 'after',
         runValidators: true,
       });
+      res.locals.data = updated
 
       res.json(updated);
     } catch (error) {
@@ -127,6 +130,7 @@ class ModelController<T extends Model<any>> {
         error.status = 404;
         throw error;
       }
+      res.locals.data = deletedTask
 
       res.json(deletedTask);
     } catch (error) {
