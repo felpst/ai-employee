@@ -14,6 +14,8 @@ RUN apk add --no-cache make gcc g++ python3
 RUN npm install
 
 EXPOSE 3000
+EXPOSE 4200
+EXPOSE 3033
 
 ENV PROD="false"
 ENV PORT=3000
