@@ -27,7 +27,7 @@ export class ChatServer {
   private sessions = new Map<string, WebSocketSession>();
 
   private app = express();
-  private port = process.env.PORT || 8080;
+  private port = process.env.PORT_CHAT || 8080;
 
   private httpServer: HTTPServer;
   private webSocketServer: WebSocketServer;
