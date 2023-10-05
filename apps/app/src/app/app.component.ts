@@ -12,6 +12,18 @@ export class AppComponent {
     iconRegistry.addSvgIcon(
       'cognum',
       sanitizer.bypassSecurityTrustResourceUrl('/assets/icons/cognum.svg')
-    );
+    ),
+      iconRegistry.addSvgIcon(
+        'logo',
+        sanitizer.bypassSecurityTrustResourceUrl('/assets/icons/logo.svg')
+      ),
+      iconRegistry.addSvgIcon(
+        'lock',
+        sanitizer.bypassSecurityTrustResourceUrl('/assets/icons/lock.svg')
+      ),
+      iconRegistry.addSvgIcon(
+        'user',
+        sanitizer.bypassSecurityTrustResourceUrl('/assets/icons/user.svg')
+      );
   }
 }
