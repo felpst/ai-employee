@@ -2,7 +2,6 @@ import { ICompany, IMessage, IUser } from '@cognum/interfaces';
 import { AgentActionOutputParser } from 'langchain/agents';
 import {
   BaseChatPromptTemplate,
-  BasePromptTemplate,
   SerializedBasePromptTemplate,
   renderTemplate,
 } from 'langchain/prompts';
@@ -139,7 +138,8 @@ export class AIEmployeePromptTemplate extends BaseChatPromptTemplate {
     return [new HumanMessage(formatted)];
   }
 
-  partial(_values: PartialValues): Promise<BasePromptTemplate> {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  partial(_values: PartialValues): Promise<any> {
     throw new Error('Not implemented');
   }
 
