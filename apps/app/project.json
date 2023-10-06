@@ -123,6 +123,10 @@
       "options": {
         "buildTarget": "app:build"
       }
+    },
+    "docker-build": {
+      "dependsOn": ["build"],
+      "command": "docker build -f apps/app/Dockerfile . -t app"
     }
   }
 }
