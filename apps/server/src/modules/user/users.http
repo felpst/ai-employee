@@ -61,6 +61,10 @@ Content-Type: application/json
   "email": "wermesonrocha2@gmail.com"
 }
 
+### Check token ###
+
+GET {{baseUrl}}/{{apiRoute}}/recovery/651ec6c77e09ea8018dc3400
+
 ### Recovery password ###
 
 PATCH {{baseUrl}}/{{apiRoute}}/recovery/651ec6c77e09ea8018dc3400
