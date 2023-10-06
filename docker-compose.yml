@@ -25,7 +25,7 @@ services:
     networks:
       - cognum_network
     env_file:
-      - .env
+      - ./apps/server/.env
       
 
   mongodb:
