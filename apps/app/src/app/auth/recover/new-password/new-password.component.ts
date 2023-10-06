@@ -5,7 +5,8 @@ import {
   FormGroup,
   Validators,
 } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+import { NotificationsService } from '../../../services/notifications/notifications.service';
 import { UsersService } from '../../../services/users/users.service';
 import { AuthService } from '../../auth.service';
 
@@ -30,13 +31,15 @@ export class RecoverComponent {
   });
   submitting = false;
   showRecoverError = false;
-  errors = [];
+  errors: string[] = [];
 
   constructor(
     private formBuilder: FormBuilder,
     private authService: AuthService,
     private usersService: UsersService,
-    private router: Router
+    private router: Router,
+    private notificationsService: NotificationsService,
+    private route: ActivatedRoute
   ) {
     const controlPass = this.recoverForm.get('password');
     const controlConfirmPass = this.recoverForm.get('confirm');
@@ -63,6 +66,27 @@ export class RecoverComponent {
   }
 
   onSubmit() {
-    console.log(this.recoverForm.value);
+    if (this.recoverForm.valid) {
+      const recoveryId = this.route.snapshot.params['recoveryId'];
+      const passwordControl = this.recoverForm.get('password');
+
+      if (passwordControl) {
+        const password = passwordControl.value;
+        this.authService.updatePassword(recoveryId, password).subscribe(
+          (response) => {
+            console.log('Password updated successfully', response);
+
+            this.router.navigate(['auth/login']);
+
+            this.notificationsService.show('Password recovery successful.');
+          },
+          (error) => {
+            console.error('Password update failed', error);
+            this.showRecoverError = true;
+            this.errors.push('Password update failed. Please try again.');
+          }
+        );
+      }
+    }
   }
 }

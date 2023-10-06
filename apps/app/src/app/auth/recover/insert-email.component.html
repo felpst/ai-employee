@@ -11,7 +11,7 @@
     </div>
   </div>
 
-  <form class="form">
+  <form [formGroup]="insertEmailForm" (ngSubmit)="onSubmit()" class="form">
     <div class="input">
       <mat-icon class="user" svgIcon="user"></mat-icon>
       <input
@@ -21,7 +21,13 @@
         type="email"
       />
     </div>
-    <button type="submit">Reset Password</button>
+    <button
+      type="submit"
+      [disabled]="submitSuccess"
+      [ngClass]="{ 'inactive-button': submitSuccess }"
+    >
+      Submit
+    </button>
   </form>
 
   <footer>

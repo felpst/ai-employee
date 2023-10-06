@@ -82,7 +82,7 @@ export class UserController extends ModelController<typeof User> {
           }
         );
       }
-      const link = `${process.env.APP_URL}/recovery/${doc._id}`;
+      const link = `${process.env.APP_URL}/auth/recovery/${doc._id}`;
       const html = passwordResetEmailTemplate
         .replace('{{name}}', user.name)
         .replace('{{link}}', link);
