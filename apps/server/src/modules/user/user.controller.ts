@@ -97,6 +97,33 @@ export class UserController extends ModelController<typeof User> {
     }
   }
 
+  public async verifyToken(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const now = new Date();
+      const recoveryId: string = req.params.recoveryId;
+      const recovery = await Recovery.findById(recoveryId);
+      if (!recovery) {
+        res.status(404).json({ error: 'Recovery token not found' });
+        return;
+      }
+      const _recovery = recovery.toObject();
+      // @ts-ignore
+      const expired = now.getTime() > new Date(_recovery.expiresIn).getTime();
+      if (_recovery.used || expired) {
+        res.json({ isValid: false });
+        return;
+      }
+      res.json({ isValid: true });
+      return;
+    } catch (error) {
+      next(error);
+    }
+  }
+
   public async recovery(
     req: Request,
     res: Response,

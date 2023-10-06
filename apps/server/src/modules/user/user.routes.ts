@@ -27,6 +27,7 @@ router.post(
   YupValidatorMiddleware(recoveryRequestSchema),
   userController.recoveryRequest
 );
+router.get('/recovery/:recoveryId', userController.verifyToken);
 router.patch(
   '/recovery/:recoveryId',
   YupValidatorMiddleware(recoveryPasswordSchema),
