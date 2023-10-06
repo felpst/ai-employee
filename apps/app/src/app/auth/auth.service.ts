@@ -56,6 +56,35 @@ export class AuthService {
     });
   }
 
+  updatePassword(recoveryId: string, password: string) {
+    return new Observable((observer) => {
+      this.coreApiService
+        .patch(`users/recovery/${recoveryId}`, { password })
+        .subscribe({
+          next: (response) => {
+            observer.next(response);
+          },
+          error: (error) => {
+            observer.error(error);
+          },
+        });
+    });
+  }
+
+  enterEmail(email: string): Observable<any> {
+    const requestBody = { email };
+    return new Observable((observer) => {
+      this.coreApiService.post('users/recovery', requestBody).subscribe({
+        next: (response) => {
+          observer.next(response);
+        },
+        error: (error) => {
+          observer.error(error);
+        },
+      });
+    });
+  }
+
   protected() {
     return new Observable((observer) => {
       this.coreApiService.get('auth/protected').subscribe({

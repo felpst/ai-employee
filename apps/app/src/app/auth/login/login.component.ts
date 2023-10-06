@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { CookieService } from 'ngx-cookie-service';
 import { NotificationsService } from '../../services/notifications/notifications.service';
 import { AuthService } from '../auth.service';
@@ -25,6 +25,7 @@ export class LoginComponent implements OnInit {
     private authService: AuthService,
     private notificationsService: NotificationsService,
     private router: Router,
+    private route: ActivatedRoute,
     cookieService: CookieService
   ) {
     this.loginForm.valueChanges.subscribe(() => {
@@ -48,6 +49,13 @@ export class LoginComponent implements OnInit {
       this.loginForm.get('password')?.setValue(password);
       this.loginForm.get('remember')?.setValue(true);
     }
+
+    this.route.queryParams.subscribe((params) => {
+      const message = params['message'];
+      if (message) {
+        this.notificationsService.show(message);
+      }
+    });
   }
 
   hasInputError(inputName: string, errorName: string) {
@@ -59,7 +67,7 @@ export class LoginComponent implements OnInit {
   }
 
   onForgot() {
-    return this.router.navigate(['/auth/recover']);
+    return this.router.navigate(['/auth/recovery']);
   }
 
   onRegister() {
