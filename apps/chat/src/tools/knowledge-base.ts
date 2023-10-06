@@ -1,59 +1,38 @@
-import { Knowledge } from '@cognum/models';
-import { Document } from 'langchain/document';
-import { OpenAIEmbeddings } from 'langchain/embeddings/openai';
-import { OpenAI } from 'langchain/llms/openai';
-import { SelfQueryRetriever } from 'langchain/retrievers/self_query';
-import { ChromaTranslator } from 'langchain/retrievers/self_query/chroma';
+import MongoVectorDatabase from '@cognum/mongo-vector-db';
+import { AttributeInfo } from 'langchain/schema/query_constructor';
 import { DynamicTool } from 'langchain/tools';
-import { FaissStore } from 'langchain/vectorstores/faiss';
 
 export class KnowledgeBaseTool extends DynamicTool {
   constructor() {
+    const vectorDb = new MongoVectorDatabase('nomeprovisorio');
+
     super({
       name: 'Knowledge Base',
       description:
         'Use this when you need search informations you dont know and possible to find in knowledge base of company. Input should be a question.',
       func: async (input: string) => {
         /**
-         * Carregar todos os documentos do knowledgeBase
-         * embeddings
-         * Cria banco vetorial
-         * Consultar
+         * Cria retriever do banco vetorial mongo
+         * Consulta documentos
          */
 
-        const knowledgeBase = await Knowledge.find();
+        const retrieverAttributeInfo: AttributeInfo[] = [
+          {
+            name: 'data',
+            description: 'Data of knowledge',
+            type: 'string',
+          },
+        ];
 
-        const docs: Document[] = knowledgeBase.map((item) => {
-          return new Document({
-            pageContent: item.data,
-          });
-        });
-
-        const vectorStore = await FaissStore.fromDocuments(
-          docs,
-          new OpenAIEmbeddings()
+        const selfQueryRetriever = vectorDb.getRetriever(
+          retrieverAttributeInfo,
+          'company data'
         );
-
-        // retrievers
-        const llm = new OpenAI();
-        const selfQueryRetriever = SelfQueryRetriever.fromLLM({
-          llm,
-          vectorStore,
-          documentContents: 'company data',
-          attributeInfo: [
-            {
-              name: 'data',
-              description: 'Data of knowledge',
-              type: 'string',
-            },
-          ],
-          structuredQueryTranslator: new ChromaTranslator(),
-        });
 
         const relevantDocs = await selfQueryRetriever.getRelevantDocuments(
-          input,
-          {}
+          input
         );
+
         console.log(relevantDocs);
 
         return relevantDocs.map((doc) => doc.pageContent).join('\n');
