@@ -10,32 +10,23 @@ services:
     ports:
       - 4200:4200
     networks:
-      - cognum_network
+      - cognum_network      
 
-  core:
+  server:
     extends:
       file: docker-compose.base.yml
       service: nx-app-base
-    command: npm run serve:core
+    command: npm run serve:server
     ports:
       - 3000:3000
-    depends_on:
-      - mongodb
-    networks:
-      - cognum_network
-      
-
-  chat:
-    extends:
-      file: docker-compose.base.yml
-      service: nx-app-base
-    command: npm run serve:chat
-    ports:
-      - 3033:3033
+      - 8080:8080
     depends_on:
       - mongodb      
     networks:
       - cognum_network
+    env_file:
+      - .env
+      
 
   mongodb:
     image: mongo:7-jammy
