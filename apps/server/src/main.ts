@@ -5,6 +5,7 @@ import 'dotenv/config';
 import express, { Application, Request, Response } from 'express';
 import errorHandler from './middlewares/error.handler';
 import router from './routes';
+import { ChatServer } from './chat/servers/chat.server';
 
 class App {
   private app: Application;
@@ -35,7 +36,7 @@ class App {
   }
 
   private handleNotFoundRoutes(): void {
-    this.app.use((req: Request, res: Response) => {
+    this.app.use((_req: Request, res: Response) => {
       res.status(404).json({ error: 'Route not found' });
     });
   }
@@ -49,6 +50,9 @@ class App {
     DatabaseHelper.connect()
       .then(() => {
         // Database connection successful, start the server
+        const chatServer = new ChatServer();
+        chatServer.run();
+
         this.app.listen(this.port, () => {
           console.log(`Server is running on port ${this.port}`);
         });
