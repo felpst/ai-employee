@@ -1,13 +1,13 @@
 {
-  "name": "chat-e2e",
+  "name": "server-e2e",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "implicitDependencies": ["chat"],
+  "implicitDependencies": ["server"],
   "targets": {
     "e2e": {
       "executor": "@nx/jest:jest",
       "outputs": ["{workspaceRoot}/coverage/{e2eProjectRoot}"],
       "options": {
-        "jestConfig": "apps/chat-e2e/jest.config.ts",
+        "jestConfig": "apps/server-e2e/jest.config.ts",
         "passWithNoTests": true
       }
     },
@@ -15,7 +15,7 @@
       "executor": "@nx/linter:eslint",
       "outputs": ["{options.outputFile}"],
       "options": {
-        "lintFilePatterns": ["apps/chat-e2e/**/*.{js,ts}"]
+        "lintFilePatterns": ["apps/server-e2e/**/*.{js,ts}"]
       }
     }
   }
