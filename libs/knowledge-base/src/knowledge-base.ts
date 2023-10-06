@@ -5,7 +5,7 @@ import { OpenAIEmbeddings } from 'langchain/embeddings/openai';
 import { OpenAI } from 'langchain/llms/openai';
 import { PineconeStore } from 'langchain/vectorstores/pinecone';
 
-export default class PineconeVectorDatabase {
+export default class KnowledgeBase {
   private pineconeIndex;
   private llm: OpenAI;
   private embeddings: OpenAIEmbeddings;
