@@ -13,11 +13,16 @@ const routes: Routes = [
   // Admin routes
   {
     path: '',
-    component: AdminComponent,
     canActivate: [AuthGuard],
     children: [
       {
+        path: 'home',
+        loadChildren: () =>
+          import('./home/home.module').then((m) => m.HomeComponentModule),
+      },
+      {
         path: 'workspaces',
+        component: AdminComponent,
         loadChildren: () =>
           import('./workspaces/workspaces.module').then(
             (m) => m.WorkspacesModule
@@ -25,17 +30,19 @@ const routes: Routes = [
       },
       {
         path: 'chats',
+        component: AdminComponent,
         loadChildren: () =>
           import('./chats/chats.module').then((m) => m.ChatsModule),
       },
       {
         path: 'knowledge-base',
+        component: AdminComponent,
         loadChildren: () =>
           import('./knowledge-base/knowledge-base.module').then(
             (m) => m.KnowledgeBaseModule
           ),
       },
-      { path: '**', redirectTo: 'workspaces', pathMatch: 'full' },
+      { path: '**', redirectTo: 'home', pathMatch: 'full' },
     ],
   },
   { path: '**', redirectTo: 'auth', pathMatch: 'full' },
