@@ -8,4 +8,5 @@ export default {
   },
   moduleFileExtensions: ['ts', 'js', 'html'],
   coverageDirectory: '../../coverage/libs/knowledge-base',
+  setupFiles: ['<rootDir>/setup-tests.ts'],
 };
