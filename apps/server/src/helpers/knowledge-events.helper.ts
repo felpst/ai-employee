@@ -1,26 +1,26 @@
 import { IKnowledge } from '@cognum/interfaces';
-import MongoVectorDatabase, { splitDocuments } from '@cognum/mongo-vector-db';
+import KnowledgeBase, { splitDocuments } from '@cognum/knowledge-base';
 import { EventEmitter } from 'events';
 
 const knowledgeOperationEventEmitter = new EventEmitter();
-const vectorDb = new MongoVectorDatabase('nomeprovisorio');
+const vectorDb = new KnowledgeBase('test');
 
 knowledgeOperationEventEmitter.on('create', async (docs: IKnowledge[]) => {
   if (!docs) return;
   const splitted = await splitDocuments(docs);
-  await vectorDb.addDocuments(splitted);
+  await vectorDb.indexDocuments(splitted);
 });
 
 knowledgeOperationEventEmitter.on('update', async (doc: IKnowledge) => {
   if (!doc) return;
-  await vectorDb.deleteDocumentsByOwnerDocumentId(doc._id);
+  await vectorDb.deleteDocumentsByOwnerDocumentId(doc._id.toString());
   const splitted = await splitDocuments([doc]);
-  await vectorDb.addDocuments(splitted);
+  await vectorDb.indexDocuments(splitted);
 });
 
 knowledgeOperationEventEmitter.on('delete', async (doc: IKnowledge) => {
   if (!doc) return;
-  await vectorDb.deleteDocumentsByOwnerDocumentId(doc._id);
+  await vectorDb.deleteDocumentsByOwnerDocumentId(doc._id.toString());
 });
 
 export default knowledgeOperationEventEmitter;
