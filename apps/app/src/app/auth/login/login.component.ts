@@ -17,6 +17,7 @@ export class LoginComponent implements OnInit {
     remember: [false, []],
   });
   showLoginError = false;
+  isSubmitting = false;
   cacheInfoData = '@cognum/data';
 
   constructor(
@@ -68,6 +69,7 @@ export class LoginComponent implements OnInit {
   // Function to handle form submission
   onSubmit() {
     if (!this.loginForm.valid) return;
+    this.isSubmitting = true;
     const { remember, ...rest } = this.loginForm.value;
     if (remember) {
       const data = JSON.stringify(rest);
@@ -77,11 +79,13 @@ export class LoginComponent implements OnInit {
     // Process login
     this.authService.login(rest).subscribe({
       next: ({ name }) => {
+        this.isSubmitting = false;
         this.router.navigate(['/']);
         this.notificationsService.show(`Welcome, ${name}!`);
       },
       error: () => {
         this.loginForm.reset();
+        this.isSubmitting = false;
         this.showLoginError = true;
       },
     });

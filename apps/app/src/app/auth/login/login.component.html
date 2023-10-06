@@ -70,7 +70,7 @@
       <button
         type="submit"
         class="font button-submit"
-        [disabled]="loginForm.invalid"
+        [disabled]="loginForm.invalid || isSubmitting"
       >
         Sign In with Email
       </button>
