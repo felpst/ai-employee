@@ -57,4 +57,8 @@ export default class KnowledgeBase {
       ...indexConfig,
     });
   }
+
+  async deleteIndex() {
+    return this._pinecone.deleteIndex(this.indexName);
+  }
 }

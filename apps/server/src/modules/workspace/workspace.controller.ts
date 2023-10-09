@@ -54,6 +54,29 @@ export class WorkspaceController extends ModelController<typeof Workspace> {
       next(error);
     }
   }
+
+  public async delete(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const taskId: string = req.params.id;
+      const deletedTask = await Workspace.findByIdAndDelete(taskId);
+
+      if (!deletedTask) {
+        const error: any = new Error('Document not found');
+        error.status = 404;
+        throw error;
+      } else {
+        await new KnowledgeBase(taskId).deleteIndex();
+      }
+
+      res.json(deletedTask);
+    } catch (error) {
+      next(error);
+    }
+  }
 }
 
 export default new WorkspaceController();
