@@ -4,6 +4,7 @@ import { Document } from 'langchain/document';
 import { OpenAIEmbeddings } from 'langchain/embeddings/openai';
 import { OpenAI } from 'langchain/llms/openai';
 import { PineconeStore } from 'langchain/vectorstores/pinecone';
+import { indexConfig } from './config/database-index.config';
 
 interface QueryOutput {
   text: string;
@@ -53,9 +54,7 @@ export default class KnowledgeBase {
   async createIndex() {
     return this._pinecone.createIndex({
       name: this.indexName,
-      dimension: 1536,
-      metric: 'cosine',
-      waitUntilReady: true,
+      ...indexConfig,
     });
   }
 }
