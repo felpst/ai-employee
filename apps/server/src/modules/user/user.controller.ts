@@ -4,6 +4,7 @@ import * as bcrypt from 'bcrypt';
 import { NextFunction, Request, Response } from 'express';
 import ModelController from '../../controllers/model.controller';
 import emailEmitter from '../../utils/email.utils';
+import { confirmPasswordResetEmailTemplate } from '../../utils/templates/confirm-reset-password';
 import { passwordResetEmailTemplate } from '../../utils/templates/reset-password';
 
 export class UserController extends ModelController<typeof User> {
@@ -154,6 +155,20 @@ export class UserController extends ModelController<typeof User> {
         { _id: _recovery.user },
         { $set: { password: hashedPassword } }
       );
+
+      // Envie um e-mail de confirmação de alteração de senha
+      const user = await User.findById(_recovery.user);
+      const email = user.email;
+      const html = confirmPasswordResetEmailTemplate.replace(
+        '{{name}}',
+        user.name
+      );
+      emailEmitter.emit('sendEmail', {
+        to: email,
+        subject: 'Password Changed Successfully',
+        html,
+      });
+
       await Recovery.findOneAndUpdate(
         { _id: _recovery._id },
         { $set: { used: true } }
