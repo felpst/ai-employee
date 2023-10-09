@@ -11,33 +11,33 @@ interface QueryOutput {
 }
 
 export default class KnowledgeBase {
-  private pineconeIndex: Index<RecordMetadata>;
-  private llm: OpenAI;
-  private vectorStore: PineconeStore;
-  private pinecone: Pinecone;
+  private _pineconeIndex: Index<RecordMetadata>;
+  private _llm: OpenAI;
+  private _vectorStore: PineconeStore;
+  private _pinecone: Pinecone;
 
   constructor(private indexName: string) {
-    this.llm = new OpenAI();
+    this._llm = new OpenAI();
     const embeddings = new OpenAIEmbeddings();
 
-    this.pinecone = new Pinecone({
+    this._pinecone = new Pinecone({
       apiKey: process.env.PINECONE_API_KEY,
       environment: 'gcp-starter',
     });
-    this.pineconeIndex = this.pinecone.Index(this.indexName);
+    this._pineconeIndex = this._pinecone.Index(this.indexName);
 
-    this.vectorStore = new PineconeStore(embeddings, {
-      pineconeIndex: this.pineconeIndex,
+    this._vectorStore = new PineconeStore(embeddings, {
+      pineconeIndex: this._pineconeIndex,
     });
   }
 
   async indexDocuments(docs: Document[]): Promise<string[]> {
     await this.createIndexIfNotExists();
-    return this.vectorStore.addDocuments(docs);
+    return this._vectorStore.addDocuments(docs);
   }
 
   async query(input: string, documentsCount = 3): Promise<QueryOutput> {
-    const chain = VectorDBQAChain.fromLLM(this.llm, this.vectorStore, {
+    const chain = VectorDBQAChain.fromLLM(this._llm, this._vectorStore, {
       k: documentsCount,
       returnSourceDocuments: true,
     });
@@ -48,13 +48,13 @@ export default class KnowledgeBase {
   async deleteDocumentsByOwnerDocumentId(
     ownerDocumentId: string
   ): Promise<void> {
-    return this.pineconeIndex.deleteMany({ ownerDocumentId });
+    return this._pineconeIndex.deleteMany({ ownerDocumentId });
   }
 
   async createIndexIfNotExists() {
     const doesIndexExist = await this._verifyIndex(true); // throws error if different from "index not found"
     if (!doesIndexExist) {
-      await this.pinecone.createIndex({
+      await this._pinecone.createIndex({
         name: this.indexName,
         dimension: 1536,
         metric: 'cosine',
@@ -65,7 +65,7 @@ export default class KnowledgeBase {
   }
 
   private async _verifyIndex(throwIfExceptionDiffFromNotFound = false) {
-    return this.pineconeIndex
+    return this._pineconeIndex
       .describeIndexStats()
       .then(() => true)
       .catch((error) => {
