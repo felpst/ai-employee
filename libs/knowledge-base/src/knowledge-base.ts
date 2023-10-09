@@ -32,7 +32,6 @@ export default class KnowledgeBase {
   }
 
   async indexDocuments(docs: Document[]): Promise<string[]> {
-    await this._watchUntilIndexIsReady();
     return this._vectorStore.addDocuments(docs);
   }
 
@@ -56,31 +55,7 @@ export default class KnowledgeBase {
       name: this.indexName,
       dimension: 1536,
       metric: 'cosine',
+      waitUntilReady: true,
     });
-  }
-
-  private async _verifyIndex() {
-    return this._pineconeIndex
-      .describeIndexStats()
-      .then(() => true)
-      .catch(() => false);
-  }
-
-  private async _watchUntilIndexIsReady(timeout = 15, verifyWindow = 3) {
-    let isIndexReady = await this._verifyIndex();
-
-    while (!isIndexReady && timeout) {
-      [isIndexReady] = await Promise.all([
-        this._verifyIndex(),
-        new Promise((r) => setTimeout(r, verifyWindow * 1000)),
-      ]);
-
-      if (timeout >= verifyWindow) timeout -= verifyWindow;
-      else timeout = 0;
-    }
-
-    if (!timeout && !isIndexReady)
-      throw new Error('Pinecode index took too long to be created.');
-    return true;
   }
 }
