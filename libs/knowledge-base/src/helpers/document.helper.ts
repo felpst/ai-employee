@@ -13,7 +13,6 @@ export interface KnowledgeDocument extends Omit<LangChainDoc, 'metadata'> {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 interface KnowledgeMetadata extends Record<string, any> {
   ownerDocumentId: string;
-  workspace: string;
   updatedAt: string;
 }
 
@@ -39,7 +38,6 @@ export async function splitDocuments<T extends MongoDoc>(
         pageContent: doc.data,
         metadata: {
           ownerDocumentId: doc._id?.toString(),
-          workspace: doc.workspace?.toString(),
           updatedAt: doc.updatedAt?.toISOString(),
         },
       })
