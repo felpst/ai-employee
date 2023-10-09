@@ -1,3 +1,4 @@
+import KnowledgeBase from '@cognum/knowledge-base';
 import { User, Workspace } from '@cognum/models';
 import { NextFunction, Request, Response } from 'express';
 import ModelController from '../../controllers/model.controller';
@@ -27,6 +28,8 @@ export class WorkspaceController extends ModelController<typeof Workspace> {
           _id: { $in: [...arrayUsers, userId] },
         });
         const doc = await Workspace.create({ ...data, users: _users });
+        await new KnowledgeBase(doc._id.toString()).createIndex();
+
         docs.push(doc);
       }
       res.status(201).json(docs.length > 1 ? docs : docs[0]);
