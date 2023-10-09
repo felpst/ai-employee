@@ -77,7 +77,6 @@ export class RecoverComponent {
         }
       },
       (error) => {
-        console.error('Token validation failed', error);
         this.router.navigate(['auth/login']);
         this.notificationsService.show('Invalid recovery token.');
       }
@@ -93,13 +92,11 @@ export class RecoverComponent {
         const password = passwordControl.value;
         this.authService.updatePassword(recoveryId, password).subscribe(
           (response) => {
-
             this.router.navigate(['auth/login']);
 
             this.notificationsService.show('Password recovery successful.');
           },
           (error) => {
-            console.error('Password update failed', error);
             this.showRecoverError = true;
             this.errors.push('Password update failed. Please try again.');
           }

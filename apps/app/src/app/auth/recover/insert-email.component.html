@@ -23,7 +23,7 @@
     </div>
     <button
       type="submit"
-      [disabled]="submitSuccess"
+      [disabled]="insertEmailForm.invalid || submitting"
       [ngClass]="{ 'inactive-button': submitSuccess }"
     >
       Submit
