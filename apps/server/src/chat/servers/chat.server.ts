@@ -1,3 +1,4 @@
+import { AIEmployee } from '@cognum/ai-employee';
 import { IChat, IMessage, IUser } from '@cognum/interfaces';
 import { Chat, User } from '@cognum/models';
 import express from 'express';
@@ -8,7 +9,6 @@ import * as url from 'url';
 import { v4 as uuidv4 } from 'uuid';
 import WebSocket, { Server as WebSocketServer } from 'ws';
 import { Adam } from '../agents/adam';
-import { AIEmployee } from '../agents/ai_employee';
 
 export interface WebSocketSession {
   id: string;

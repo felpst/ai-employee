@@ -15,6 +15,7 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
+      "@cognum/ai-employee": ["libs/ai-employee/src/index.ts"],
       "@cognum/auth": ["libs/auth/src/index.ts"],
       "@cognum/data-connection": ["libs/data-connection/src/index.ts"],
       "@cognum/helpers": ["libs/helpers/src/index.ts"],
