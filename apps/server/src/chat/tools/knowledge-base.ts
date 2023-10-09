@@ -2,8 +2,8 @@ import KnowledgeBase from '@cognum/knowledge-base';
 import { DynamicTool } from 'langchain/tools';
 
 export class KnowledgeBaseTool extends DynamicTool {
-  constructor() {
-    const knowledgeBase = new KnowledgeBase('test');
+  constructor(knowledgeWorkspaceId: string) {
+    const knowledgeBase = new KnowledgeBase(knowledgeWorkspaceId);
 
     super({
       name: 'Knowledge Base',
