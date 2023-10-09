@@ -32,7 +32,7 @@ export default class KnowledgeBase {
   }
 
   async indexDocuments(docs: Document[]): Promise<string[]> {
-    await this.createIndexIfNotExists();
+    await this._watchUntilIndexIsReady();
     return this._vectorStore.addDocuments(docs);
   }
 
@@ -51,31 +51,19 @@ export default class KnowledgeBase {
     return this._pineconeIndex.deleteMany({ ownerDocumentId });
   }
 
-  async createIndexIfNotExists() {
-    const doesIndexExist = await this._verifyIndex(true); // throws error if different from "index not found"
-    if (!doesIndexExist) {
-      await this._pinecone.createIndex({
-        name: this.indexName,
-        dimension: 1536,
-        metric: 'cosine',
-      });
-
-      await this._watchUntilIndexIsReady();
-    }
+  async createIndex() {
+    return this._pinecone.createIndex({
+      name: this.indexName,
+      dimension: 1536,
+      metric: 'cosine',
+    });
   }
 
-  private async _verifyIndex(throwIfExceptionDiffFromNotFound = false) {
+  private async _verifyIndex() {
     return this._pineconeIndex
       .describeIndexStats()
       .then(() => true)
-      .catch((error) => {
-        if (
-          throwIfExceptionDiffFromNotFound &&
-          error.name !== 'PineconeNotFoundError'
-        )
-          throw error;
-        else return false;
-      });
+      .catch(() => false);
   }
 
   private async _watchUntilIndexIsReady(timeout = 15, verifyWindow = 3) {
