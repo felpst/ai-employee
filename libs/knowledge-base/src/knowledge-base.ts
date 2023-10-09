@@ -14,16 +14,17 @@ export default class KnowledgeBase {
   private pineconeIndex: Index<RecordMetadata>;
   private llm: OpenAI;
   private vectorStore: PineconeStore;
+  private pinecone: Pinecone;
 
   constructor(private indexName: string) {
     this.llm = new OpenAI();
     const embeddings = new OpenAIEmbeddings();
 
-    const pinecone = new Pinecone({
+    this.pinecone = new Pinecone({
       apiKey: process.env.PINECONE_API_KEY,
       environment: 'gcp-starter',
     });
-    this.pineconeIndex = pinecone.Index(this.indexName);
+    this.pineconeIndex = this.pinecone.Index(this.indexName);
 
     this.vectorStore = new PineconeStore(embeddings, {
       pineconeIndex: this.pineconeIndex,
@@ -31,6 +32,7 @@ export default class KnowledgeBase {
   }
 
   async indexDocuments(docs: Document[]): Promise<string[]> {
+    await this.createIndexIfNotExists();
     return this.vectorStore.addDocuments(docs);
   }
 
@@ -47,5 +49,50 @@ export default class KnowledgeBase {
     ownerDocumentId: string
   ): Promise<void> {
     return this.pineconeIndex.deleteMany({ ownerDocumentId });
+  }
+
+  async createIndexIfNotExists() {
+    const doesIndexExist = await this._verifyIndex(true); // throws error if different from "index not found"
+    if (!doesIndexExist) {
+      await this.pinecone.createIndex({
+        name: this.indexName,
+        dimension: 1536,
+        metric: 'cosine',
+      });
+
+      await this._watchUntilIndexIsReady();
+    }
+  }
+
+  private async _verifyIndex(throwIfExceptionDiffFromNotFound = false) {
+    return this.pineconeIndex
+      .describeIndexStats()
+      .then(() => true)
+      .catch((error) => {
+        if (
+          throwIfExceptionDiffFromNotFound &&
+          error.name !== 'PineconeNotFoundError'
+        )
+          throw error;
+        else return false;
+      });
+  }
+
+  private async _watchUntilIndexIsReady(timeout = 15, verifyWindow = 3) {
+    let isIndexReady = await this._verifyIndex();
+
+    while (!isIndexReady && timeout) {
+      [isIndexReady] = await Promise.all([
+        this._verifyIndex(),
+        new Promise((r) => setTimeout(r, verifyWindow * 1000)),
+      ]);
+
+      if (timeout >= verifyWindow) timeout -= verifyWindow;
+      else timeout = 0;
+    }
+
+    if (!timeout && !isIndexReady)
+      throw new Error('Pinecode index took too long to be created.');
+    return true;
   }
 }
