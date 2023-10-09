@@ -65,6 +65,28 @@ export class RecoverComponent {
     };
   }
 
+  ngOnInit() {
+    const recoveryId = this.route.snapshot.params['recoveryId'];
+
+    // Valida o token de recuperação assim que a tela é carregada
+    this.authService.validateRecoveryToken(recoveryId).subscribe(
+      (validationResult) => {
+        console.log(validationResult);
+        if (!validationResult.isValid) {
+          this.router.navigate(['auth/login']);
+          this.notificationsService.show(
+            'Invalid or expired recovery token. Please request a new reset.'
+          );
+        }
+      },
+      (error) => {
+        console.error('Token validation failed', error);
+        this.router.navigate(['auth/login']);
+        this.notificationsService.show('Invalid recovery token.');
+      }
+    );
+  }
+
   onSubmit() {
     if (this.recoverForm.valid) {
       const recoveryId = this.route.snapshot.params['recoveryId'];

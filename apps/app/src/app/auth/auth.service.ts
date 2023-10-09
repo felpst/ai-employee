@@ -85,6 +85,10 @@ export class AuthService {
     });
   }
 
+  validateRecoveryToken(recoveryId: string): Observable<{ isValid: boolean }> {
+    return this.coreApiService.get(`users/recovery/${recoveryId}`);
+  }
+
   protected() {
     return new Observable((observer) => {
       this.coreApiService.get('auth/protected').subscribe({
