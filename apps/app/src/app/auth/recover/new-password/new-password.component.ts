@@ -67,11 +67,8 @@ export class RecoverComponent {
 
   ngOnInit() {
     const recoveryId = this.route.snapshot.params['recoveryId'];
-
-    // Valida o token de recuperação assim que a tela é carregada
     this.authService.validateRecoveryToken(recoveryId).subscribe(
       (validationResult) => {
-        console.log(validationResult);
         if (!validationResult.isValid) {
           this.router.navigate(['auth/login']);
           this.notificationsService.show(
@@ -96,7 +93,6 @@ export class RecoverComponent {
         const password = passwordControl.value;
         this.authService.updatePassword(recoveryId, password).subscribe(
           (response) => {
-            console.log('Password updated successfully', response);
 
             this.router.navigate(['auth/login']);
 
