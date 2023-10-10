@@ -1,6 +1,6 @@
 import { AIEmployee } from '@cognum/ai-employee';
 import { IChat, IMessage, IUser } from '@cognum/interfaces';
-import { Chat, User } from '@cognum/models';
+import { AIEmployee as AIEmployeeModel, Chat, User, Workspace } from '@cognum/models';
 import express from 'express';
 import { Server as HTTPServer, IncomingMessage, createServer } from 'http';
 import jwt from 'jsonwebtoken';
@@ -8,7 +8,6 @@ import { Callbacks } from 'langchain/callbacks';
 import * as url from 'url';
 import { v4 as uuidv4 } from 'uuid';
 import WebSocket, { Server as WebSocketServer } from 'ws';
-import { Adam } from '../agents/adam';
 
 export interface WebSocketSession {
   id: string;
@@ -105,31 +104,44 @@ export class ChatServer {
                     },
                   },
                 ];
+                
+                // Initiate AI Employees
 
-                // Initiate AI Employee: Adam
-                const aiEmployee = new Adam({
-                  chat: session.chat,
-                  user,
-                  callbacks,
-                });
-                session.aiEmployee = aiEmployee;
-                this.sessions.set(context.sessionId, session);
+                const _workspaces = await Workspace.find({ users: { $in: { _id: user._id }}})
 
-                // Load chat messages
-                await aiEmployee.memory.loadAllMessages();
-                const messages = await aiEmployee.chatHistory();
+                _workspaces.map(async (workspace) => {
 
-                // Send
-                this.send(context.sessionId, {
-                  type: 'auth',
-                  content: {
-                    user,
-                    aiEmployee: session.aiEmployee.getIdentity(),
-                    chat: session.chat,
-                    messages,
-                  },
-                });
-              });
+                  const _aiEmployees = await AIEmployeeModel.find({ workspaces: { $in: { _id: workspace.id } }})
+
+                  _aiEmployees.map(async (_employee) => {
+                    const aiEmployee = new AIEmployee({
+                      chat: session.chat,
+                      user,
+                      callbacks,
+                      identity: { name: _employee.name, profession: _employee.role}
+                    })
+                    session.aiEmployee = aiEmployee;
+                    this.sessions.set(context.sessionId, session);
+
+                     // Load chat messages
+
+                    await aiEmployee.memory.loadAllMessages();
+                    const messages = await aiEmployee.chatHistory();
+
+                    // Send
+
+                    this.send(context.sessionId, {
+                      type: 'auth',
+                      content: {
+                        user,
+                        aiEmployee: session.aiEmployee.getIdentity(),
+                        chat: session.chat,
+                        messages,
+                      },
+                    });
+                  })
+                })
+              }); 
           }
         }
       },
