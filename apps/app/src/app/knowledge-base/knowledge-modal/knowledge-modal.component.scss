@@ -1,0 +1,92 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit&display=swap');
+
+mat-dialog-content {
+  font-family: 'Outfit', sans-serif !important;
+}
+.dialog-header {
+  display: flex;
+  margin-top: 1em;
+  margin-bottom: 1em;
+  justify-content: space-between;
+  align-content: center;
+}
+
+.actions-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 14px;
+}
+
+.mat-mdc-card-subtitle {
+  margin: 0 0.5em;
+}
+
+.shared-btn {
+  border: none;
+  margin: 0 0.5em;
+  background-color: transparent;
+
+  &:hover {
+      cursor: pointer;
+      background-color: #F5F5F5;
+  }
+}
+
+.active-icon,
+.active-btn {
+  color: #14B8A6;
+}
+
+.divider-container {
+  display: flex;
+  align-items: center;
+  background-color: #FAFAFA;
+  border-top: 1px solid #D9D9D9;
+  border-bottom: 1px solid #D9D9D9;
+  font-family: 'Outfit', sans-serif !important;
+  padding: 0.75em 1em;
+}
+
+::ng-deep .mat-mdc-menu-content {
+  padding-top: 0 !important;
+}
+
+.member-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 0.5em;
+  font-family: 'Outfit', sans-serif !important;
+}
+  
+.user-info {
+  display: flex;
+  align-items: center;
+}
+
+.user-info mat-icon {
+  margin-right: 0em !important;
+}
+  
+.user-name {
+  font-size: 14px;
+  font-weight: normal;
+  margin-left: 6px; 
+  text-transform: capitalize !important;
+}
+  
+.dropdown-container {
+  display: flex;
+  align-items: center;
+}
+
+.dropdown-container mat-select {
+  width: 80px !important; 
+  font-size: 14px;
+  font-family: 'Outfit', sans-serif !important;
+}
+
+
+  
