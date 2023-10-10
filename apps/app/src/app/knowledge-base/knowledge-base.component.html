@@ -1,8 +1,51 @@
 <div class="main">
   <div class="header">
-    <h2>Knowledge Base - {{ !!workspace ? workspace.name : '' }}</h2>
+    <div class="">
+      <h2>{{ !!workspace ? workspace.name : '' }}'s Knowledge Base</h2>
+    </div>
 
-    <mat-form-field class="search-bar">
+    <div class="sorting-buttons">
+      <button 
+        mat-stroked-button
+        [ngClass]="{ 'active-button': activeButton === 'newFirst', 'inactive-button': activeButton !== 'newFirst' }"
+        (click)="onButtonClick('newFirst')">
+        New first
+      </button>
+      <button 
+        mat-stroked-button 
+        [ngClass]="{ 'active-button': activeButton === 'oldFirst', 'inactive-button': activeButton !== 'oldFirst' }"
+        (click)="onButtonClick('oldFirst')">
+        Old first
+      </button>
+      <button 
+        mat-stroked-button 
+        [ngClass]="{ 'active-button': activeButton === 'mix', 'inactive-button': activeButton !== 'mix' }"
+        (click)="onButtonClick('mix')">
+        Mix
+      </button>
+    </div>
+
+    <div class="search-container">
+      <input
+        type="text"
+        [(ngModel)]="searchText"
+        (keyup)="onSearch($event)"
+        placeholder="Search..."
+        class="search-input"
+      />
+      <button
+        mat-raised-button color="primary"
+        *ngIf="searchText"
+        class="clear-button"
+        aria-label="Clear"
+        mat-icon-button
+        (click)="clearSearch()"
+      >
+        <mat-icon>search</mat-icon>
+      </button>
+    </div>
+
+    <!-- <mat-form-field class="search-bar">
       <mat-label>Search</mat-label>
       <input
         matInput
@@ -20,24 +63,37 @@
       >
         <mat-icon>close</mat-icon>
       </button>
-    </mat-form-field>
+    </mat-form-field> -->
 
     <button mat-raised-button color="primary" (click)="onForm()">
       <mat-icon>add</mat-icon>
-      New
+      New Information
     </button>
   </div>
 
   <div class="knowledges">
-    <div
-      class="knowledge"
-      *ngFor="let knowledge of knowledgeBaseFiltered"
-      (click)="onForm(knowledge)"
-    >
-      <div class="knowledge__content">
-        <p [innerHTML]="knowledge.data | markdown"></p>
-      </div>
-    </div>
+    <mat-card *ngFor="let knowledge of knowledgeBaseFiltered" class="knowledge-card">
+      <mat-card-header>
+        <mat-card-title (click)="openKnowledgeModal(knowledge)">{{ knowledge.title }}</mat-card-title>
+        <mat-card-subtitle (click)="openKnowledgeModal(knowledge)">last updated {{ knowledge.updatedAt ? updatedTimeDifference(knowledge.updatedAt) : 'N/A' }}</mat-card-subtitle>
+        <button mat-icon-button class="icon-button" [matMenuTriggerFor]="menu">
+          <mat-icon>more_horiz</mat-icon>
+        </button>
+        <mat-menu #menu="matMenu">
+          <button mat-menu-item (click)="editKnowledge(knowledge)">
+            <mat-icon>edit</mat-icon>
+            edit
+          </button>
+          <button mat-menu-item (click)="openDeleteConfirmationDialog(knowledge)">
+            <mat-icon>delete</mat-icon>
+            delete
+          </button>
+        </mat-menu>
+      </mat-card-header>
+      <mat-card-content (click)="openKnowledgeModal(knowledge)">
+        <p>{{ knowledge.data }}</p>
+      </mat-card-content>
+    </mat-card>
   </div>
 
   <div *ngIf="knowledgeBaseFiltered.length === 0">

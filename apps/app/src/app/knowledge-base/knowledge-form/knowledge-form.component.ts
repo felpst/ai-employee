@@ -21,6 +21,7 @@ export class KnowledgeFormComponent {
   markdownOptions = {
     showPreviewPanel: false,
   };
+  isLoading = false;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -35,6 +36,7 @@ export class KnowledgeFormComponent {
     }
   ) {
     this.form = this.formBuilder.group({
+      title: ['', [Validators.required]],
       data: ['', [Validators.required]],
     });
 
@@ -45,24 +47,40 @@ export class KnowledgeFormComponent {
   }
 
   onSave() {
+    this.isLoading = true;
+  
     if (this.knowledge) {
       this.knowledge.data = this.form.value.data;
-      this.knowledgeBaseService.update(this.knowledge).subscribe((res) => {
-        this.notificationsService.show('Knowledge updated!');
-        this.dialogRef.close(res);
+      this.knowledgeBaseService.update(this.knowledge).subscribe({
+        next: (res) => {
+          this.notificationsService.show('Successfully updated knowledge');
+          this.dialogRef.close(res);
+          this.isLoading = false;
+        },
+        error: (error) => {
+          console.error('Error updating knowledge:', error);
+          this.notificationsService.show('Error updating knowledge. Please try again.');
+          this.isLoading = false;
+        }
       });
     } else {
       const data = this.form.value;
       const { _id } = this.data.workspace;
-      this.knowledgeBaseService
-        .create({ ...data, workspace: _id })
-        .subscribe((res) => {
-          this.notificationsService.show('Knowledge created!');
+      this.knowledgeBaseService.create({ ...data, workspace: _id }).subscribe({
+        next: (res) => {
+          this.notificationsService.show('Successfully created knowledge');
           this.dialogRef.close(res);
-        });
+          this.isLoading = false;
+        },
+        error: (error) => {
+          console.error('Error creating knowledge:', error);
+          this.notificationsService.show('Error creating knowledge. Please try again.');
+          this.isLoading = false;
+        }
+      });
     }
   }
-
+  
   onRemove() {
     this.dialog
       .open(DialogComponent, {
@@ -76,10 +94,21 @@ export class KnowledgeFormComponent {
       .subscribe((result) => {
         if (result && this.knowledge) {
           this.knowledgeBaseService.delete(this.knowledge).subscribe((res) => {
-            this.notificationsService.show('Knowledge deleted!');
+            this.notificationsService.show('Successfully deleted knowledge');
             this.dialogRef.close(res);
           });
         }
       });
   }
+
+  closeModal(): void {
+    const isFormFilled = Object.values(this.form.value).some(fieldValue => fieldValue);
+  
+    if (isFormFilled) {
+      this.onSave();
+    } else {
+      this.dialogRef.close();
+    }
+  }
+
 }
