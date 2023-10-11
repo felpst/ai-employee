@@ -1,3 +1,4 @@
+import { IKnowledge } from '@cognum/interfaces';
 import { Knowledge } from '@cognum/models';
 import { NextFunction, Request, Response } from 'express';
 import { LLMChain } from 'langchain/chains';
@@ -70,6 +71,33 @@ export class KnowledgeController extends ModelController<typeof Knowledge> {
         docs.push(doc);
       }
       res.status(201).json(docs.length > 1 ? docs : docs[0]);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  public async update(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const knowledgeId: string = req.params.id;
+      const body: Partial<IKnowledge> = req.body;
+      const { title, description, ...rest } = body;
+      const _title = title || (await this._generateTitle(rest.data));
+      const _description =
+        description || (await this._generateSummary(rest.data));
+      const updated = await Knowledge.findByIdAndUpdate(
+        knowledgeId,
+        { ...rest, title: _title, description: _description },
+        {
+          returnDocument: 'after',
+          runValidators: true,
+        }
+      );
+
+      res.json(updated);
     } catch (error) {
       next(error);
     }
