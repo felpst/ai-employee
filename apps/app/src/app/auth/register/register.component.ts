@@ -7,6 +7,7 @@ import {
 } from '@angular/forms';
 import { Router } from '@angular/router';
 import { debounceTime, distinctUntilChanged, filter, map } from 'rxjs';
+import { NotificationsService } from '../../services/notifications/notifications.service';
 import { UsersService } from '../../services/users/users.service';
 import { AuthService } from '../auth.service';
 
@@ -31,6 +32,7 @@ export class RegisterComponent {
     ],
     confirm: ['', [Validators.required]],
   });
+  cacheInfoData = '@cognum/data';
   submitting = false;
   showRegisterError = false;
   errors = [];
@@ -39,6 +41,7 @@ export class RegisterComponent {
     private formBuilder: FormBuilder,
     private authService: AuthService,
     private usersService: UsersService,
+    private notificationsService: NotificationsService,
     private router: Router
   ) {
     const controlPass = this.registerForm.get('password');
@@ -95,27 +98,31 @@ export class RegisterComponent {
     };
   }
 
+  hasInputError(inputName: string, errorName: string) {
+    return (
+      this.registerForm.get(inputName)?.invalid &&
+      this.registerForm.get(inputName)?.touched &&
+      this.registerForm.get(inputName)?.hasError(errorName)
+    );
+  }
+
   // Function to handle form submission
   onSubmit() {
     if (!this.registerForm.valid) return;
     this.submitting = true;
     const { confirm, ...rest } = this.registerForm.value;
+    const data = JSON.stringify({ email: rest.email, password: rest.password });
 
     // Process register
     this.usersService.register({ ...rest }).subscribe({
-      next: () => {
-        const { email, password } = rest;
-        // Process login
-        this.authService.login({ email, password }).subscribe({
-          next: () => {
-            this.submitting = false;
-            this.router.navigate(['/']);
-          },
-          error: (error) => {
-            this.submitting = false;
-            console.log('An error ocurred on login: ', { error });
-          },
-        });
+      next: (token) => {
+        const { _id } = token;
+        localStorage.setItem(this.cacheInfoData, btoa(data));
+        this.submitting = false;
+        this.router.navigate([`/auth/register/${_id}`]);
+        this.notificationsService.show(
+          'An email has been sent to you containing a token to confirm your account'
+        );
       },
       error: (err) => {
         const { error } = err;
@@ -125,6 +132,10 @@ export class RegisterComponent {
         this.submitting = false;
       },
     });
+  }
+
+  onLogin() {
+    return this.router.navigate(['/auth/login']);
   }
 
   private isEmail(s: string) {
