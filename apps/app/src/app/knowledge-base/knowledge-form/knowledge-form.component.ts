@@ -48,23 +48,26 @@ export class KnowledgeFormComponent {
 
   onSave() {
     this.isLoading = true;
-  
+    const data = this.form.value;
+
     if (this.knowledge) {
-      this.knowledge.data = this.form.value.data;
-      this.knowledgeBaseService.update(this.knowledge).subscribe({
-        next: (res) => {
-          this.notificationsService.show('Successfully updated knowledge');
-          this.dialogRef.close(res);
-          this.isLoading = false;
-        },
-        error: (error) => {
-          console.error('Error updating knowledge:', error);
-          this.notificationsService.show('Error updating knowledge. Please try again.');
-          this.isLoading = false;
-        }
-      });
+      this.knowledgeBaseService
+        .update({ ...this.knowledge, ...data })
+        .subscribe({
+          next: (res) => {
+            this.notificationsService.show('Successfully updated knowledge');
+            this.dialogRef.close(res);
+            this.isLoading = false;
+          },
+          error: (error) => {
+            console.error('Error updating knowledge:', error);
+            this.notificationsService.show(
+              'Error updating knowledge. Please try again.'
+            );
+            this.isLoading = false;
+          },
+        });
     } else {
-      const data = this.form.value;
       const { _id } = this.data.workspace;
       this.knowledgeBaseService.create({ ...data, workspace: _id }).subscribe({
         next: (res) => {
@@ -74,13 +77,15 @@ export class KnowledgeFormComponent {
         },
         error: (error) => {
           console.error('Error creating knowledge:', error);
-          this.notificationsService.show('Error creating knowledge. Please try again.');
+          this.notificationsService.show(
+            'Error creating knowledge. Please try again.'
+          );
           this.isLoading = false;
-        }
+        },
       });
     }
   }
-  
+
   onRemove() {
     this.dialog
       .open(DialogComponent, {
@@ -102,13 +107,14 @@ export class KnowledgeFormComponent {
   }
 
   closeModal(): void {
-    const isFormFilled = Object.values(this.form.value).some(fieldValue => fieldValue);
-  
+    const isFormFilled = Object.values(this.form.value).some(
+      (fieldValue) => fieldValue
+    );
+
     if (isFormFilled) {
       this.onSave();
     } else {
       this.dialogRef.close();
     }
   }
-
 }

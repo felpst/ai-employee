@@ -1,6 +1,6 @@
 .main {
   padding: 25px 30px;
-  background-color: #F0F2F5;
+  background-color: #f0f2f5;
   height: 100vh;
 
   h2 {
@@ -11,19 +11,46 @@
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+    align-items: center;
+  }
+}
+
+.search-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.search-container input {
+  border: 1px solid #d9d9d9;
+  font-size: 14px;
+  padding: 0.3em;
+}
+
+.search-container button {
+  border: 1px solid #d9d9d9;
+  background-color: #fff;
+  border-radius: 0;
+  padding: 0.1em;
+  width: 31px;
+  height: 31px;
+
+  &:hover {
+    background-color: #c8c8c8;
+    border-radius: 0;
   }
 }
 
 .knowledges {
   display: grid;
-  grid-template-columns: repeat(3, 1fr); 
-  grid-gap: 16px; 
+  grid-template-columns: repeat(3, 1fr);
+  grid-gap: 16px;
   margin-bottom: 80px;
   margin-top: 50px;
 }
 
 .knowledge-card {
-  width: 100%; 
+  width: 100%;
   background-color: #f9f9f9;
   border: 1px solid #e0e0e0;
   border-radius: 8px;
@@ -42,7 +69,6 @@
 
 .knowledge-card mat-card-header {
   margin-bottom: 1.1em;
-  
 }
 
 .icon-button {
@@ -50,8 +76,8 @@
 }
 
 .active-button {
-  color: #14B8A6 !important;
-  border-color: #14B8A6 !important;
+  color: #14b8a6 !important;
+  border-color: #14b8a6 !important;
 }
 
 .search-bar {
@@ -59,5 +85,3 @@
   max-width: 400px;
   margin-top: -8px;
 }
-
-

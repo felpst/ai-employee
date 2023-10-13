@@ -5,22 +5,34 @@
     </div>
 
     <div class="sorting-buttons">
-      <button 
+      <button
         mat-stroked-button
-        [ngClass]="{ 'active-button': activeButton === 'newFirst', 'inactive-button': activeButton !== 'newFirst' }"
-        (click)="onButtonClick('newFirst')">
+        [ngClass]="{
+          'active-button': activeButton === 'newFirst',
+          'inactive-button': activeButton !== 'newFirst'
+        }"
+        (click)="onButtonClick('newFirst')"
+      >
         New first
       </button>
-      <button 
-        mat-stroked-button 
-        [ngClass]="{ 'active-button': activeButton === 'oldFirst', 'inactive-button': activeButton !== 'oldFirst' }"
-        (click)="onButtonClick('oldFirst')">
+      <button
+        mat-stroked-button
+        [ngClass]="{
+          'active-button': activeButton === 'oldFirst',
+          'inactive-button': activeButton !== 'oldFirst'
+        }"
+        (click)="onButtonClick('oldFirst')"
+      >
         Old first
       </button>
-      <button 
-        mat-stroked-button 
-        [ngClass]="{ 'active-button': activeButton === 'mix', 'inactive-button': activeButton !== 'mix' }"
-        (click)="onButtonClick('mix')">
+      <button
+        mat-stroked-button
+        [ngClass]="{
+          'active-button': activeButton === 'mix',
+          'inactive-button': activeButton !== 'mix'
+        }"
+        (click)="onButtonClick('mix')"
+      >
         Mix
       </button>
     </div>
@@ -34,26 +46,13 @@
         class="search-input"
       />
       <button
-        mat-raised-button color="primary"
-        *ngIf="searchText"
-        class="clear-button"
-        aria-label="Clear"
+        *ngIf="!searchText"
         mat-icon-button
+        aria-label="Clear"
         (click)="clearSearch()"
       >
         <mat-icon>search</mat-icon>
       </button>
-    </div>
-
-    <!-- <mat-form-field class="search-bar">
-      <mat-label>Search</mat-label>
-      <input
-        matInput
-        type="text"
-        [(ngModel)]="searchText"
-        (keyup)="onSearch($event)"
-        placeholder="Search..."
-      />
       <button
         *ngIf="searchText"
         matSuffix
@@ -63,7 +62,7 @@
       >
         <mat-icon>close</mat-icon>
       </button>
-    </mat-form-field> -->
+    </div>
 
     <button mat-raised-button color="primary" (click)="onForm()">
       <mat-icon>add</mat-icon>
@@ -72,10 +71,22 @@
   </div>
 
   <div class="knowledges">
-    <mat-card *ngFor="let knowledge of knowledgeBaseFiltered" class="knowledge-card">
+    <mat-card
+      *ngFor="let knowledge of knowledgeBaseFiltered"
+      class="knowledge-card"
+    >
       <mat-card-header>
-        <mat-card-title (click)="openKnowledgeModal(knowledge)">{{ knowledge.title }}</mat-card-title>
-        <mat-card-subtitle (click)="openKnowledgeModal(knowledge)">last updated {{ knowledge.updatedAt ? updatedTimeDifference(knowledge.updatedAt) : 'N/A' }}</mat-card-subtitle>
+        <mat-card-title (click)="openKnowledgeModal(knowledge)">{{
+          knowledge.title
+        }}</mat-card-title>
+        <mat-card-subtitle (click)="openKnowledgeModal(knowledge)"
+          >last updated
+          {{
+            knowledge.updatedAt
+              ? updatedTimeDifference(knowledge.updatedAt)
+              : 'N/A'
+          }}</mat-card-subtitle
+        >
         <button mat-icon-button class="icon-button" [matMenuTriggerFor]="menu">
           <mat-icon>more_horiz</mat-icon>
         </button>
@@ -84,14 +95,17 @@
             <mat-icon>edit</mat-icon>
             edit
           </button>
-          <button mat-menu-item (click)="openDeleteConfirmationDialog(knowledge)">
+          <button
+            mat-menu-item
+            (click)="openDeleteConfirmationDialog(knowledge)"
+          >
             <mat-icon>delete</mat-icon>
             delete
           </button>
         </mat-menu>
       </mat-card-header>
       <mat-card-content (click)="openKnowledgeModal(knowledge)">
-        <p>{{ knowledge.data }}</p>
+        <p>{{ knowledge.description }}</p>
       </mat-card-content>
     </mat-card>
   </div>
