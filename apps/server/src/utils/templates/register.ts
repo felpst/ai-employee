@@ -1,4 +1,4 @@
-export const passwordResetEmailTemplate = `
+export const registerEmailTemplate = `
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -10,7 +10,7 @@ export const passwordResetEmailTemplate = `
       href="https://fonts.googleapis.com/css2?family=Hind:wght@400;700&family=Montserrat:wght@700&family=Outfit:wght@300;500;600;700&family=Roboto:wght@400;700&display=swap"
       rel="stylesheet"
     />
-    <title>Password reset</title>
+    <title>Cognum - Register</title>
     <style>
       body {
         font-family: Outfit, sans-serif;
@@ -73,23 +73,21 @@ export const passwordResetEmailTemplate = `
           alt="Logo"
           class="logo"
         />
-        <h1>Password reset</h1>
+        <h1>Cognum - Register</h1>
       </div>
       <div class="content">
-        <p>Hello, <strong>{{name}}</strong></p>
+        <p>Hello!!</p>
         <p>
-          We have received a request to reset your account password. To continue
-          the password reset process, click the button below:
+        We received a request to register for Cognum services via this email. To continue the process, use this validation token:
         </p>
         <div class='redefine' style='justify-content: center;align-items: center;'>
-          <a href="{{link}}" class="btn" style='color:#fff;'>Redefine password</a>
+          <strong style='font-family: Outfit, sans-serif;font-weight:600;'>{{token}}</a>
         </div>
         <p>
-          We certify that the link lasts 15 minutes, after the deadline a new reset will have to be requested.
+          We guarantee that the link lasts 30 minutes, after the deadline a new one must be requested.
         </p>
         <p>
-          If you have not requested a password reset, please ignore this email.
-          Your current password will remain the same.
+          If you have not requested your registration, please ignore this email.
         </p>
         <p>Thank you for choosing our services!</p>
         <p>Yours sincerely,<br />Cognum</p>

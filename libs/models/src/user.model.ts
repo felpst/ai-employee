@@ -7,6 +7,8 @@ const schema = new Schema<IUser>({
   name: { type: String, required: false },
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
+  active: { type: Boolean, required: true, default: false },
+  company: { type: Schema.Types.ObjectId, ref: 'Company', required: false },
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now },
 });

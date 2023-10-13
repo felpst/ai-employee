@@ -21,13 +21,17 @@ router.get('/:id', authMiddleware, userController.getById);
 router.put('/:id', authMiddleware, userController.update);
 router.delete('/:id', authMiddleware, userController.delete);
 
+// Verify tokens
+router.get('/token/:tokenId', userController.verifyToken);
+router.post('/token/:tokenId/resend', userController.resendTokenRequest);
+router.post('/token/:tokenId/verify', userController.verifyUser);
+
 // Recovery password
 router.post(
   '/recovery',
   YupValidatorMiddleware(recoveryRequestSchema),
   userController.recoveryRequest
 );
-router.get('/recovery/:recoveryId', userController.verifyToken);
 router.patch(
   '/recovery/:recoveryId',
   YupValidatorMiddleware(recoveryPasswordSchema),

@@ -15,6 +15,13 @@ export class AuthController {
         return;
       }
 
+      if (!user.active) {
+        res
+          .status(401)
+          .json({ error: 'Inactive user, please validate your email' });
+        return;
+      }
+
       const validPassword = await bcrypt.compare(password, user.password);
 
       if (!validPassword) {

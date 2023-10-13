@@ -1,10 +1,11 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import { Recovery, User } from '@cognum/models';
+import { Token, User } from '@cognum/models';
 import * as bcrypt from 'bcrypt';
 import { NextFunction, Request, Response } from 'express';
 import ModelController from '../../controllers/model.controller';
 import emailEmitter from '../../utils/email.utils';
 import { confirmPasswordResetEmailTemplate } from '../../utils/templates/confirm-reset-password';
+import { registerEmailTemplate } from '../../utils/templates/register';
 import { passwordResetEmailTemplate } from '../../utils/templates/reset-password';
 
 export class UserController extends ModelController<typeof User> {
@@ -39,13 +40,124 @@ export class UserController extends ModelController<typeof User> {
         email,
         password,
       });
+      const expiresIn = new Date();
+      expiresIn.setMinutes(expiresIn.getMinutes() + 30);
+      const tokens = await Token.find({ email })
+        .sort({ createdAt: 'desc' })
+        .limit(1);
+      const lastRecovery = tokens && tokens.length ? tokens[0] : null;
+      let doc = null;
+      const newToken = Math.floor(100000 + Math.random() * 900000).toString();
+      if (!lastRecovery || (lastRecovery && lastRecovery.used)) {
+        doc = await Token.create({
+          expiresIn,
+          email,
+          used: false,
+          token: newToken,
+          user,
+        });
+      } else {
+        doc = await Token.findOneAndUpdate(
+          { _id: lastRecovery._id },
+          { $set: { expiresIn, token: newToken } },
+          {
+            returnDocument: 'after',
+            runValidators: true,
+          }
+        );
+      }
+      const html = registerEmailTemplate.replace('{{token}}', doc.token);
       emailEmitter.emit('sendEmail', {
         to: email,
-        subject: 'Welcome to Cognum!',
-        text: "Welcome to COGNUM. Let's go together in search of a promising future with AI's. This is an automatic email from the system, you do not need to respond to it.",
+        subject: 'Cognum - Register',
+        html,
       });
-      const { password: _passwd, ...rest } = user.toObject();
-      res.status(201).json(rest);
+      res.status(201).json(doc);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  public async resendTokenRequest(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const tokenId = req.params.tokenId;
+      const { email } = req.body;
+      const expiresIn = new Date();
+      expiresIn.setMinutes(expiresIn.getMinutes() + 30);
+      const token = await Token.findById(tokenId);
+      const user = await User.findOne({ email });
+      let doc = null;
+      const newToken = Math.floor(100000 + Math.random() * 900000).toString();
+      if (!token || (token && token.used)) {
+        doc = await Token.create({
+          expiresIn,
+          user,
+          used: false,
+          token: newToken,
+        });
+      } else {
+        doc = await Token.findOneAndUpdate(
+          { _id: token._id },
+          { $set: { expiresIn, token: newToken } },
+          {
+            returnDocument: 'after',
+            runValidators: true,
+          }
+        );
+      }
+      const html = registerEmailTemplate.replace('{{token}}', doc.token);
+      emailEmitter.emit('sendEmail', {
+        to: email,
+        subject: 'Cognum - Register',
+        html,
+      });
+      res.status(200).json();
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  public async verifyUser(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const now = new Date();
+      const tokenId = req.params.tokenId;
+      const { token } = req.body;
+      const expiresIn = new Date();
+      expiresIn.setMinutes(expiresIn.getMinutes() + 30);
+      const _token = await Token.findOne({ _id: tokenId, token });
+      if (!_token) {
+        res.status(404).json({ error: 'Token not found' });
+        return;
+      }
+      const tokenData = _token.toObject();
+
+      // @ts-ignore
+      const expired = now.getTime() > new Date(_token.expiresIn).getTime();
+      if (tokenData.used || expired) {
+        res.status(400).json({ error: 'Used or expired token' });
+        return;
+      }
+
+      const user = await User.findById(tokenData.user);
+      if (user.active) {
+        res.status(400).json({
+          error: 'User is already active in the system, proceed to login',
+        });
+        return;
+      }
+
+      await User.findByIdAndUpdate(user._id, { $set: { active: true } });
+      await Token.findByIdAndUpdate(_token._id, { $set: { used: true } });
+
+      res.status(201).json();
     } catch (error) {
       next(error);
     }
@@ -60,21 +172,23 @@ export class UserController extends ModelController<typeof User> {
       const { email } = req.body;
       const expiresIn = new Date();
       expiresIn.setMinutes(expiresIn.getMinutes() + 15);
-      const user = await User.findOne({ email });
+      const user = await User.findOne({ email, active: true });
       if (!user) {
-        res.status(404).json({ error: 'No user registered with email' });
+        res
+          .status(404)
+          .json({ error: 'No active users registered with email' });
         return;
       }
-      const recoveries = await Recovery.find({ user: user._id })
+      const recoveries = await Token.find({ user: user._id })
         .sort({ createdAt: 'desc' })
         .limit(1);
       const lastRecovery =
         recoveries && recoveries.length ? recoveries[0] : null;
       let doc = null;
       if (!lastRecovery || (lastRecovery && lastRecovery.used)) {
-        doc = await Recovery.create({ expiresIn, user: user._id });
+        doc = await Token.create({ expiresIn, user: user._id });
       } else {
-        doc = await Recovery.findOneAndUpdate(
+        doc = await Token.findOneAndUpdate(
           { _id: lastRecovery._id },
           { $set: { expiresIn } },
           {
@@ -105,8 +219,8 @@ export class UserController extends ModelController<typeof User> {
   ): Promise<void> {
     try {
       const now = new Date();
-      const recoveryId: string = req.params.recoveryId;
-      const recovery = await Recovery.findById(recoveryId);
+      const tokenId: string = req.params.tokenId;
+      const recovery = await Token.findById(tokenId);
       if (!recovery) {
         res.status(404).json({ error: 'Recovery token not found' });
         return;
@@ -118,7 +232,8 @@ export class UserController extends ModelController<typeof User> {
         res.json({ isValid: false });
         return;
       }
-      res.json({ isValid: true });
+      const user = await User.findById(_recovery.user);
+      res.json({ isValid: true, email: user.email });
       return;
     } catch (error) {
       next(error);
@@ -134,7 +249,7 @@ export class UserController extends ModelController<typeof User> {
       const now = new Date();
       const recoveryId: string = req.params.recoveryId;
       const { password } = req.body;
-      const recovery = await Recovery.findById(recoveryId);
+      const recovery = await Token.findById(recoveryId);
       if (!recovery) {
         res.status(404).json({ error: 'Recovery token not found' });
         return;
@@ -169,7 +284,7 @@ export class UserController extends ModelController<typeof User> {
         html,
       });
 
-      await Recovery.findOneAndUpdate(
+      await Token.findOneAndUpdate(
         { _id: _recovery._id },
         { $set: { used: true } }
       );
