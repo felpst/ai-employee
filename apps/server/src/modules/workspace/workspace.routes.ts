@@ -10,7 +10,7 @@ const router: Router = express.Router();
 router.post(
   '/',
   authMiddleware,
-  workspaceController.middleware.single('profilePhoto'),
+  workspaceController.middleware.array('files', 2),
   jsonParserMiddleware,
   YupValidatorMiddleware(addWorkspace),
   workspaceController.create
