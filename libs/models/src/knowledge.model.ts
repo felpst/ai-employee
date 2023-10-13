@@ -10,6 +10,12 @@ const schema = new Schema<IKnowledge>({
   employees: [
     { type: Schema.Types.ObjectId, ref: 'AIEmployee', required: false },
   ],
+  permissions: [
+    {
+      userId: { type: String, required: true },
+      permission: { type: String, required: true, enum: ['Reader', 'Editor'] },
+    },
+  ],
   ...defaultSchemaProps,
 });
 triggers(schema);

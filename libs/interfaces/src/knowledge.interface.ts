@@ -9,4 +9,10 @@ export interface IKnowledge extends DefaultModel {
   data: string;
   workspace: Schema.Types.ObjectId | IWorkspace;
   employees: Schema.Types.ObjectId[] | IAIEmployee[];
+  permissions: [
+    {
+      userId: string;
+      permission: 'Reader' | 'Editor';
+    }
+  ];
 }
