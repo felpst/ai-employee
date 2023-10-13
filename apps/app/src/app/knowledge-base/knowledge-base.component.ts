@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-empty-function */
 import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 
@@ -23,8 +24,8 @@ export class KnowledgeBaseComponent {
 
   sortingType: 'newFirst' | 'oldFirst' | 'mix' = 'newFirst';
   sortingDirection: 'asc' | 'desc' = 'desc';
-  activeButton: string = 'newFirst';
-  
+  activeButton = 'newFirst';
+
   constructor(
     private route: ActivatedRoute,
     private knowledgeBaseService: KnowledgeBaseService,
@@ -64,7 +65,6 @@ export class KnowledgeBaseComponent {
   clearSearch() {
     this.searchText = '';
     this.knowledgeBaseFiltered = this.knowledgeBase;
-    console.log(this.knowledgeBaseFiltered)
   }
 
   loadKnowledgeBase(workspaceId: string) {
@@ -81,12 +81,10 @@ export class KnowledgeBaseComponent {
   }
 
   deleteKnowledge(knowledge: IKnowledge) {
-    this.knowledgeBaseService
-      .delete(knowledge)
-      .subscribe((res) => {
-        this.loadKnowledgeBase(this.workspace._id);
-        this.notificationsService.show('Knowledge deleted!');
-      });
+    this.knowledgeBaseService.delete(knowledge).subscribe((res) => {
+      this.loadKnowledgeBase(this.workspace._id);
+      this.notificationsService.show('Knowledge deleted!');
+    });
   }
 
   openDeleteConfirmationDialog(knowledge: IKnowledge) {
@@ -97,23 +95,22 @@ export class KnowledgeBaseComponent {
         confirmText: 'Delete',
       },
     });
-  
+
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
         this.deleteKnowledge(knowledge);
       }
     });
   }
-  
+
   openKnowledgeModal(knowledge: IKnowledge): void {
     const dialogRef = this.dialog.open(KnowledgeModalComponent, {
-      width: '60%', 
+      width: '60%',
       height: '80%',
-      data: knowledge,  
+      data: knowledge,
     });
 
-    dialogRef.afterClosed().subscribe(() => {
-    });
+    dialogRef.afterClosed().subscribe(() => {});
   }
 
   updatedTimeDifference(updatedAt: Date | undefined): string {
@@ -121,7 +118,7 @@ export class KnowledgeBaseComponent {
       return 'N/A';
     }
 
-    const updatedAtDate = new Date(updatedAt); 
+    const updatedAtDate = new Date(updatedAt);
     const now = new Date();
     const diffMilliseconds = now.getTime() - updatedAtDate.getTime();
     const diffMinutes = Math.floor(diffMilliseconds / (1000 * 60));
@@ -139,23 +136,23 @@ export class KnowledgeBaseComponent {
 
   sortKnowledgeBase(sortingCriterion: string) {
     if (sortingCriterion === 'newFirst') {
-      this.sortingDirection = 'desc'; 
+      this.sortingDirection = 'desc';
     } else if (sortingCriterion === 'oldFirst') {
-      this.sortingDirection = 'asc'; 
+      this.sortingDirection = 'asc';
     } else if (sortingCriterion === 'mix') {
       this.knowledgeBaseFiltered.sort(() => Math.random() - 0.5);
     } else {
       this.sortingDirection = 'desc';
     }
-  
+
     if (sortingCriterion !== 'mix') {
       this.knowledgeBaseFiltered.sort((a: IKnowledge, b: IKnowledge) => {
         if (a.createdAt && b.createdAt) {
           const dateA = new Date(a.createdAt);
           const dateB = new Date(b.createdAt);
-  
+
           const sortOrder = this.sortingDirection === 'asc' ? 1 : -1;
-  
+
           if (dateA < dateB) {
             return -sortOrder;
           }
@@ -167,10 +164,9 @@ export class KnowledgeBaseComponent {
       });
     }
   }
-  
+
   onButtonClick(button: string) {
     this.activeButton = button;
     this.sortKnowledgeBase(button);
   }
-
 }
