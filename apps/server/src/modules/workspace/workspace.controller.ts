@@ -1,4 +1,5 @@
-import { User, Workspace } from '@cognum/models';
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+import { AIEmployee, User, Workspace } from '@cognum/models';
 import { Storage } from '@google-cloud/storage';
 import crypto from 'crypto';
 import { NextFunction, Request, Response } from 'express';
@@ -23,27 +24,24 @@ export class WorkspaceController extends ModelController<typeof Workspace> {
 
   private async _uploadFile(
     id: string,
-    originalName: string,
-    filePath: string
+    file: Express.Multer.File,
+    folder: string
   ) {
-    googleStorageBucket.getFiles({});
     try {
       const hash = crypto
         .createHash('sha256')
-        .update(originalName + Date.now())
+        .update(file.originalname + Date.now())
         .digest('hex');
-      const newName = `${hash}_${originalName}`;
-      const destinationPath = `workspaces/${id}/${newName}`;
-      await googleStorageBucket.upload(filePath, {
-        destination: destinationPath,
-      });
-      const file = await googleStorageBucket.file(destinationPath);
-      await file.acl.add({ entity: 'allUsers', role: 'READER' });
+      const newName = `${hash}_${file.originalname}`;
+      const destination = `${folder}/${id}/${newName}`;
+      await googleStorageBucket.upload(file.path, { destination });
+      const upload = await googleStorageBucket.file(destination);
+      await upload.acl.add({ entity: 'allUsers', role: 'READER' });
 
       // delete file from local storage
-      fs.unlinkSync(filePath);
+      fs.unlinkSync(file.path);
 
-      return `https://storage.googleapis.com/${googleStorageBucket.name}/${destinationPath}`;
+      return `https://storage.googleapis.com/${googleStorageBucket.name}/${destination}`;
     } catch (error) {
       const { errors } = error;
       console.log('An error ocurring in upload file: ', { error, errors });
@@ -59,18 +57,22 @@ export class WorkspaceController extends ModelController<typeof Workspace> {
     try {
       const dataset = Array.isArray(req.body) ? [...req.body] : [req.body];
       const userId = req['userId'];
+      // @ts-ignore
+      const files = req.files ? Array.from(req.files) : [];
       const docs = [];
       for (const data of dataset) {
-        const { users } = data;
+        const { users, employee } = data;
         const arrayUsers = Array.isArray(users) ? [...users] : [users];
         const _id = new mongoose.Types.ObjectId();
-        const profilePhoto = req.file?.path
-          ? await this._uploadFile(
-              _id.toString(),
-              req.file.originalname,
-              req.file.path
-            )
-          : process.env.WORKSPACE_PHOTO_URL;
+        let profilePhoto = process.env.DEFAULT_PHOTO_URL;
+        const [profileFile, employeeFile] = files;
+        if (profileFile?.path) {
+          profilePhoto = await this._uploadFile(
+            _id.toString(),
+            profileFile,
+            'workspaces'
+          );
+        }
 
         if (!data.createdBy) {
           data.createdBy = userId;
@@ -85,6 +87,25 @@ export class WorkspaceController extends ModelController<typeof Workspace> {
           users: _users,
           profilePhoto,
         });
+        if (employee) {
+          const _employeeId = new mongoose.Types.ObjectId();
+          let avatarPhoto = process.env.DEFAULT_PHOTO_URL;
+          if (employeeFile?.path) {
+            avatarPhoto = await this._uploadFile(
+              _employeeId.toString(),
+              employeeFile,
+              'employees'
+            );
+          }
+          await AIEmployee.create({
+            ...employee,
+            _id: _employeeId,
+            workspaces: [doc._id],
+            avatar: avatarPhoto,
+            createdBy: userId,
+            updatedBy: userId,
+          });
+        }
         docs.push(doc);
       }
       res.status(201).json(docs.length > 1 ? docs : docs[0]);
@@ -99,14 +120,14 @@ export class WorkspaceController extends ModelController<typeof Workspace> {
     next: NextFunction
   ): Promise<void> {
     try {
-      const workspaceId: string = req.params.id;
+      const workspaceId = req.params.id;
       const data = req.body;
       data.updatedBy = req['userId'];
       if (req.file?.path) {
         data.profilePhoto = await this._uploadFile(
           workspaceId,
-          req.file.originalname,
-          req.file.path
+          req.file,
+          'workspaces'
         );
       }
 
