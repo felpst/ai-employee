@@ -67,6 +67,12 @@ export class KnowledgeController extends ModelController<typeof Knowledge> {
           updatedBy: userId,
           title: _title,
           description: _description,
+          permissions: [
+            {
+              userId: userId,
+              permission: 'Editor',
+            },
+          ],
         });
         docs.push(doc);
       }

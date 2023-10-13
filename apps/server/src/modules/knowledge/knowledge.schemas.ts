@@ -8,6 +8,15 @@ export const addKnowledgeSchema = yup.object({
       data: yup.string().required(),
       workspace: yup.string().required(),
       employees: yup.array().of(yup.string()).notRequired(),
+      permissions: yup
+        .array()
+        .of(
+          yup.object({
+            userId: yup.string().required(),
+            permission: yup.string().oneOf(['Reader', 'Editor']).required(),
+          })
+        )
+        .notRequired(),
     })
     .noUnknown()
     .required(),
