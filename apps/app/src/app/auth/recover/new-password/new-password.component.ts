@@ -7,7 +7,6 @@ import {
 } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NotificationsService } from '../../../services/notifications/notifications.service';
-import { UsersService } from '../../../services/users/users.service';
 import { AuthService } from '../../auth.service';
 
 @Component({
@@ -32,11 +31,11 @@ export class RecoverComponent {
   submitting = false;
   showRecoverError = false;
   errors: string[] = [];
+  cacheInfoData = '@cognum/data';
 
   constructor(
     private formBuilder: FormBuilder,
     private authService: AuthService,
-    private usersService: UsersService,
     private router: Router,
     private notificationsService: NotificationsService,
     private route: ActivatedRoute
@@ -93,7 +92,7 @@ export class RecoverComponent {
         this.authService.updatePassword(recoveryId, password).subscribe(
           (response) => {
             this.router.navigate(['auth/login']);
-
+            localStorage.removeItem(this.cacheInfoData);
             this.notificationsService.show('Password recovery successful.');
           },
           (error) => {

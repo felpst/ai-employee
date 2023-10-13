@@ -6,11 +6,13 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 
 import { MatIconModule } from '@angular/material/icon';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { AuthRoutingModule } from './auth-routing.module';
 import { LoginComponent } from './login/login.component';
 import { InsertEmailComponent } from './recover/insert-email.component';
 import { RecoverComponent } from './recover/new-password/new-password.component';
 import { RegisterComponent } from './register/register.component';
+import { ValidateComponent } from './validate/validate.component';
 
 @NgModule({
   declarations: [
@@ -18,6 +20,7 @@ import { RegisterComponent } from './register/register.component';
     RegisterComponent,
     RecoverComponent,
     InsertEmailComponent,
+    ValidateComponent,
   ],
   imports: [
     CommonModule,
@@ -28,6 +31,7 @@ import { RegisterComponent } from './register/register.component';
     MatInputModule,
     MatCheckboxModule,
     MatFormFieldModule,
+    MatProgressSpinnerModule,
   ],
 })
 export class AuthModule {}
