@@ -5,5 +5,6 @@ import { IWorkspace } from './workspace.interface';
 export interface IAIEmployee extends DefaultModel {
   name: string;
   role: string;
+  avatar?: string;
   workspaces: Schema.Types.ObjectId[] | IWorkspace[];
 }
