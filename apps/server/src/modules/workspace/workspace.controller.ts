@@ -5,9 +5,6 @@ import crypto from 'crypto';
 import { NextFunction, Request, Response } from 'express';
 import fs from 'fs';
 import mongoose from 'mongoose';
-import multer from 'multer';
-import os from 'os';
-import path from 'path';
 import ModelController from '../../controllers/model.controller';
 
 const gc = new Storage({
@@ -157,29 +154,6 @@ export class WorkspaceController extends ModelController<typeof Workspace> {
     } catch (error) {
       next(error);
     }
-  }
-
-  get middleware() {
-    const storage = multer.diskStorage({
-      destination: function (req, file, cb) {
-        const uploadPath = path.join(os.tmpdir(), 'uploads');
-        if (!fs.existsSync(uploadPath)) {
-          fs.mkdirSync(uploadPath, { recursive: true });
-        }
-        cb(null, uploadPath);
-      },
-      filename: function (req, file, cb) {
-        const hash = crypto
-          .createHash('sha256')
-          .update(file.originalname + Date.now())
-          .digest('hex');
-        const newName = `${hash}_${file.originalname}`;
-        cb(null, newName);
-      },
-    });
-
-    const upload = multer({ storage: storage });
-    return upload;
   }
 }
 
