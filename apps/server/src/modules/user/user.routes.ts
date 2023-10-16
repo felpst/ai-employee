@@ -1,4 +1,7 @@
 import express, { Router } from 'express';
+import multer from 'multer';
+import jsonParserMiddleware from '../../middlewares/jsonParserMiddleware';
+import multerConfig from '../../middlewares/multerConfig';
 import YupValidatorMiddleware from '../../middlewares/yup.validator';
 import { authMiddleware } from '../auth/auth.middleware';
 import userController from './user.controller';
@@ -12,6 +15,8 @@ const router: Router = express.Router();
 
 router.post(
   '/register',
+  multer(multerConfig).single('profilePhoto'),
+  jsonParserMiddleware,
   YupValidatorMiddleware(addUserSchema),
   userController.register
 );
