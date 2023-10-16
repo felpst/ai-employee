@@ -1,5 +1,7 @@
 import express, { Router } from 'express';
+import multer from 'multer';
 import jsonParserMiddleware from '../../middlewares/jsonParserMiddleware';
+import multerConfig from '../../middlewares/multerConfig';
 import YupValidatorMiddleware from '../../middlewares/yup.validator';
 import { authMiddleware } from '../auth/auth.middleware';
 import workspaceController from './workspace.controller';
@@ -10,7 +12,7 @@ const router: Router = express.Router();
 router.post(
   '/',
   authMiddleware,
-  workspaceController.middleware.array('files', 2),
+  multer(multerConfig).array('files', 2),
   jsonParserMiddleware,
   YupValidatorMiddleware(addWorkspace),
   workspaceController.create
@@ -21,7 +23,7 @@ router.get('/:id', authMiddleware, workspaceController.getById);
 router.put(
   '/:id',
   authMiddleware,
-  workspaceController.middleware.single('profilePhoto'),
+  multer(multerConfig).single('profilePhoto'),
   jsonParserMiddleware,
   workspaceController.update
 );
