@@ -172,11 +172,9 @@ export class UserController extends ModelController<typeof User> {
       const { email } = req.body;
       const expiresIn = new Date();
       expiresIn.setMinutes(expiresIn.getMinutes() + 15);
-      const user = await User.findOne({ email, active: true });
+      const user = await User.findOne({ email });
       if (!user) {
-        res
-          .status(404)
-          .json({ error: 'No active users registered with email' });
+        res.status(404).json({ error: 'No users found with email' });
         return;
       }
       const recoveries = await Token.find({ user: user._id })
@@ -268,7 +266,7 @@ export class UserController extends ModelController<typeof User> {
       const hashedPassword = await bcrypt.hash(password, 10);
       await User.findOneAndUpdate(
         { _id: _recovery.user },
-        { $set: { password: hashedPassword } }
+        { $set: { password: hashedPassword, active: true } }
       );
 
       // Envie um e-mail de confirmação de alteração de senha
