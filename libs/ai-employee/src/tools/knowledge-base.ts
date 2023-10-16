@@ -10,9 +10,7 @@ export class KnowledgeBaseTool extends DynamicTool {
       description:
         'Use this when you need search informations you dont know and possible to find in knowledge base of company. Input should be a question.',
       func: async (input: string) => {
-        const { sourceDocuments: relevantDocs } = await knowledgeBase.query(
-          input
-        );
+        const relevantDocs = await knowledgeBase.query(input);
 
         console.log(relevantDocs);
 

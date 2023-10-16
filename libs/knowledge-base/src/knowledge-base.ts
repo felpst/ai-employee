@@ -1,64 +1,37 @@
-import { Index, Pinecone, RecordMetadata } from '@pinecone-database/pinecone';
-import { VectorDBQAChain } from 'langchain/chains';
 import { Document } from 'langchain/document';
 import { OpenAIEmbeddings } from 'langchain/embeddings/openai';
-import { OpenAI } from 'langchain/llms/openai';
-import { PineconeStore } from 'langchain/vectorstores/pinecone';
-import { indexConfig } from './config/database-index.config';
-
-interface QueryOutput {
-  text: string;
-  sourceDocuments: Document[];
-}
+import { Milvus } from 'langchain/vectorstores/milvus';
 
 export default class KnowledgeBase {
-  private _pineconeIndex: Index<RecordMetadata>;
-  private _llm: OpenAI;
-  private _vectorStore: PineconeStore;
-  private _pinecone: Pinecone;
+  private _vectorStore: Milvus;
 
-  constructor(private indexName: string) {
-    this._llm = new OpenAI();
+  constructor(collectionName: string) {
+    collectionName = `_${collectionName}`;
     const embeddings = new OpenAIEmbeddings();
-
-    this._pinecone = new Pinecone({
-      apiKey: process.env.PINECONE_API_KEY,
-      environment: 'gcp-starter',
-    });
-    this._pineconeIndex = this._pinecone.Index(this.indexName);
-
-    this._vectorStore = new PineconeStore(embeddings, {
-      pineconeIndex: this._pineconeIndex,
+    this._vectorStore = new Milvus(embeddings, {
+      collectionName: collectionName,
     });
   }
 
-  async indexDocuments(docs: Document[]): Promise<string[]> {
+  async indexDocuments(docs: Document[]): Promise<void> {
     return this._vectorStore.addDocuments(docs);
   }
 
-  async query(input: string, documentsCount = 3): Promise<QueryOutput> {
-    const chain = VectorDBQAChain.fromLLM(this._llm, this._vectorStore, {
-      k: documentsCount,
-      returnSourceDocuments: true,
-    });
-
-    return chain.call({ query: input }) as Promise<QueryOutput>;
+  async query(input: string, documentsCount = 3): Promise<Document[]> {
+    return this._vectorStore.similaritySearch(input, documentsCount);
   }
 
   async deleteDocumentsByOwnerDocumentId(
     ownerDocumentId: string
   ): Promise<void> {
-    return this._pineconeIndex.deleteMany({ ownerDocumentId });
+    return this._vectorStore.delete({ filter: ownerDocumentId });
   }
 
   async createIndex() {
-    return this._pinecone.createIndex({
-      name: this.indexName,
-      ...indexConfig,
-    });
+    return undefined;
   }
 
   async deleteIndex() {
-    return this._pinecone.deleteIndex(this.indexName);
+    return undefined;
   }
 }
