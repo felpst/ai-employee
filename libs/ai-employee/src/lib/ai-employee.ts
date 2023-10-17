@@ -1,17 +1,14 @@
 import { IChat, ICompany, IUser } from '@cognum/interfaces';
+import {
+  AIEmployeeIdentity, AIEmployeeMemory, AIEmployeeOutputParser,
+  AIEmployeePromptTemplate, KnowledgeBaseTool
+} from '@cognum/tools';
 import { AgentExecutor, LLMSingleActionAgent } from 'langchain/agents';
 import { LLMChain } from 'langchain/chains';
 import { ChatOpenAI } from 'langchain/chat_models/openai';
 import { Callbacks } from 'langchain/dist/callbacks';
 import { Tool } from 'langchain/tools';
 import { Calculator } from 'langchain/tools/calculator';
-import {
-  AIEmployeeIdentity,
-  AIEmployeeOutputParser,
-  AIEmployeePromptTemplate,
-} from '../helpers/prompts.helper';
-import { AIEmployeeMemory } from '../memories/ai_employee.memory';
-import { KnowledgeBaseTool } from '../tools/knowledge-base';
 
 export class AIEmployee {
   private _chat: IChat;

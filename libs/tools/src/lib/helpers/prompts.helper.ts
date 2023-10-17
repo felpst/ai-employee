@@ -3,7 +3,7 @@ import { AgentActionOutputParser } from 'langchain/agents';
 import {
   BaseChatPromptTemplate,
   SerializedBasePromptTemplate,
-  renderTemplate,
+  renderTemplate
 } from 'langchain/prompts';
 import {
   AgentAction,
