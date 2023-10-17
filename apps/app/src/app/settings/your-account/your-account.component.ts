@@ -5,7 +5,7 @@ import {
   ValidationErrors,
   Validators,
 } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { AuthService } from '../../auth/auth.service';
 import { SettingsService } from '../settings.service';
 
@@ -27,7 +27,6 @@ export class YourAccountComponent implements OnInit {
   showDeleteConfirmation = false;
 
   constructor(
-    private route: ActivatedRoute,
     private settingsService: SettingsService,
     private authService: AuthService,
     private formBuilder: FormBuilder,
