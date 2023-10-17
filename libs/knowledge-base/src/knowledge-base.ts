@@ -1,3 +1,4 @@
+import { MetricType } from '@zilliz/milvus2-sdk-node';
 import { Document } from 'langchain/document';
 import { OpenAIEmbeddings } from 'langchain/embeddings/openai';
 import { Milvus } from 'langchain/vectorstores/milvus';
@@ -92,6 +93,7 @@ export default class KnowledgeBase {
     await client.createIndex({
       collection_name: this._collectionName,
       field_name: 'vector',
+      metric_type: MetricType.L2,
     });
   }
 }
