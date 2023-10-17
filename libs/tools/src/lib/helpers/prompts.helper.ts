@@ -2,9 +2,8 @@ import { ICompany, IMessage, IUser } from '@cognum/interfaces';
 import { AgentActionOutputParser } from 'langchain/agents';
 import {
   BaseChatPromptTemplate,
-  BasePromptTemplate,
   SerializedBasePromptTemplate,
-  renderTemplate,
+  renderTemplate
 } from 'langchain/prompts';
 import {
   AgentAction,
@@ -18,6 +17,7 @@ import {
 import { Tool } from 'langchain/tools';
 import { AIEmployeeMemory } from '../memories/ai_employee.memory';
 import { ToolsHelper } from './tools.helper';
+import { AnyARecord } from 'dns';
 
 const formatIdentity = (identity: AIEmployeeIdentity) =>
   `Your name is ${identity.name || 'Atlas'}. Your a ${
@@ -139,7 +139,7 @@ export class AIEmployeePromptTemplate extends BaseChatPromptTemplate {
     return [new HumanMessage(formatted)];
   }
 
-  partial(_values: PartialValues): Promise<BasePromptTemplate> {
+  partial(_values: PartialValues): Promise<any> {
     throw new Error('Not implemented');
   }
 

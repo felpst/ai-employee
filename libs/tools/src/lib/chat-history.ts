@@ -1,5 +1,5 @@
 import { DynamicTool } from 'langchain/tools';
-import { AIEmployeeMemory } from '../memories/ai_employee.memory';
+import { AIEmployeeMemory } from './memories/ai_employee.memory';
 
 export class ChatHistoryTool extends DynamicTool {
   constructor(memory: AIEmployeeMemory) {

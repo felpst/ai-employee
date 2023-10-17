@@ -18,6 +18,7 @@ export class ToolsHelper {
 
   async getTools(query: string, k = 3) {
     if (!query) return [];
+    if (!this._vectorStore) await this._storeTools();
     const retriever = this._vectorStore.asRetriever(k);
     const docs = await retriever.getRelevantDocuments(query);
     const tools = [];
