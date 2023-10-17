@@ -23,7 +23,7 @@ export class AuthGuard {
         next: () => {
           observer.next(true);
         },
-        error: () => {
+        error: (error) => {
           console.error('Invalid token');
           this.router.navigate(['auth']);
           observer.next(false);

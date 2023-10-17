@@ -21,6 +21,13 @@ const routes: Routes = [
           import('./home/home.module').then((m) => m.HomeComponentModule),
       },
       {
+        path: 'settings',
+        loadChildren: () =>
+          import('./settings/settings.module').then(
+            (m) => m.SettingsComponentModule
+          ),
+      },
+      {
         path: 'workspaces',
         component: AdminComponent,
         loadChildren: () =>
