@@ -10,6 +10,7 @@ export interface IMessage extends DefaultModel {
   content: string;
   feedbacks: IFeedback[];
   role: MessageRole;
+  thought?: string;
   user: Schema.Types.ObjectId | IUser;
   chat: Schema.Types.ObjectId | IChat;
   question?: Schema.Types.ObjectId | IMessage;

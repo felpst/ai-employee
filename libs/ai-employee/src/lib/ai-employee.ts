@@ -50,10 +50,10 @@ export class AIEmployee {
       callbacks: this._callbacks,
       // verbose: true,
     }
-    
+
     this._model = new ChatModel(configChatModel)
 
-    
+
 
     this.memory = new AIEmployeeMemory({
       chat: this._chat,
@@ -107,10 +107,17 @@ export class AIEmployee {
     // Executor
     const chainValues = await this._executor.call({ input }, callbacks);
     const response = chainValues.output;
+    // @ts-ignore
+    const thought = this._agent.outputParser.getLastThought();
 
     // Save response
     this.memory
-      .addMessage({ content: response, role: 'AI', question: message._id })
+      .addMessage({
+        content: response,
+        role: 'AI',
+        question: message._id,
+        thought,
+      })
       .then((responseMessage) => {
         if (callbacks.onSaveAIMessage) {
           callbacks.onSaveAIMessage(responseMessage);
@@ -139,6 +146,7 @@ export class AIEmployee {
       content: message.content,
       role: message.role,
       feedbacks: message.feedbacks,
+      thought: message.thought,
       createdBy: message.createdBy,
       createdAt: message.createdAt,
     }));

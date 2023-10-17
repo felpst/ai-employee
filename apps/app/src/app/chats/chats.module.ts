@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 
+import { CdkAccordionModule } from '@angular/cdk/accordion';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule } from '@angular/material/dialog';
@@ -26,6 +27,7 @@ import { ChatsComponent } from './chats.component';
     MatListModule,
     MatTooltipModule,
     MatDialogModule,
+    CdkAccordionModule,
     ReactiveFormsModule,
     NgxSkeletonLoaderModule,
   ],

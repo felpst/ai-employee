@@ -73,6 +73,7 @@
   align-items: center;
   width: 100%;
   background: #f0f0f0;
+  height: 100%;
 
   .data-content {
     align-items: center;
@@ -244,5 +245,11 @@
 @media screen and (max-width: 930px) {
   .data-content {
     padding: 1.5rem;
+  }
+}
+
+@media screen and (max-width: 475px) {
+  .content {
+    height: auto;
   }
 }
