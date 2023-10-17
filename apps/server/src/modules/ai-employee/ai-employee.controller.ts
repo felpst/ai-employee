@@ -1,48 +1,12 @@
 import { AIEmployee, Workspace } from '@cognum/models';
-import { Storage } from '@google-cloud/storage';
-import crypto from 'crypto';
 import { NextFunction, Request, Response } from 'express';
-import fs from 'fs';
 import mongoose from 'mongoose';
 import ModelController from '../../controllers/model.controller';
-
-const gc = new Storage({
-  keyFilename: 'cognum.secrets.json',
-  projectId: 'cognum',
-});
-
-const googleStorageBucket = gc.bucket('cognum-data-sources');
+import UploadUtils from '../../utils/upload.utils';
 
 export class AiEmployeeController extends ModelController<typeof AIEmployee> {
   constructor() {
     super(AIEmployee);
-  }
-
-  private async _uploadFile(
-    id: string,
-    file: Express.Multer.File,
-    folder: string
-  ) {
-    try {
-      const hash = crypto
-        .createHash('sha256')
-        .update(file.originalname + Date.now())
-        .digest('hex');
-      const newName = `${hash}_${file.originalname}`;
-      const destination = `${folder}/${id}/${newName}`;
-      await googleStorageBucket.upload(file.path, { destination });
-      const upload = await googleStorageBucket.file(destination);
-      await upload.acl.add({ entity: 'allUsers', role: 'READER' });
-
-      // delete file from local storage
-      fs.unlinkSync(file.path);
-
-      return `https://storage.googleapis.com/${googleStorageBucket.name}/${destination}`;
-    } catch (error) {
-      const { errors } = error;
-      console.log('An error ocurring in upload file: ', { error, errors });
-      return '';
-    }
   }
 
   public async create(
@@ -69,7 +33,7 @@ export class AiEmployeeController extends ModelController<typeof AIEmployee> {
         const _id = new mongoose.Types.ObjectId();
         let avatar = process.env.DEFAULT_PHOTO_URL;
         if (req.file?.path) {
-          avatar = await this._uploadFile(
+          avatar = await UploadUtils.uploadFile(
             _id.toString(),
             req.file,
             'employees'
@@ -99,7 +63,11 @@ export class AiEmployeeController extends ModelController<typeof AIEmployee> {
       const data = req.body;
       data.updatedBy = req['userId'];
       if (req.file?.path) {
-        data.avatar = await this._uploadFile(employeeId, req.file, 'employees');
+        data.avatar = await UploadUtils.uploadFile(
+          employeeId,
+          req.file,
+          'employees'
+        );
       }
 
       const updated = await AIEmployee.findByIdAndUpdate(employeeId, data, {
