@@ -1,7 +1,7 @@
 import { IChat, ICompany, IUser } from '@cognum/interfaces';
 import {
   AIEmployeeIdentity, AIEmployeeMemory, AIEmployeeOutputParser,
-  AIEmployeePromptTemplate, KnowledgeBaseTool
+  AIEmployeePromptTemplate, GoogleCalendarCreate, GoogleCalendarView, KnowledgeBaseTool
 } from '@cognum/tools';
 import { AgentExecutor, LLMSingleActionAgent } from 'langchain/agents';
 import { LLMChain } from 'langchain/chains';
@@ -64,6 +64,8 @@ export class AIEmployee {
       // new ChatHistoryTool(this.memory),
       // new ZapierTool(),
       new KnowledgeBaseTool(),
+      new GoogleCalendarView(),
+      new GoogleCalendarCreate(),
     ];
 
     this._chain = new LLMChain({
