@@ -1,0 +1,83 @@
+<div class="delete-account-modal" *ngIf="showDeleteConfirmation">
+  <div class="modal-content">
+    <p>Are you sure you want to delete your account?</p>
+    <button (click)="confirmDeleteAccount()">Delete</button>
+    <button (click)="cancelDeleteAccount()">Cancel</button>
+  </div>
+</div>
+
+<header class="header">
+  <nav>
+    <div class="workspace-info-group">
+      <button>
+        <mat-icon svgIcon="arrow-left"></mat-icon>
+      </button>
+      <img src="" alt="" />
+      <span class="workspace-name">potato</span>
+    </div>
+    <div>
+      <img src="" alt="" />
+      <span>{{ name }}</span>
+    </div>
+  </nav>
+</header>
+<div class="body">
+  <div class="description">
+    <h1>Your Account</h1>
+    <span
+      >Adjust account-wide settings and preferences here for Felipe Telles</span
+    >
+  </div>
+  <div class="settings">
+    <nav>
+      <span
+        class="item"
+        [class.selected]="selectedItem === 1"
+        (click)="selectItem(1)"
+        >General</span
+      >
+    </nav>
+    <div class="content">
+      <ng-container *ngIf="selectedItem === 1">
+        <form
+          [formGroup]="updateForm"
+          (ngSubmit)="onSubmit()"
+          class="container-group"
+        >
+          <span class="workspace-image">Your profile photo (optional)</span>
+          <div class="image-group">
+            <input class="image" type="file" name="" id="" />
+            <span>Help teammates know that you are the right person.</span>
+          </div>
+
+          <div>
+            <div style="flex-direction: column" class="input">
+              <span>Your name</span>
+              <div style="display: flex; gap: 2px">
+                <input
+                  type="text"
+                  placeholder="Felipe Telles"
+                  formControlName="name"
+                  [value]="name"
+                />
+                <button class="button" (click)="onSubmit()">Submit</button>
+              </div>
+            </div>
+          </div>
+        </form>
+        <div class="footer">
+          <div>
+            <span>Delete your account</span>
+            <button class="button" (click)="openDeleteAccountModal()">
+              delete it
+            </button>
+          </div>
+          <span class="footer-description"
+            >Lorem ipsum dolor sit amet consectetur. Amet a faucibus
+            pellentesque posuere.
+          </span>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+</div>
