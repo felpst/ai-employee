@@ -15,15 +15,19 @@ const router: Router = express.Router();
 
 router.post(
   '/register',
-  multer(multerConfig).single('profilePhoto'),
-  jsonParserMiddleware,
   YupValidatorMiddleware(addUserSchema),
   userController.register
 );
 router.post('/', authMiddleware, userController.create);
 router.get('/', authMiddleware, userController.find);
 router.get('/:id', authMiddleware, userController.getById);
-router.put('/:id', authMiddleware, userController.update);
+router.put(
+  '/:id',
+  authMiddleware,
+  multer(multerConfig).single('profilePhoto'),
+  jsonParserMiddleware,
+  userController.update
+);
 router.delete('/:id', authMiddleware, userController.delete);
 
 // Verify tokens

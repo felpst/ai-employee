@@ -7,6 +7,7 @@ import emailEmitter from '../../utils/email.utils';
 import { confirmPasswordResetEmailTemplate } from '../../utils/templates/confirm-reset-password';
 import { registerEmailTemplate } from '../../utils/templates/register';
 import { passwordResetEmailTemplate } from '../../utils/templates/reset-password';
+import UploadUtils from '../../utils/upload.utils';
 
 export class UserController extends ModelController<typeof User> {
   constructor() {
@@ -22,6 +23,33 @@ export class UserController extends ModelController<typeof User> {
       const sort = (req.query.sort as string) || [];
       const list = await User.find().sort(sort).select('-password');
       res.json(list);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  public async update(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const userId: string = req.params.id;
+      const data = req.body;
+      data.updatedBy = req['userId'];
+      if (req.file?.path) {
+        data.profilePhoto = await UploadUtils.uploadFile(
+          userId,
+          req.file,
+          'users'
+        );
+      }
+      const updated = await User.findByIdAndUpdate(userId, data, {
+        returnDocument: 'after',
+        runValidators: true,
+      });
+
+      res.json(updated);
     } catch (error) {
       next(error);
     }
