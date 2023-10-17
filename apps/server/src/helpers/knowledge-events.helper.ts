@@ -8,7 +8,7 @@ knowledgeOperationEventEmitter.on('create', async (docs: IKnowledge[]) => {
   if (!docs) return;
   const vectorDb = new KnowledgeBase(docs[0].workspace.toString());
   const splitted = await splitDocuments(docs);
-  await vectorDb.indexDocuments(splitted);
+  await vectorDb.addDocuments(splitted);
 });
 
 knowledgeOperationEventEmitter.on('update', async (doc: IKnowledge) => {
@@ -16,7 +16,7 @@ knowledgeOperationEventEmitter.on('update', async (doc: IKnowledge) => {
   const vectorDb = new KnowledgeBase(doc.workspace.toString());
   await vectorDb.deleteDocumentsByOwnerDocumentId(doc._id.toString());
   const splitted = await splitDocuments([doc]);
-  await vectorDb.indexDocuments(splitted);
+  await vectorDb.addDocuments(splitted);
 });
 
 knowledgeOperationEventEmitter.on('delete', async (doc: IKnowledge) => {

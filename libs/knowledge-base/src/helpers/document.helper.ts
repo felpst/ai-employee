@@ -1,8 +1,5 @@
 import { Document as LangChainDoc } from 'langchain/document';
-import {
-  RecursiveCharacterTextSplitter,
-  RecursiveCharacterTextSplitterParams,
-} from 'langchain/text_splitter';
+import { RecursiveCharacterTextSplitter } from 'langchain/text_splitter';
 import { Document as MongoDoc } from 'mongodb';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -23,13 +20,11 @@ interface KnowledgeMetadata extends Record<string, any> {
  * @returns Plain array of splitted knowledge documents with metadata
  */
 export async function splitDocuments<T extends MongoDoc>(
-  docsToSplit: T[],
-  options?: Partial<RecursiveCharacterTextSplitterParams>
+  docsToSplit: T[]
 ): Promise<KnowledgeDocument[]> {
   const splitter = new RecursiveCharacterTextSplitter({
-    chunkSize: 1000,
-    chunkOverlap: 100,
-    ...(options || {}),
+    chunkSize: 255,
+    chunkOverlap: 0,
   });
 
   const documents = docsToSplit.map(

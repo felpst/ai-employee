@@ -1,19 +1,23 @@
 import { Document } from 'langchain/document';
 import { OpenAIEmbeddings } from 'langchain/embeddings/openai';
 import { Milvus } from 'langchain/vectorstores/milvus';
+import { collectionConfig, milvusConfig } from './config/database-index.config';
 
 export default class KnowledgeBase {
   private _vectorStore: Milvus;
+  private _collectionName: string;
 
   constructor(collectionName: string) {
-    collectionName = `_${collectionName}`;
+    this._collectionName = `_${collectionName}`;
+
     const embeddings = new OpenAIEmbeddings();
     this._vectorStore = new Milvus(embeddings, {
-      collectionName: collectionName,
+      collectionName: this._collectionName,
+      ...milvusConfig,
     });
   }
 
-  async indexDocuments(docs: Document[]): Promise<void> {
+  async addDocuments(docs: Document[]): Promise<void> {
     return this._vectorStore.addDocuments(docs);
   }
 
@@ -21,17 +25,73 @@ export default class KnowledgeBase {
     return this._vectorStore.similaritySearch(input, documentsCount);
   }
 
+  async setupCollection(): Promise<void> {
+    await this._vectorStore.client.createCollection({
+      collection_name: this._collectionName,
+      ...collectionConfig,
+    });
+    await this._setupIndexes();
+  }
+
   async deleteDocumentsByOwnerDocumentId(
     ownerDocumentId: string
   ): Promise<void> {
-    return this._vectorStore.delete({ filter: ownerDocumentId });
+    await this._loadCollection();
+
+    const { data, status } = await this._vectorStore.client.query({
+      collection_name: this._collectionName,
+      filter: `ownerDocumentId == "${ownerDocumentId}"`,
+    });
+
+    if (status.error_code !== 'Success') {
+      await this._releaseCollection();
+      throw new Error(status.reason);
+    }
+
+    const ids = data.map(({ id }) => id);
+    await this._vectorStore.client.deleteEntities({
+      collection_name: this._collectionName,
+      expr: `id in [${ids.join()}]`,
+    });
+
+    await this._releaseCollection();
   }
 
-  async createIndex() {
-    return undefined;
+  async deleteCollection(): Promise<boolean> {
+    return this._vectorStore
+      .ensureCollection()
+      .then(async () => {
+        await this._vectorStore.client.dropCollection({
+          collection_name: this._collectionName,
+        });
+        return true;
+      })
+      .catch(() => false);
   }
 
-  async deleteIndex() {
-    return undefined;
+  private async _loadCollection() {
+    return this._vectorStore.client.loadCollection({
+      collection_name: this._collectionName,
+    });
+  }
+
+  private async _releaseCollection() {
+    await this._vectorStore.client.releaseCollection({
+      collection_name: this._collectionName,
+    });
+  }
+
+  private async _setupIndexes(): Promise<void> {
+    const { client } = this._vectorStore;
+
+    await client.createIndex({
+      collection_name: this._collectionName,
+      field_name: 'id',
+    });
+
+    await client.createIndex({
+      collection_name: this._collectionName,
+      field_name: 'vector',
+    });
   }
 }

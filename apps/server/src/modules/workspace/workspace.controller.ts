@@ -28,7 +28,7 @@ export class WorkspaceController extends ModelController<typeof Workspace> {
           _id: { $in: [...arrayUsers, userId] },
         });
         const doc = await Workspace.create({ ...data, users: _users });
-        await new KnowledgeBase(doc._id.toString()).createIndex();
+        await new KnowledgeBase(doc._id.toString()).setupCollection();
 
         docs.push(doc);
       }
@@ -69,7 +69,7 @@ export class WorkspaceController extends ModelController<typeof Workspace> {
         error.status = 404;
         throw error;
       } else {
-        await new KnowledgeBase(taskId).deleteIndex();
+        await new KnowledgeBase(taskId).deleteCollection();
       }
 
       res.json(deletedTask);
