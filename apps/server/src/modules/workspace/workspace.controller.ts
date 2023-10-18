@@ -70,7 +70,6 @@ export class WorkspaceController extends ModelController<typeof Workspace> {
         docs.push(doc);
       }
       res.status(201).json(docs.length > 1 ? docs : docs[0]);
-      console.log(req.files);
     } catch (error) {
       next(error);
     }
