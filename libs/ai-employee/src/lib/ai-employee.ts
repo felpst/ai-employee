@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import { IChat, ICompany, IUser } from '@cognum/interfaces';
 import { AgentExecutor, LLMSingleActionAgent } from 'langchain/agents';
 import { LLMChain } from 'langchain/chains';
@@ -107,10 +108,17 @@ export class AIEmployee {
     // Executor
     const chainValues = await this._executor.call({ input }, callbacks);
     const response = chainValues.output;
+    // @ts-ignore
+    const thought = this._agent.outputParser.getLastThought();
 
     // Save response
     this.memory
-      .addMessage({ content: response, role: 'AI', question: message._id })
+      .addMessage({
+        content: response,
+        role: 'AI',
+        question: message._id,
+        thought,
+      })
       .then((responseMessage) => {
         if (callbacks.onSaveAIMessage) {
           callbacks.onSaveAIMessage(responseMessage);
@@ -139,6 +147,7 @@ export class AIEmployee {
       content: message.content,
       role: message.role,
       feedbacks: message.feedbacks,
+      thought: message.thought,
       createdBy: message.createdBy,
       createdAt: message.createdAt,
     }));

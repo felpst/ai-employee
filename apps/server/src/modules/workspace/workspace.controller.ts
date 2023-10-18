@@ -1,49 +1,13 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import { AIEmployee, User, Workspace } from '@cognum/models';
-import { Storage } from '@google-cloud/storage';
-import crypto from 'crypto';
 import { NextFunction, Request, Response } from 'express';
-import fs from 'fs';
 import mongoose from 'mongoose';
 import ModelController from '../../controllers/model.controller';
-
-const gc = new Storage({
-  keyFilename: 'cognum.secrets.json',
-  projectId: 'cognum',
-});
-
-const googleStorageBucket = gc.bucket('cognum-data-sources');
+import UploadUtils from '../../utils/upload.utils';
 
 export class WorkspaceController extends ModelController<typeof Workspace> {
   constructor() {
     super(Workspace);
-  }
-
-  private async _uploadFile(
-    id: string,
-    file: Express.Multer.File,
-    folder: string
-  ) {
-    try {
-      const hash = crypto
-        .createHash('sha256')
-        .update(file.originalname + Date.now())
-        .digest('hex');
-      const newName = `${hash}_${file.originalname}`;
-      const destination = `${folder}/${id}/${newName}`;
-      await googleStorageBucket.upload(file.path, { destination });
-      const upload = await googleStorageBucket.file(destination);
-      await upload.acl.add({ entity: 'allUsers', role: 'READER' });
-
-      // delete file from local storage
-      fs.unlinkSync(file.path);
-
-      return `https://storage.googleapis.com/${googleStorageBucket.name}/${destination}`;
-    } catch (error) {
-      const { errors } = error;
-      console.log('An error ocurring in upload file: ', { error, errors });
-      return '';
-    }
   }
 
   public async create(
@@ -88,7 +52,7 @@ export class WorkspaceController extends ModelController<typeof Workspace> {
           const _employeeId = new mongoose.Types.ObjectId();
           let avatarPhoto = process.env.DEFAULT_PHOTO_URL;
           if (employeeFile?.path) {
-            avatarPhoto = await this._uploadFile(
+            avatarPhoto = await UploadUtils.uploadFile(
               _employeeId.toString(),
               employeeFile,
               'employees'
