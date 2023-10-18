@@ -17,11 +17,13 @@
     "paths": {
       "@cognum/ai-employee": ["libs/ai-employee/src/index.ts"],
       "@cognum/auth": ["libs/auth/src/index.ts"],
+      "@cognum/chat": ["libs/chat/src/index.ts"],
       "@cognum/data-connection": ["libs/data-connection/src/index.ts"],
       "@cognum/helpers": ["libs/helpers/src/index.ts"],
       "@cognum/interfaces": ["libs/interfaces/src/index.ts"],
       "@cognum/models": ["libs/models/src/index.ts"],
-      "@cognum/tools": ["libs/tools/src/index.ts"]
+      "@cognum/tools": ["libs/tools/src/index.ts"],
+      "@cognum/users": ["libs/users/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]
