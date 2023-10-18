@@ -4,6 +4,7 @@ import { MatDialog } from '@angular/material/dialog';
 
 import { ActivatedRoute } from '@angular/router';
 import { IKnowledge, IWorkspace } from '@cognum/interfaces';
+import { AuthService } from '../auth/auth.service';
 import { NotificationsService } from '../services/notifications/notifications.service';
 import { DialogComponent } from '../shared/dialog/dialog.component';
 import { WorkspacesService } from '../workspaces/workspaces.service';
@@ -25,10 +26,12 @@ export class KnowledgeBaseComponent {
   sortingType: 'newFirst' | 'oldFirst' | 'mix' = 'newFirst';
   sortingDirection: 'asc' | 'desc' = 'desc';
   activeButton = 'newFirst';
+  userId = '';
 
   constructor(
     private route: ActivatedRoute,
     private knowledgeBaseService: KnowledgeBaseService,
+    private authService: AuthService,
     private workspacesService: WorkspacesService,
     private notificationsService: NotificationsService,
     private dialog: MatDialog
@@ -37,6 +40,8 @@ export class KnowledgeBaseComponent {
       this.getWorkspace(params['workspaceId']);
       this.loadKnowledgeBase(params['workspaceId']);
     });
+    
+    this.userId = this.authService.user?._id;
   }
 
   getWorkspace(workspaceId: string) {
@@ -74,6 +79,13 @@ export class KnowledgeBaseComponent {
         this.knowledgeBase = knowledges;
         this.clearSearch();
       });
+  }
+
+  userHasEditorPermission(knowledge: IKnowledge): boolean {
+    return this.knowledgeBaseService.userPermission(
+      knowledge,
+      this.userId
+    );
   }
 
   editKnowledge(knowledge: IKnowledge) {
