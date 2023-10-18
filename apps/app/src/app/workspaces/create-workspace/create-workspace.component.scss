@@ -1,5 +1,8 @@
 .white {
   background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 
   h2 {
     color: black;
@@ -14,6 +17,9 @@
   gap: 0.5rem;
   align-self: stretch;
   cursor: pointer;
+  h2{
+    padding-top: 2px;
+  }
 }
 
 .logo {
@@ -22,6 +28,28 @@
   flex-shrink: 0;
   background: #14b8a6;
   border-radius: 0.25rem;
+}
+.info-container {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  padding: 0.5rem;
+  gap: 0.5rem;
+
+  font-size: 0.875rem;
+  font-weight: 500;
+  line-height: 1.375rem;
+
+  .email {
+    color: rgba(0, 0, 0, 0.85);
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+
+  .change {
+    cursor: pointer;
+    color: #14b8a6;
+  }
 }
 
 button {
