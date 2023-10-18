@@ -43,10 +43,17 @@
           [formGroup]="updateForm"
           (ngSubmit)="onSubmit()"
           class="container-group"
+          enctype="multipart/form-data"
         >
           <span class="workspace-image">Your profile photo (optional)</span>
           <div class="image-group">
-            <input class="image" type="file" name="" id="" />
+            <input
+              class="image"
+              type="file"
+              name="profilePhoto"
+              id="profilePhoto"
+              (change)="onFileSelected($event)"
+            />
             <span>Help teammates know that you are the right person.</span>
           </div>
 
@@ -60,7 +67,7 @@
                   formControlName="name"
                   [value]="name"
                 />
-                <button class="button" (click)="onSubmit()">Submit</button>
+                <button class="button" type="submit">Submit</button>
               </div>
             </div>
           </div>
