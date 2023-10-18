@@ -34,12 +34,12 @@ export class InMemoryUserRepository implements IUserRepository {
     return Promise.resolve(updatedUser);
   }
 
-  delete(id: string): Promise<IUser> {
+  delete(id: string): Promise<void> {
     const index = this.users.findIndex(u => u.id === id);
     if (index === -1) {
       return Promise.reject(new Error('User not found'));
     }
     const deletedUser = this.users.splice(index, 1)[0];
-    return Promise.resolve(deletedUser);
+    Promise.resolve(deletedUser);
   }
 }

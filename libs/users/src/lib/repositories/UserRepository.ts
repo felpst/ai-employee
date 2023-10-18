@@ -38,7 +38,7 @@ export interface IUserRepository {
   findById(id: string): Promise<IUser>;
   findByEmail(email: string): Promise<IUser>;
   update(id: string, data: Partial<IUser>): Promise<IUser>;
-  delete(id: string): Promise<IUser>;
+  delete(id: string): Promise<void>;
 }
 
 const UserModel = model<IUserDocument>("User", userSchema);
@@ -75,7 +75,7 @@ export default class UserRepository implements IUserRepository {
     return await user.save();
   }
 
-  async delete(id: string): Promise<IUser> {
+  async delete(id: string): Promise<void> {
     const user = await this.model.findById(id);
     if (!user) {
       throw new Error("User not found");
