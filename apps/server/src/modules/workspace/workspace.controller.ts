@@ -22,8 +22,11 @@ export class WorkspaceController extends ModelController<typeof Workspace> {
       const files = req.files ? Array.from(req.files) : [];
       const docs = [];
       for (const data of dataset) {
-        const { users, employee } = data;
+        const { users, usersEmails, employee } = data;
         const arrayUsers = Array.isArray(users) ? [...users] : [users];
+        const arrayEmails = Array.isArray(usersEmails)
+          ? [...usersEmails]
+          : [usersEmails];
         const _id = new mongoose.Types.ObjectId();
         let workspacePhoto = process.env.DEFAULT_PHOTO_URL;
         const [workspaceFile, employeeFile] = files;
@@ -40,7 +43,10 @@ export class WorkspaceController extends ModelController<typeof Workspace> {
         }
         data.updatedBy = userId;
         const _users = await User.find({
-          _id: { $in: [...arrayUsers, userId] },
+          $or: [
+            { _id: { $in: [...arrayUsers, userId] } },
+            { email: { $in: arrayEmails } },
+          ],
         });
         const doc = await Workspace.create({
           ...data,
