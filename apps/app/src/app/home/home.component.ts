@@ -37,6 +37,11 @@ export class HomeComponent implements OnInit {
     );
   }
 
+  goCreateWorkspace() {
+    this.router.navigate(['/create-workspace']);
+  }
+
+
   goHome() {
     this.router.navigate(['/']);
   }
