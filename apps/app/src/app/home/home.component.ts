@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { IWorkspace } from '@cognum/interfaces';
+import { CookieService } from 'ngx-cookie-service';
 import { AuthService } from '../auth/auth.service';
 import { LoadingService } from '../layouts/loading/loading.service';
 import { WorkspacesService } from '../workspaces/workspaces.service';
@@ -15,12 +16,9 @@ export class HomeComponent implements OnInit {
     private authService: AuthService,
     private workspacesService: WorkspacesService,
     private loadingService: LoadingService,
-    private router: Router
+    private router: Router,
+    private cookieService: CookieService
   ) {}
-
-  get selectedWorkspace(): string | null {
-    return this.workspacesService.selectedWorkspace;
-  }
 
   ngOnInit() {
     this.onLoadList();
@@ -41,16 +39,15 @@ export class HomeComponent implements OnInit {
     this.router.navigate(['/create-workspace']);
   }
 
-
   goHome() {
     this.router.navigate(['/']);
   }
 
   onLoadList() {
     this.loadingService.add('onWorkspaces');
-    this.workspacesService
-      .list()
-      .subscribe(() => this.loadingService.remove('onWorkspaces'));
+    this.workspacesService.list().subscribe((data) => {
+      this.loadingService.remove('onWorkspaces');
+    });
   }
 
   get username() {
@@ -64,12 +61,14 @@ export class HomeComponent implements OnInit {
   onLogOut() {
     this.authService.logout().subscribe({
       next: () => {
+        this.cookieService.delete('token');
         this.router.navigate(['/auth']);
       },
     });
   }
 
   onSelectWorkspace(workspaceId: string) {
+    this.workspacesService.onSelectWorkspace(workspaceId);
     this.router.navigate(['/workspaces', workspaceId]);
   }
 }
