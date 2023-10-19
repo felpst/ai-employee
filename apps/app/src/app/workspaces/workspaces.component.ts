@@ -53,7 +53,7 @@ export class WorkspacesComponent implements OnInit {
   }
 
   onWorkspace(workspace: IWorkspace) {
-    this.workspacesService.selectedWorkspace = workspace._id;
+    this.workspacesService.onSelectWorkspace(workspace._id);
     this.router.navigate(['/workspaces', workspace._id]);
   }
 

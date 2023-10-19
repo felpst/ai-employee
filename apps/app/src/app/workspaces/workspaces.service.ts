@@ -10,6 +10,7 @@ export class WorkspacesService {
   private route = 'workspaces';
   selectedWorkspace: string | null = null;
   workspaces: Map<string, IWorkspace> = new Map<string, IWorkspace>();
+  workspaceData = '@cognum/selected-workspace';
 
   constructor(private coreApiService: CoreApiService) {}
 
@@ -51,7 +52,9 @@ export class WorkspacesService {
         }) as Observable<IWorkspace[]>
       ).subscribe({
         next: (workspaces: IWorkspace[]) => {
-          workspaces.forEach((chat) => this.workspaces.set(chat._id, chat));
+          workspaces.forEach((workspace) =>
+            this.workspaces.set(workspace._id, workspace)
+          );
           observer.next(this.workspaces);
         },
       });
@@ -63,5 +66,10 @@ export class WorkspacesService {
     return this.coreApiService.delete(
       `${this.route}/${chat._id}`
     ) as Observable<IWorkspace>;
+  }
+
+  onSelectWorkspace(workspaceId: string) {
+    this.selectedWorkspace = workspaceId;
+    localStorage.setItem(this.workspaceData, workspaceId);
   }
 }
