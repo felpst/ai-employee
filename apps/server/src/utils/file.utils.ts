@@ -9,6 +9,7 @@ export class FileUtils {
       'application/msword',
       'text/plain',
       'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+      'application/octet-stream',
     ];
   }
 
