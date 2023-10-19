@@ -1,5 +1,4 @@
-export { GoogleCalendarCreate } from './lib/google-calendar-create.tool';
-export { GoogleCalendarView } from './lib/google-calendar-view.tool';
+export { GoogleCalendarAgent } from './lib/googleCalendarAgent.tool';
 export {
     AIEmployeeIdentity,
     AIEmployeeOutputParser,
