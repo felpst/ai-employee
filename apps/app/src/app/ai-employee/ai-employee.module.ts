@@ -4,6 +4,9 @@ import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AiEmployeeComponent } from './ai-employee.component';
 import { AiEmployeeRoutingModule } from './ai-employee-routing.module';
+import {MatMenuModule} from '@angular/material/menu';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
 
 
 @NgModule({
@@ -15,6 +18,10 @@ import { AiEmployeeRoutingModule } from './ai-employee-routing.module';
     AiEmployeeRoutingModule,
     ReactiveFormsModule,
     FormsModule,
+    MatMenuModule,
+    MatIconModule,
+    MatButtonModule
+    
 
   ],
 })
