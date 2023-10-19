@@ -16,7 +16,7 @@
           delete
         </button>
       </mat-menu>
-      <button class="shared-btn" (click)="openShareMenu()" [ngClass]="{'active-btn': isSharedActive}" [matMenuTriggerFor]="shareMenu" (menuOpened)="shareMenuOpened()" (menuClosed)="shareMenuClosed()" *ngIf="knowledge && userHasEditorPermission(knowledge)">Shared</button>
+      <button class="shared-btn" [ngClass]="{'active-btn': isSharedActive}" [matMenuTriggerFor]="shareMenu" (menuOpened)="shareMenuOpened()" (menuClosed)="shareMenuClosed()" *ngIf="knowledge && userHasEditorPermission(knowledge)">Shared</button>
       <mat-menu #shareMenu="matMenu" id="sharedMenu">
         <div class="divider-container">
           <mat-icon>expand_more</mat-icon>
