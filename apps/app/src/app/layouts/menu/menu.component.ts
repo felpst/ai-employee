@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import { MediaMatcher } from '@angular/cdk/layout';
-import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy } from '@angular/core';
 import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
-import { IWorkspace } from '@cognum/interfaces';
+import { IUser } from '@cognum/interfaces';
 import { CookieService } from 'ngx-cookie-service';
 import { forkJoin } from 'rxjs';
 import { AuthService } from '../../auth/auth.service';
@@ -16,8 +16,7 @@ import { WorkspacesService } from '../../workspaces/workspaces.service';
   templateUrl: './menu.component.html',
   styleUrls: ['./menu.component.scss'],
 })
-export class MenuComponent implements OnInit, OnDestroy {
-  workspace!: IWorkspace | null;
+export class MenuComponent implements OnDestroy {
   mobileQuery: MediaQueryList;
   isLoading = true;
   showMenu = false;
@@ -27,6 +26,30 @@ export class MenuComponent implements OnInit, OnDestroy {
   profilePhoto = '';
   userName = '';
   background: string;
+  remainingUsersCount = 0;
+
+  menuItems = [
+    {
+      path: 'overview',
+      text: 'Overview',
+      icon: '../../../assets/icons/home.svg',
+    },
+    {
+      path: 'employees',
+      text: 'Employees',
+      icon: '../../../assets/icons/robot.svg',
+    },
+    {
+      path: 'history',
+      text: 'History',
+      icon: '../../../assets/icons/clock.svg',
+    },
+    {
+      path: 'knowledge-base',
+      text: 'Knowledge Base',
+      icon: '../../../assets/icons/database.svg',
+    },
+  ];
 
   private _mobileQueryListener: () => void;
 
@@ -80,98 +103,55 @@ export class MenuComponent implements OnInit, OnDestroy {
     return predefinedColors[randomIndex];
   }
 
+  onRedirect() {
+    this.router.navigate(['/settings/workspaces']);
+  }
+
   loadProfilePhotos() {
-    const userRequests = this.usersId.map((userId: any) =>
+    const userRequests = this.usersId.map((userId: string) =>
       this.settingsService.getUserById(userId)
     );
 
     forkJoin(userRequests).subscribe((users: any) => {
-      this.usersId = users.map((user: any) => ({
+      this.usersId = users.map((user: IUser) => ({
         ...user,
-        profilePhoto: user.profilePhoto,
+        photo: user.photo,
         name: user.name,
       }));
+      this.calculateRemainingUsersCount();
     });
+  }
+
+  calculateRemainingUsersCount() {
+    this.remainingUsersCount = Math.max(this.usersId.length - 2, 0);
   }
 
   ngOnInit(): void {
-    this.workspacesService.get(this.workspaceId).subscribe((data) => {
+    this.workspacesService.get(this.workspace._id).subscribe((data) => {
       this.usersId = data.users;
       this.loadProfilePhotos();
     });
-
-    const workspaces = this.workspacesService.workspaces;
-    if (workspaces.size === 0) {
-      return this.onLoadList();
-    } else {
-      this.workspace =
-        this.workspacesService.workspaces.get(this.workspaceId) || null;
-      this.isLoading = false;
-    }
   }
 
-  get currentPath() {
-    const url = this.router.url.split('/');
-    return url[url.length - 1];
+  get user() {
+    return this.authService.user;
   }
 
-  onLoadList() {
-    this.workspacesService.list().subscribe((data) => {
-      const workspace = data.get(this.workspaceId) || null;
-      this.workspace = workspace;
-      this.isLoading = false;
-    });
+  get workspace() {
+    return this.workspacesService.selectedWorkspace;
   }
 
-  get username() {
-    return this.authService.user?.name || '';
-  }
-
-  get name() {
-    return this.workspace?.name || 'Workspace';
-  }
-
-  get userPhoto() {
-    return (
-      this.authService.user?.profilePhoto || '../../../assets/icons/avatar.svg'
-    );
-  }
-
-  get photo() {
-    return this.workspace?.workspacePhoto || '../../../assets/icons/avatar.svg';
-  }
-
-  get workspaceId() {
-    return localStorage.getItem(this.workspaceData) || '';
+  // TODO
+  get workspaceUsage() {
+    return 25;
   }
 
   ngOnDestroy(): void {
     this.mobileQuery.removeListener(this._mobileQueryListener);
-    localStorage.removeItem(this.workspaceData);
-  }
-
-  onLink(url: string) {
-    this.router.navigate([url], { relativeTo: this.route });
   }
 
   toggleMenu() {
     this.showMenu = !this.showMenu;
-  }
-
-  onItemChange(selected: string) {
-    const ids = ['overview', 'employees', 'history', 'knowledge'];
-    ids.forEach((id) => {
-      const element = document.getElementById(id);
-      if (element) {
-        if (id === selected) element.classList.add('active');
-        else element.classList.remove('active');
-      }
-      this.onLink(`${this.workspaceId}/${selected}`);
-    });
-  }
-
-  onReturn() {
-    return this.router.navigate(['/home']);
   }
 
   onLogOut() {
