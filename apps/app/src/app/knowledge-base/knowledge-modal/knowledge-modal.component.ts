@@ -1,7 +1,8 @@
-import { Component, Inject } from '@angular/core';
+import { ChangeDetectorRef, Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { IKnowledge, IUser, IWorkspace } from '@cognum/interfaces';
 import { AuthService } from '../../auth/auth.service';
+import { NotificationsService } from '../../services/notifications/notifications.service';
 import { UsersService } from '../../services/users/users.service';
 import { DialogComponent } from '../../shared/dialog/dialog.component';
 import { KnowledgeBaseService } from '../knowledge-base.service';
@@ -24,7 +25,7 @@ export class KnowledgeModalComponent {
   currentKnowledgePermissions: any[] = [];
   memberPermissions: { [userId: string]: string } = {};
   userId = '';
-  
+
   constructor(
       private dialog: MatDialog,
       private dialogRef: MatDialogRef<KnowledgeModalComponent>,
@@ -32,11 +33,20 @@ export class KnowledgeModalComponent {
       @Inject(MAT_DIALOG_DATA) 
       public data: IKnowledge,
       private knowledgeBaseService: KnowledgeBaseService,
-      private usersService: UsersService
+      private notificationsService: NotificationsService,
+      private usersService: UsersService,
+      private changeDetector: ChangeDetectorRef,
   ) {
       this.knowledge = data;
       this.currentKnowledgePermissions = this.knowledge?.permissions || [];
       this.userId = this.authService.user?._id;
+      this.members = []; 
+
+      this.memberPermissions = this.currentKnowledgePermissions.reduce((permissions, permission) => {
+          permissions[permission.userId] = permission.permission;
+          return permissions;
+      }, {});
+      this.loadMembersFromPermissions(); 
   }
 
   menuOpened() {
@@ -52,34 +62,10 @@ export class KnowledgeModalComponent {
 
   shareMenuClosed() {
     this.isSharedActive = false;
-  }
-
-  isCreator(member: IUser): boolean {
-    return !!this.knowledge && this.knowledge.createdBy === member._id;
-  }
-
-  openShareMenu() {
-    this.usersService.list().subscribe((members: IUser[]) => {
-      this.members = members;
-      this.members.forEach((member) => {
-        const knowledgePermission = this.currentKnowledgePermissions.find(p => p.userId === member._id);
-        if (knowledgePermission) {
-          this.memberPermissions[member._id] = knowledgePermission.permission;
-        } else if (this.knowledge?.createdBy === member._id) {
-          this.memberPermissions[member._id] = 'Editor';
-        } else {
-          this.memberPermissions[member._id] = 'Reader';
-        }
-      });
-    
-    });
-  }
-
-  userHasEditorPermission(knowledge: IKnowledge): boolean {
-    return this.knowledgeBaseService.userPermission(
-      knowledge,
-      this.userId
-    );
+    if (this.permissionsChanged()) {
+      this.updatePermissionsInDatabase();
+    }
+    this.applyPermissionsChanges();
   }
 
   clearSearch() {
@@ -96,61 +82,106 @@ export class KnowledgeModalComponent {
         });
   }
 
+  async loadMembersFromPermissions() {
+    const memberIds = this.currentKnowledgePermissions.map(p => p.userId);
+    try {
+        const members = await this.usersService.list().toPromise();
+        if (members) {
+            this.members = members.filter(member => memberIds.includes(member._id));
+        }
+    } catch (error) {
+        console.error('Error getting members', error);
+    }
+  }
+
   closeModal(): void {
     if (this.permissionsChanged()) {
       this.updatePermissionsInDatabase();
     }
-
+    this.applyPermissionsChanges();
     this.dialogRef.close();
   }
 
+  isCreator(member: IUser): boolean {
+    return !!this.knowledge && this.knowledge.createdBy === member._id;
+  }
+
+  userHasEditorPermission(knowledge: IKnowledge): boolean {
+    return this.knowledgeBaseService.userPermission(
+      knowledge,
+      this.userId
+    );
+  }
+
   permissionsChanged(): boolean {
+    let changed = false; 
+  
     if (this.members.length !== this.currentKnowledgePermissions.length) {
-      return true;
+      changed = true; 
     }
-  
     for (const member of this.members) {
+      
       const currentPermission = this.memberPermissions[member._id];
+
       const originalPermission = this.currentKnowledgePermissions.find(p => p.userId === member._id)?.permission;
-  
       if (currentPermission !== originalPermission) {
-        return true;
+        changed = true; 
       }
     }
-  
-    return false;
+    return changed; 
+  }
+
+  setPermission(member: IUser, permission: string) {
+    this.memberPermissions[member._id] = permission;
+    this.changeDetector.detectChanges();
+  }
+
+  applyPermissionsChanges() {
+    this.members.forEach((member) => {
+      const existingPermissionIndex = this.currentKnowledgePermissions.findIndex(p => p.userId === member._id);
+      if (existingPermissionIndex !== -1) {
+        this.currentKnowledgePermissions[existingPermissionIndex].permission = this.memberPermissions[member._id];
+      }
+    });
+    
   }
 
   updatePermissionsInDatabase() {
-    const updatedPermissions: { userId: string; permission: 'Reader' | 'Editor' }[] = [];
+    if (this.permissionsChanged()) {
+      const updatedPermissions: { userId: string; permission: 'Reader' | 'Editor' }[] = [];
   
-    this.members.forEach((member) => {
-      const existingPermission = this.knowledge?.permissions.find((p) => p.userId === member._id);
+      this.members.forEach((member) => {
+        const existingPermission = this.knowledge?.permissions.find((p) => p.userId === member._id);
   
-      if (existingPermission) {
-        updatedPermissions.push(existingPermission);
-      } else {
-        updatedPermissions.push({
-          userId: member._id,
-          permission: 'Reader',
+        if (existingPermission) {
+          updatedPermissions.push(existingPermission);
+        } else {
+          updatedPermissions.push({
+            userId: member._id,
+            permission: 'Reader',
+          });
+        }
+      });
+  
+      if (this.knowledge) {
+        this.knowledge.permissions = updatedPermissions;
+  
+        this.knowledgeBaseService.update(this.knowledge).subscribe({
+          next: (res) => {
+            this.notificationsService.show('Successfully updated knowledge');
+            this.dialogRef.close(res);
+          },
+          error: (error) => {
+            console.error('Error updating knowledge:', error);
+            this.notificationsService.show(
+              'Error updating knowledge. Please try again.'
+            );
+          },
         });
       }
-    });
-  
-    if (this.knowledge) {
-      this.knowledge.permissions = updatedPermissions;
-  
-      this.knowledgeBaseService.update(this.knowledge).subscribe(
-        (updatedKnowledge) => {
-          console.log('Successfully updated knowledge', updatedKnowledge);
-        },
-        (error) => {
-          console.error('Error updating knowledge:', error);
-        }
-      );
     }
   }
-
+  
   updatedTimeDifference(updatedAt: Date | undefined): string {
       if (!updatedAt) {
         return 'N/A';
@@ -207,25 +238,6 @@ export class KnowledgeModalComponent {
       }
     });
   }
-
-  setPermission(member: IUser, permission: string) {
-    this.memberPermissions[member._id] = permission;
-    const existingPermissionIndex = this.currentKnowledgePermissions.findIndex(p => p.userId === member._id);
-  
-    if (existingPermissionIndex !== -1) {
-      this.currentKnowledgePermissions[existingPermissionIndex].permission = permission;
-    } else {
-      this.currentKnowledgePermissions.push({ userId: member._id, permission });
-    }
-    this.currentKnowledgePermissions = [...this.currentKnowledgePermissions];
-  }
-  
-  
-  getPermission(memberId: string): string {
-    const permission = this.currentKnowledgePermissions.find(p => p.userId === memberId);
-    return permission ? permission.permission : 'Reader';
-  }
-
 
   capitalizeName(name: string): string {
     return name.toLowerCase().split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
