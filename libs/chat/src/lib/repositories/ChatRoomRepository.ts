@@ -1,7 +1,7 @@
 import { Model, Schema, model } from "mongoose";
 import { IChatRoom } from "../entities/ChatRoom";
 
-interface IChatRoomDocument extends IChatRoom, Document {}
+export interface IChatRoomDocument extends IChatRoom, Document {}
 
 const chatRoomSchema = new Schema<IChatRoomDocument>(
   {
@@ -19,7 +19,7 @@ export interface IChatRoomRepository {
   findById(id: string): Promise<IChatRoomDocument>;
   findByWorkspace(workspaceId: string): Promise<IChatRoomDocument[]>;
   update(id: string, data: Partial<IChatRoom>): Promise<IChatRoomDocument>;
-  delete(id: string): Promise<IChatRoomDocument>;
+  delete(id: string): Promise<void>;
 }
 
 const ChatRoomModel = model<IChatRoomDocument>("ChatRoom", chatRoomSchema);
@@ -56,7 +56,7 @@ export class ChatRoomRepository implements IChatRoomRepository {
     return await chatRoom.save();
   }
 
-  async delete(id: string): Promise<IChatRoomDocument> {
+  async delete(id: string): Promise<void> {
     return await this.model.findByIdAndDelete(id);
   }
 }

@@ -21,7 +21,7 @@ export interface IMessageRepository {
   findById(id: string): Promise<IMessageDocument>;
   findByChatRoomId(chatRoomId: string): Promise<IMessageDocument[]>;
   update(id: string, data: Partial<IMessage>): Promise<IMessageDocument>;
-  delete(id: string): Promise<IMessageDocument>;
+  delete(id: string): Promise<void>;
 }
 
 const MessageModel = model<IMessageDocument>("Message", messageSchema);
@@ -58,7 +58,7 @@ export class MessageRepository implements IMessageRepository {
     return await message.save();
   }
 
-  async delete(id: string): Promise<IMessageDocument> {
+  async delete(id: string): Promise<void> {
     const message = await this.model.findById(id);
     if (!message) {
       throw new Error(`Message with id ${id} not found`);
