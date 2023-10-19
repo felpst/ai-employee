@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from './auth/auth.guard';
 import { AdminComponent } from './layouts/admin/admin.component';
+import { AiEmployeeComponent } from './ai-employee/ai-employee.component';
 
 const routes: Routes = [
   // Public routes
@@ -26,6 +27,14 @@ const routes: Routes = [
         loadChildren: () =>
           import('./workspaces/workspaces.module').then(
             (m) => m.WorkspacesModule
+          ),
+      },
+      {
+        path: 'ai-employee',
+        component: AiEmployeeComponent,
+        loadChildren: () =>
+          import('./ai-employee/ai-employee.module').then(
+            (m) => m.AiEmployeeModule
           ),
       },
       {
