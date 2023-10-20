@@ -1,22 +1,10 @@
-import { Document, Model, Schema, Types, model } from "mongoose";
-import { IOpenAILogs } from "../entities/OpenAILogs";
+import { IOpenAILogs } from "@cognum/interfaces";
+import { OpenAILogsModel } from '@cognum/models';
+import { Document, Model, Types } from "mongoose";
 
 export interface OpenAILogsDocument extends IOpenAILogs, Document { 
     _id: Types.ObjectId;
 }
-
-const OpenAILogsSchema: Schema = new Schema({
-    component: { type: String, required: true },
-    relatedFiles: { type: String, required: true },
-    codeLine: { type: Number, required: true },
-    OpenAIKey: { type: String, required: true },
-    createdAt: { type: Date, required: true },
-    parameters: { type: Object, required: false }
-},
-{
-    timestamps: true
-}
-);
 
 export interface IOpenAILogsRepository {
     create(logs: Partial<IOpenAILogs>): Promise<IOpenAILogs>;
@@ -24,12 +12,10 @@ export interface IOpenAILogsRepository {
     findByOpenAIKeys(OpenAIKey: string): Promise<IOpenAILogs[]>;
 }
 
-const OpenAILogsModel = model<OpenAILogsDocument>('OpenAILogs', OpenAILogsSchema);
-
 export default class OpenAILogsRepository implements IOpenAILogsRepository {
-    private model: Model<OpenAILogsDocument>;
+    private model: Model<any>;
 
-    constructor(model: Model<OpenAILogsDocument> = OpenAILogsModel) {
+    constructor(model: Model<any> = OpenAILogsModel) {
         this.model = model;
     }
 

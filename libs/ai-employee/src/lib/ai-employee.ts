@@ -1,7 +1,9 @@
 import { IChat, ICompany, IUser } from '@cognum/interfaces';
+import { OpenAILogsService } from '@cognum/logs';
 import {
   AIEmployeeIdentity, AIEmployeeMemory, AIEmployeeOutputParser,
-  AIEmployeePromptTemplate, GoogleCalendarAgent, KnowledgeBaseTool
+  AIEmployeePromptTemplate,
+  KnowledgeBaseTool
 } from '@cognum/tools';
 import { AgentExecutor, LLMSingleActionAgent } from 'langchain/agents';
 import { LLMChain } from 'langchain/chains';
@@ -10,18 +12,6 @@ import { Callbacks } from 'langchain/dist/callbacks';
 import { Tool } from 'langchain/tools';
 import { Calculator } from 'langchain/tools/calculator';
 
-
-const googleCalendarParams = {
-  credentials: {
-    clientEmail: process.env.GOOGLE_CALENDAR_CLIENT_EMAIL,
-    privateKey: process.env.GOOGLE_CALENDAR_PRIVATE_KEY,
-    calendarId: process.env.GOOGLE_CALENDAR_CALENDAR_ID,
-  },
-  scopes: [
-    'https://www.googleapis.com/auth/calendar',
-    'https://www.googleapis.com/auth/calendar.events'
-  ]
-}
 export class AIEmployee {
   private _chat: IChat;
   private _user: IUser;
@@ -55,13 +45,19 @@ export class AIEmployee {
       this._identity = data.identity;
     }
 
-    this._model = new ChatOpenAI({
+    const openAILogsService = new OpenAILogsService();
+
+   const configOpenAI = {
       modelName: 'gpt-4',
       temperature: 0,
       streaming: true,
       callbacks: this._callbacks,
       // verbose: true,
-    });
+    }
+
+    openAILogsService.log(configOpenAI);
+    
+    this._model = new ChatOpenAI(configOpenAI);
 
     this.memory = new AIEmployeeMemory({
       chat: this._chat,
@@ -76,11 +72,6 @@ export class AIEmployee {
       // new ChatHistoryTool(this.memory),
       // new ZapierTool(),
       new KnowledgeBaseTool(),
-      new GoogleCalendarAgent({
-        mode: 'full',
-        calendarOptions: googleCalendarParams,
-        openApiOptions: { temperature: 0, openAIApiKey: process.env.OPENAI_API_KEY }
-      }),
     ];
 
     this._chain = new LLMChain({

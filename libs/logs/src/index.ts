@@ -1,1 +1,2 @@
-export * from './lib/logs';
+export { OpenAILogsService } from './lib/services/OpenAILogsService';
+

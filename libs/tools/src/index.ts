@@ -1,4 +1,3 @@
-export { GoogleCalendarAgent } from './lib/googleCalendarAgent.tool';
 export {
     AIEmployeeIdentity,
     AIEmployeeOutputParser,

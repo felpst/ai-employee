@@ -1,6 +1,5 @@
 import { InMemoryOpenAILogsRepository } from '../repositories/InMemoryOpenAILogsRepository';
 import { CreateOpenAILogs } from '../useCases/createOpenAILogs';
-import exp = require('constants');
 
 describe('OpenAILogs', () => {
     let createOpenAILogs: CreateOpenAILogs;
