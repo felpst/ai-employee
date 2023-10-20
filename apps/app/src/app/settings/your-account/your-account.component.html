@@ -9,23 +9,25 @@
 <header class="header">
   <nav>
     <div class="workspace-info-group">
-      <button>
+      <button (click)="onRedirect()">
         <mat-icon svgIcon="arrow-left"></mat-icon>
       </button>
-      <img src="" alt="" />
-      <span class="workspace-name">potato</span>
-    </div>
-    <div>
-      <img src="" alt="" />
-      <span>{{ name }}</span>
+      <div style="display: flex; align-items: center; gap: 2px">
+        <img
+          style="width: 30px"
+          src="{{ selectedImage || image }}"
+          alt="User Image"
+        />
+        <span>{{ name }}</span>
+      </div>
     </div>
   </nav>
 </header>
 <div class="body">
   <div class="description">
     <h1>Your Account</h1>
-    <span
-      >Adjust account-wide settings and preferences here for Felipe Telles</span
+    <span class="adjust-name"
+      >Adjust account-wide settings and preferences here for {{ name }}</span
     >
   </div>
   <div class="settings">
@@ -47,13 +49,22 @@
         >
           <span class="workspace-image">Your profile photo (optional)</span>
           <div class="image-group">
-            <input
-              class="image"
-              type="file"
-              name="profilePhoto"
-              id="profilePhoto"
-              (change)="onFileSelected($event)"
-            />
+            <div>
+              <label for="profilePhotoInput" class="image-label">
+                <img
+                  class="image"
+                  src="{{ selectedImage || image }}"
+                  alt="User Image"
+                />
+              </label>
+              <input
+                style="display: none"
+                type="file"
+                id="profilePhotoInput"
+                name="profilePhoto"
+                (change)="onFileSelected($event)"
+              />
+            </div>
             <span>Help teammates know that you are the right person.</span>
           </div>
 
@@ -80,8 +91,8 @@
             </button>
           </div>
           <span class="footer-description"
-            >Lorem ipsum dolor sit amet consectetur. Amet a faucibus
-            pellentesque posuere.
+            >Are you sure you want to permanently delete your account? This
+            action cannot be undone, and all your data will be lost.
           </span>
         </div>
       </ng-container>
