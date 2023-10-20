@@ -1,7 +1,7 @@
 import { Types } from 'mongoose';
 
 export interface IOpenAILogs {
-    _id?: Types.ObjectId;
+    _id?: Types.ObjectId | string;
     component: string;
     relatedFiles: string;
     codeLine: number;
@@ -11,21 +11,17 @@ export interface IOpenAILogs {
 }
 
 export class OpenAILogs implements IOpenAILogs {
-    _id?: Types.ObjectId;
-    component: string;
-    relatedFiles: string;
-    codeLine: number;
-    OpenAIKey: string;
-    createdAt: Date;
-    parameters?: any;
+    _id = Math.random().toString(36).substring(2, 9);
+    component = '';
+    relatedFiles = '';
+    codeLine = 0;
+    OpenAIKey = '';
+    createdAt = new Date();
+    parameters? = '';
 
-    constructor(logs: IOpenAILogs) {
-        this._id = logs._id;
-        this.component = logs.component;
-        this.relatedFiles = logs.relatedFiles;
-        this.codeLine = logs.codeLine;
-        this.OpenAIKey = logs.OpenAIKey;
-        this.createdAt = logs.createdAt;
-        this.parameters = logs.parameters;
+    constructor(params: Partial<IOpenAILogs> = {}) {
+        Object.assign(this, params);
     }
 }
+
+    
