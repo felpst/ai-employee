@@ -21,7 +21,7 @@ interface CreateOpenAILogsResponse {
 }
 
 
-export class CreateOpenAILogsUseCase {
+export class CreateOpenAILogs {
     private OpenAILogsRepository: IOpenAILogsRepository;
 
 
