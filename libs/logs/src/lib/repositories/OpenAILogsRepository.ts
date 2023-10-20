@@ -19,7 +19,7 @@ const OpenAILogsSchema: Schema = new Schema({
 );
 
 export interface IOpenAILogsRepository {
-    create(logs: IOpenAILogs): Promise<IOpenAILogs>;
+    create(logs: Partial<IOpenAILogs>): Promise<IOpenAILogs>;
     findAll(): Promise<IOpenAILogs[]>;
     findByOpenAIKeys(OpenAIKey: string): Promise<IOpenAILogs[]>;
 }
@@ -33,7 +33,7 @@ export default class OpenAILogsRepository implements IOpenAILogsRepository {
         this.model = model;
     }
 
-    public async create(logs: IOpenAILogs): Promise<IOpenAILogs> {
+    public async create(logs: Partial<IOpenAILogs>): Promise<IOpenAILogs> {
         const createdLogs = await this.model.create(logs);
         return createdLogs;
     }
