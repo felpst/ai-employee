@@ -22,10 +22,19 @@ const routes: Routes = [
           import('./home/home.module').then((m) => m.HomeComponentModule),
       },
       {
-        path: 'create-workspace',
-        component:CreateWorkspaceComponent,
+        path: 'settings',
         loadChildren: () =>
-          import('./workspaces/create-workspace/create-workspace.module').then((m) => m.CreateWorkspaceModule),
+          import('./settings/settings.module').then(
+            (m) => m.SettingsComponentModule
+          ),
+      },
+      {
+        path: 'create-workspace',
+        component: CreateWorkspaceComponent,
+        loadChildren: () =>
+          import('./workspaces/create-workspace/create-workspace.module').then(
+            (m) => m.CreateWorkspaceModule
+          ),
       },
       {
         path: 'workspaces',
