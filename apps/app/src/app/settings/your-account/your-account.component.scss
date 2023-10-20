@@ -2,6 +2,14 @@
   font-family: 'Outfit', sans-serif;
 }
 
+.image-style {
+  width: 2rem;
+  height: 2rem;
+  flex-shrink: 0;
+  border-radius: 0.25rem;
+  background: lightgray 50% / cover no-repeat;
+}
+
 .delete-account-modal {
   position: absolute;
   height: 300px;

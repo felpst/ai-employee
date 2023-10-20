@@ -56,8 +56,6 @@ export class YourAccountComponent implements OnInit {
   ngOnInit() {
     const userId = this.authService.user?._id;
 
-    console.log(this.workspacesService.selectedWorkspace);
-
     this.settingsService.getUserById(userId).subscribe({
       next: (response) => {
         this.image = response.profilePhoto;
