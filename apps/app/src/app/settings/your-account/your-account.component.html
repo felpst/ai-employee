@@ -12,12 +12,14 @@
       <button>
         <mat-icon svgIcon="arrow-left"></mat-icon>
       </button>
-      <img src="" alt="" />
-      <span class="workspace-name">potato</span>
-    </div>
-    <div>
-      <img src="" alt="" />
-      <span>{{ name }}</span>
+      <div style="display: flex; align-items: center; gap: 2px">
+        <img
+          class="image-style"
+          src="{{ selectedImage || image }}"
+          alt="User Image"
+        />
+        <span>{{ name }}</span>
+      </div>
     </div>
   </nav>
 </header>
