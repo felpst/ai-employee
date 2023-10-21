@@ -1,4 +1,4 @@
-import callsites from 'callsites';
+import { get } from 'stack-trace';
 import { OpenAILogs } from "../entities/OpenAILogs";
 import { IOpenAILogsRepository } from "../repositories/OpenAILogsRepository";
 import { splitOpenAIKey } from "../utils/splitOpenAIKey";
@@ -33,7 +33,7 @@ export class CreateOpenAILogs {
 
     async execute(request: CreateOpenAILogsRequest): Promise<CreateOpenAILogsResponse> {
 
-        const stack = callsites();
+        const stack = get();
         
         const openAILogsData = {
             component: stack[1].getFunctionName(),

@@ -5,7 +5,7 @@ interface FindOpenAILogsResponse {
     component: string;
     relatedFiles: string;
     codeLine: number;
-    OpenAIKey: string;
+    openAIKey: string;
     createdAt: Date;
     parameters?: any;
 }
@@ -17,8 +17,8 @@ export class FindOpenAILogs {
         this.OpenAILogsRepository = OpenAILogsRepository;
     }
 
-    async byApiKey(OpenAIKey: string): Promise<FindOpenAILogsResponse[]> {
-        const logs = await this.OpenAILogsRepository.findByOpenAIKeys(OpenAIKey);
+    async byApiKey(openAIKey: string): Promise<FindOpenAILogsResponse[]> {
+        const logs = await this.OpenAILogsRepository.findByOpenAIKeys(openAIKey);
         
         if (logs.length <= 0){
             throw new Error('Not exist logs with this OpenAIKey');
@@ -29,7 +29,7 @@ export class FindOpenAILogs {
             component: log.component,
             relatedFiles: log.relatedFiles,
             codeLine: log.codeLine,
-            OpenAIKey: log.OpenAIKey,
+            OpenAIKey: log.openAIKey,
             createdAt: log.createdAt,
             parameters: log.parameters
         }));
@@ -48,7 +48,7 @@ export class FindOpenAILogs {
             component: log.component,
             relatedFiles: log.relatedFiles,
             codeLine: log.codeLine,
-            OpenAIKey: log.OpenAIKey,
+            OpenAIKey: log.openAIKey,
             createdAt: log.createdAt,
             parameters: log.parameters
         }));

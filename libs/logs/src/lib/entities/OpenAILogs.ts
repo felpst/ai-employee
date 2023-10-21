@@ -1,7 +1,8 @@
 import { IOpenAILogs } from '@cognum/interfaces';
+import { Types } from 'mongoose';
 
 export class OpenAILogs implements IOpenAILogs {
-    _id = Math.random().toString(36).substring(2, 9);
+    _id = new Types.ObjectId()
     component = '';
     relatedFiles = '';
     codeLine = 0;
