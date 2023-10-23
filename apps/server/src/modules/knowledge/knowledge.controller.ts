@@ -57,22 +57,23 @@ export class KnowledgeController extends ModelController<typeof Knowledge> {
       const _knowledges = Array.isArray(req.body) ? [...req.body] : [req.body];
       const docs = [];
       for (const knowledge of _knowledges) {
-        const { title, description, ...rest } = knowledge;
+        const { title, description, permissions, ...rest } = knowledge;
         const _title = title || (await this._generateTitle(rest.data));
         const _description =
           description || (await this._generateSummary(rest.data));
+        const _permissions = permissions || [
+          {
+            userId: userId,
+            permission: 'Editor',
+          },
+        ];
         const doc = await Knowledge.create({
           ...rest,
           createdBy: userId,
           updatedBy: userId,
           title: _title,
           description: _description,
-          permissions: [
-            {
-              userId: userId,
-              permission: 'Editor',
-            },
-          ],
+          permissions: _permissions,
         });
         docs.push(doc);
       }
