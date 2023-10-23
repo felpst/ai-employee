@@ -5,8 +5,28 @@ import { WorkspaceComponent } from './workspace/workspace.component';
 const routes: Routes = [
   {
     path: ':id',
-    component: WorkspaceComponent,
+    children: [
+      {
+        path: 'overview',
+        component: WorkspaceComponent,
+      },
+      {
+        path: 'employees',
+        component: WorkspaceComponent,
+      },
+      {
+        path: 'history',
+        component: WorkspaceComponent,
+      },
+      {
+        path: 'knowledge',
+        component: WorkspaceComponent,
+      },
+
+      { path: '**', redirectTo: 'overview', pathMatch: 'full' },
+    ],
   },
+  { path: ':id/**', redirectTo: 'overview', pathMatch: 'full' },
 ];
 
 @NgModule({

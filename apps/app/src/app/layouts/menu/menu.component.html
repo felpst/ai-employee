@@ -1,10 +1,32 @@
 <div class="menu" [class.is-mobile]="mobileQuery.matches" role="link">
-  <mat-toolbar class="menu-header">
+  <mat-toolbar class="menu-header" (click)="toggleMenu()" mat-icon-button>
     <div class="info-container" *ngIf="!isLoading">
       <img [src]="photo" />
       <strong class="font-outfit">{{ name }}</strong>
     </div>
   </mat-toolbar>
+
+  <div class="cdk-overlay-container" *ngIf="showMenu">
+    <div
+      class="cdk-overlay-backdrop cdk-overlay-transparent-backdrop cdk-overlay-backdrop-showing"
+      (click)="toggleMenu()"
+    ></div>
+    <div
+      class="cdk-overlay-connected-position-bounding-box"
+      style="top: 0rem; left: 12.5rem"
+    >
+      <div class="cdk-overlay-pane auth-menu">
+        <div (click)="onLink(workspaceId + '/settings')">
+          <img src="../../../assets/icons/setting.svg" alt="Settings" />
+          <span class="font-outfit">settings</span>
+        </div>
+        <div (click)="onReturn()">
+          <img src="../../../assets/icons/swap.svg" alt="Switch workspace" />
+          <span class="font-outfit">switch workspace</span>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <mat-sidenav-container
     class="sidenav-container"
@@ -48,9 +70,9 @@
       <div class="workspaces-links">
         <div
           class="menu-item"
-          id="menu-overview"
-          (click)="onItemChange('menu-overview')"
-          #overviewContainer
+          id="overview"
+          (click)="onItemChange('overview')"
+          [ngClass]="{ active: currentPath === 'overview' }"
         >
           <div class="icon">
             <img src="../../../assets/icons/home.svg" title="Overview" />
@@ -62,8 +84,9 @@
 
         <div
           class="menu-item"
-          id="menu-employees"
-          (click)="onItemChange('menu-employees')"
+          id="employees"
+          (click)="onItemChange('employees')"
+          [ngClass]="{ active: currentPath === 'employees' }"
         >
           <div class="icon">
             <img src="../../../assets/icons/robot.svg" title="AI employees" />
@@ -75,8 +98,9 @@
 
         <div
           class="menu-item"
-          id="menu-history"
-          (click)="onItemChange('menu-history')"
+          id="history"
+          (click)="onItemChange('history')"
+          [ngClass]="{ active: currentPath === 'history' }"
         >
           <div class="icon">
             <img src="../../../assets/icons/clock.svg" title="History" />
@@ -88,8 +112,9 @@
 
         <div
           class="menu-item"
-          id="menu-knowledge"
-          (click)="onItemChange('menu-knowledge')"
+          id="knowledge"
+          (click)="onItemChange('knowledge')"
+          [ngClass]="{ active: currentPath === 'knowledge' }"
         >
           <div class="icon">
             <img
@@ -114,8 +139,8 @@
   <mat-toolbar class="workspace-info menu-footer">
     <img
       src="../../../assets/icons/logout.svg"
-      title="Return"
-      (click)="onReturn()"
+      title="LogOut"
+      (click)="onLogOut()"
     />
   </mat-toolbar>
 </div>
