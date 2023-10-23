@@ -1,15 +1,9 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import { MediaMatcher } from '@angular/cdk/layout';
-import {
-  ChangeDetectorRef,
-  Component,
-  ElementRef,
-  OnDestroy,
-  OnInit,
-  ViewChild,
-} from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { IWorkspace } from '@cognum/interfaces';
 import { CookieService } from 'ngx-cookie-service';
 import { AuthService } from '../../auth/auth.service';
@@ -21,11 +15,10 @@ import { WorkspacesService } from '../../workspaces/workspaces.service';
   styleUrls: ['./menu.component.scss'],
 })
 export class MenuComponent implements OnInit, OnDestroy {
-  @ViewChild('overviewContainer', { static: true })
-  private overviewContainer!: ElementRef<HTMLDivElement>;
   workspace!: IWorkspace | null;
   mobileQuery: MediaQueryList;
   isLoading = true;
+  showMenu = false;
   workspaceData = '@cognum/selected-workspace';
 
   private _mobileQueryListener: () => void;
@@ -38,7 +31,8 @@ export class MenuComponent implements OnInit, OnDestroy {
     private authService: AuthService,
     changeDetectorRef: ChangeDetectorRef,
     media: MediaMatcher,
-    private cookieService: CookieService
+    private cookieService: CookieService,
+    private route: ActivatedRoute
   ) {
     this.mobileQuery = media.matchMedia('(max-width: 600px)');
     this._mobileQueryListener = () => changeDetectorRef.detectChanges();
@@ -51,7 +45,6 @@ export class MenuComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     const workspaces = this.workspacesService.workspaces;
-    this.overviewContainer.nativeElement.classList.add('active');
     if (workspaces.size === 0) {
       return this.onLoadList();
     } else {
@@ -59,6 +52,11 @@ export class MenuComponent implements OnInit, OnDestroy {
         this.workspacesService.workspaces.get(this.workspaceId) || null;
       this.isLoading = false;
     }
+  }
+
+  get currentPath() {
+    const url = this.router.url.split('/');
+    return url[url.length - 1];
   }
 
   onLoadList() {
@@ -97,22 +95,22 @@ export class MenuComponent implements OnInit, OnDestroy {
   }
 
   onLink(url: string) {
-    this.router.navigate([url]);
+    this.router.navigate([url], { relativeTo: this.route });
+  }
+
+  toggleMenu() {
+    this.showMenu = !this.showMenu;
   }
 
   onItemChange(selected: string) {
-    const ids = [
-      'menu-overview',
-      'menu-employees',
-      'menu-history',
-      'menu-knowledge',
-    ];
+    const ids = ['overview', 'employees', 'history', 'knowledge'];
     ids.forEach((id) => {
       const element = document.getElementById(id);
       if (element) {
         if (id === selected) element.classList.add('active');
         else element.classList.remove('active');
       }
+      this.onLink(`${this.workspaceId}/${selected}`);
     });
   }
 
