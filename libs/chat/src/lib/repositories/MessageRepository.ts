@@ -16,11 +16,11 @@ const messageSchema = new Schema<IMessageDocument>(
 );
 
 export interface IMessageRepository {
-  create(data: Partial<IMessage>): Promise<IMessageDocument>;
-  findAll(): Promise<IMessageDocument[]>;
-  findById(id: string): Promise<IMessageDocument>;
-  findByChatRoomId(chatRoomId: string): Promise<IMessageDocument[]>;
-  update(id: string, data: Partial<IMessage>): Promise<IMessageDocument>;
+  create(data: Partial<IMessage>): Promise<IMessage>;
+  findAll(): Promise<IMessage[]>;
+  findById(id: string): Promise<IMessage>;
+  findByChatRoomId(chatRoomId: string): Promise<IMessage[]>;
+  update(id: string, data: Partial<IMessage>): Promise<IMessage>;
   delete(id: string): Promise<void>;
 }
 

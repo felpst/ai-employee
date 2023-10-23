@@ -31,7 +31,8 @@ export class SendMessage {
 
     // Check if chat room already exists
     const chatRoomExists = await this.chatRoomRepository.findById(request.chatRoomId.toString());
-    if (chatRoomExists) {
+
+    if (!chatRoomExists) {
       throw new Error('Chat not exists');
     }
 

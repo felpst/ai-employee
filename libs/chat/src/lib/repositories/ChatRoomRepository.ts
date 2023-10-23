@@ -14,11 +14,11 @@ const chatRoomSchema = new Schema<IChatRoomDocument>(
 );
 
 export interface IChatRoomRepository {
-  create(data: Partial<IChatRoom>): Promise<IChatRoomDocument>;
-  findAll(): Promise<IChatRoomDocument[]>;
-  findById(id: string): Promise<IChatRoomDocument>;
-  findByWorkspace(workspaceId: string): Promise<IChatRoomDocument[]>;
-  update(id: string, data: Partial<IChatRoom>): Promise<IChatRoomDocument>;
+  create(data: Partial<IChatRoom>): Promise<IChatRoom>;
+  findAll(): Promise<IChatRoom[]>;
+  findById(id: string): Promise<IChatRoom>;
+  findByWorkspace(workspaceId: string): Promise<IChatRoom[]>;
+  update(id: string, data: Partial<IChatRoom>): Promise<IChatRoom>;
   delete(id: string): Promise<void>;
 }
 
@@ -31,23 +31,23 @@ export class ChatRoomRepository implements IChatRoomRepository {
     this.model = model;
   }
 
-  async create(data: Partial<IChatRoom>): Promise<IChatRoomDocument> {
+  async create(data: Partial<IChatRoom>): Promise<IChatRoom> {
     return await this.model.create(data);
   }
 
-  async findAll(): Promise<IChatRoomDocument[]> {
+  async findAll(): Promise<IChatRoom[]> {
     return await this.model.find();
   }
 
-  async findById(id: string): Promise<IChatRoomDocument> {
+  async findById(id: string): Promise<IChatRoom> {
     return await this.model.findById(id);
   }
 
-  async findByWorkspace(workspaceId: string): Promise<IChatRoomDocument[]> {
+  async findByWorkspace(workspaceId: string): Promise<IChatRoom[]> {
     return await this.model.find({ workspaceId });
   }
 
-  async update(id: string, data: Partial<IChatRoom>): Promise<IChatRoomDocument> {
+  async update(id: string, data: Partial<IChatRoom>): Promise<IChatRoom> {
     const chatRoom = await this.model.findById(id);
     if (!chatRoom) {
       throw new Error(`ChatRoom with id ${id} not found`);

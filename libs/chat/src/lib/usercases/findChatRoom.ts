@@ -1,16 +1,15 @@
-import { ChatRoom } from "../entities/ChatRoom";
-import { IChatRoomDocument, IChatRoomRepository } from "../repositories/ChatRoomRepository";
+import { ChatRoom, IChatRoom } from "../entities/ChatRoom";
+import { IChatRoomRepository } from "../repositories/ChatRoomRepository";
 
 
 export class FindChatRoom {
   private chatRepository: IChatRoomRepository;
-  private document: Document
 
   constructor(chatRepository: IChatRoomRepository) {
     this.chatRepository = chatRepository;
   }
 
-  async byId(id: string): Promise<IChatRoomDocument> {
+  async byId(id: string): Promise<IChatRoom> {
 
     // find chat room
     const findChat = await this.chatRepository.findById(id);
@@ -18,14 +17,11 @@ export class FindChatRoom {
     // Create new chat room entity
     const chat = new ChatRoom(findChat);
 
-    document = new Document();
-
-    Object.assign(chat, ...document);
 
     return chat
   }
 
-  async byWorkspace(workspace: string): Promise<IChatRoomDocument[]> {
+  async byWorkspace(workspace: string): Promise<IChatRoom[]> {
      // find chat room
      const findChat = await this.chatRepository.findByWorkspace(workspace);
 
@@ -36,7 +32,7 @@ export class FindChatRoom {
      return chat;
   }
 
-  async all(): Promise<IChatRoomDocument[]> {
+  async all(): Promise<IChatRoom[]> {
     // find chat room
     const findChat = await this.chatRepository.findAll();
 

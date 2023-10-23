@@ -9,7 +9,7 @@ interface FindMessageResponse {
   timestamp: Date;
 }
 
-export class SendMessage {
+export class FindMessage {
   private messageRepository: IMessageRepository;
 
   constructor(messageRepository: IMessageRepository) {
@@ -37,7 +37,7 @@ export class SendMessage {
     
     const messages = await this.messageRepository.findByChatRoomId(chatRoomId);
 
-    if(!messages || messages.length >= 0) {
+    if(!messages || messages.length <= 0) {
       throw new Error('Messages not found');
     }
 
@@ -55,7 +55,7 @@ export class SendMessage {
   async all(): Promise<FindMessageResponse[]> {
     const messages = await this.messageRepository.findAll();
 
-    if(!messages || messages.length >= 0) {
+    if(!messages || messages.length <= 0) {
       throw new Error('Messages not found');
     }
 
