@@ -1,7 +1,6 @@
+import { OpenAI, OpenAIEmbeddings } from '@cognum/llm/openai';
 import { Knowledge } from '@cognum/models';
 import { Document } from 'langchain/document';
-import { OpenAIEmbeddings } from 'langchain/embeddings/openai';
-import { OpenAI } from 'langchain/llms/openai';
 import { SelfQueryRetriever } from 'langchain/retrievers/self_query';
 import { ChromaTranslator } from 'langchain/retrievers/self_query/chroma';
 import { DynamicTool } from 'langchain/tools';

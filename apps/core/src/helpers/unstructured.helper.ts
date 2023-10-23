@@ -1,7 +1,6 @@
+import { OpenAI, OpenAIEmbeddings } from '@cognum/llm/openai';
 import { RetrievalQAChain } from 'langchain/chains';
 import { UnstructuredLoader } from 'langchain/document_loaders/fs/unstructured';
-import { OpenAIEmbeddings } from 'langchain/embeddings/openai';
-import { OpenAI } from 'langchain/llms/openai';
 import { HNSWLib } from 'langchain/vectorstores/hnswlib';
 
 export class Unstructured {
@@ -33,7 +32,7 @@ export class Unstructured {
     const vectorStoreRetriever = vectorStore.asRetriever();
 
     // Create a chain that uses the OpenAI LLM and HNSWLib vector store.
-    const model = new OpenAI({});
+    const model = new OpenAI();
     const chain = RetrievalQAChain.fromLLM(model, vectorStoreRetriever);
     const res = await chain.call({
       query: 'List all informations about this profile',
