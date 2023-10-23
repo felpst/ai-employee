@@ -22,6 +22,12 @@ export class AppComponent {
         sanitizer.bypassSecurityTrustResourceUrl('/assets/icons/logo.svg')
       ),
       iconRegistry.addSvgIcon(
+        'button-submit',
+        sanitizer.bypassSecurityTrustResourceUrl(
+          '/assets/icons/button-submit.svg'
+        )
+      ),
+      iconRegistry.addSvgIcon(
         'lock',
         sanitizer.bypassSecurityTrustResourceUrl('/assets/icons/lock.svg')
       ),

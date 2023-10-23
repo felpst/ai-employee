@@ -1,0 +1,91 @@
+<header class="header">
+  <nav>
+    <div class="workspace-info-group">
+      <button (click)="onRedirect()">
+        <mat-icon svgIcon="arrow-left"></mat-icon>
+      </button>
+
+      <span class="workspace-name">potato</span>
+    </div>
+    <div class="user-details">
+      <img class="imageProfile" src="{{ image }}" alt="" />
+      <span>{{ name }}</span>
+    </div>
+  </nav>
+</header>
+<div class="body">
+  <div class="description">
+    <h1>Settings</h1>
+    <span>Adjust workspace-wide settings and preferences here for potato</span>
+  </div>
+  <div class="settings">
+    <nav>
+      <span
+        class="item"
+        [class.selected]="selectedItem === 1"
+        (click)="selectItem(1)"
+        >General</span
+      >
+      <span
+        class="item"
+        [class.selected]="selectedItem === 2"
+        (click)="selectItem(2)"
+        >Members and Permissions</span
+      >
+    </nav>
+    <div class="content">
+      <ng-container *ngIf="selectedItem === 1">
+        <div class="container-group">
+          <span class="workspace-image">Workspace photo (optional)</span>
+          <div class="image-group">
+            <div class="image"></div>
+            <span>Help teammates know that this is right place.</span>
+          </div>
+
+          <div>
+            <div class="input">
+              <span>Company or team name</span>
+              <input type="text" placeholder="potato" value="potato" />
+            </div>
+            <div class="input">
+              <span>Your workspace access link</span>
+              <input
+                type="text"
+                placeholder="potato.cognum.ai"
+                value="potato.cognum.ai"
+              />
+            </div>
+          </div>
+        </div>
+        <div class="footer">
+          <div>
+            <span>Delete workspace</span>
+            <button class="delete">delete it</button>
+          </div>
+          <span class="footer-description"
+            >Lorem ipsum dolor sit amet consectetur. Amet a faucibus
+            pellentesque posuere.
+          </span>
+        </div>
+      </ng-container>
+
+      <ng-container *ngIf="selectedItem === 2">
+        <div class="container-group">
+          <span>Add a new workspace member</span>
+          <div class="input">
+            <input type="text" placeholder="potato" value="potato" />
+            <select
+              class="form-select no-focus-outline"
+              aria-label="Default select example"
+            >
+              <option value="1">Admin</option>
+            </select>
+            <button class="submit-button">
+              <mat-icon svgIcon="button-submit"></mat-icon>
+            </button>
+          </div>
+        </div>
+      </ng-container>
+    </div>
+  </div>
+</div>

@@ -9,10 +9,11 @@ import { LayoutsModule } from '../layouts/layouts.module';
 
 import { MatIconModule } from '@angular/material/icon';
 import { SettingsRoutingModule } from './settings-routing.module';
+import { SettingsWorkspaceComponent } from './workspace/settings-workspace.component';
 import { YourAccountComponent } from './your-account/your-account.component';
 
 @NgModule({
-  declarations: [YourAccountComponent],
+  declarations: [YourAccountComponent, SettingsWorkspaceComponent],
   imports: [
     CommonModule,
     SettingsRoutingModule,
