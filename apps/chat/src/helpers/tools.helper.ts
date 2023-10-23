@@ -1,4 +1,4 @@
-import { OpenAIEmbeddings } from '@cognum/llm/openai';
+import { EmbeddingsModel } from '@cognum/llm';
 import { Document } from 'langchain/document';
 import { Tool } from 'langchain/tools';
 import { FaissStore } from 'langchain/vectorstores/faiss';
@@ -18,6 +18,7 @@ export class ToolsHelper {
 
   async getTools(query: string, k = 3) {
     if (!query) return [];
+    if (k > this._tools.length) k = this._tools.length;
     const retriever = this._vectorStore.asRetriever(k);
     const docs = await retriever.getRelevantDocuments(query);
     const tools = [];
@@ -38,7 +39,7 @@ export class ToolsHelper {
 
     this._vectorStore = await FaissStore.fromDocuments(
       docs,
-      new OpenAIEmbeddings()
+      new EmbeddingsModel()
     );
     return this._vectorStore;
   }

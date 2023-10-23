@@ -1,5 +1,5 @@
-import { IChat, ICompany, IMessage, IUser } from '@cognum/interfaces';
-import { OpenAI, OpenAIModel } from '@cognum/llm/openai';
+import { IChat, IMessage, IUser } from '@cognum/interfaces';
+import { ChatModel } from '@cognum/llm';
 import { Message } from '@cognum/models';
 import { Callbacks } from 'langchain/callbacks';
 import { LLMChain } from 'langchain/chains';
@@ -23,7 +23,7 @@ export class AIEmployeeMemory {
     this.chat = data.chat;
     this.user = data.user;
     this.vectorStore = new AIEmployeeVectorStore({
-      directoryPath: `${(this.user.company as ICompany)._id}/${this.chat._id}`,
+      directoryPath: `${this.chat._id}`,
     });
   }
 
@@ -46,9 +46,7 @@ export class AIEmployeeMemory {
     if (this.chat.name !== 'New chat') return;
 
     try {
-      const model = new OpenAI({
-        temperature: 0,
-        streaming: true,
+      const model = new ChatModel({
         callbacks: [
           {
             handleLLMNewToken: callbacks.handleLLMNewTokenChatName,
@@ -63,7 +61,7 @@ export class AIEmployeeMemory {
       this.chat.name = res.trim();
       await this.chat.save();
     } catch (error) {
-      console.log(error);
+      console.log('[chatName error]', error);
     }
   }
 
@@ -104,10 +102,7 @@ export class AIEmployeeMemory {
     if (this.messages.length < 10) return;
 
     // Generate summary
-    const model = new OpenAI({
-      temperature: 0,
-      model: OpenAIModel.GPT4,
-    });
+    const model = new ChatModel();
     const prompt =
       PromptTemplate.fromTemplate(`Summarize the conversation below in just a sentence or two, using the entire conversation history, without losing information. Be objective and direct. Do not add irrelevant messages. You need to keep all the data and information in the summary.
 
@@ -170,7 +165,7 @@ export class AIEmployeeMemory {
       'Interactions with Human or AI'
     );
     const docs = await retriever.getRelevantDocuments(query, {});
-    console.log(docs);
+    console.log('queryMemory', docs);
 
     return docs;
   }
