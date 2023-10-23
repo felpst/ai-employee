@@ -1,5 +1,5 @@
+import { OpenAI } from '@cognum/llm/openai';
 import { SqlDatabaseChain } from 'langchain/chains/sql_db';
-import { OpenAI } from 'langchain/llms/openai';
 import { SqlDatabase } from 'langchain/sql_db';
 import { DynamicTool } from 'langchain/tools';
 import { DataSource } from 'typeorm';
@@ -26,7 +26,10 @@ export class DatabaseConnect extends DynamicTool {
         });
 
         const chain = new SqlDatabaseChain({
-          llm: new OpenAI({ temperature: 0, verbose: true }),
+          llm: new OpenAI({
+            temperature: 0,
+            verbose: true,
+          }),
           database: db,
         });
 

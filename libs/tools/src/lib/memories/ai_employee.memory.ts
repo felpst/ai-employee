@@ -1,9 +1,9 @@
 import { IChat, IMessage, IUser } from '@cognum/interfaces';
+import { OpenAI, OpenAIModel } from '@cognum/llm/openai';
 import { Message } from '@cognum/models';
 import { Callbacks } from 'langchain/callbacks';
 import { LLMChain } from 'langchain/chains';
 import { Document } from 'langchain/document';
-import { OpenAI } from 'langchain/llms/openai';
 import { PromptTemplate } from 'langchain/prompts';
 import { AttributeInfo } from 'langchain/schema/query_constructor';
 import { AIEmployeeVectorStore } from '../vectorstores/ai_employee.vectorstore';
@@ -104,7 +104,10 @@ export class AIEmployeeMemory {
     if (this.messages.length < 10) return;
 
     // Generate summary
-    const model = new OpenAI({ temperature: 0, modelName: 'gpt-4' });
+    const model = new OpenAI({
+      temperature: 0,
+      model: OpenAIModel.GPT4,
+    });
     const prompt =
       PromptTemplate.fromTemplate(`Summarize the conversation below in just a sentence or two, using the entire conversation history, without losing information. Be objective and direct. Do not add irrelevant messages. You need to keep all the data and information in the summary.
 

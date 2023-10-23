@@ -1,11 +1,11 @@
 import { IChat, ICompany, IUser } from '@cognum/interfaces';
+import { ChatOpenAI, OpenAIModel } from '@cognum/llm/openai';
 import {
   AIEmployeeIdentity, AIEmployeeMemory, AIEmployeeOutputParser,
   AIEmployeePromptTemplate, KnowledgeBaseTool
 } from '@cognum/tools';
 import { AgentExecutor, LLMSingleActionAgent } from 'langchain/agents';
 import { LLMChain } from 'langchain/chains';
-import { ChatOpenAI } from 'langchain/chat_models/openai';
 import { Callbacks } from 'langchain/dist/callbacks';
 import { Tool } from 'langchain/tools';
 import { Calculator } from 'langchain/tools/calculator';
@@ -44,7 +44,7 @@ export class AIEmployee {
     }
 
     this._model = new ChatOpenAI({
-      modelName: 'gpt-4',
+      model: OpenAIModel.GPT4,
       temperature: 0,
       streaming: true,
       callbacks: this._callbacks,

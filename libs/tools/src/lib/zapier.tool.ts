@@ -1,8 +1,8 @@
+import { OpenAI } from '@cognum/llm/openai';
 import {
   initializeAgentExecutorWithOptions,
   ZapierToolKit,
 } from 'langchain/agents';
-import { OpenAI } from 'langchain/llms/openai';
 import { DynamicTool, ZapierNLAWrapper } from 'langchain/tools';
 
 export class ZapierTool extends DynamicTool {
@@ -15,7 +15,10 @@ export class ZapierTool extends DynamicTool {
       func: async (input: string) => {
         console.log('------------ZapierTool------------');
 
-        const model = new OpenAI({ temperature: 0, verbose: true });
+        const model = new OpenAI({
+          temperature: 0,
+          verbose: true,
+        });
         const zapier = new ZapierNLAWrapper();
         const toolkit = await ZapierToolKit.fromZapierNLAWrapper(zapier);
 

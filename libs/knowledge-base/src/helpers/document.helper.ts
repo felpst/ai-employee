@@ -1,6 +1,6 @@
+import { OpenAI } from '@cognum/llm/openai';
 import { LLMChain } from 'langchain/chains';
 import { Document as LangChainDoc } from 'langchain/document';
-import { OpenAI } from 'langchain/llms/openai';
 import { ChatPromptTemplate } from 'langchain/prompts';
 import { RecursiveCharacterTextSplitter } from 'langchain/text_splitter';
 import { Document as MongoDoc } from 'mongodb';

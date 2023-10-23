@@ -1,5 +1,5 @@
+import { OpenAIEmbeddings } from '@cognum/llm/openai';
 import { Document } from 'langchain/document';
-import { OpenAIEmbeddings } from 'langchain/embeddings/openai';
 import { Tool } from 'langchain/tools';
 import { FaissStore } from 'langchain/vectorstores/faiss';
 
