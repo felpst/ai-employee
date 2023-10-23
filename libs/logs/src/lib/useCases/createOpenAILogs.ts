@@ -1,6 +1,7 @@
 import { get } from 'stack-trace';
 import { OpenAILogs } from "../entities/OpenAILogs";
 import { IOpenAILogsRepository } from "../repositories/OpenAILogsRepository";
+import { extractPathFromDist } from '../utils/extractPath';
 import { splitOpenAIKey } from "../utils/splitOpenAIKey";
 
 interface CreateOpenAILogsRequest {
@@ -36,11 +37,11 @@ export class CreateOpenAILogs {
         const stack = get();
         
         const openAILogsData = {
-            component: stack[1].getFunctionName(),
-            relatedFiles: stack[1].getFileName(),
-            codeLine: stack[1].getLineNumber(),
+            component: stack[2].getFunctionName(),
+            relatedFiles: extractPathFromDist(stack[2].getFileName()),
+            codeLine: stack[2].getLineNumber(),
             openAIKey: splitOpenAIKey(process.env.OPENAI_API_KEY),
-            ...request,
+            params: { ...request },
         };
 
         const openAILogs = new OpenAILogs(openAILogsData);

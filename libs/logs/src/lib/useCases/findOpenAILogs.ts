@@ -29,7 +29,7 @@ export class FindOpenAILogs {
             component: log.component,
             relatedFiles: log.relatedFiles,
             codeLine: log.codeLine,
-            OpenAIKey: log.openAIKey,
+            openAIKey: log.openAIKey,
             createdAt: log.createdAt,
             parameters: log.parameters
         }));
@@ -48,7 +48,7 @@ export class FindOpenAILogs {
             component: log.component,
             relatedFiles: log.relatedFiles,
             codeLine: log.codeLine,
-            OpenAIKey: log.openAIKey,
+            openAIKey: log.openAIKey,
             createdAt: log.createdAt,
             parameters: log.parameters
         }));
