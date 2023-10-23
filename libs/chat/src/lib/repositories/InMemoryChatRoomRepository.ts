@@ -1,39 +1,48 @@
 import { ChatRoom, IChatRoom } from '../entities/ChatRoom';
-import { IChatRoomDocument, IChatRoomRepository } from './ChatRoomRepository';
+import { IChatRoomRepository } from './ChatRoomRepository';
 
-export class InMemoryUserRepository implements IChatRoomRepository {
-  private chatRooms: IChatRoomDocument[] = [];
+export class InMemoryChatRoomRepository implements IChatRoomRepository {
+  private chatRooms: IChatRoom[] = [];
 
-  async create(data: Partial<IChatRoom>): Promise<IChatRoomDocument> {
+  async create(data: Partial<IChatRoom>): Promise<IChatRoom> {
 
     const chatRoom = new ChatRoom(data);
-    const document = new Document()
+
+    this.chatRooms.push(chatRoom);
     
-    return Promise.resolve (Object.assign(chatRoom, ...Document))
+    return Promise.resolve(chatRoom)
   }
 
-  async findAll(): Promise<IChatRoomDocument[]> {
-    return await this.chatRooms.find();
+  async findAll(): Promise<IChatRoom[]> {
+    return Promise.resolve(this.chatRooms)
   }
 
-  async findById(id: string): Promise<IChatRoomDocument> {
-    return await this.chatRooms.findById(id);
+  async findById(id: string): Promise<IChatRoom> {
+    const chatRoom = this.chatRooms.find(u => u.id === id);
+    return Promise.resolve(chatRoom);
   }
 
-  async findByWorkspace(workspaceId: string): Promise<IChatRoomDocument[]> {
-    return await this.chatRooms.find({ workspaceId });
+  async findByWorkspace(workspaceId: string): Promise<IChatRoom[]> {
+    const chatRoom = this.chatRooms.filter(u => u.workspace.toString() === workspaceId);
+    return Promise.resolve(chatRoom);
   }
 
-  async update(id: string, data: Partial<IChatRoom>): Promise<IChatRoomDocument> {
-    const chatRoom = await this.chatRooms.findById(id);
-    if (!chatRoom) {
-      throw new Error(`ChatRoom with id ${id} not found`);
+  async update(id: string, data: Partial<IChatRoom>): Promise<IChatRoom> {
+    const index = this.chatRooms.findIndex(u => u.id === id);
+    if (index === -1) {
+      return Promise.reject(new Error('Chat not found'));
     }
-    Object.assign(chatRoom, data);
-    return await chatRoom.save();
+    const updatedChat = { ...this.chatRooms[index], ...data };
+    this.chatRooms[index] = updatedChat as ChatRoom;
+    return Promise.resolve(updatedChat);
   }
 
-  async delete(id: string): Promise<IChatRoomDocument> {
-    return await this.chatRooms.findByIdAndDelete(id);
+  async delete(id: string): Promise<void> {
+    const index = this.chatRooms.findIndex(u => u.id === id);
+    if (index === -1) {
+      return Promise.reject(new Error('Chat not found'));
+    }
+    const deletedChat = this.chatRooms.splice(index, 1)[0];
+    Promise.resolve(deletedChat);
   }
 }
