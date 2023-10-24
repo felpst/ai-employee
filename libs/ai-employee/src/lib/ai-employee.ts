@@ -1,4 +1,4 @@
-import { IChat, ICompany, IUser } from '@cognum/interfaces';
+import { IChat, IUser } from '@cognum/interfaces';
 import { OpenAILogsService } from '@cognum/logs';
 import {
   AIEmployeeIdentity, AIEmployeeMemory, AIEmployeeOutputParser,
@@ -82,7 +82,6 @@ export class AIEmployee {
         identity: this._identity,
         memory: this.memory,
         user: this._user,
-        company: this._chat.company as ICompany,
       }),
     });
 

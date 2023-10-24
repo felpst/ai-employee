@@ -1,6 +1,6 @@
 import { AIEmployee } from '@cognum/ai-employee';
 import { IChat, IMessage, IUser } from '@cognum/interfaces';
-import { Chat, User } from '@cognum/models';
+import { User } from '@cognum/models';
 import express from 'express';
 import { Server as HTTPServer, IncomingMessage, createServer } from 'http';
 import jwt from 'jsonwebtoken';
@@ -83,7 +83,6 @@ export class ChatServer {
           const session = this.sessions.get(context.sessionId);
           if (session) {
             User.findById(userId)
-              .populate(['company'])
               .then(async (user) => {
                 // Set user
                 const session = this.sessions.get(context.sessionId);
@@ -233,14 +232,9 @@ export class ChatServer {
         if (!chatId) {
           throw new Error('Chat ID not found');
         }
-        const chat = await Chat.findById(chatId).populate(['company']);
-        if (!chat) {
-          throw new Error('Chat not exists');
-        }
 
         // Set chat
         const session = this.sessions.get(sessionId);
-        session.chat = chat;
         this.sessions.set(sessionId, session);
 
         // Listeners

@@ -49,7 +49,6 @@ export class DataSourcesController extends ModelController<typeof DataSource> {
 
   upload(req: Request, res: Response) {
     const filePath = req.file.path;
-    const companyId = (req as any).companyId;
 
     const hash = crypto
       .createHash('sha256')
@@ -57,7 +56,7 @@ export class DataSourcesController extends ModelController<typeof DataSource> {
       .digest('hex');
     const newName = `${hash}_${req.file.originalname}`;
 
-    const destinationPath = `${companyId}/${newName}`;
+    const destinationPath = `${newName}`;
 
     googleStorageBucket
       .upload(filePath, {
@@ -66,7 +65,6 @@ export class DataSourcesController extends ModelController<typeof DataSource> {
       .then(async () => {
         const dataSource: Partial<IDataSource> = {
           name: req.file.originalname,
-          company: companyId,
           type: 'file',
           metadata: {
             bucket: googleStorageBucket.name,

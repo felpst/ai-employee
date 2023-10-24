@@ -1,4 +1,4 @@
-import { IChat, ICompany, IMessage, IUser } from '@cognum/interfaces';
+import { IChat, IMessage, IUser } from '@cognum/interfaces';
 import { Message } from '@cognum/models';
 import { Callbacks } from 'langchain/callbacks';
 import { LLMChain } from 'langchain/chains';
@@ -23,7 +23,7 @@ export class AIEmployeeMemory {
     this.chat = data.chat;
     this.user = data.user;
     this.vectorStore = new AIEmployeeVectorStore({
-      directoryPath: `${(this.user.company as ICompany)._id}/${this.chat._id}`,
+      directoryPath: `${this.chat._id}`,
     });
   }
 
