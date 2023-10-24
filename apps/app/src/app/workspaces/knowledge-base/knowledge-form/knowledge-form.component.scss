@@ -22,7 +22,6 @@ input {
   padding: 0.3em;
 }
 
-
 mat-dialog-content {
   padding: 0.5em 1em !important;
 }
@@ -36,5 +35,5 @@ mat-dialog-content {
   left: 0;
   right: 0;
   bottom: 0;
-  z-index: 9999; /* Optional: ensures the spinner is above other elements */
+  z-index: 9999;
 }

@@ -1,13 +1,20 @@
 <div class="header-container">
   <h2 mat-dialog-title>{{ knowledge ? 'Edit' : 'New' }} knowledge</h2>
   <mat-dialog-actions align="end">
-    <button mat-button (click)="closeModal()" class="close-btn"><mat-icon>close</mat-icon></button>
+    <button mat-button (click)="closeModal()" class="close-btn">
+      <mat-icon>close</mat-icon>
+    </button>
   </mat-dialog-actions>
 </div>
 <mat-dialog-content>
   <form [formGroup]="form">
     <div>
-      <input matInput formControlName="title" placeholder="Title" required="true">
+      <input
+        matInput
+        formControlName="title"
+        placeholder="Title"
+        required="true"
+      />
     </div>
     <md-editor
       formControlName="data"
@@ -37,4 +44,3 @@
 <div class="spinner-container" *ngIf="isLoading">
   <mat-spinner></mat-spinner>
 </div>
-
