@@ -4,7 +4,7 @@ import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
-import { IWorkspace } from '@cognum/interfaces';
+import { IUser, IWorkspace } from '@cognum/interfaces';
 import { CookieService } from 'ngx-cookie-service';
 import { forkJoin } from 'rxjs';
 import { AuthService } from '../../auth/auth.service';
@@ -27,6 +27,7 @@ export class MenuComponent implements OnInit, OnDestroy {
   profilePhoto = '';
   userName = '';
   background: string;
+  remainingUsersCount = 0;
 
   private _mobileQueryListener: () => void;
 
@@ -80,18 +81,27 @@ export class MenuComponent implements OnInit, OnDestroy {
     return predefinedColors[randomIndex];
   }
 
+  onRedirect() {
+    this.router.navigate(['/settings/workspaces']);
+  }
+
   loadProfilePhotos() {
-    const userRequests = this.usersId.map((userId: any) =>
+    const userRequests = this.usersId.map((userId: string) =>
       this.settingsService.getUserById(userId)
     );
 
     forkJoin(userRequests).subscribe((users: any) => {
-      this.usersId = users.map((user: any) => ({
+      this.usersId = users.map((user: IUser) => ({
         ...user,
         profilePhoto: user.profilePhoto,
         name: user.name,
       }));
+      this.calculateRemainingUsersCount();
     });
+  }
+
+  calculateRemainingUsersCount() {
+    this.remainingUsersCount = Math.max(this.usersId.length - 2, 0);
   }
 
   ngOnInit(): void {

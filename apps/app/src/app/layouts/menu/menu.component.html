@@ -69,16 +69,14 @@
                   </div>
                 </ng-container>
               </ng-container>
-              <ng-container *ngIf="i === 2">
-                <button (click)="showAllUsers = true">
-                  {{ usersId.length - 2 }}+ mais
-                </button>
-              </ng-container>
-              <ng-container *ngIf="i === 3 && showAllUsers">
-                <div class="add-user">
-                  <button>Adicionar Usuário</button>
-                </div>
-              </ng-container>
+            </ng-container>
+            <ng-container *ngIf="remainingUsersCount > 0">
+              <div class="more-users" [style.background-color]="background">
+                {{ remainingUsersCount }}+
+              </div>
+              <button (click)="onRedirect()" class="add-user">
+                <mat-icon svgIcon="whiteUser"></mat-icon>
+              </button>
             </ng-container>
           </div>
 
