@@ -1,0 +1,125 @@
+.container {
+  display: flex;
+  flex: 1;
+  justify-content: center;
+  background-color: #f0f0f0;
+
+  width: 100vw;
+  height: 100vh;
+
+  font-family: 'Outfit', sans-serif;
+  font-style: normal;
+  font-weight: 400;
+}
+
+.form-container {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  max-width: 550px;
+  padding: 16px;
+
+  justify-content: space-between;
+}
+
+.margin {
+  margin-bottom: 8px;
+}
+
+.title-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 16px;
+}
+
+.logo {
+  width: 50px;
+  min-width: 20px;
+  height: 50px;
+  min-height: 20px;
+}
+
+.companyStyle {
+  color: rgba(0, 0, 0, 0.85);
+  font-size: 2.0625rem;
+  font-weight: 600;
+  line-height: 2.375rem;
+  letter-spacing: 0.01031rem;
+}
+
+.help-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 8px;
+
+  p {
+    color: rgba(0, 0, 0, 0.85);
+    font-size: 2.375rem;
+    font-weight: 500;
+    line-height: 2.875rem;
+  }
+
+  small {
+    color: rgba(0, 0, 0, 0.45);
+    font-size: 0.875rem;
+    font-weight: 400;
+    line-height: 1.375rem;
+  }
+}
+
+.login-form {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  margin-top: 32px;
+  gap: 16px;
+  align-self: center;
+  width: 100%;
+  max-width: 500px;
+}
+
+.ion-item-wrap {
+  --ion-item-background: #f0f0f0;
+}
+
+.font {
+  font-family: 'Outfit', sans-serif;
+  font-style: normal;
+  font-weight: 300;
+}
+
+.email-icon {
+  width: 0.875rem;
+  height: 0.875rem;
+  padding: 2px 5px;
+  color: #14b8a6;
+}
+
+.errorContainer {
+  text-align: center;
+  font-weight: 400;
+  color: #d9534f;
+}
+
+.btnSubmit {
+  margin-top: 8px;
+  border-radius: 0.125rem;
+  border: 1px solid #14b8a6;
+  background: #14b8a6;
+
+  /* drop-shadow/button-primary */
+  box-shadow: 0px 2px 0px 0px rgba(0, 0, 0, 0.04);
+}
+
+.footer {
+  color: rgba(0, 0, 0, 0.45);
+  text-align: center;
+  font-size: 0.875rem;
+  font-weight: 400;
+  line-height: 1.375rem;
+}

@@ -1,0 +1,100 @@
+<div class="container">
+  <div class="form-container">
+    <div class="margin">
+      <div class="title-container">
+        <img src="../../../assets/icon/cognum.svg" alt="Cognum" class="logo" />
+        <ion-label class="companyStyle">cognum</ion-label>
+      </div>
+
+      <div class="help-container">
+        <p>Sign in to Cognum</p>
+
+        <small>We suggest using the email address you use at work</small>
+      </div>
+    </div>
+
+    <form class="login-form" [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+      <ion-item class="ion-item-wrap">
+        <ion-label class="font" position="floating">Email</ion-label>
+        <ion-input
+          type="email"
+          formControlName="email"
+          errorText="Invalid email"
+          placeholder="name@work-email.com"
+          #inputEmail
+        >
+          <ion-icon
+            slot="start"
+            class="email-icon"
+            name="person-outline"
+          ></ion-icon>
+        </ion-input>
+        <div
+          slot="error"
+          *ngIf="
+                  loginForm.get('email')?.invalid &&
+                  loginForm.get('email')?.touched
+                "
+        >
+          <small
+            class="error"
+            *ngIf="loginForm.get('email')?.errors?.['required']"
+            >Email is required.</small
+          >
+          <small class="error" *ngIf="loginForm.get('email')?.errors?.['email']"
+            >Email is invalid.</small
+          >
+        </div>
+      </ion-item>
+
+      <ion-item class="ion-item-wrap">
+        <ion-label class="font" position="floating">Password</ion-label>
+        <ion-input
+          type="password"
+          formControlName="password"
+          placeholder="Your password"
+        ></ion-input>
+        <div
+          slot="error"
+          *ngIf="
+                  loginForm.get('password')?.invalid &&
+                  loginForm.get('password')?.touched
+                "
+        >
+          <small
+            class="error"
+            *ngIf="loginForm.get('password')?.errors?.['required']"
+            >Password is required.</small
+          >
+          <small
+            class="error"
+            *ngIf="loginForm.get('password')?.errors?.['minlength']"
+          >
+            Password must be at least 6 characters long.
+          </small>
+        </div>
+      </ion-item>
+
+      <div slot="error" class="errorContainer" *ngIf="showLoginError">
+        <small>Email or password is incorrect.</small>
+      </div>
+
+      <ion-button
+        type="submit"
+        expand="full"
+        color="#f0f0f0"
+        class="btnSubmit"
+        [disabled]="loginForm.invalid"
+        >Sign In with Email</ion-button
+      >
+    </form>
+
+    <div class="footer">
+      <ion-label>
+        By clicking “Continue with Apple/Google/Email/SAML” above, you
+        acknowledge that you have read and understood, and agree to Notion's
+        Terms & Conditions and Privacy Policy.
+      </ion-label>
+    </div>
+  </div>
+</div>

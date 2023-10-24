@@ -1,0 +1,42 @@
+version: "3"
+
+services:
+
+  frontend:
+    extends:
+      file: docker-compose.base.yml
+      service: nx-app-base
+    command: npm run serve:app
+    ports:
+      - 4200:4200
+    networks:
+      - cognum_network      
+
+  server:
+    extends:
+      file: docker-compose.base.yml
+      service: nx-app-base
+    command: npm run serve:server
+    ports:
+      - 3000:3000
+      - 8080:8080
+    depends_on:
+      - mongodb      
+    networks:
+      - cognum_network
+    env_file:
+      - ./apps/server/.env
+      
+
+  mongodb:
+    image: mongo:7-jammy
+    ports:
+      - 27017:27017
+    networks:
+      - cognum_network
+
+networks:
+  default:
+    name: cognum_network
+  cognum_network:
+    driver: bridge
