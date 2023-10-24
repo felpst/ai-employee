@@ -7,9 +7,9 @@ import { CoreApiService } from '../services/apis/core-api.service';
   providedIn: 'root',
 })
 export class AuthService {
-  user: IUser | null = null;
-  company: ICompany | null = null;
-  authToken: string | null = null;
+  user!: IUser;
+  company!: ICompany;
+  authToken!: string;
 
   constructor(private coreApiService: CoreApiService) {}
 

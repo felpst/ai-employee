@@ -1,8 +1,8 @@
 <div class="menu" [class.is-mobile]="mobileQuery.matches" role="link">
   <mat-toolbar class="menu-header" (click)="toggleMenu()" mat-icon-button>
-    <div class="info-container" *ngIf="!isLoading">
-      <img [src]="photo" />
-      <strong class="font-outfit">{{ name }}</strong>
+    <div class="info-container">
+      <img [src]="workspace.photo" />
+      <strong class="font-outfit">{{ workspace.name }}</strong>
     </div>
   </mat-toolbar>
 
@@ -16,11 +16,11 @@
       style="top: 0rem; left: 12.5rem"
     >
       <div class="cdk-overlay-pane auth-menu">
-        <div (click)="onLink(workspaceId + '/settings')">
+        <div class="item" [routerLink]="['./', workspace._id, 'settings']">
           <img src="../../../assets/icons/setting.svg" alt="Settings" />
           <span class="font-outfit">settings</span>
         </div>
-        <div (click)="onReturn()">
+        <div class="item" routerLink="/">
           <img src="../../../assets/icons/swap.svg" alt="Switch workspace" />
           <span class="font-outfit">switch workspace</span>
         </div>
@@ -71,67 +71,23 @@
         <div
           class="menu-item"
           id="overview"
-          (click)="onItemChange('overview')"
-          [ngClass]="{ active: currentPath === 'overview' }"
+          *ngFor="let menuItem of menuItems"
+          [routerLink]="['./', workspace._id, menuItem.path]"
+          [routerLinkActive]="['active']"
         >
           <div class="icon">
-            <img src="../../../assets/icons/home.svg" title="Overview" />
+            <img [src]="menuItem.icon" [title]="menuItem.text" />
           </div>
           <div class="content">
-            <span class="font-outfit">Overview</span>
-          </div>
-        </div>
-
-        <div
-          class="menu-item"
-          id="employees"
-          (click)="onItemChange('employees')"
-          [ngClass]="{ active: currentPath === 'employees' }"
-        >
-          <div class="icon">
-            <img src="../../../assets/icons/robot.svg" title="AI employees" />
-          </div>
-          <div class="content">
-            <span class="font-outfit">AI employees</span>
-          </div>
-        </div>
-
-        <div
-          class="menu-item"
-          id="history"
-          (click)="onItemChange('history')"
-          [ngClass]="{ active: currentPath === 'history' }"
-        >
-          <div class="icon">
-            <img src="../../../assets/icons/clock.svg" title="History" />
-          </div>
-          <div class="content">
-            <span class="font-outfit">History</span>
-          </div>
-        </div>
-
-        <div
-          class="menu-item"
-          id="knowledge"
-          (click)="onItemChange('knowledge')"
-          [ngClass]="{ active: currentPath === 'knowledge' }"
-        >
-          <div class="icon">
-            <img
-              src="../../../assets/icons/database.svg"
-              title="Knowledge base"
-            />
-          </div>
-          <div class="content">
-            <span class="font-outfit">Knowledge base</span>
+            <span class="font-outfit">{{ menuItem.text }}</span>
           </div>
         </div>
       </div>
 
       <div class="personal-data">
-        <img [src]="userPhoto" />
+        <img [src]="user.photo" />
         <div class="person-name">
-          <strong class="font-outfit">{{ username }}</strong>
+          <strong class="font-outfit">{{ user.name }}</strong>
         </div>
       </div>
     </mat-sidenav-content>
