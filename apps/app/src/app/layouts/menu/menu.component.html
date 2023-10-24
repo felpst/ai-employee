@@ -58,9 +58,28 @@
           </div>
 
           <div class="members">
-            <img src="../../../assets/icons/avatar.svg" />
-            <img src="../../../assets/icons/avatar.svg" />
-            <img src="../../../assets/icons/avatar.svg" />
+            <ng-container *ngFor="let user of usersId; let i = index">
+              <ng-container *ngIf="i < 2">
+                <ng-container *ngIf="user.profilePhoto">
+                  <img [src]="user.profilePhoto" />
+                </ng-container>
+                <ng-container *ngIf="!user.profilePhoto">
+                  <div class="initials" [style.background-color]="background">
+                    {{ getInitials(user.name) }}
+                  </div>
+                </ng-container>
+              </ng-container>
+              <ng-container *ngIf="i === 2">
+                <button (click)="showAllUsers = true">
+                  {{ usersId.length - 2 }}+ mais
+                </button>
+              </ng-container>
+              <ng-container *ngIf="i === 3 && showAllUsers">
+                <div class="add-user">
+                  <button>Adicionar Usuário</button>
+                </div>
+              </ng-container>
+            </ng-container>
           </div>
 
           <div class="divider"><hr /></div>

@@ -6,7 +6,9 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { IWorkspace } from '@cognum/interfaces';
 import { CookieService } from 'ngx-cookie-service';
+import { forkJoin } from 'rxjs';
 import { AuthService } from '../../auth/auth.service';
+import { SettingsService } from '../../settings/settings.service';
 import { WorkspacesService } from '../../workspaces/workspaces.service';
 
 @Component({
@@ -19,7 +21,12 @@ export class MenuComponent implements OnInit, OnDestroy {
   mobileQuery: MediaQueryList;
   isLoading = true;
   showMenu = false;
+  showAllUsers = false;
+  usersId: any = [];
   workspaceData = '@cognum/selected-workspace';
+  profilePhoto = '';
+  userName = '';
+  background: string;
 
   private _mobileQueryListener: () => void;
 
@@ -27,12 +34,14 @@ export class MenuComponent implements OnInit, OnDestroy {
     iconRegistry: MatIconRegistry,
     sanitizer: DomSanitizer,
     private router: Router,
+    private settingsService: SettingsService,
     private workspacesService: WorkspacesService,
     private authService: AuthService,
     changeDetectorRef: ChangeDetectorRef,
     media: MediaMatcher,
     private cookieService: CookieService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private cdRef: ChangeDetectorRef
   ) {
     this.mobileQuery = media.matchMedia('(max-width: 600px)');
     this._mobileQueryListener = () => changeDetectorRef.detectChanges();
@@ -41,9 +50,56 @@ export class MenuComponent implements OnInit, OnDestroy {
       'cognum',
       sanitizer.bypassSecurityTrustResourceUrl('/assets/icons/cognum.svg')
     );
+    this.background = this.getRandomColorFromSet();
+  }
+
+  getInitials(userName: string): string {
+    if (userName) {
+      const names = userName.split(' ');
+      const initials = names[0][0] + (names[1] ? names[1][0] : '');
+      return initials.toUpperCase();
+    }
+    return '';
+  }
+
+  getRandomColorFromSet(): string {
+    const predefinedColors = [
+      '#22333B',
+      '#0A0908',
+      '#BFCC94',
+      '#E6AACE',
+      '#0D1821',
+      '#344966',
+      '#A9927D',
+      '#5E503F',
+      '#1C1F33',
+      '#666370',
+      '#D33E43',
+    ];
+    const randomIndex = Math.floor(Math.random() * predefinedColors.length);
+    return predefinedColors[randomIndex];
+  }
+
+  loadProfilePhotos() {
+    const userRequests = this.usersId.map((userId: any) =>
+      this.settingsService.getUserById(userId)
+    );
+
+    forkJoin(userRequests).subscribe((users: any) => {
+      this.usersId = users.map((user: any) => ({
+        ...user,
+        profilePhoto: user.profilePhoto,
+        name: user.name,
+      }));
+    });
   }
 
   ngOnInit(): void {
+    this.workspacesService.get(this.workspaceId).subscribe((data) => {
+      this.usersId = data.users;
+      this.loadProfilePhotos();
+    });
+
     const workspaces = this.workspacesService.workspaces;
     if (workspaces.size === 0) {
       return this.onLoadList();
