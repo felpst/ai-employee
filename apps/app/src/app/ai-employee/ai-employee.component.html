@@ -1,7 +1,77 @@
 <div class="main">
-  <div class="content">
-    <h2>AI employee list</h2>
+  <div class="header">
+    <div class="title">
+      <h2>AI employee list</h2>
+    </div>
+    <div class="filters">
+      <div class="sorting-buttons">
+        <button
+          mat-stroked-button
+          [ngClass]="{
+            'active-button': activeButton === 'newFirst',
+            'inactive-button': activeButton !== 'newFirst'
+          }"
+          (click)="onButtonClick('newFirst')"
+        >
+          New first
+        </button>
+        <button
+          mat-stroked-button
+          [ngClass]="{
+            'active-button': activeButton === 'oldFirst',
+            'inactive-button': activeButton !== 'oldFirst'
+          }"
+          (click)="onButtonClick('oldFirst')"
+        >
+          Old first
+        </button>
+        <button
+          mat-stroked-button
+          [ngClass]="{
+            'active-button': activeButton === 'mix',
+            'inactive-button': activeButton !== 'mix'
+          }"
+          (click)="onButtonClick('mix')"
+        >
+          Mix
+        </button>
+      </div>
 
+      <div class="search-container">
+        <input
+          type="text"
+          [(ngModel)]="searchText"
+          (keyup)="onSearch($event)"
+          placeholder="Search..."
+          class="search-input"
+        />
+        <button
+          *ngIf="!searchText"
+          mat-icon-button
+          aria-label="Clear"
+          (click)="clearSearch()"
+        >
+          <mat-icon>search</mat-icon>
+        </button>
+        <button
+          *ngIf="searchText"
+          matSuffix
+          mat-icon-button
+          aria-label="Clear"
+          (click)="clearSearch()"
+        >
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
+
+      <button (click)="createEmployee()" mat-raised-button color="primary">
+        <mat-icon>add</mat-icon>
+        New AI employee
+      </button>
+    </div>
+  </div>
+
+  <div class="content">
     <div class="list">
       <div class="white-content" *ngFor="let employee of employees">
         <div class="ai-employee">
@@ -25,11 +95,11 @@
             <mat-icon>more_horizon</mat-icon>
           </button>
           <mat-menu #menu="matMenu">
-            <button mat-menu-item>
+            <button (click)="editEmployee(employee)" mat-menu-item>
               <mat-icon>border_color</mat-icon>
               <span>edit</span>
             </button>
-            <button mat-menu-item disabled>
+            <button (click)="deleteEmployee(employee)" mat-menu-item>
               <mat-icon>delete_outline</mat-icon>
               <span>delete</span>
             </button>

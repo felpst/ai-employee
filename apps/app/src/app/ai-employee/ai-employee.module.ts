@@ -4,15 +4,14 @@ import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AiEmployeeComponent } from './ai-employee.component';
 import { AiEmployeeRoutingModule } from './ai-employee-routing.module';
-import {MatMenuModule} from '@angular/material/menu';
+import { MatMenuModule } from '@angular/material/menu';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
-
+import { MatDialogModule } from '@angular/material/dialog';
+import { WhiteAiEmployeeComponent } from './white-ai-employee/white-ai-employee.component';
 
 @NgModule({
-  declarations: [
- AiEmployeeComponent
-  ],
+  declarations: [AiEmployeeComponent, WhiteAiEmployeeComponent],
   imports: [
     CommonModule,
     AiEmployeeRoutingModule,
@@ -20,9 +19,8 @@ import { MatButtonModule } from '@angular/material/button';
     FormsModule,
     MatMenuModule,
     MatIconModule,
-    MatButtonModule
-    
-
+    MatButtonModule,
+    MatDialogModule
   ],
 })
 export class AiEmployeeModule {}
