@@ -25,6 +25,7 @@ export class AiEmployeeComponent implements OnInit {
    {}
 
   ngOnInit() {
+    this.activeButton = '';
     this.loadEmployees();
   }
 
@@ -39,15 +40,18 @@ export class AiEmployeeComponent implements OnInit {
     );
   }
 
+
   createEmployee() {
     const dialogRef = this.dialog.open(WhiteAiEmployeeComponent, {
-
-    height: '80%',
-     
+      height: '80%',
     });
 
-    dialogRef.afterClosed().subscribe(() => {});
-    console.log('Editando funcionário:');
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result === 'success') {
+        this.loadEmployees(); 
+        this.activeButton = '';
+      }
+    });
   }
 
   editEmployee(employee: IAIEmployee) {

@@ -17,7 +17,7 @@ export class EmployeeService {
     private authService: AuthService
   ) {}
 
-  create(data: Partial<IAIEmployee>): Observable<IAIEmployee> {
+  create(data: Partial<IAIEmployee> | FormData): Observable<IAIEmployee>  {
     return this.coreApiService.post(this.route, data) as Observable<IAIEmployee>;
   }
 

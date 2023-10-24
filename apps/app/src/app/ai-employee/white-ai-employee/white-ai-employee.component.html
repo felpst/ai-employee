@@ -27,16 +27,22 @@
       <div class="white-content">
         <p>Select your AI employee avatar</p>
         <div class="avatar">
-            <img [src]="" alt="avatar" />
+          <div
+            *ngFor="let avatar of availableAvatars"
+            (click)="selectAvatar(avatar)"
+            [ngClass]="{ 'avatar-selected': selectedAvatar === avatar }"
+          >
+            <img [src]="avatar" alt="avatar" />
           </div>
         </div>
-        <div class="warning-message">
+      </div>
+        <div class="warning-message" *ngIf="showWarning">
           Please fill in all fields.
         </div>
         <div style="display: flex; flex: 1; gap: 8px">
           <button (click)="createAiEmployee()" class="conclude" >
-            <span >Creating Ai Employee...</span>
-            <span >Create AI employee</span>
+            <span *ngIf="isLoading" >Creating Ai Employee...</span>
+            <span *ngIf="!isLoading" >Create AI employee</span>
           </button>
       </div>
       </div>
