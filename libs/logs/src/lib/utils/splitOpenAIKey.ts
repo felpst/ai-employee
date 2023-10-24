@@ -1,5 +1,5 @@
-function splitOpenAIKey(key) {
-  const firstFour = key.slice(0, 7);
+function splitOpenAIKey(key: string) {
+  const firstFour = key.slice(0, 4);
   const lastFour = key.slice(-4);
   return `${firstFour}...${lastFour}`;
 }

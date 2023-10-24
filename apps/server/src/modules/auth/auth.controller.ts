@@ -23,17 +23,17 @@ export class AuthController {
       }
 
       const token = jwt.sign(
-        { userId: user._id},
+        { userId: user._id.toString() },
         process.env.AUTH_SECRET_KEY,
         { expiresIn: '14d' }
       );
 
-      const { password: passwd, ..._user } = user.toObject();
       const expires = new Date();
       expires.setDate(expires.getDate() + 14);
       AuthController._setTokenCookie(res, token, expires);
       res.setHeader('X-Auth-Token', token);
-      res.json(_user);
+      
+      res.json(user.toObject());
     } catch (error) {
       console.log(error);
 

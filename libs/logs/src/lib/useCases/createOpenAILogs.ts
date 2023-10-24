@@ -35,12 +35,13 @@ export class CreateOpenAILogs {
     async execute(request: CreateOpenAILogsRequest): Promise<CreateOpenAILogsResponse> {
 
         const stack = get();
-        
+        console.trace('rastro')
         const openAILogsData = {
-            component: stack[2].getFunctionName(),
-            relatedFiles: extractPathFromDist(stack[2].getFileName()),
-            codeLine: stack[2].getLineNumber(),
-            openAIKey: splitOpenAIKey(process.env.OPENAI_API_KEY),
+            component: stack[4].getFunctionName(),
+            relatedFiles: extractPathFromDist(stack[4].getFileName()),
+            codeLine: stack[4].getLineNumber(),
+            openAIKey: splitOpenAIKey(process.env.AZURE_OPENAI_API_KEY),
+            createdAt: new Date(),
             params: { ...request },
         };
 
@@ -48,7 +49,6 @@ export class CreateOpenAILogs {
 
         const savedOpenAILogs = await this.OpenAILogsRepository.create(openAILogs);
         
-        console.log(openAILogsData);
         
         return {
             id: savedOpenAILogs._id.toString(),

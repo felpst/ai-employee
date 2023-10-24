@@ -1,5 +1,5 @@
 import { IChat, IUser } from '@cognum/interfaces';
-import { OpenAILogsService } from '@cognum/logs';
+import { ChatModel } from '@cognum/llm';
 import {
   AIEmployeeIdentity, AIEmployeeMemory, AIEmployeeOutputParser,
   AIEmployeePromptTemplate,
@@ -7,7 +7,7 @@ import {
 } from '@cognum/tools';
 import { AgentExecutor, LLMSingleActionAgent } from 'langchain/agents';
 import { LLMChain } from 'langchain/chains';
-import { ChatOpenAI } from 'langchain/chat_models/openai';
+import { ChatOpenAI as LangchainChatOpenAI } from 'langchain/chat_models/openai';
 import { Callbacks } from 'langchain/dist/callbacks';
 import { Tool } from 'langchain/tools';
 import { Calculator } from 'langchain/tools/calculator';
@@ -15,9 +15,8 @@ import { Calculator } from 'langchain/tools/calculator';
 export class AIEmployee {
   private _chat: IChat;
   private _user: IUser;
-  private _logs = new OpenAILogsService();
 
-  private _model: ChatOpenAI;
+  private _model: LangchainChatOpenAI;
   private _callbacks: Callbacks;
   private _tools: Tool[];
   memory: AIEmployeeMemory;
@@ -46,18 +45,15 @@ export class AIEmployee {
       this._identity = data.identity;
     }
 
-
-   const configOpenAI = {
-      modelName: 'gpt-4',
-      temperature: 0,
+    const configChatModel = {
       streaming: true,
       callbacks: this._callbacks,
       // verbose: true,
     }
-
-    this._logs.log(configOpenAI);
     
-    this._model = new ChatOpenAI(configOpenAI);
+    this._model = new ChatModel(configChatModel)
+
+    
 
     this.memory = new AIEmployeeMemory({
       chat: this._chat,
