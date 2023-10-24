@@ -35,7 +35,6 @@ export class CreateOpenAILogs {
     async execute(request: CreateOpenAILogsRequest): Promise<CreateOpenAILogsResponse> {
 
         const stack = get();
-        console.trace('rastro')
         const openAILogsData = {
             component: stack[4].getFunctionName(),
             relatedFiles: extractPathFromDist(stack[4].getFileName()),
