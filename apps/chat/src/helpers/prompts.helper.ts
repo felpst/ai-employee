@@ -1,5 +1,6 @@
 import { ICompany, IMessage, IUser } from '@cognum/interfaces';
 import { AgentActionOutputParser } from 'langchain/agents';
+import { ChatPromptValue } from 'langchain/dist/prompts/chat';
 import {
   BaseChatPromptTemplate,
   BasePromptTemplate,
@@ -139,8 +140,14 @@ export class AIEmployeePromptTemplate extends BaseChatPromptTemplate {
     return [new HumanMessage(formatted)];
   }
 
-  partial(_values: PartialValues): Promise<BasePromptTemplate> {
-    throw new Error('Not implemented');
+  // partial(_values: PartialValues): Promise<BasePromptTemplate> {
+  //   throw new Error('Not implemented');
+  // }
+
+  partial(
+    values: PartialValues
+  ): Promise<BasePromptTemplate<any, ChatPromptValue, any>> {
+    throw new Error('Method not implemented.');
   }
 
   serialize(): SerializedBasePromptTemplate {

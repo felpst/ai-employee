@@ -1,7 +1,6 @@
+import { ChatModel, EmbeddingsModel } from '@cognum/llm';
 import { Knowledge } from '@cognum/models';
 import { Document } from 'langchain/document';
-import { OpenAIEmbeddings } from 'langchain/embeddings/openai';
-import { OpenAI } from 'langchain/llms/openai';
 import { SelfQueryRetriever } from 'langchain/retrievers/self_query';
 import { ChromaTranslator } from 'langchain/retrievers/self_query/chroma';
 import { DynamicTool } from 'langchain/tools';
@@ -31,11 +30,11 @@ export class KnowledgeBaseTool extends DynamicTool {
 
         const vectorStore = await FaissStore.fromDocuments(
           docs,
-          new OpenAIEmbeddings()
+          new EmbeddingsModel()
         );
 
         // retrievers
-        const llm = new OpenAI();
+        const llm = new ChatModel();
         const selfQueryRetriever = SelfQueryRetriever.fromLLM({
           llm,
           vectorStore,
@@ -54,7 +53,7 @@ export class KnowledgeBaseTool extends DynamicTool {
           input,
           {}
         );
-        console.log(relevantDocs);
+        console.log('relevantDocs', relevantDocs);
 
         return relevantDocs.map((doc) => doc.pageContent).join('\n');
       },

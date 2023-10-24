@@ -257,7 +257,7 @@ export class ChatServer {
           content: { sessionId, isConnected: true },
         });
       } catch (error) {
-        console.log(error);
+        console.log('[connect error]', error);
         this.closeSession(sessionId, error.message);
       }
     });
