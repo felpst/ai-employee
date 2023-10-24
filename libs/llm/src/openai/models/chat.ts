@@ -17,12 +17,9 @@ export class ChatModel extends LangchainChatOpenAI {
         Partial<AzureOpenAIInput> &
         BaseChatModelParams,
       'modelName' | 'azureOpenAIApiDeploymentName'
-    > & {
-      model?: string;
-    }
+    >
   ) {
     const azureOpenAIApiDeploymentName = 'gpt-35';
-    delete fields?.model;
 
     const callbacks: (BaseCallbackHandler | CallbackHandlerMethods)[] = [
       new LLMCallbackHandler(),
