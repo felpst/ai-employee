@@ -143,7 +143,7 @@ export class MenuComponent implements OnDestroy {
 
   // TODO
   get workspaceUsage() {
-    return 25;
+    return 30;
   }
 
   ngOnDestroy(): void {
