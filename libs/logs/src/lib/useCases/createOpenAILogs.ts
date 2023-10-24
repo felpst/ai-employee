@@ -49,7 +49,6 @@ export class CreateOpenAILogs {
 
         const savedOpenAILogs = await this.OpenAILogsRepository.create(openAILogs);
         
-        console.log(openAILogsData);
         
         return {
             id: savedOpenAILogs._id.toString(),

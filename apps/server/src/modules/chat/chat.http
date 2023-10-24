@@ -19,10 +19,6 @@ POST {{baseUrl}}/chats
 Content-Type: application/json
 Authorization: Bearer {{$authToken}}
 
-{
-  "company": "649dc975d95e431d238afa65"
-}
-
 ### find all
 GET {{baseUrl}}/chats?sort=-createdAt
 Authorization: Bearer {{$authToken}}

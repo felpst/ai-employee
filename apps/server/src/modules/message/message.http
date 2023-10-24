@@ -52,6 +52,6 @@ Authorization: Bearer {{$authToken}}
 }
 
 ### delete
-DELETE {{baseUrl}}/messages/{companyId}
+DELETE {{baseUrl}}/messages
 Authorization: Bearer {{$authToken}}
 

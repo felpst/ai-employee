@@ -237,6 +237,7 @@ export class ChatServer {
           throw new Error('Chat not exists');
         }
 
+        
         // Set chat
         const session = this.sessions.get(sessionId);
         session.chat = chat;
