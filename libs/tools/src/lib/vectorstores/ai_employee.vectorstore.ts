@@ -1,4 +1,4 @@
-import { OpenAIEmbeddings } from '@cognum/llm/openai';
+import { EmbeddingsModel } from '@cognum/llm';
 import { Document } from 'langchain/document';
 import { OpenAI } from 'langchain/llms/openai';
 import { SelfQueryRetriever } from 'langchain/retrievers/self_query';
@@ -15,17 +15,24 @@ export class AIEmployeeVectorStore {
   }
 
   async load() {
-    this.vectorStore = await FaissStore.load(
-      this.directoryPath,
-      new OpenAIEmbeddings()
-    );
+    try {
+      this.vectorStore = await FaissStore.load(
+        this.directoryPath,
+        new EmbeddingsModel()
+      );
+    } catch (error) {
+      this.vectorStore = await FaissStore.fromDocuments(
+        [],
+        new EmbeddingsModel()
+      );
+    }
   }
 
   async addDocuments(docs: Document[]) {
     if (!this.vectorStore) {
       this.vectorStore = await FaissStore.fromDocuments(
         docs,
-        new OpenAIEmbeddings()
+        new EmbeddingsModel()
       );
     }
     await this.vectorStore.addDocuments(docs);

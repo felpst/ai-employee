@@ -1,4 +1,4 @@
-import { OpenAI } from '@cognum/llm/openai';
+import { ChatModel } from '@cognum/llm';
 import {
   initializeAgentExecutorWithOptions,
   ZapierToolKit,
@@ -15,7 +15,7 @@ export class ZapierTool extends DynamicTool {
       func: async (input: string) => {
         console.log('------------ZapierTool------------');
 
-        const model = new OpenAI({
+        const model = new ChatModel({
           temperature: 0,
           verbose: true,
         });

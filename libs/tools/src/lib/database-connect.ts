@@ -1,4 +1,4 @@
-import { OpenAI } from '@cognum/llm/openai';
+import { ChatModel } from '@cognum/llm';
 import { SqlDatabaseChain } from 'langchain/chains/sql_db';
 import { SqlDatabase } from 'langchain/sql_db';
 import { DynamicTool } from 'langchain/tools';
@@ -26,7 +26,7 @@ export class DatabaseConnect extends DynamicTool {
         });
 
         const chain = new SqlDatabaseChain({
-          llm: new OpenAI({
+          llm: new ChatModel({
             temperature: 0,
             verbose: true,
           }),

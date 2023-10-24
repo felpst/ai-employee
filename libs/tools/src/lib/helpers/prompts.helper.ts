@@ -138,7 +138,7 @@ export class AIEmployeePromptTemplate extends BaseChatPromptTemplate {
     return [new HumanMessage(formatted)];
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any
   partial(_values: PartialValues): Promise<any> {
     throw new Error('Not implemented');
   }
