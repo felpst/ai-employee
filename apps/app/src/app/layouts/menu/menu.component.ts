@@ -144,11 +144,6 @@ export class MenuComponent implements OnDestroy {
     return 25;
   }
 
-  // TODO
-  get workspaceUsage() {
-    return 25;
-  }
-
   ngOnDestroy(): void {
     this.mobileQuery.removeListener(this._mobileQueryListener);
   }
