@@ -201,6 +201,6 @@ export class KnowledgeBaseComponent implements OnInit {
   }
 
   get workspaceId() {
-    return localStorage.getItem(this.workspaceData) || '';
+    return this.workspacesService.selectedWorkspace?._id || '';
   }
 }
