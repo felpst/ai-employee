@@ -1,6 +1,5 @@
 import { IChat, ICompany, IUser } from '@cognum/interfaces';
 import { ChatModel } from '@cognum/llm';
-import { OpenAILogsService } from '@cognum/logs';
 import {
   AIEmployeeIdentity, AIEmployeeMemory, AIEmployeeOutputParser,
   AIEmployeePromptTemplate,
@@ -16,7 +15,6 @@ import { Calculator } from 'langchain/tools/calculator';
 export class AIEmployee {
   private _chat: IChat;
   private _user: IUser;
-  private _logs = new OpenAILogsService();
 
   private _model: LangchainChatOpenAI;
   private _callbacks: Callbacks;
@@ -52,9 +50,7 @@ export class AIEmployee {
       callbacks: this._callbacks,
       // verbose: true,
     }
-
-    this._logs.log(configChatModel);
-
+    
     this._model = new ChatModel(configChatModel)
 
     
