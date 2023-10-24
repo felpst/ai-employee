@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { KnowledgeBaseComponent } from './knowledge-base/knowledge-base.component';
 import { WorkspaceComponent } from './workspace/workspace.component';
 
 const routes: Routes = [
@@ -20,7 +21,7 @@ const routes: Routes = [
       },
       {
         path: 'knowledge',
-        component: WorkspaceComponent,
+        component: KnowledgeBaseComponent,
       },
 
       { path: '**', redirectTo: 'overview', pathMatch: 'full' },
@@ -33,4 +34,4 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
 })
-export class ChatsRoutingModule {}
+export class WorkspacesRoutingModule {}

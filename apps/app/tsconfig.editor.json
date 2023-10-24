@@ -1,6 +1,9 @@
 {
   "extends": "./tsconfig.json",
-  "include": ["src/**/*.ts", "src/app/knowledge-base/knowledge-modal"],
+  "include": [
+    "src/**/*.ts",
+    "src/app/workspaces/knowledge-base/knowledge-modal"
+  ],
   "compilerOptions": {
     "types": ["jest", "node"]
   }
