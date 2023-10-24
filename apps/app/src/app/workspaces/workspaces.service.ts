@@ -20,6 +20,16 @@ export class WorkspacesService {
     ) as Observable<IWorkspace>;
   }
 
+  createWorkspace(formData: FormData): Observable<IWorkspace> {
+    return this.coreApiService.post(`${this.route}`, formData, {
+      headers: {
+        Accept: 'application/json',
+  
+      },
+    }) as Observable<IWorkspace>;
+  }
+  
+
   get(id: string): Observable<IWorkspace> {
     return this.coreApiService.get(
       `${this.route}/${id}`
