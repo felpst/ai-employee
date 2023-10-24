@@ -15,6 +15,7 @@ import { Calculator } from 'langchain/tools/calculator';
 export class AIEmployee {
   private _chat: IChat;
   private _user: IUser;
+  private _logs = new OpenAILogsService();
 
   private _model: ChatOpenAI;
   private _callbacks: Callbacks;
@@ -45,7 +46,6 @@ export class AIEmployee {
       this._identity = data.identity;
     }
 
-    const openAILogsService = new OpenAILogsService();
 
    const configOpenAI = {
       modelName: 'gpt-4',
@@ -55,7 +55,7 @@ export class AIEmployee {
       // verbose: true,
     }
 
-    openAILogsService.log(configOpenAI);
+    this._logs.log(configOpenAI);
     
     this._model = new ChatOpenAI(configOpenAI);
 
