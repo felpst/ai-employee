@@ -21,7 +21,9 @@
       "@cognum/helpers": ["libs/helpers/src/index.ts"],
       "@cognum/interfaces": ["libs/interfaces/src/index.ts"],
       "@cognum/models": ["libs/models/src/index.ts"],
-      "@cognum/tools": ["libs/tools/src/index.ts"]
+      "@cognum/tools": ["libs/tools/src/index.ts"],
+      "@cognum/llm": ["libs/llm/src/index.ts"],
+      "@cognum/llm/openai": ["libs/llm/src/openai/index.ts"],
     }
   },
   "exclude": ["node_modules", "tmp"]
