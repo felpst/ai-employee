@@ -7,3 +7,4 @@ export { default as Knowledge } from './knowledge.model';
 export { default as Message } from './message.model';
 export { default as User } from './user.model';
 export { default as Workspace } from './workspace.model';
+
