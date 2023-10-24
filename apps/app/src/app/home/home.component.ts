@@ -68,7 +68,6 @@ export class HomeComponent implements OnInit {
   }
 
   onSelectWorkspace(workspaceId: string) {
-    this.workspacesService.onSelectWorkspace(workspaceId);
     this.router.navigate(['/workspaces', workspaceId]);
   }
 }

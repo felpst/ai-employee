@@ -115,6 +115,8 @@ export class MenuComponent implements OnDestroy {
     forkJoin(userRequests).subscribe((users: any) => {
       this.usersId = users.map((user: IUser) => ({
         ...user,
+        photo: user.photo,
+        name: user.name,
       }));
       this.calculateRemainingUsersCount();
     });

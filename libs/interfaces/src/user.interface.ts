@@ -5,6 +5,6 @@ export interface IUser extends DefaultModel {
   email: string;
   password: string;
   active: boolean;
-  profilePhoto?: string;
+  photo?: string;
   company: string | ICompany;
 }
