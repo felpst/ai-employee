@@ -89,6 +89,11 @@ export class MenuComponent implements OnInit, OnDestroy {
     return localStorage.getItem(this.workspaceData) || '';
   }
 
+  // TODO
+  get workspaceUsage() {
+    return 25;
+  }
+
   ngOnDestroy(): void {
     this.mobileQuery.removeListener(this._mobileQueryListener);
     localStorage.removeItem(this.workspaceData);
