@@ -1,8 +1,13 @@
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
+import {
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  Validators,
+} from '@angular/forms';
 import { Router } from '@angular/router';
-import { WorkspacesService } from '../workspaces.service';
 import { AuthService } from '../../auth/auth.service';
+import { WorkspacesService } from '../workspaces.service';
 
 @Component({
   selector: 'cognum-create-workspace',
@@ -21,7 +26,7 @@ export class CreateWorkspaceComponent {
   selectedAvatar: string | null = null;
   isAvatarSelected = false;
   availableAvatars = ['../../../assets/icons/avatar(2).svg'];
-  workspacePhoto: string | null = null;
+  photo: string | null = null;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -33,20 +38,19 @@ export class CreateWorkspaceComponent {
       name: ['', Validators.required],
       link: ['', Validators.required],
       allowJoin: [false],
-      workspacePhoto: [null],
+      photo: [null],
     });
 
     this.teamForm = this.formBuilder.group({
       email: ['', [Validators.required, this.emailListValidator]],
     });
 
-
     this.aiEmployeeForm = this.formBuilder.group({
       description: ['', Validators.required],
       name: ['', Validators.required],
     });
   }
- 
+
   onLogOut() {
     this.authService.logout().subscribe({
       next: () => {
@@ -55,11 +59,9 @@ export class CreateWorkspaceComponent {
     });
   }
 
-
   get email() {
     return this.authService.user ? this.authService.user.email : '';
   }
-
 
   onFileSelected(event: any, fileType: string) {
     const files: FileList = event.target.files;
@@ -68,7 +70,7 @@ export class CreateWorkspaceComponent {
       const reader = new FileReader();
       reader.onloadend = () => {
         if (file.type.match('image.*')) {
-          this.workspacePhoto = reader.result as string;
+          this.photo = reader.result as string;
           this.selectedFiles.push(file);
         }
       };
@@ -79,17 +81,17 @@ export class CreateWorkspaceComponent {
   }
 
   emailListValidator(control: FormControl): { [key: string]: any } | null {
-    const emails: string[] = (control.value as string).split(',').map(email => email.trim());
+    const emails: string[] = (control.value as string)
+      .split(',')
+      .map((email) => email.trim());
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     for (const email of emails) {
       if (!emailRegex.test(email)) {
-        return { 'invalidEmail': true };
+        return { invalidEmail: true };
       }
     }
     return null;
   }
-  
-  
 
   nextStep() {
     switch (this.currentStep) {
@@ -99,12 +101,12 @@ export class CreateWorkspaceComponent {
           return;
         }
         break;
-        case 1:
-          if (this.teamForm.invalid) {
-            this.showWarning = true;
-            return;
-          }
-          break;
+      case 2:
+        if (this.teamForm.invalid) {
+          this.showWarning = true;
+          return;
+        }
+        break;
       case 3:
         if (this.aiEmployeeForm.invalid || !this.isAvatarSelected) {
           this.showWarning = true;
@@ -120,7 +122,7 @@ export class CreateWorkspaceComponent {
     }
   }
 
-  skipStep(){
+  skipStep() {
     this.currentStep++;
     if (this.currentStep > this.numSteps) {
       this.currentStep = 1;
@@ -156,7 +158,7 @@ export class CreateWorkspaceComponent {
     const submitData = {
       name: workspaceData.name,
       description: aiEmployeeData.description,
-      workspacePhoto: workspaceData.workspacePhoto,
+      photo: workspaceData.photo,
       accessLink: workspaceData.link,
       private: false,
       usersEmails: teamData.email.split(','),

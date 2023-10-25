@@ -1,3 +1,4 @@
+import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import {
   AbstractControl,
@@ -7,6 +8,7 @@ import {
 } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../../auth/auth.service';
+import { NotificationsService } from '../../services/notifications/notifications.service';
 import { SettingsService } from '../settings.service';
 
 @Component({
@@ -16,10 +18,10 @@ import { SettingsService } from '../settings.service';
 })
 export class YourAccountComponent implements OnInit {
   name = '';
-  profilePhoto: File | null = null;
+  photo: File | null = null;
   updateForm = this.formBuilder.group({
-    name: [this.name, [Validators.required, Validators.minLength(6)]],
-    profilePhoto: [this.profilePhoto, []],
+    name: [this.name, [Validators.minLength(6)]],
+    photo: [this.photo, []],
   });
   submitting = false;
   showUpdateError = false;
@@ -27,10 +29,12 @@ export class YourAccountComponent implements OnInit {
   showDeleteConfirmation = false;
 
   constructor(
+    private location: Location,
     private settingsService: SettingsService,
     private authService: AuthService,
     private formBuilder: FormBuilder,
-    private router: Router
+    private router: Router,
+    private notificationsService: NotificationsService
   ) {
     this.updateForm.valueChanges.subscribe(() => {
       this.showUpdateError = false;
@@ -41,11 +45,16 @@ export class YourAccountComponent implements OnInit {
     this.showDeleteConfirmation = true;
   }
 
+  onRedirect() {
+    this.location.back();
+  }
+
   ngOnInit() {
     const userId = this.authService.user?._id;
 
     this.settingsService.getUserById(userId).subscribe({
       next: (response) => {
+        this.image = response.photo;
         this.name = response.name;
       },
     });
@@ -90,11 +99,12 @@ export class YourAccountComponent implements OnInit {
     try {
       const [file] = event.target.files;
       if (file) {
-        const control = this.updateForm.get('profilePhoto');
+        this.selectedImage = URL.createObjectURL(file);
+        const control = this.updateForm.get('photo');
         control?.patchValue(file);
         control?.setValidators(this.validatorFile);
         control?.updateValueAndValidity();
-        this.profilePhoto = file;
+        this.photo = file;
       }
     } catch (error) {
       console.log('An error ocurring: ', { error });
@@ -104,16 +114,22 @@ export class YourAccountComponent implements OnInit {
   async onSubmit() {
     if (!this.updateForm.valid) return;
     this.submitting = true;
-    const { name, profilePhoto } = this.updateForm.value;
+
+    let name = this.updateForm.get('name')?.value;
+    if (!name) {
+      name = this.name; // Usar o nome atual se o campo name estiver vazio
+    }
+
+    const photo = this.updateForm.get('photo')?.value;
     const updateData = JSON.stringify({ name });
     const userId = this.authService.user?._id;
-    this.settingsService
-      .updateUserById(userId, updateData, profilePhoto)
-      .subscribe({
-        next: (response) => {
-          console.log(response);
-        },
-      });
+
+    this.settingsService.updateUserById(userId, updateData, photo).subscribe({
+      next: () => {
+        this.notificationsService.show('Successfully changed data!');
+        this.router.navigate(['/home']);
+      },
+    });
   }
 
   selectedItem: number | null = 1;

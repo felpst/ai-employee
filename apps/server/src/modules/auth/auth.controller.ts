@@ -60,7 +60,7 @@ export class AuthController {
       const decodedToken: any = jwt.verify(token, process.env.AUTH_SECRET_KEY);
 
       const userId = decodedToken.userId;
-      const user = await User.findById(userId).select('name email');
+      const user = await User.findById(userId).select('-password');
       if (!user) {
         res.status(404).json({ error: 'User not found' });
         return;
