@@ -51,4 +51,14 @@ export class KnowledgeBaseService {
       `${this.route}/${item._id}`
     ) as Observable<IKnowledge>;
   }
+
+  userPermission(knowledge: IKnowledge, userId: string): boolean {
+    if (knowledge.permissions) {
+      const userPermission = knowledge.permissions.find(
+        (perm) => perm.userId === userId
+      );
+      return userPermission?.permission === 'Editor';
+    }
+    return false;
+  }
 }

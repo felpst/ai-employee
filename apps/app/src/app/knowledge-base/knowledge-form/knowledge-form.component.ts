@@ -5,8 +5,10 @@ import {
   MatDialog,
   MatDialogRef,
 } from '@angular/material/dialog';
-import { IKnowledge, IWorkspace } from '@cognum/interfaces';
+import { IKnowledge, IUser, IWorkspace } from '@cognum/interfaces';
+import { AuthService } from '../../auth/auth.service';
 import { NotificationsService } from '../../services/notifications/notifications.service';
+import { UsersService } from '../../services/users/users.service';
 import { DialogComponent } from '../../shared/dialog/dialog.component';
 import { KnowledgeBaseService } from '../knowledge-base.service';
 
@@ -17,15 +19,20 @@ import { KnowledgeBaseService } from '../knowledge-base.service';
 })
 export class KnowledgeFormComponent {
   knowledge: IKnowledge | undefined;
+  workspace!: IWorkspace;
+  members: IUser[] = [];
   form: FormGroup;
   markdownOptions = {
     showPreviewPanel: false,
   };
   isLoading = false;
+  creatorId: string | undefined;
 
   constructor(
     private formBuilder: FormBuilder,
     private knowledgeBaseService: KnowledgeBaseService,
+    private usersService: UsersService,
+    private authService: AuthService,
     private dialog: MatDialog,
     private dialogRef: MatDialogRef<KnowledgeFormComponent>,
     private notificationsService: NotificationsService,
@@ -39,20 +46,27 @@ export class KnowledgeFormComponent {
       title: ['', [Validators.required]],
       data: ['', [Validators.required]],
     });
-
+    
     if (data.knowledge) {
       this.knowledge = data.knowledge;
       this.form.patchValue(data.knowledge);
     }
+
+    this.creatorId = this.authService.user?._id;
+    this.usersService.list().subscribe((members: IUser[]) => {
+      this.members = members.filter((member) => member._id !== this.creatorId);
+    });
   }
 
   onSave() {
     this.isLoading = true;
     const data = this.form.value;
-
+    
     if (this.knowledge) {
+      const modifiedKnowledge = this.handlePermissions(this.knowledge, this.members, this.creatorId as string);
+      
       this.knowledgeBaseService
-        .update({ ...this.knowledge, ...data })
+        .update({ ...modifiedKnowledge, ...data })
         .subscribe({
           next: (res) => {
             this.notificationsService.show('Successfully updated knowledge');
@@ -69,7 +83,16 @@ export class KnowledgeFormComponent {
         });
     } else {
       const { _id } = this.data.workspace;
-      this.knowledgeBaseService.create({ ...data, workspace: _id }).subscribe({
+      const defaultPermissions = this.members.map((member) => ({
+        userId: member._id,
+        permission: 'Reader',
+      }));
+      defaultPermissions.push({
+        userId: this.creatorId,
+        permission: 'Editor',
+      });
+
+      this.knowledgeBaseService.create({ ...data, workspace: _id , permissions: defaultPermissions}).subscribe({
         next: (res) => {
           this.notificationsService.show('Successfully created knowledge');
           this.dialogRef.close(res);
@@ -84,6 +107,32 @@ export class KnowledgeFormComponent {
         },
       });
     }
+  }
+
+  handlePermissions(knowledge: IKnowledge, members: IUser[], creatorId: string) {
+    const modifiedKnowledge = { ...knowledge };
+  
+    if (!knowledge.permissions || knowledge.permissions.length === 0) {
+      const defaultPermissions = members.map((member) => ({
+        userId: member._id,
+        permission: 'Reader' as 'Reader' | 'Editor'
+      }));
+      defaultPermissions.push({
+        userId: creatorId,
+        permission: 'Editor' as 'Reader' | 'Editor',
+      });
+  
+      modifiedKnowledge.permissions = defaultPermissions;
+    } else if (knowledge.permissions.some((perm) => perm.userId === creatorId && perm.permission === 'Editor')) {
+      members.forEach((member) => {
+        const memberPermission = knowledge.permissions.find((perm) => perm.userId === member._id);
+        if (!memberPermission) {
+          modifiedKnowledge.permissions.push({ userId: member._id, permission: 'Reader' });
+        }
+      });
+    }
+  
+    return modifiedKnowledge;
   }
 
   onRemove() {

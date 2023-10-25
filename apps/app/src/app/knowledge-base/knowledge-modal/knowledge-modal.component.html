@@ -1,9 +1,9 @@
 <mat-dialog-content>
   <div class="dialog-header">
-    <h2>{{ knowledge?.title }}</h2>
+    <h2>{{ knowledge.title }}</h2>
     <div class="actions-container">
-      <p class="mat-mdc-card-subtitle">last updated {{ knowledge?.updatedAt ? updatedTimeDifference(knowledge?.updatedAt) : 'N/A' }}</p>
-      <button mat-icon-button class="icon-button" [matMenuTriggerFor]="menu" (menuOpened)="menuOpened()" (menuClosed)="menuClosed()">
+      <p class="mat-mdc-card-subtitle">last updated {{ knowledge.updatedAt ? updatedTimeDifference(knowledge.updatedAt) : 'N/A' }}</p>
+      <button mat-icon-button class="icon-button" [matMenuTriggerFor]="menu" (menuOpened)="menuOpened()" (menuClosed)="menuClosed()" *ngIf="userHasEditorPermission(knowledge)">
         <mat-icon [ngClass]="{'active-icon': isMoreHorizActive}">more_horiz</mat-icon>
       </button>
       <mat-menu #menu="matMenu">
@@ -16,20 +16,20 @@
           delete
         </button>
       </mat-menu>
-      <button class="shared-btn" (click)="openShareMenu()" [ngClass]="{'active-btn': isSharedActive}" *ngIf="knowledge" [matMenuTriggerFor]="shareMenu" (menuOpened)="shareMenuOpened()" (menuClosed)="shareMenuClosed()">Shared</button>
+      <button class="shared-btn" [ngClass]="{'active-btn': isSharedActive}" [matMenuTriggerFor]="shareMenu" (menuOpened)="shareMenuOpened()" (menuClosed)="shareMenuClosed()" *ngIf="knowledge && userHasEditorPermission(knowledge)">Shared</button>
       <mat-menu #shareMenu="matMenu" id="sharedMenu">
         <div class="divider-container">
           <mat-icon>expand_more</mat-icon>
           <span>Workspace members</span>
         </div>
         <ng-container *ngFor="let member of members">
-          <div class="member-container">
+          <div class="member-container" *ngIf="!isCreator(member)">
             <div class="user-info">
               <mat-icon>account_circle</mat-icon>
               <span class="user-name">{{ capitalizeName(member.name) }}</span>
             </div>
             <div class="dropdown-container">
-              <mat-select [(value)]="selectedPermission" (selectionChange)="setPermission(member, $event.value)">
+              <mat-select [(value)]="memberPermissions[member._id]" (selectionChange)="setPermission(member, $event.value)">
                 <mat-option value="Editor">Editor</mat-option>
                 <mat-option value="Reader">Reader</mat-option>
               </mat-select>
@@ -43,7 +43,7 @@
     </div>    
   </div>
   <div class="knowledge-data">
-    <p>{{ knowledge?.data }}</p>
+    <p>{{ knowledge.data }}</p>
   </div>
 </mat-dialog-content>
  
