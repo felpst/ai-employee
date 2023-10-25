@@ -13,7 +13,7 @@ export const addUserSchema = yup.object({
           /^(?=.*[A-Z])(?=.*[!@#$&*.,])(?=.*[0-9])(?=.*[a-z]).{6,}$/,
           'The password must contain lowercase and uppercase letters, numbers and special characters (!@#$*.,)'
         ),
-      profilePhoto: yup.string().notRequired(),
+      photo: yup.string().notRequired(),
     })
     .noUnknown()
     .required(),

@@ -5,7 +5,7 @@ export const addWorkspace = yup.object({
     .object({
       name: yup.string().required(),
       description: yup.string().notRequired().defined(),
-      workspacePhoto: yup.string().notRequired(),
+      photo: yup.string().notRequired(),
       accessLink: yup.string().notRequired(),
       private: yup.bool().notRequired(),
       users: yup.array().of(yup.string()).notRequired(),

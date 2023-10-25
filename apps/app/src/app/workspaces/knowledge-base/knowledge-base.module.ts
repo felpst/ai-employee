@@ -2,7 +2,6 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { KnowledgeBaseRoutingModule } from './knowledge-base-routing.module';
 import { KnowledgeBaseComponent } from './knowledge-base.component';
 
 import { MatButtonModule } from '@angular/material/button';
@@ -22,10 +21,13 @@ import { KnowledgeFormComponent } from './knowledge-form/knowledge-form.componen
 import { KnowledgeModalComponent } from './knowledge-modal/knowledge-modal.component';
 
 @NgModule({
-  declarations: [KnowledgeBaseComponent, KnowledgeFormComponent, KnowledgeModalComponent],
+  declarations: [
+    KnowledgeBaseComponent,
+    KnowledgeFormComponent,
+    KnowledgeModalComponent,
+  ],
   imports: [
     CommonModule,
-    KnowledgeBaseRoutingModule,
     ReactiveFormsModule,
     FormsModule,
     MarkdownModule,

@@ -38,11 +38,7 @@ export class UserController extends ModelController<typeof User> {
       const data = req.body;
       data.updatedBy = req['userId'];
       if (req.file?.path) {
-        data.profilePhoto = await UploadUtils.uploadFile(
-          userId,
-          req.file,
-          'users'
-        );
+        data.photo = await UploadUtils.uploadFile(userId, req.file, 'users');
       }
       const updated = await User.findByIdAndUpdate(userId, data, {
         returnDocument: 'after',

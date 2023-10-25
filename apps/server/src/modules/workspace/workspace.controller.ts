@@ -28,10 +28,10 @@ export class WorkspaceController extends ModelController<typeof Workspace> {
           ? [...usersEmails]
           : [usersEmails];
         const _id = new mongoose.Types.ObjectId();
-        let workspacePhoto = process.env.DEFAULT_PHOTO_URL;
+        let photo = process.env.DEFAULT_PHOTO_URL;
         const [workspaceFile, employeeFile] = files;
         if (workspaceFile?.path) {
-          workspacePhoto = await UploadUtils.uploadFile(
+          photo = await UploadUtils.uploadFile(
             _id.toString(),
             workspaceFile,
             'workspaces'
@@ -52,7 +52,7 @@ export class WorkspaceController extends ModelController<typeof Workspace> {
           ...data,
           _id,
           users: _users,
-          workspacePhoto,
+          photo,
         });
         if (employee) {
           const _employeeId = new mongoose.Types.ObjectId();
@@ -92,7 +92,7 @@ export class WorkspaceController extends ModelController<typeof Workspace> {
       const data = req.body;
       data.updatedBy = req['userId'];
       if (req.file?.path) {
-        data.workspacePhoto = await UploadUtils.uploadFile(
+        data.photo = await UploadUtils.uploadFile(
           workspaceId,
           req.file,
           'workspaces'

@@ -8,9 +8,8 @@ import { CoreApiService } from '../services/apis/core-api.service';
 })
 export class WorkspacesService {
   private route = 'workspaces';
-  selectedWorkspace: string | null = null;
+  selectedWorkspace!: IWorkspace;
   workspaces: Map<string, IWorkspace> = new Map<string, IWorkspace>();
-  workspaceData = '@cognum/selected-workspace';
 
   constructor(private coreApiService: CoreApiService) {}
 
@@ -45,7 +44,7 @@ export class WorkspacesService {
   list(): Observable<Map<string, IWorkspace>> {
     return new Observable((observer) => {
       (
-        this.coreApiService.get(`${this.route}/user`, {
+        this.coreApiService.get(`${this.route}`, {
           params: { sort: '-createdAt' },
         }) as Observable<IWorkspace[]>
       ).subscribe({
@@ -64,10 +63,5 @@ export class WorkspacesService {
     return this.coreApiService.delete(
       `${this.route}/${chat._id}`
     ) as Observable<IWorkspace>;
-  }
-
-  onSelectWorkspace(workspaceId: string) {
-    this.selectedWorkspace = workspaceId;
-    localStorage.setItem(this.workspaceData, workspaceId);
   }
 }

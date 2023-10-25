@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
 import { IKnowledge } from '@cognum/interfaces';
 import { Observable } from 'rxjs';
-import { AuthService } from '../auth/auth.service';
-import { CoreApiService } from '../services/apis/core-api.service';
+import { CoreApiService } from '../../services/apis/core-api.service';
 
 @Injectable({
   providedIn: 'root',
@@ -10,10 +9,7 @@ import { CoreApiService } from '../services/apis/core-api.service';
 export class KnowledgeBaseService {
   private route = 'knowledges';
 
-  constructor(
-    private coreApiService: CoreApiService,
-    private authService: AuthService
-  ) {}
+  constructor(private coreApiService: CoreApiService) {}
 
   create(data: Partial<IKnowledge>): Observable<IKnowledge> {
     return this.coreApiService.post(this.route, data) as Observable<IKnowledge>;
@@ -22,9 +18,9 @@ export class KnowledgeBaseService {
   list(): Observable<IKnowledge[]> {
     return new Observable((observer) => {
       (
-        this.coreApiService.get(`${this.route}?sort=-createdAt`) as Observable<
-          IKnowledge[]
-        >
+        this.coreApiService.get(this.route, {
+          params: { sort: '-createdAt' },
+        }) as Observable<IKnowledge[]>
       ).subscribe({
         next: (knowledgeBase: IKnowledge[]) => {
           observer.next(knowledgeBase);

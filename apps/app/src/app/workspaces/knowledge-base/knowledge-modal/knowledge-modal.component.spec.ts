@@ -19,4 +19,3 @@ describe('KnowledgeModalComponent', () => {
     expect(component).toBeTruthy();
   });
 });
-
