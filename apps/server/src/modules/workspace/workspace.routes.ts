@@ -17,8 +17,7 @@ router.post(
   YupValidatorMiddleware(addWorkspace),
   workspaceController.create
 );
-router.get('/', authMiddleware, workspaceController.find);
-router.get('/user', authMiddleware, workspaceController.findByUser);
+router.get('/', authMiddleware, workspaceController.findByUser);
 router.get('/:id', authMiddleware, workspaceController.getById);
 router.put(
   '/:id',

@@ -24,7 +24,7 @@ router.get('/:id', authMiddleware, userController.getById);
 router.put(
   '/:id',
   authMiddleware,
-  multer(multerConfig).single('profilePhoto'),
+  multer(multerConfig).single('photo'),
   jsonParserMiddleware,
   userController.update
 );
