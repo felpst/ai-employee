@@ -17,7 +17,7 @@ const routes: Routes = [
     canActivate: [AuthGuard],
     children: [
       {
-        path: 'home',
+        path: '',
         loadChildren: () =>
           import('./home/home.module').then((m) => m.HomeComponentModule),
       },
@@ -57,14 +57,6 @@ const routes: Routes = [
         component: AdminComponent,
         loadChildren: () =>
           import('./chats/chats.module').then((m) => m.ChatsModule),
-      },
-      {
-        path: 'knowledge-base',
-        component: AdminComponent,
-        loadChildren: () =>
-          import('./knowledge-base/knowledge-base.module').then(
-            (m) => m.KnowledgeBaseModule
-          ),
       },
       { path: '**', redirectTo: 'home', pathMatch: 'full' },
     ],

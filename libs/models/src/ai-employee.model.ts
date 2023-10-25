@@ -7,7 +7,7 @@ const schema = new Schema<IAIEmployee>({
   name: { type: String, required: true },
   role: { type: String, required: true },
   avatar: { type: String, required: false },
-  workspaces: [{ type: Schema.Types.ObjectId, ref: 'Workspace' }],
+  workspace: { type: Schema.Types.ObjectId, ref: 'Workspace', required: true },
   ...defaultSchemaProps,
 });
 triggers(schema);

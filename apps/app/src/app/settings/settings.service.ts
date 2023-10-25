@@ -17,11 +17,11 @@ export class SettingsService {
   updateUserById(
     userId: string,
     updateData: string,
-    profilePhoto: File | null = null
+    photo: File | null = null
   ) {
     const formData = new FormData();
     formData.append('json', updateData);
-    if (profilePhoto) formData.append('profilePhoto', profilePhoto);
+    if (photo) formData.append('photo', photo);
 
     return this.coreApiService.put(`users/${userId}`, formData, {
       headers: {

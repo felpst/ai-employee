@@ -8,14 +8,14 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { LayoutsModule } from '../layouts/layouts.module';
 
 import { MatIconModule } from '@angular/material/icon';
-import { AuthRoutingModule } from './home-routing.module';
+import { HomeRoutingModule } from './home-routing.module';
 import { HomeComponent } from './home.component';
 
 @NgModule({
   declarations: [HomeComponent],
   imports: [
     CommonModule,
-    AuthRoutingModule,
+    HomeRoutingModule,
     FormsModule,
     ReactiveFormsModule,
     MatIconModule,

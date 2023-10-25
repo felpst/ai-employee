@@ -60,21 +60,16 @@
       <div class="update-content">
         <form [formGroup]="workspaceForm">
           <label class="gray-content" for="workspaceFileInput">
-            <img
-              *ngIf="workspacePhoto"
-              class="workspaceImage"
-              [src]="workspacePhoto"
-              alt=""
-            />
+            <img *ngIf="photo" class="workspaceImage" [src]="photo" alt="" />
             <img src="../../../assets/icons/Plus.svg" alt="plus" class="plus" />
-            <p *ngIf="!workspacePhoto">Upload</p>
+            <p *ngIf="!photo">Upload</p>
           </label>
           <input
             type="file"
             id="workspaceFileInput"
             (change)="onFileSelected($event, 'workspace')"
             name="workspaceFile"
-            formControlName="workspacePhoto"
+            formControlName="photo"
             accept="image/*"
             style="display: none"
           />
@@ -126,10 +121,18 @@
     <div class="warning-message" *ngIf="showWarning">
       Please fill in all fields.
     </div>
-    <div *ngIf="teamForm.get('email') && teamForm.get('email')?.hasError('invalidEmail') && teamForm.get('email')?.touched" class="warning-message">
-      Invalid email address. Please enter valid email addresses separated by commas.
+    <div
+      *ngIf="
+        teamForm.get('email') &&
+        teamForm.get('email')?.hasError('invalidEmail') &&
+        teamForm.get('email')?.touched
+      "
+      class="warning-message"
+    >
+      Invalid email address. Please enter valid email addresses separated by
+      commas.
     </div>
-    
+
     <div class="buttons">
       <button class="invite" (click)="prevStep()">Prev</button>
       <button (click)="nextStep()">Next</button>

@@ -1,13 +1,13 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 
 import { ActivatedRoute } from '@angular/router';
 import { IKnowledge, IWorkspace } from '@cognum/interfaces';
-import { AuthService } from '../auth/auth.service';
-import { NotificationsService } from '../services/notifications/notifications.service';
-import { DialogComponent } from '../shared/dialog/dialog.component';
-import { WorkspacesService } from '../workspaces/workspaces.service';
+import { AuthService } from '../../auth/auth.service';
+import { NotificationsService } from '../../services/notifications/notifications.service';
+import { DialogComponent } from '../../shared/dialog/dialog.component';
+import { WorkspacesService } from '../workspaces.service';
 import { KnowledgeBaseService } from './knowledge-base.service';
 import { KnowledgeFormComponent } from './knowledge-form/knowledge-form.component';
 import { KnowledgeModalComponent } from './knowledge-modal/knowledge-modal.component';
@@ -17,8 +17,8 @@ import { KnowledgeModalComponent } from './knowledge-modal/knowledge-modal.compo
   templateUrl: './knowledge-base.component.html',
   styleUrls: ['./knowledge-base.component.scss'],
 })
-export class KnowledgeBaseComponent {
-  workspace!: IWorkspace;
+export class KnowledgeBaseComponent implements OnInit {
+  workspace!: IWorkspace | null;
   knowledgeBase: IKnowledge[] = [];
   knowledgeBaseFiltered: IKnowledge[] = [];
   searchText = '';
@@ -26,7 +26,8 @@ export class KnowledgeBaseComponent {
   sortingType: 'newFirst' | 'oldFirst' | 'mix' = 'newFirst';
   sortingDirection: 'asc' | 'desc' = 'desc';
   activeButton = 'newFirst';
-  userId = '';
+  isLoading = true;
+  workspaceData = '@cognum/selected-workspace';
 
   constructor(
     private route: ActivatedRoute,
@@ -35,13 +36,28 @@ export class KnowledgeBaseComponent {
     private workspacesService: WorkspacesService,
     private notificationsService: NotificationsService,
     private dialog: MatDialog
-  ) {
-    this.route.params.subscribe((params) => {
-      this.getWorkspace(params['workspaceId']);
-      this.loadKnowledgeBase(params['workspaceId']);
+  ) {}
+
+  ngOnInit(): void {
+    const workspaces = this.workspacesService.workspaces;
+    if (workspaces.size === 0) {
+      return this.onLoadList();
+    } else {
+      this.workspace =
+        this.workspacesService.workspaces.get(this.workspaceId) || null;
+      this.loadKnowledgeBase(this.workspaceId);
+      this.isLoading = false;
+    }
+  }
+
+  onLoadList() {
+    this.workspacesService.list().subscribe((data) => {
+      const workspace = data.get(this.workspaceId) || null;
+      console.log({ data, workspace });
+      this.workspace = workspace;
+      this.loadKnowledgeBase(this.workspaceId);
+      this.isLoading = false;
     });
-    
-    this.userId = this.authService.user?._id;
   }
 
   getWorkspace(workspaceId: string) {
@@ -56,7 +72,7 @@ export class KnowledgeBaseComponent {
       data: { knowledge, workspace: this.workspace },
     });
     dialogRef.afterClosed().subscribe((res) => {
-      this.loadKnowledgeBase(this.workspace._id);
+      this.loadKnowledgeBase(this.workspaceId);
     });
   }
 
@@ -78,7 +94,7 @@ export class KnowledgeBaseComponent {
       .subscribe((knowledges) => {
         this.knowledgeBase = knowledges;
         this.clearSearch();
-      
+
         this.sortKnowledgeBase(this.activeButton);
       });
   }
@@ -86,7 +102,7 @@ export class KnowledgeBaseComponent {
   userHasEditorPermission(knowledge: IKnowledge): boolean {
     return this.knowledgeBaseService.userPermission(
       knowledge,
-      this.userId
+      this.authService.user?._id
     );
   }
 
@@ -96,7 +112,7 @@ export class KnowledgeBaseComponent {
 
   deleteKnowledge(knowledge: IKnowledge) {
     this.knowledgeBaseService.delete(knowledge).subscribe((res) => {
-      this.loadKnowledgeBase(this.workspace._id);
+      this.loadKnowledgeBase(this.workspaceId);
       this.notificationsService.show('Knowledge deleted!');
     });
   }
@@ -182,5 +198,9 @@ export class KnowledgeBaseComponent {
   onButtonClick(button: string) {
     this.activeButton = button;
     this.sortKnowledgeBase(button);
+  }
+
+  get workspaceId() {
+    return this.workspacesService.selectedWorkspace?._id || '';
   }
 }
