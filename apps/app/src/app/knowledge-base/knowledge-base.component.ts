@@ -78,6 +78,8 @@ export class KnowledgeBaseComponent {
       .subscribe((knowledges) => {
         this.knowledgeBase = knowledges;
         this.clearSearch();
+      
+        this.sortKnowledgeBase(this.activeButton);
       });
   }
 
