@@ -28,6 +28,10 @@ export class AppComponent {
       iconRegistry.addSvgIcon(
         'user',
         sanitizer.bypassSecurityTrustResourceUrl('/assets/icons/user.svg')
+      ),
+      iconRegistry.addSvgIcon(
+        'whiteUser',
+        sanitizer.bypassSecurityTrustResourceUrl('/assets/icons/whiteUser.svg')
       );
   }
 }

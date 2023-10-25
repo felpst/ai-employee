@@ -3,7 +3,9 @@ import { MatDialog } from '@angular/material/dialog';
 import { IAIEmployee } from '@cognum/interfaces';
 import { DialogComponent } from '../shared/dialog/dialog.component';
 import { EmployeeService } from './ai-employee.service';
+import { WorkspacesService } from '../workspaces/workspaces.service';
 import { WhiteAiEmployeeComponent } from './white-ai-employee/white-ai-employee.component';
+import { YourAccountComponent } from '../settings/your-account/your-account.component';
 
 @Component({
   selector: 'cognum-ai-employee',
@@ -12,8 +14,10 @@ import { WhiteAiEmployeeComponent } from './white-ai-employee/white-ai-employee.
 
 })
 export class AiEmployeeComponent implements OnInit {
+  originalEmployees: IAIEmployee[] = [];
   employees: IAIEmployee[] = [];
   searchText = '';
+
 
   sortingType: 'newFirst' | 'oldFirst' | 'mix' = 'newFirst';
   sortingDirection: 'asc' | 'desc' = 'desc';
@@ -21,6 +25,7 @@ export class AiEmployeeComponent implements OnInit {
 
   constructor(
     private employeeService: EmployeeService,
+    private workspacesService: WorkspacesService,
     private dialog: MatDialog)
    {}
 
@@ -29,10 +34,12 @@ export class AiEmployeeComponent implements OnInit {
     this.loadEmployees();
   }
 
+ 
   loadEmployees() {
     this.employeeService.list().subscribe(
       employees => {
-        this.employees = employees;
+        this.originalEmployees = employees;
+        this.filterEmployees();
       },
       error => {
         console.error(error);
@@ -55,7 +62,10 @@ export class AiEmployeeComponent implements OnInit {
   }
 
   editEmployee(employee: IAIEmployee) {
-    
+    const dialogRef = this.dialog.open(YourAccountComponent, {
+      height: '80%',
+      width:'100%'
+    });
   }
 
   deleteEmployee(employee: IAIEmployee) {
@@ -83,16 +93,21 @@ export class AiEmployeeComponent implements OnInit {
       });
   }
   
+
+  filterEmployees() {
+    this.employees = this.originalEmployees.filter(employee =>
+      employee.name.toLowerCase().includes(this.searchText.toLowerCase())
+    );
+  }
+
   onSearch(event: any) {
     this.searchText = event.target.value;
-    this.employees = this.employees.filter((employees) => {
-      return employees.name.includes(this.searchText);
-    });
+    this.filterEmployees();
   }
 
   clearSearch() {
     this.searchText = '';
-    this.employees = this.employees;
+    this.employees = this.originalEmployees;
   }
 
   sortKnowledgeBase(sortingCriterion: string) {
