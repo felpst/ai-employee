@@ -1,14 +1,32 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { WorkspaceComponent } from './workspace/workspace.component';
-import { WorkspacesComponent } from './workspaces.component';
 
 const routes: Routes = [
   {
-    path: '',
-    component: WorkspacesComponent,
-    children: [{ path: ':id', component: WorkspaceComponent }],
+    path: ':id',
+    children: [
+      {
+        path: 'overview',
+        component: WorkspaceComponent,
+      },
+      {
+        path: 'employees',
+        component: WorkspaceComponent,
+      },
+      {
+        path: 'history',
+        component: WorkspaceComponent,
+      },
+      {
+        path: 'knowledge',
+        component: WorkspaceComponent,
+      },
+
+      { path: '**', redirectTo: 'overview', pathMatch: 'full' },
+    ],
   },
+  { path: ':id/**', redirectTo: 'overview', pathMatch: 'full' },
 ];
 
 @NgModule({
