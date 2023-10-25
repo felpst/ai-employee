@@ -8,4 +8,3 @@ services:
       dockerfile: Dockerfile
     volumes:
       - ./:/app
-      - mono-node-modules:/app/node_modules

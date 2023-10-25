@@ -1,4 +1,4 @@
-import { ICompany, IMessage, IUser } from '@cognum/interfaces';
+import { IMessage, IUser } from '@cognum/interfaces';
 import { AgentActionOutputParser } from 'langchain/agents';
 import {
   BaseChatPromptTemplate,
@@ -17,17 +17,14 @@ import {
 import { Tool } from 'langchain/tools';
 import { AIEmployeeMemory } from '../memories/ai_employee.memory';
 import { ToolsHelper } from './tools.helper';
-import { AnyARecord } from 'dns';
 
 const formatIdentity = (identity: AIEmployeeIdentity) =>
   `Your name is ${identity.name || 'Atlas'}. Your a ${
     identity.profession || 'Assistant'
   }.`;
 
-const formatPrefix = (user: IUser, company: ICompany) =>
-  `You are talking to "${user?.name || ''}", and you work at company "${
-    company?.name || ''
-  }".
+const formatPrefix = (user: IUser) =>
+  `You are talking to ${user?.name || ''}
 The following is a friendly conversation between a human and an AI. The AI is talkative and provides lots of specific details from its context.
 You can get informations in summary or history conversation without tools or use tools to get new informations.
 Answer the following questions as best you can. You have access to the following tools:`;
@@ -72,7 +69,6 @@ export class AIEmployeePromptTemplate extends BaseChatPromptTemplate {
   };
   private _memory: AIEmployeeMemory;
   user: IUser;
-  company: ICompany;
 
   constructor(args: {
     tools: Tool[];
@@ -80,7 +76,6 @@ export class AIEmployeePromptTemplate extends BaseChatPromptTemplate {
     identity: AIEmployeeIdentity;
     memory: AIEmployeeMemory;
     user: IUser;
-    company: ICompany;
   }) {
     super({ inputVariables: args.inputVariables });
     this.tools = args.tools;
@@ -88,7 +83,6 @@ export class AIEmployeePromptTemplate extends BaseChatPromptTemplate {
     this.identity = args.identity;
     this._memory = args.memory;
     this.user = args.user;
-    this.company = args.company;
   }
 
   _getPromptType(): string {
@@ -109,7 +103,7 @@ export class AIEmployeePromptTemplate extends BaseChatPromptTemplate {
     // Identity
     const identity = formatIdentity(this.identity);
 
-    const prefix = formatPrefix(this.user, this.company);
+    const prefix = formatPrefix(this.user);
 
     // Instructions
     const instructions = formatInstructions(toolNames);
@@ -139,6 +133,7 @@ export class AIEmployeePromptTemplate extends BaseChatPromptTemplate {
     return [new HumanMessage(formatted)];
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any
   partial(_values: PartialValues): Promise<any> {
     throw new Error('Not implemented');
   }

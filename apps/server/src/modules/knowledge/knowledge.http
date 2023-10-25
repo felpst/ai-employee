@@ -21,7 +21,6 @@ Authorization: Bearer {{$authToken}}
 
 {
   "data": "Meu nome é Linecker e eu tenho 30 anos.",
-  "company": "64f70f067fc12188010bdbc5"
 }
 
 ### find all
