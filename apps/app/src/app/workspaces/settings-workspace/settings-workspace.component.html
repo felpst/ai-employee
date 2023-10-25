@@ -45,15 +45,7 @@
           <div>
             <div class="input">
               <span>Company or team name</span>
-              <input type="text" placeholder="potato" value="potato" />
-            </div>
-            <div class="input">
-              <span>Your workspace access link</span>
-              <input
-                type="text"
-                placeholder="potato.cognum.ai"
-                value="potato.cognum.ai"
-              />
+              <input type="text" placeholder="potato" [value]="workspaceName" />
             </div>
           </div>
         </div>
@@ -83,6 +75,10 @@
             <button class="submit-button">
               <mat-icon svgIcon="button-submit"></mat-icon>
             </button>
+          </div>
+          <div>
+            <span>Linecker Amorim</span>
+            <img class="image-style" alt="User Image" />
           </div>
         </div>
       </ng-container>

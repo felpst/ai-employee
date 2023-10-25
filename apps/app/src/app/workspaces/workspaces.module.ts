@@ -14,6 +14,7 @@ import { MarkdownModule } from 'ngx-markdown';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { LayoutsModule } from '../layouts/layouts.module';
 import { CreateWorkspaceFormComponent } from './create-workspace-form/create-workspace-form.component';
+import { SettingsWorkspaceComponent } from './settings-workspace/settings-workspace.component';
 import { WorkspaceComponent } from './workspace/workspace.component';
 import { ChatsRoutingModule } from './workspaces-routing.module';
 import { WorkspacesComponent } from './workspaces.component';
@@ -23,6 +24,7 @@ import { WorkspacesComponent } from './workspaces.component';
     WorkspacesComponent,
     CreateWorkspaceFormComponent,
     WorkspaceComponent,
+    SettingsWorkspaceComponent,
   ],
   imports: [
     CommonModule,

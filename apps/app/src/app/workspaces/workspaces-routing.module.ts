@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { SettingsWorkspaceComponent } from './settings-workspace/settings-workspace.component';
 import { WorkspaceComponent } from './workspace/workspace.component';
 
 const routes: Routes = [
@@ -17,6 +18,10 @@ const routes: Routes = [
       {
         path: 'history',
         component: WorkspaceComponent,
+      },
+      {
+        path: 'settings',
+        component: SettingsWorkspaceComponent,
       },
       {
         path: 'knowledge',
