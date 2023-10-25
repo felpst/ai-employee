@@ -64,7 +64,8 @@ class ModelController<T extends Model<any>> {
   ): Promise<void> {
     try {
       const sort = (req.query.sort as string) || [];
-      const list = await this.model.find().sort(sort);
+      const filter = (req.query.filter as any) || {};
+      const list = await this.model.find(filter).sort(sort);
       // const list = await this._populateQuery(this.model.find());
       res.json(list);
     } catch (error) {
