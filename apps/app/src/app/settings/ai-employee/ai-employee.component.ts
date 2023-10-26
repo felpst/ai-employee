@@ -10,6 +10,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '../../auth/auth.service';
 import { NotificationsService } from '../../services/notifications/notifications.service';
 import { WorkspacesService } from '../../workspaces/workspaces.service';
+import { EmployeeService } from '../../workspaces/ai-employee/ai-employee.service';
 import { SettingsService } from '../settings.service';
 
 @Component({
@@ -17,12 +18,14 @@ import { SettingsService } from '../settings.service';
   templateUrl: './ai-employee.component.html',
   styleUrls: ['./ai-employee.component.scss'],
 })
-export class AiEmployeeComponent implements OnInit {
+export class AiEmployeeComponentSettings implements OnInit {
   name = '';
-  profilePhoto: File | null = null;
+  role='';
+
   updateForm = this.formBuilder.group({
     name: [this.name, [Validators.minLength(6)]],
-    profilePhoto: [this.profilePhoto, []],
+    
+  
   });
   submitting = false;
   showUpdateError = false;
@@ -31,6 +34,9 @@ export class AiEmployeeComponent implements OnInit {
   image = '';
   selectedImage: string | null = null;
   workspaceId: string | null = null;
+  selectedAvatar: string | null = null;
+  isAvatarSelected = false;
+  availableAvatars = ['../../../assets/icons/avatar(2).svg'];
 
   constructor(
     private route: ActivatedRoute,
@@ -39,11 +45,12 @@ export class AiEmployeeComponent implements OnInit {
     private formBuilder: FormBuilder,
     private router: Router,
     private notificationsService: NotificationsService,
-    private workspacesService: WorkspacesService
+    private aiEmployeeService: EmployeeService
   ) {
     this.updateForm.valueChanges.subscribe(() => {
       this.showUpdateError = false;
     });
+    
   }
 
   openDeleteAccountModal() {
@@ -55,18 +62,18 @@ export class AiEmployeeComponent implements OnInit {
   }
 
   ngOnInit() {
-    const userId = this.authService.user?._id;
-
-    this.settingsService.getUserById(userId).subscribe({
+    const employeeId = this.route.snapshot.params['employeeId'];
+    console.log(employeeId)
+    this.aiEmployeeService.getById(employeeId).subscribe({
       next: (response) => {
-        this.image = response.profilePhoto;
         this.name = response.name;
+        this.role = response.role;
       },
     });
   }
 
   confirmDeleteAccount() {
-    const userId = this.authService.user?._id;
+    const userId = this.aiEmployeeService.employeeId?._id;
 
     this.settingsService.deleteUserById(userId).subscribe({
       next: () => {
@@ -99,21 +106,7 @@ export class AiEmployeeComponent implements OnInit {
     return null;
   }
 
-  onFileSelected(event: any) {
-    try {
-      const [file] = event.target.files;
-      if (file) {
-        this.selectedImage = URL.createObjectURL(file);
-        const control = this.updateForm.get('profilePhoto');
-        control?.patchValue(file);
-        control?.setValidators(this.validatorFile);
-        control?.updateValueAndValidity();
-        this.profilePhoto = file;
-      }
-    } catch (error) {
-      console.log('An error ocurring: ', { error });
-    }
-  }
+
 
   async onSubmit() {
     if (!this.updateForm.valid) return;

@@ -48,7 +48,7 @@ const routes: Routes = [
         path: 'ai-employee',
         component: AdminComponent,
         loadChildren: () =>
-          import('./ai-employee/ai-employee.module').then(
+          import('./workspaces/ai-employee/ai-employee.module').then(
             (m) => m.AiEmployeeModule
           ),
       },

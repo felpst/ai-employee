@@ -3,7 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { KnowledgeBaseComponent } from './knowledge-base/knowledge-base.component';
 import { WorkspaceResolver } from './workspace.resolver';
 import { WorkspaceComponent } from './workspace/workspace.component';
-import { AiEmployeeComponent } from '../ai-employee/ai-employee.component';
+import { AiEmployeeComponent } from './ai-employee/ai-employee.component';
 
 const routes: Routes = [
   {

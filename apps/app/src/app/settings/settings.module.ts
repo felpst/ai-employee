@@ -10,10 +10,10 @@ import { LayoutsModule } from '../layouts/layouts.module';
 import { MatIconModule } from '@angular/material/icon';
 import { SettingsRoutingModule } from './settings-routing.module';
 import { YourAccountComponent } from './your-account/your-account.component';
-import { AiEmployeeComponent } from './ai-employee/ai-employee.component';
+import { AiEmployeeComponentSettings } from './ai-employee/ai-employee.component';
 
 @NgModule({
-  declarations: [YourAccountComponent, AiEmployeeComponent],
+  declarations: [YourAccountComponent, AiEmployeeComponentSettings],
   imports: [
     CommonModule,
     SettingsRoutingModule,

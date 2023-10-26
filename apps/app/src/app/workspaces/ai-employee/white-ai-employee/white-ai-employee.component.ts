@@ -3,8 +3,8 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { AiEmployeeComponent } from '../ai-employee.component';
 import { EmployeeService } from '../ai-employee.service';
-import { WorkspacesService } from '../../workspaces/workspaces.service';
-import { NotificationsService } from '../../services/notifications/notifications.service';
+import { WorkspacesService } from '../../workspaces.service';
+import { NotificationsService } from '../../../services/notifications/notifications.service';
 
 
 @Component({

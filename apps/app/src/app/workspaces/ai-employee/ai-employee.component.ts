@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { IAIEmployee } from '@cognum/interfaces';
-import { DialogComponent } from '../shared/dialog/dialog.component';
+import { DialogComponent } from '../../shared/dialog/dialog.component';
 import { EmployeeService } from './ai-employee.service';
-import { WorkspacesService } from '../workspaces/workspaces.service';
+import { WorkspacesService } from '../workspaces.service';
 import { WhiteAiEmployeeComponent } from './white-ai-employee/white-ai-employee.component';
-import { YourAccountComponent } from '../settings/your-account/your-account.component';
+import { AiEmployeeComponentSettings } from '../../settings/ai-employee/ai-employee.component'; 
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'cognum-ai-employee',
@@ -24,6 +25,7 @@ export class AiEmployeeComponent implements OnInit {
   activeButton = 'newFirst';
 
   constructor(
+    private router: Router,
     private employeeService: EmployeeService,
     private workspacesService: WorkspacesService,
     private dialog: MatDialog)
@@ -62,10 +64,10 @@ export class AiEmployeeComponent implements OnInit {
   }
 
   editEmployee(employee: IAIEmployee) {
-    const dialogRef = this.dialog.open(YourAccountComponent, {
-      height: '80%',
-      width:'100%'
-    });
+    const employeeId = employee._id; // Obtendo o ID do funcionário
+    console.log(employeeId)
+    const employees= this.router.navigate(['/employee', employeeId]);
+    console.log(employees)
   }
 
   deleteEmployee(employee: IAIEmployee) {

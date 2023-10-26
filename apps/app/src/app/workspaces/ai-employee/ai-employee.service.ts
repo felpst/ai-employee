@@ -1,14 +1,15 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { IAIEmployee } from '@cognum/interfaces'; 
-import { AuthService } from '../auth/auth.service';
-import { CoreApiService } from '../services/apis/core-api.service';
+import { AuthService } from '../../auth/auth.service';
+import { CoreApiService } from '../../services/apis/core-api.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class EmployeeService {
   private route = 'employees';
+  employeeId!: IAIEmployee;
   selectedAiEmployees: string | null = null;
  
 
