@@ -1,0 +1,147 @@
+<div class="signin-container">
+  <div class="form-container">
+    <div class="margin">
+      <div class="title-container">
+        <img
+          src="../../../assets/icons/cognum_filled.svg"
+          alt="Cognum"
+          class="logo"
+        />
+        <label class="company-style">cognum</label>
+      </div>
+
+      <div class="help-container">
+        <p>Check your email for a code</p>
+
+        <small class="small-style"
+          >We’ve sent a 6-character code to felipe@potato.ai. The code expires
+          shortly, so please enter it soon</small
+        >
+      </div>
+    </div>
+
+    <form class="login-form" [formGroup]="validateForm" (ngSubmit)="onSubmit()">
+      <div class="mat-item-wrap">
+        <mat-form-field class="mat-input-style">
+          <mat-label>Email</mat-label>
+          <input
+            type="email"
+            matInput
+            placeholder="name@work-email.com"
+            [value]="email"
+            readonly
+          />
+        </mat-form-field>
+      </div>
+
+      <small class="small-style">6-character code</small>
+
+      <div class="token-inputs">
+        <div class="input-container">
+          <input
+            class="font token-input"
+            min="0"
+            max="9"
+            placeholder="0"
+            name="digit1"
+            required
+            #tokenInput
+            [disabled]="disableInputs"
+            (keyup)="onInputKeyup(0, $event)"
+          />
+
+          <input
+            class="font token-input"
+            min="0"
+            max="9"
+            placeholder="0"
+            name="digit2"
+            required
+            #tokenInput
+            [disabled]="disableInputs"
+            (keyup)="onInputKeyup(1, $event)"
+          />
+
+          <input
+            class="font token-input"
+            min="0"
+            max="9"
+            placeholder="0"
+            name="digit3"
+            required
+            #tokenInput
+            [disabled]="disableInputs"
+            (keyup)="onInputKeyup(2, $event)"
+          />
+        </div>
+        <strong> - </strong>
+        <div class="input-container">
+          <input
+            class="font token-input"
+            min="0"
+            max="9"
+            placeholder="0"
+            name="digit4"
+            required
+            #tokenInput
+            [disabled]="disableInputs"
+            (keyup)="onInputKeyup(3, $event)"
+          />
+
+          <input
+            class="font token-input"
+            min="0"
+            max="9"
+            placeholder="0"
+            name="digit5"
+            required
+            #tokenInput
+            [disabled]="disableInputs"
+            (keyup)="onInputKeyup(4, $event)"
+          />
+
+          <input
+            class="font token-input"
+            min="0"
+            max="9"
+            placeholder="0"
+            name="digit6"
+            required
+            #tokenInput
+            [disabled]="disableInputs"
+            (keyup)="onInputKeyup(5, $event)"
+          />
+        </div>
+      </div>
+
+      <mat-progress-spinner
+        class="spinner"
+        mode="indeterminate"
+        *ngIf="submitting"
+      >
+      </mat-progress-spinner>
+
+      <span *ngIf="!submitting" class="font small-style receive-container"
+        >Did not receive?
+        <strong class="font register" (click)="onResend()"
+          >Click to resend</strong
+        ></span
+      >
+    </form>
+
+    <div slot="error" class="errorContainer" *ngIf="showTokenError">
+      <small
+        >An error occurred while validating your account. Try again in
+        ins.</small
+      >
+    </div>
+
+    <div class="footer">
+      <label>
+        By clicking “Continue with Apple/Google/Email/SAML” above, you
+        acknowledge that you have read and understood, and agree to Notion's
+        Terms & Conditions and Privacy Policy.
+      </label>
+    </div>
+  </div>
+</div>

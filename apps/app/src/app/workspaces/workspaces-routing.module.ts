@@ -1,18 +1,38 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { KnowledgeBaseComponent } from './knowledge-base/knowledge-base.component';
+import { WorkspaceResolver } from './workspace.resolver';
 import { WorkspaceComponent } from './workspace/workspace.component';
-import { WorkspacesComponent } from './workspaces.component';
 
 const routes: Routes = [
   {
-    path: '',
-    component: WorkspacesComponent,
-    children: [{ path: ':id', component: WorkspaceComponent }],
+    path: ':id',
+    resolve: [WorkspaceResolver],
+    children: [
+      {
+        path: 'overview',
+        component: WorkspaceComponent,
+      },
+      {
+        path: 'employees',
+        component: WorkspaceComponent,
+      },
+      {
+        path: 'history',
+        component: WorkspaceComponent,
+      },
+      {
+        path: 'knowledge-base',
+        component: KnowledgeBaseComponent,
+      },
+      { path: '**', redirectTo: 'overview', pathMatch: 'full' },
+    ],
   },
+  { path: '**', redirectTo: '/', pathMatch: 'full' },
 ];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
 })
-export class ChatsRoutingModule {}
+export class WorkspacesRoutingModule {}

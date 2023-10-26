@@ -9,7 +9,7 @@ export class NotificationsService {
 
   show(message: string) {
     this.matSnackBar.open(message, 'OK', {
-      duration: 3000,
+      duration: 4000,
     });
   }
 }

@@ -7,13 +7,13 @@ import {
 } from './default.model';
 
 export type MessageRole = 'HUMAN' | 'AI';
-export type RatingRole = 'THUMBSUP' | 'THUMBSDOWN';
 
 const feedbackSchema = new Schema<IFeedback>(feedbackSchemaProps);
 
 const schema: Schema = new Schema({
   content: { type: String, required: true },
   role: { type: String, required: true, enum: ['HUMAN', 'AI'] },
+  thought: { type: String, required: false },
   feedbacks: { type: [feedbackSchema], required: false, default: [] },
   user: { type: Schema.Types.ObjectId, ref: 'User' },
   chat: { type: Schema.Types.ObjectId, ref: 'Chat', required: true },

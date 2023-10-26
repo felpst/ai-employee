@@ -1,65 +1,99 @@
-<div class="menu">
-  <div class="top-items">
-    <!-- <div class="item">
-      <button mat-icon-button matTooltip="Cognum" matTooltipPosition="right">
-        <mat-icon svgIcon="cognum"></mat-icon>
-      </button>
+<div class="menu" [class.is-mobile]="mobileQuery.matches" role="link">
+  <mat-toolbar class="menu-header" (click)="toggleMenu()" mat-icon-button>
+    <div class="info-container">
+      <img
+        [src]="
+          workspace.photo ||
+          'https://storage.googleapis.com/factory-assets/workspace-avatar-default.png'
+        "
+      />
+      <h3 class="text-strong">{{ workspace.name }}</h3>
     </div>
-    <div class="item">
-      <button mat-icon-button matTooltip="Dashboard" matTooltipPosition="right">
-        <span class="material-symbols-outlined"> monitoring </span>
-      </button>
-    </div>
-    <div class="item">
-      <button mat-icon-button matTooltip="Projects" matTooltipPosition="right">
-        <span class="material-symbols-outlined"> account_tree </span>
-      </button>
-    </div> -->
+  </mat-toolbar>
 
-    <div class="item">
-      <button
-        (click)="onLink('workspaces/')"
-        mat-icon-button
-        matTooltip="Workspaces"
-        matTooltipPosition="right"
-      >
-        <span class="material-symbols-outlined"> workspaces </span>
-      </button>
+  <div class="cdk-overlay-container" *ngIf="showMenu">
+    <div
+      class="cdk-overlay-backdrop cdk-overlay-transparent-backdrop cdk-overlay-backdrop-showing"
+      (click)="toggleMenu()"
+    ></div>
+    <div
+      class="cdk-overlay-connected-position-bounding-box"
+      style="top: 0rem; left: 12.5rem"
+    >
+      <div class="cdk-overlay-pane auth-menu">
+        <div class="item" [routerLink]="['./', workspace._id, 'settings']">
+          <img src="../../../assets/icons/setting.svg" alt="Settings" />
+          <span class="font-outfit">settings</span>
+        </div>
+        <div class="item" routerLink="/">
+          <img src="../../../assets/icons/swap.svg" alt="Switch workspace" />
+          <span class="font-outfit">switch workspace</span>
+        </div>
+      </div>
     </div>
-
-    <!-- <div class="item">
-      <button
-        mat-icon-button
-        (click)="onLink('data-sources/')"
-        matTooltip="Data Sources"
-        matTooltipPosition="right"
-      >
-        <span class="material-symbols-outlined"> database </span>
-      </button>
-    </div>
-    <div class="item">
-      <button mat-icon-button matTooltip="Actions" matTooltipPosition="right">
-        <span class="material-symbols-outlined"> flowsheet </span>
-      </button>
-    </div> -->
   </div>
 
-  <div class="bottom-items">
-    <div class="item">
-      <mat-menu #accountMenu="matMenu">
-        <button (click)="onLogout()" mat-menu-item>
-          <mat-icon>logout</mat-icon>
-          <span>Logout</span>
-        </button>
-      </mat-menu>
-      <button
-        [matMenuTriggerFor]="accountMenu"
-        mat-icon-button
-        matTooltip="Account"
-        matTooltipPosition="right"
-      >
-        <span class="material-symbols-outlined"> account_circle </span>
-      </button>
-    </div>
-  </div>
+  <mat-sidenav-container
+    class="sidenav-container"
+    [style.marginTop.px]="mobileQuery.matches ? 56 : 0"
+    role="link"
+  >
+    <mat-sidenav-content class="nav-content">
+      <div class="workspace-info">
+        <div class="full-width">
+          <div class="text-container">
+            <h3>Workspace usage</h3>
+          </div>
+
+          <div class="usage">
+            <mat-progress-bar
+              mode="determinate"
+              value="30"
+              class="full-width"
+            ></mat-progress-bar>
+            <h3>{{ workspaceUsage }}%</h3>
+          </div>
+
+          <div class="divider"><hr /></div>
+        </div>
+
+        <div class="full-width">
+          <cognum-workspace-members></cognum-workspace-members>
+
+          <div class="divider"><hr /></div>
+        </div>
+      </div>
+
+      <div class="workspaces-links">
+        <div
+          class="menu-item"
+          id="overview"
+          *ngFor="let menuItem of menuItems"
+          [routerLink]="['./', workspace._id, menuItem.path]"
+          [routerLinkActive]="['active']"
+        >
+          <div class="icon">
+            <img [src]="menuItem.icon" [title]="menuItem.text" />
+          </div>
+          <div class="content">
+            <span class="font-outfit">{{ menuItem.text }}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="personal-data">
+        <img [src]="user.photo" />
+        <div class="person-name">
+          <strong class="font-outfit">{{ user.name }}</strong>
+        </div>
+      </div>
+    </mat-sidenav-content>
+  </mat-sidenav-container>
+  <mat-toolbar class="workspace-info menu-footer">
+    <img
+      src="../../../assets/icons/logout.svg"
+      title="LogOut"
+      (click)="onLogOut()"
+    />
+  </mat-toolbar>
 </div>

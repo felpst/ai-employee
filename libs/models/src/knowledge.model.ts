@@ -3,10 +3,18 @@ import { Schema, model } from 'mongoose';
 import { defaultSchemaProps, triggers } from './default.model';
 
 const schema = new Schema<IKnowledge>({
-  data: { type: String },
+  title: { type: String, required: true },
+  description: { type: String, required: true },
+  data: { type: String, required: true },
   workspace: { type: Schema.Types.ObjectId, ref: 'Workspace', required: true },
   employees: [
     { type: Schema.Types.ObjectId, ref: 'AIEmployee', required: false },
+  ],
+  permissions: [
+    {
+      userId: { type: String, required: true },
+      permission: { type: String, required: true, enum: ['Reader', 'Editor'] },
+    },
   ],
   ...defaultSchemaProps,
 });

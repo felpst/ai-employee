@@ -27,8 +27,6 @@
       <div
         class="message-wrapper"
         [ngClass]="{
-          ai: message.role === 'AI',
-          human: message.role === 'HUMAN',
           system: message.role === 'SYSTEM'
         }"
         *ngFor="let message of chatService.messages"
@@ -36,39 +34,67 @@
         <div
           class="message"
           [ngClass]="{
-            ai: message.role === 'AI',
-            human: message.role === 'HUMAN',
             system: message.role === 'SYSTEM'
           }"
         >
-          <div class="header">
-            <div class="from">
-              <span *ngIf="message.role === 'HUMAN'">{{
-                chatService.user.name
-              }}</span>
-              <span *ngIf="message.role === 'AI'">{{
-                chatService.aiEmployee.name
-              }}</span>
-              <span *ngIf="message.role === 'SYSTEM'">SYSTEM</span>
-            </div>
-
-            <div class="date">
-              <div
-                class="material-symbols-outlined icon"
-                matTooltip="{{
-                  message.createdAt | date : 'dd/MM/yyyy HH:mm:ss'
-                }}"
-              >
-                schedule
-              </div>
-            </div>
-          </div>
+          <div class="avatar"></div>
 
           <div class="content">
-            <markdown
-              *ngIf="message.role === 'HUMAN' || message.role === 'AI'"
-              >{{ message.content }}</markdown
-            >
+            <div class="header">
+              <div class="from">
+                <span *ngIf="message.role === 'HUMAN'">{{
+                  chatService.user.name
+                }}</span>
+                <span *ngIf="message.role === 'AI'">{{
+                  chatService.aiEmployee.name
+                }}</span>
+                <span *ngIf="message.role === 'SYSTEM'">SYSTEM</span>
+              </div>
+
+              <div class="date">
+                <div
+                  class="material-symbols-outlined icon"
+                  matTooltip="{{
+                    message.createdAt | date : 'dd/MM/yyyy HH:mm:ss'
+                  }}"
+                >
+                  schedule
+                </div>
+              </div>
+            </div>
+
+            <cdk-accordion class="thought" *ngIf="!!message.thought">
+              <cdk-accordion-item
+                class="accordion"
+                #accordionItem="cdkAccordionItem"
+                role="button"
+                tabindex="0"
+                [attr.id]="'accordion-header-' + message._id"
+                [attr.aria-expanded]="accordionItem.expanded"
+                [attr.aria-controls]="'accordion-body-' + message._id"
+              >
+                <div (click)="accordionItem.toggle()" class="accordion-header">
+                  <strong class="header-text">Internal monologue</strong>
+                </div>
+
+                <markdown
+                  role="region"
+                  [style.display]="accordionItem.expanded ? '' : 'none'"
+                  [attr.id]="'accordion-body-' + message._id"
+                  [attr.aria-labelledby]="'accordion-header-' + message._id"
+                  class="accordion-body"
+                >
+                  <span class="header-text">{{ message.thought }}</span>
+                </markdown>
+              </cdk-accordion-item>
+            </cdk-accordion>
+
+            <strong *ngIf="message.role === 'AI'">Answer</strong>
+
+            <markdown *ngIf="message.role === 'HUMAN' || message.role === 'AI'">
+              {{ message.content }}
+            </markdown>
+
             <div *ngIf="message.role === 'SYSTEM'">
               <div *ngIf="message.content.action">
                 <strong>Action: </strong>{{ message.content.action }}
@@ -77,27 +103,28 @@
                 <strong>Thought: </strong>{{ message.content.thought }}
               </div>
             </div>
-          </div>
-        </div>
 
-        <!-- Unrated message -->
-        <div
-          class="rating-wrapper"
-          *ngIf="
-            message.role === 'AI' && isUnratedMessage(message._id);
-            else ratedMessage
-          "
-        >
-          <i
-            class="rating-icon like fa fa-thumbs-o-up"
-            aria-hidden="true"
-            (click)="$event.stopPropagation(); onApprove(message._id)"
-          ></i>
-          <i
-            class="rating-icon unlike fa fa-thumbs-o-down"
-            aria-hidden="true"
-            (click)="$event.stopPropagation(); onReprove(message._id)"
-          ></i>
+            <!-- Unrated message -->
+
+            <div
+              class="rating-wrapper"
+              *ngIf="
+                message.role === 'AI' && isUnratedMessage(message._id);
+                else ratedMessage
+              "
+            >
+              <i
+                class="rating-icon like fa fa-thumbs-o-up"
+                aria-hidden="true"
+                (click)="$event.stopPropagation(); onApprove(message._id)"
+              ></i>
+              <i
+                class="rating-icon unlike fa fa-thumbs-o-down"
+                aria-hidden="true"
+                (click)="$event.stopPropagation(); onReprove(message._id)"
+              ></i>
+            </div>
+          </div>
         </div>
 
         <!-- Rated message -->

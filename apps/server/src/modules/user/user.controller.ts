@@ -1,7 +1,13 @@
-import { User } from '@cognum/models';
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+import { Token, User } from '@cognum/models';
+import * as bcrypt from 'bcrypt';
 import { NextFunction, Request, Response } from 'express';
 import ModelController from '../../controllers/model.controller';
 import emailEmitter from '../../utils/email.utils';
+import { confirmPasswordResetEmailTemplate } from '../../utils/templates/confirm-reset-password';
+import { registerEmailTemplate } from '../../utils/templates/register';
+import { passwordResetEmailTemplate } from '../../utils/templates/reset-password';
+import UploadUtils from '../../utils/upload.utils';
 
 export class UserController extends ModelController<typeof User> {
   constructor() {
@@ -22,6 +28,29 @@ export class UserController extends ModelController<typeof User> {
     }
   }
 
+  public async update(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const userId: string = req.params.id;
+      const data = req.body;
+      data.updatedBy = req['userId'];
+      if (req.file?.path) {
+        data.photo = await UploadUtils.uploadFile(userId, req.file, 'users');
+      }
+      const updated = await User.findByIdAndUpdate(userId, data, {
+        returnDocument: 'after',
+        runValidators: true,
+      });
+
+      res.json(updated);
+    } catch (error) {
+      next(error);
+    }
+  }
+
   public async register(
     req: Request,
     res: Response,
@@ -29,19 +58,259 @@ export class UserController extends ModelController<typeof User> {
   ): Promise<void> {
     try {
       const { name, email, password } = req.body;
-      const _name = name.toUpperCase();
       const user = await User.create({
-        name: _name,
-        email,
+        name: name,
+        email: email.toLowerCase(),
         password,
       });
+      const expiresIn = new Date();
+      expiresIn.setMinutes(expiresIn.getMinutes() + 30);
+      const tokens = await Token.find({ email })
+        .sort({ createdAt: 'desc' })
+        .limit(1);
+      const lastRecovery = tokens && tokens.length ? tokens[0] : null;
+      let doc = null;
+      const newToken = Math.floor(100000 + Math.random() * 900000).toString();
+      if (!lastRecovery || (lastRecovery && lastRecovery.used)) {
+        doc = await Token.create({
+          expiresIn,
+          email,
+          used: false,
+          token: newToken,
+          user,
+        });
+      } else {
+        doc = await Token.findOneAndUpdate(
+          { _id: lastRecovery._id },
+          { $set: { expiresIn, token: newToken } },
+          {
+            returnDocument: 'after',
+            runValidators: true,
+          }
+        );
+      }
+      const html = registerEmailTemplate.replace('{{token}}', doc.token);
       emailEmitter.emit('sendEmail', {
         to: email,
-        subject: 'Welcome to Cognum!',
-        text: "Welcome to COGNUM. Let's go together in search of a promising future with AI's. This is an automatic email from the system, you do not need to respond to it.",
+        subject: 'Cognum - Register',
+        html,
       });
-      const { password: _passwd, ...rest } = user.toObject();
-      res.status(201).json(rest);
+      res.status(201).json(doc);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  public async resendTokenRequest(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const tokenId = req.params.tokenId;
+      const { email } = req.body;
+      const expiresIn = new Date();
+      expiresIn.setMinutes(expiresIn.getMinutes() + 30);
+      const token = await Token.findById(tokenId);
+      const user = await User.findOne({ email });
+      let doc = null;
+      const newToken = Math.floor(100000 + Math.random() * 900000).toString();
+      if (!token || (token && token.used)) {
+        doc = await Token.create({
+          expiresIn,
+          user,
+          used: false,
+          token: newToken,
+        });
+      } else {
+        doc = await Token.findOneAndUpdate(
+          { _id: token._id },
+          { $set: { expiresIn, token: newToken } },
+          {
+            returnDocument: 'after',
+            runValidators: true,
+          }
+        );
+      }
+      const html = registerEmailTemplate.replace('{{token}}', doc.token);
+      emailEmitter.emit('sendEmail', {
+        to: email,
+        subject: 'Cognum - Register',
+        html,
+      });
+      res.status(200).json();
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  public async verifyUser(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const now = new Date();
+      const tokenId = req.params.tokenId;
+      const { token } = req.body;
+      const expiresIn = new Date();
+      expiresIn.setMinutes(expiresIn.getMinutes() + 30);
+      const _token = await Token.findOne({ _id: tokenId, token });
+      if (!_token) {
+        res.status(404).json({ error: 'Token not found' });
+        return;
+      }
+      const tokenData = _token.toObject();
+
+      // @ts-ignore
+      const expired = now.getTime() > new Date(_token.expiresIn).getTime();
+      if (tokenData.used || expired) {
+        res.status(400).json({ error: 'Used or expired token' });
+        return;
+      }
+
+      const user = await User.findById(tokenData.user);
+      if (user.active) {
+        res.status(400).json({
+          error: 'User is already active in the system, proceed to login',
+        });
+        return;
+      }
+
+      await User.findByIdAndUpdate(user._id, { $set: { active: true } });
+      await Token.findByIdAndUpdate(_token._id, { $set: { used: true } });
+
+      res.status(201).json();
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  public async recoveryRequest(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const { email } = req.body;
+      const expiresIn = new Date();
+      expiresIn.setMinutes(expiresIn.getMinutes() + 15);
+      const user = await User.findOne({ email });
+      if (!user) {
+        res.status(404).json({ error: 'No users found with email' });
+        return;
+      }
+      const recoveries = await Token.find({ user: user._id })
+        .sort({ createdAt: 'desc' })
+        .limit(1);
+      const lastRecovery =
+        recoveries && recoveries.length ? recoveries[0] : null;
+      let doc = null;
+      if (!lastRecovery || (lastRecovery && lastRecovery.used)) {
+        doc = await Token.create({ expiresIn, user: user._id });
+      } else {
+        doc = await Token.findOneAndUpdate(
+          { _id: lastRecovery._id },
+          { $set: { expiresIn } },
+          {
+            returnDocument: 'after',
+            runValidators: true,
+          }
+        );
+      }
+      const link = `${process.env.APP_URL}/auth/recovery/${doc._id}`;
+      const html = passwordResetEmailTemplate
+        .replace('{{name}}', user.name)
+        .replace('{{link}}', link);
+      emailEmitter.emit('sendEmail', {
+        to: email,
+        subject: 'Password reset',
+        html,
+      });
+      res.status(201).json();
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  public async verifyToken(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const now = new Date();
+      const tokenId: string = req.params.tokenId;
+      const recovery = await Token.findById(tokenId);
+      if (!recovery) {
+        res.status(404).json({ error: 'Recovery token not found' });
+        return;
+      }
+      const _recovery = recovery.toObject();
+      // @ts-ignore
+      const expired = now.getTime() > new Date(_recovery.expiresIn).getTime();
+      if (_recovery.used || expired) {
+        res.json({ isValid: false });
+        return;
+      }
+      const user = await User.findById(_recovery.user);
+      res.json({ isValid: true, email: user.email });
+      return;
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  public async recovery(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const now = new Date();
+      const recoveryId: string = req.params.recoveryId;
+      const { password } = req.body;
+      const recovery = await Token.findById(recoveryId);
+      if (!recovery) {
+        res.status(404).json({ error: 'Recovery token not found' });
+        return;
+      }
+      const _recovery = recovery.toObject();
+      // @ts-ignore
+      const expired = now.getTime() > new Date(_recovery.expiresIn).getTime();
+      if (_recovery.used) {
+        res.status(400).json({ error: 'Recovery token already used' });
+        return;
+      }
+      if (expired) {
+        res.status(400).json({ error: 'Recovery token already expired' });
+        return;
+      }
+      const hashedPassword = await bcrypt.hash(password, 10);
+      await User.findOneAndUpdate(
+        { _id: _recovery.user },
+        { $set: { password: hashedPassword, active: true } }
+      );
+
+      // Envie um e-mail de confirmação de alteração de senha
+      const user = await User.findById(_recovery.user);
+      const email = user.email;
+      const html = confirmPasswordResetEmailTemplate.replace(
+        '{{name}}',
+        user.name
+      );
+      emailEmitter.emit('sendEmail', {
+        to: email,
+        subject: 'Password Changed Successfully',
+        html,
+      });
+
+      await Token.findOneAndUpdate(
+        { _id: _recovery._id },
+        { $set: { used: true } }
+      );
+
+      res.status(201).json();
     } catch (error) {
       next(error);
     }
