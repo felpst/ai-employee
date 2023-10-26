@@ -1,7 +1,6 @@
 export class Configs {
-    public host = "";
-    public port = 587;
-    public user = "";
-    public password = "";
+    public service = "gmail";
+    public user = "ta.funcionando15@gmail.com";
+    public password = "ibzu qzah ihzz sdcg";
 }
 

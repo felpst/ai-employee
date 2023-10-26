@@ -39,11 +39,14 @@ export class Mail {
     
         transporter.sendMail(mailOptions, function (error) {
             if (error) {
-                return error;
+                return error
             } else {
-                return'Email sent successfully';
+                return'Email sent successfully'
             }
-    });
+    })
 
-        };
-};
+        }
+}
+
+
+new Mail('renato@cognum.ai', 'isso é um teste', 'o teste deu certo ?')
