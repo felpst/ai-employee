@@ -22,19 +22,21 @@ export class EmployeeService {
     return this.coreApiService.post(this.route, data) as Observable<IAIEmployee>;
   }
 
-  list(): Observable<IAIEmployee[]> {
-    return this.coreApiService.get(this.route) as Observable<IAIEmployee[]>;
+  listByWorkspace(workspaceId: string): Observable<IAIEmployee[]> {
+    const params = { filter: { workspace: workspaceId } };
+    return this.coreApiService.get(this.route, { params }) as Observable<IAIEmployee[]>;
   }
 
   getById(employeeId: string): Observable<IAIEmployee> {
     return this.coreApiService.get(`${this.route}/${employeeId}`) as Observable<IAIEmployee>;
   }
 
-  update(item: IAIEmployee): Observable<IAIEmployee> {
+  update(item: Partial<IAIEmployee>): Observable<IAIEmployee> {
     return this.coreApiService.put(`${this.route}/${item._id}`, item) as Observable<IAIEmployee>;
   }
+  
 
-  delete(item: IAIEmployee): Observable<IAIEmployee> {
+  delete(item: Partial<IAIEmployee>): Observable<IAIEmployee> {
     return this.coreApiService.delete(`${this.route}/${item._id}`) as Observable<IAIEmployee>;
   }
 }

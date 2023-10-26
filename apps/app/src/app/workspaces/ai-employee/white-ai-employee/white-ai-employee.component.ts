@@ -5,6 +5,7 @@ import { AiEmployeeComponent } from '../ai-employee.component';
 import { EmployeeService } from '../ai-employee.service';
 import { WorkspacesService } from '../../workspaces.service';
 import { NotificationsService } from '../../../services/notifications/notifications.service';
+import { ActivatedRoute } from '@angular/router';
 
 
 @Component({
@@ -22,6 +23,7 @@ export class WhiteAiEmployeeComponent {
   isLoading = false;
 
   constructor(
+    private route: ActivatedRoute,
     private formBuilder: FormBuilder,
     private dialog: MatDialog,
     private dialogRef: MatDialogRef<AiEmployeeComponent>,
@@ -30,62 +32,21 @@ export class WhiteAiEmployeeComponent {
     @Inject(MAT_DIALOG_DATA) private data: any,
     private employeeService: EmployeeService) {
 
-    this.form = this.formBuilder.group({
-      description: ['', [Validators.required]],
-      name: ['', [Validators.required]],
-    });
+      this.form = this.formBuilder.group({
+        description: ['', [Validators.required]],
+        name: ['', [Validators.required]],
+        workspace: [data.workspaceId, [Validators.required]] 
+      });
 
   }
 
 
   selectAvatar(avatarPath: string) {
-    const img = new Image();
-    img.crossOrigin = 'Anonymous'; // Para permitir o acesso a imagens de outros domínios
-    img.onload = () => {
-      const canvas = document.createElement('canvas');
-      const ctx = canvas.getContext('2d');
-
-      // Certifique-se de que o contexto de renderização não seja nulo
-      if (ctx) {
-        // Redimensionar a imagem (por exemplo, para 800x600)
-        const maxWidth = 800;
-        const maxHeight = 600;
-        let width = img.width;
-        let height = img.height;
-
-        if (width > height) {
-          if (width > maxWidth) {
-            height *= maxWidth / width;
-            width = maxWidth;
-          }
-        } else {
-          if (height > maxHeight) {
-            width *= maxHeight / height;
-            height = maxHeight;
-          }
-        }
-
-        canvas.width = width;
-        canvas.height = height;
-
-        // Desenhar a imagem redimensionada no canvas
-        ctx.drawImage(img, 0, 0, width, height);
-
-        // Obter a imagem redimensionada como uma string base64
-        const resizedImageData = canvas.toDataURL('image/jpeg', 0.7); // 0.7 é a qualidade da imagem (de 0 a 1)
-
-        // Enviar a imagem redimensionada como base64 para o backend
-        this.selectedAvatar = resizedImageData;
+ 
+        this.selectedAvatar = avatarPath;
         this.form.patchValue({ avatar: this.selectedAvatar });
         this.isAvatarSelected = true;
-      } else {
-        // Lidar com a situação quando o contexto de renderização é nulo
-        console.error('Failed to get 2D rendering context.');
-      }
-    };
 
-    // Carregar a imagem
-    img.src = avatarPath;
   }
 
   onFileSelected(event: Event): void {
@@ -116,8 +77,10 @@ export class WhiteAiEmployeeComponent {
           name: nameControl.value,
           role: descriptionControl.value,
           avatar: avatarValue,
+          workspace: this.form.get('workspace')?.value ?? null
     
         };
+        console.log(aiEmployeeData)
         this.isLoading = true;
         this.employeeService.create(aiEmployeeData).subscribe(
           (createdEmployee) => {

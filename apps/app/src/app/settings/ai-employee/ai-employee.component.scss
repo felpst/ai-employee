@@ -109,7 +109,7 @@
       border-radius: 2px;
   
       width: 720px;
-      height: 500px;
+     
   
       nav {
         display: flex;
@@ -157,6 +157,11 @@
     .avatar {
       display: flex;
       gap: 20px;
+      margin-bottom: 20px;
+
+      img{
+        width: 60px;
+      }
     }
     
     .avatar > div {
@@ -165,7 +170,7 @@
     
     .avatar-selected {
       border: 2px solid #14b8a6;
-      width: 44px;
+      width: 64px;
     }
     
     .image-group {
@@ -197,6 +202,8 @@
       margin-top: 20px;
       padding-top: 20px;
       border-top: 1px solid #f0f0f0;
+      padding-bottom: 20px;
+
   
       div {
         display: flex;

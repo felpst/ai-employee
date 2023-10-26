@@ -1,17 +1,16 @@
 
 import { Component, OnInit } from '@angular/core';
 import {
-  AbstractControl,
-  FormBuilder,
-  ValidationErrors,
-  Validators,
+ 
+  FormBuilder, 
+  Validators
+
 } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AuthService } from '../../auth/auth.service';
 import { NotificationsService } from '../../services/notifications/notifications.service';
-import { WorkspacesService } from '../../workspaces/workspaces.service';
 import { EmployeeService } from '../../workspaces/ai-employee/ai-employee.service';
-import { SettingsService } from '../settings.service';
+import { IAIEmployee } from '@cognum/interfaces';
+
 
 @Component({
   selector: 'cognum-ai-employee',
@@ -21,11 +20,10 @@ import { SettingsService } from '../settings.service';
 export class AiEmployeeComponentSettings implements OnInit {
   name = '';
   role='';
-
   updateForm = this.formBuilder.group({
-    name: [this.name, [Validators.minLength(6)]],
-    
-  
+    name: [this.name, [Validators.required]],
+    role: [this.role, [Validators.required]],
+   
   });
   submitting = false;
   showUpdateError = false;
@@ -40,8 +38,6 @@ export class AiEmployeeComponentSettings implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private settingsService: SettingsService,
-    private authService: AuthService,
     private formBuilder: FormBuilder,
     private router: Router,
     private notificationsService: NotificationsService,
@@ -57,29 +53,43 @@ export class AiEmployeeComponentSettings implements OnInit {
     this.showDeleteConfirmation = true;
   }
 
-  onRedirect() {
-    this.router.navigate(['/workspaces']);
-  }
+
+  selectAvatar(avatarPath: string) {
+ 
+    this.selectedAvatar = avatarPath;
+ 
+    this.isAvatarSelected = true;
+
+}
+
 
   ngOnInit() {
-    const employeeId = this.route.snapshot.params['employeeId'];
-    console.log(employeeId)
-    this.aiEmployeeService.getById(employeeId).subscribe({
-      next: (response) => {
-        this.name = response.name;
-        this.role = response.role;
-      },
+    this.route.params.subscribe(params => {
+      const employeeId = params['id'];
+      console.log(employeeId);
+      this.aiEmployeeService.getById(employeeId).subscribe({
+        next: (response) => {
+          this.name = response.name;
+          this.role = response.role;
+        },
+      });
     });
   }
 
-  confirmDeleteAccount() {
-    const userId = this.aiEmployeeService.employeeId?._id;
-
-    this.settingsService.deleteUserById(userId).subscribe({
-      next: () => {
-        this.router.navigate(['/auth/register']);
-      },
-    });
+  confirmDeleteAccount() {  
+ 
+  
+      const employeeId = this.route.snapshot.params['id']; 
+      const updateData: Partial<IAIEmployee> = {
+        _id: employeeId, 
+      };
+      console.log(employeeId);
+      this.aiEmployeeService.delete(updateData).subscribe({
+        next: () => {
+          this.router.navigate(['/'], { relativeTo: this.route });
+        },
+      });
+    
 
     this.showDeleteConfirmation = false;
   }
@@ -88,48 +98,33 @@ export class AiEmployeeComponentSettings implements OnInit {
     this.showDeleteConfirmation = false;
   }
 
-  validatorFile(control: AbstractControl): ValidationErrors | null {
-    const file = control.value;
-    if (!file) return null;
-    const { name, type, size } = file;
-    // Tamanho máximo: 10MB
-    const maxFileSize = 10 * 1024 * 1024;
-    const validFileTypes = ['image/jpeg', 'image/png'];
-    const conditionType =
-      !validFileTypes.includes(type) ||
-      !/jpg$|jpeg$|png$/g.test(name.toLowerCase());
-    const conditionSize = !(size <= maxFileSize);
 
-    if (conditionType)
-      return { custom: 'Formatos válidos: .png, .jpg e .jpeg' };
-    if (conditionSize) return { custom: 'Tamanho máximo: 5MB' };
-    return null;
-  }
+
 
 
 
   async onSubmit() {
     if (!this.updateForm.valid) return;
     this.submitting = true;
+    const employeeId = this.route.snapshot.params['id'];
+    const name = this.updateForm.get('name')?.value as string;
+    const role = this.updateForm.get('role')?.value as string;
 
-    let name = this.updateForm.get('name')?.value;
-    if (!name) {
-      name = this.name; // Usar o nome atual se o campo name estiver vazio
+    const updateData: Partial<IAIEmployee> = { _id: employeeId };
+    if (name) {
+      updateData.name = name;
+    }
+    if (role) {
+      updateData.role = role;
     }
 
-    const profilePhoto = this.updateForm.get('profilePhoto')?.value;
-    const updateData = JSON.stringify({ name });
-    const userId = this.authService.user?._id;
-
-    this.settingsService
-      .updateUserById(userId, updateData, profilePhoto)
-      .subscribe({
-        next: () => {
-          this.notificationsService.show('Successfully changed data!');
-        },
-      });
+    this.aiEmployeeService.update(updateData).subscribe({
+      next: () => {
+        this.notificationsService.show('Successfully changed data!');
+      },
+    });
   }
-
+  
   selectedItem: number | null = 1;
 
   selectItem(itemNumber: number): void {

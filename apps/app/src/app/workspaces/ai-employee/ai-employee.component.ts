@@ -5,8 +5,7 @@ import { DialogComponent } from '../../shared/dialog/dialog.component';
 import { EmployeeService } from './ai-employee.service';
 import { WorkspacesService } from '../workspaces.service';
 import { WhiteAiEmployeeComponent } from './white-ai-employee/white-ai-employee.component';
-import { AiEmployeeComponentSettings } from '../../settings/ai-employee/ai-employee.component'; 
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'cognum-ai-employee',
@@ -25,20 +24,22 @@ export class AiEmployeeComponent implements OnInit {
   activeButton = 'newFirst';
 
   constructor(
+    private route: ActivatedRoute,
     private router: Router,
     private employeeService: EmployeeService,
     private workspacesService: WorkspacesService,
     private dialog: MatDialog)
    {}
 
-  ngOnInit() {
+   
+   ngOnInit() {
     this.activeButton = '';
-    this.loadEmployees();
+    const workspaceId = this.route.snapshot.params['id'];
+    this.loadEmployees({ workspace: workspaceId }); // Passe um objeto como filtro
   }
-
- 
-  loadEmployees() {
-    this.employeeService.list().subscribe(
+  
+  loadEmployees(filterParams: any) { // Aceite um objeto de filtro como parâmetro
+    this.employeeService.listByWorkspace(filterParams).subscribe(
       employees => {
         this.originalEmployees = employees;
         this.filterEmployees();
@@ -48,26 +49,28 @@ export class AiEmployeeComponent implements OnInit {
       }
     );
   }
+  
 
 
   createEmployee() {
     const dialogRef = this.dialog.open(WhiteAiEmployeeComponent, {
       height: '80%',
-    });
+      data: { workspaceId: this.route.snapshot.params['id'] } 
+  });
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result === 'success') {
-        this.loadEmployees(); 
+        const workspaceId = this.route.snapshot.params['id'];
+        this.loadEmployees(workspaceId);
         this.activeButton = '';
       }
     });
   }
 
+
   editEmployee(employee: IAIEmployee) {
-    const employeeId = employee._id; // Obtendo o ID do funcionário
-    console.log(employeeId)
-    const employees= this.router.navigate(['/employee', employeeId]);
-    console.log(employees)
+    const employeeId = employee._id;
+    this.router.navigate(['settings/employee', employeeId]);
   }
 
   deleteEmployee(employee: IAIEmployee) {
