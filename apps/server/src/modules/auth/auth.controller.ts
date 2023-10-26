@@ -1,4 +1,4 @@
-import { Company, User } from '@cognum/models';
+import { User } from '@cognum/models';
 import bcrypt from 'bcrypt';
 import { Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
@@ -30,17 +30,17 @@ export class AuthController {
       }
 
       const token = jwt.sign(
-        { userId: user._id, companyId: user?.company || null },
+        { userId: user._id.toString() },
         process.env.AUTH_SECRET_KEY,
         { expiresIn: '14d' }
       );
 
-      const { password: passwd, ..._user } = user.toObject();
       const expires = new Date();
       expires.setDate(expires.getDate() + 14);
       AuthController._setTokenCookie(res, token, expires);
       res.setHeader('X-Auth-Token', token);
-      res.json(_user);
+      
+      res.json(user.toObject());
     } catch (error) {
       console.log(error);
 
@@ -66,13 +66,7 @@ export class AuthController {
         return;
       }
 
-      const companyId = decodedToken.companyId;
-      user.company = companyId;
-      const company = companyId
-        ? await Company.findById(companyId).select('name')
-        : null;
-
-      res.json({ user, company, token });
+      res.json({ user, token });
     } catch (error) {
       res.status(403).json({ error: 'Invalid token' });
     }

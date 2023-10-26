@@ -22,8 +22,7 @@ export class WorkspaceController extends ModelController<typeof Workspace> {
       const files = req.files ? Array.from(req.files) : [];
       const docs = [];
       for (const data of dataset) {
-        const { users, usersEmails, employee } = data;
-        const arrayUsers = Array.isArray(users) ? [...users] : [users];
+        const { usersEmails, employee } = data;
         const arrayEmails = Array.isArray(usersEmails)
           ? [...usersEmails]
           : [usersEmails];
@@ -43,10 +42,7 @@ export class WorkspaceController extends ModelController<typeof Workspace> {
         }
         data.updatedBy = userId;
         const _users = await User.find({
-          $or: [
-            { _id: { $in: [...arrayUsers, userId] } },
-            { email: { $in: arrayEmails } },
-          ],
+          $or: [{ _id: { $in: [userId] } }, { email: { $in: arrayEmails } }],
         });
         const doc = await Workspace.create({
           ...data,
@@ -67,7 +63,7 @@ export class WorkspaceController extends ModelController<typeof Workspace> {
           await AIEmployee.create({
             ...employee,
             _id: _employeeId,
-            workspaces: [doc._id],
+            workspace: doc._id,
             avatar: avatarPhoto,
             createdBy: userId,
             updatedBy: userId,
@@ -76,7 +72,6 @@ export class WorkspaceController extends ModelController<typeof Workspace> {
         docs.push(doc);
       }
       res.status(201).json(docs.length > 1 ? docs : docs[0]);
-      console.log(req.files);
     } catch (error) {
       next(error);
     }

@@ -1,24 +1,24 @@
-/* eslint-disable @typescript-eslint/ban-ts-comment */
-import { IChat, ICompany, IUser } from '@cognum/interfaces';
+import { IChat, IUser } from '@cognum/interfaces';
+import { ChatModel } from '@cognum/llm';
+import {
+  AIEmployeeIdentity,
+  AIEmployeeMemory,
+  AIEmployeeOutputParser,
+  AIEmployeePromptTemplate,
+  KnowledgeBaseTool,
+} from '@cognum/tools';
 import { AgentExecutor, LLMSingleActionAgent } from 'langchain/agents';
 import { LLMChain } from 'langchain/chains';
-import { ChatOpenAI } from 'langchain/chat_models/openai';
+import { ChatOpenAI as LangchainChatOpenAI } from 'langchain/chat_models/openai';
 import { Callbacks } from 'langchain/dist/callbacks';
 import { Tool } from 'langchain/tools';
 import { Calculator } from 'langchain/tools/calculator';
-import {
-  AIEmployeeIdentity,
-  AIEmployeeOutputParser,
-  AIEmployeePromptTemplate,
-} from '../helpers/prompts.helper';
-import { AIEmployeeMemory } from '../memories/ai_employee.memory';
-import { KnowledgeBaseTool } from '../tools/knowledge-base';
 
 export class AIEmployee {
   private _chat: IChat;
   private _user: IUser;
 
-  private _model: ChatOpenAI;
+  private _model: LangchainChatOpenAI;
   private _callbacks: Callbacks;
   private _tools: Tool[];
   memory: AIEmployeeMemory;
@@ -47,13 +47,13 @@ export class AIEmployee {
       this._identity = data.identity;
     }
 
-    this._model = new ChatOpenAI({
-      modelName: 'gpt-4',
-      temperature: 0,
+    const configChatModel = {
       streaming: true,
       callbacks: this._callbacks,
       // verbose: true,
-    });
+    };
+
+    this._model = new ChatModel(configChatModel);
 
     this.memory = new AIEmployeeMemory({
       chat: this._chat,
@@ -78,7 +78,6 @@ export class AIEmployee {
         identity: this._identity,
         memory: this.memory,
         user: this._user,
-        company: this._chat.company as ICompany,
       }),
     });
 

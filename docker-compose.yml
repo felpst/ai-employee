@@ -35,9 +35,6 @@ services:
     networks:
       - cognum_network
 
-volumes:
-  mono-node-modules: null
-
 networks:
   default:
     name: cognum_network

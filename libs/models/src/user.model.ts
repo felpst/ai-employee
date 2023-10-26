@@ -1,7 +1,6 @@
 import { IUser } from '@cognum/interfaces';
 import * as bcrypt from 'bcrypt';
 import { Model, Schema, model } from 'mongoose';
-import Company from './company.model';
 import { triggers } from './default.model';
 
 const schema = new Schema<IUser>({
@@ -10,7 +9,6 @@ const schema = new Schema<IUser>({
   password: { type: String, required: true },
   active: { type: Boolean, required: true, default: false },
   photo: { type: String, required: false },
-  company: { type: Schema.Types.ObjectId, ref: 'Company', required: false },
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now },
 });
@@ -41,7 +39,6 @@ schema.pre('findOneAndUpdate', async function (next) {
 
 // Dependency injection
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-const company = Company; // Force import model
 
 const User: Model<IUser> = model<IUser>('User', schema);
 export default User as Model<IUser>;
