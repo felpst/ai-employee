@@ -9,6 +9,7 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { RouterModule } from '@angular/router';
+import { UsersAvatarComponent } from '../shared/users-avatar/users-avatar.component';
 import { AdminComponent } from './admin/admin.component';
 import { LoadingComponent } from './loading/loading.component';
 import { MenuComponent } from './menu/menu.component';
@@ -19,6 +20,7 @@ const declarations: any[] = [
   LoadingComponent,
   MenuComponent,
   WorkspaceMembersComponent,
+  UsersAvatarComponent
 ];
 
 const MaterialModules: any[] = [

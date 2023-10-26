@@ -4,6 +4,7 @@ import { ChangeDetectorRef, Component, OnDestroy } from '@angular/core';
 import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Router } from '@angular/router';
+import { IUser } from '@cognum/interfaces';
 import { CookieService } from 'ngx-cookie-service';
 import { AuthService } from '../../auth/auth.service';
 import { WorkspacesService } from '../../workspaces/workspaces.service';
@@ -66,6 +67,10 @@ export class MenuComponent implements OnDestroy {
 
   get user() {
     return this.authService.user;
+  }
+
+  get users(): IUser[] {
+    return this.workspacesService.selectedWorkspace.users as IUser[];
   }
 
   get workspace() {

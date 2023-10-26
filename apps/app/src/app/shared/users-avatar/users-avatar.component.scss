@@ -1,0 +1,25 @@
+.users {
+  color: #fff;
+  display: block;
+  font-weight: 600;
+  height: 2.5rem;
+  cursor: pointer;
+
+  .item {
+    float: left;
+    width: 2.5rem;
+    height: 2.5rem;
+    background-color: #14b8a6;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: -8px;
+    border: 2px solid #fff;
+
+    mat-icon {
+      width: 1.3rem;
+      margin-top: -2px;
+    }
+  }
+}

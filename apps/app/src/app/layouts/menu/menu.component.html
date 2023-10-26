@@ -58,8 +58,13 @@
         </div>
 
         <div class="full-width">
-          <cognum-workspace-members></cognum-workspace-members>
-
+          <div class="text-container">
+            <h3>Workspace members</h3>
+          </div>
+          <cognum-users-avatar
+            [routerLink]="['./', workspace._id, 'settings']"
+            [users]="users"
+          ></cognum-users-avatar>
           <div class="divider"><hr /></div>
         </div>
       </div>
