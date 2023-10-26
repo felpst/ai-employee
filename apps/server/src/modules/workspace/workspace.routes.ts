@@ -9,6 +9,7 @@ import { addWorkspace } from './workspace.schemas';
 
 const router: Router = express.Router();
 
+// TODO created a separeted route for upload files
 router.post(
   '/',
   authMiddleware,
@@ -17,7 +18,12 @@ router.post(
   YupValidatorMiddleware(addWorkspace),
   workspaceController.create
 );
-router.get('/', authMiddleware, workspaceController.findByUser);
+router.get(
+  '/',
+  authMiddleware,
+  workspaceController.filterByUser,
+  workspaceController.find
+);
 router.get('/:id', authMiddleware, workspaceController.getById);
 router.put(
   '/:id',

@@ -10,10 +10,7 @@ export class SettingsService {
 
   constructor(private coreApiService: CoreApiService) {}
 
-  getUserById(userId: string) {
-    return this.coreApiService.get(`users/${userId}`);
-  }
-
+  // TODO migrar para apps\app\src\app\services\users\users.service.ts
   updateUserById(
     userId: string,
     updateData: string,
@@ -33,6 +30,7 @@ export class SettingsService {
     });
   }
 
+  // TODO migrar para apps\app\src\app\services\users\users.service.ts
   deleteUserById(userId: string) {
     return this.coreApiService.delete(`users/${userId}`);
   }

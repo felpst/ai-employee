@@ -28,9 +28,10 @@ export class WorkspacesService {
     }) as Observable<IWorkspace>;
   }
 
-  get(id: string): Observable<IWorkspace> {
+  get(id: string, options?: any): Observable<IWorkspace> {
     return this.coreApiService.get(
-      `${this.route}/${id}`
+      `${this.route}/${id}`,
+      options
     ) as Observable<IWorkspace>;
   }
 

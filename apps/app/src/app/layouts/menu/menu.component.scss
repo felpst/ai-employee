@@ -1,11 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,0,0');
 
-.font-outfit {
-  font-family: 'Outfit', sans-serif;
-  font-weight: 300;
-  font-style: normal;
-}
-
 .menu {
   display: flex;
   max-width: 12rem;
@@ -105,6 +99,7 @@
   .menu-header:active,
   .menu-header:hover {
     background: #f5f5f5;
+    cursor: pointer;
   }
 
   .sidenav-container {
@@ -170,48 +165,6 @@
             font-size: 0.75rem;
             font-weight: 400;
             line-height: 1.25rem;
-          }
-        }
-
-        .members {
-          display: flex;
-          align-items: center;
-          gap: -0.5rem;
-
-          .initials,
-          .more-users,
-          .add-user {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-direction: column;
-
-            color: #fff;
-            background-color: #14b8a6;
-            border-radius: 62.4375rem;
-            border: 1px solid #fff;
-            font-weight: 600;
-
-            width: 2rem;
-            height: 2rem;
-
-            mat-icon {
-              width: 18px;
-              display: flex;
-              align-items: center;
-            }
-          }
-
-          img {
-            display: flex;
-            width: 2rem;
-            height: 2rem;
-            flex-direction: column;
-            align-items: flex-end;
-
-            border-radius: 62.4375rem;
-            border: 1px solid #fff;
-            background: #f5f5f5 50% / cover no-repeat, #fff;
           }
         }
       }
