@@ -1,4 +1,3 @@
-import { ICompany } from './company.interface';
 import { DefaultModel } from './default.model';
 
 export interface IUser extends DefaultModel {
@@ -7,5 +6,4 @@ export interface IUser extends DefaultModel {
   password: string;
   active: boolean;
   photo?: string;
-  company: string | ICompany;
 }

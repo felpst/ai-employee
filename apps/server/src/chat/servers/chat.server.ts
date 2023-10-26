@@ -83,7 +83,6 @@ export class ChatServer {
           const session = this.sessions.get(context.sessionId);
           if (session) {
             User.findById(userId)
-              .populate(['company'])
               .then(async (user) => {
                 // Set user
                 const session = this.sessions.get(context.sessionId);
@@ -233,11 +232,12 @@ export class ChatServer {
         if (!chatId) {
           throw new Error('Chat ID not found');
         }
-        const chat = await Chat.findById(chatId).populate(['company']);
+        const chat = await Chat.findById(chatId)
         if (!chat) {
           throw new Error('Chat not exists');
         }
 
+        
         // Set chat
         const session = this.sessions.get(sessionId);
         session.chat = chat;
@@ -257,7 +257,7 @@ export class ChatServer {
           content: { sessionId, isConnected: true },
         });
       } catch (error) {
-        console.log(error);
+        console.log('[connect error]', error);
         this.closeSession(sessionId, error.message);
       }
     });
