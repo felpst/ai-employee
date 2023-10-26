@@ -9,6 +9,7 @@ import {
 import { Router } from '@angular/router';
 import { AuthService } from '../../auth/auth.service';
 import { NotificationsService } from '../../services/notifications/notifications.service';
+import { UsersService } from '../../services/users/users.service';
 import { SettingsService } from '../settings.service';
 
 @Component({
@@ -37,7 +38,8 @@ export class YourAccountComponent implements OnInit {
     private authService: AuthService,
     private formBuilder: FormBuilder,
     private router: Router,
-    private notificationsService: NotificationsService
+    private notificationsService: NotificationsService,
+    private usersService: UsersService
   ) {
     this.updateForm.valueChanges.subscribe(() => {
       this.showUpdateError = false;
@@ -55,7 +57,7 @@ export class YourAccountComponent implements OnInit {
   ngOnInit() {
     const userId = this.authService.user?._id;
 
-    this.settingsService.getUserById(userId).subscribe({
+    this.usersService.getById(userId).subscribe({
       next: (response) => {
         this.image = response.photo;
         this.name = response.name;

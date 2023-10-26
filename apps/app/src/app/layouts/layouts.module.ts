@@ -12,8 +12,14 @@ import { RouterModule } from '@angular/router';
 import { AdminComponent } from './admin/admin.component';
 import { LoadingComponent } from './loading/loading.component';
 import { MenuComponent } from './menu/menu.component';
+import { WorkspaceMembersComponent } from './menu/workspace-members/workspace-members.component';
 
-const declarations: any[] = [AdminComponent, LoadingComponent, MenuComponent];
+const declarations: any[] = [
+  AdminComponent,
+  LoadingComponent,
+  MenuComponent,
+  WorkspaceMembersComponent,
+];
 
 const MaterialModules: any[] = [
   MatButtonModule,

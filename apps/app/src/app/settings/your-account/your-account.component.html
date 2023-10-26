@@ -15,7 +15,7 @@
       <div style="display: flex; align-items: center; gap: 2px">
         <img
           class="image-style"
-          src="{{ selectedImage || image }}"
+          [src]="selectedImage || image"
           alt="User Image"
         />
         <span>{{ name }}</span>
