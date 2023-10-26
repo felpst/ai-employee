@@ -9,12 +9,12 @@
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  padding: 3rem 12rem;
+  padding: 3rem;
 }
 
 .filters {
   display: flex;
-  gap: 2rem;
+  gap: 1rem;
 }
 .search-container {
   display: flex;
@@ -132,6 +132,11 @@ h2 {
 }
 
 @media (max-width: 768px) {
+
+  .header{
+    display: flex;
+    flex-direction: column;
+  }
   .content {
     padding: 10px;
 
@@ -139,4 +144,17 @@ h2 {
       width: calc(100% - 2rem);
     }
   }
+
+  .filters{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .title{
+    margin-bottom: 20px;
+  }
 }
+
+

@@ -3,10 +3,10 @@ import { MediaMatcher } from '@angular/cdk/layout';
 import { ChangeDetectorRef, Component, OnDestroy } from '@angular/core';
 import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
+import { IUser } from '@cognum/interfaces';
 import { CookieService } from 'ngx-cookie-service';
 import { AuthService } from '../../auth/auth.service';
-import { SettingsService } from '../../settings/settings.service';
 import { WorkspacesService } from '../../workspaces/workspaces.service';
 
 @Component({
@@ -50,14 +50,11 @@ export class MenuComponent implements OnDestroy {
     iconRegistry: MatIconRegistry,
     sanitizer: DomSanitizer,
     private router: Router,
-    private settingsService: SettingsService,
     private workspacesService: WorkspacesService,
     private authService: AuthService,
     changeDetectorRef: ChangeDetectorRef,
     media: MediaMatcher,
     private cookieService: CookieService,
-    private route: ActivatedRoute,
-    private cdRef: ChangeDetectorRef
   ) {
     this.mobileQuery = media.matchMedia('(max-width: 600px)');
     this._mobileQueryListener = () => changeDetectorRef.detectChanges();
@@ -70,6 +67,10 @@ export class MenuComponent implements OnDestroy {
 
   get user() {
     return this.authService.user;
+  }
+
+  get users(): IUser[] {
+    return this.workspacesService.selectedWorkspace.users as IUser[];
   }
 
   get workspace() {
@@ -87,14 +88,5 @@ export class MenuComponent implements OnDestroy {
 
   toggleMenu() {
     this.showMenu = !this.showMenu;
-  }
-
-  onLogOut() {
-    this.authService.logout().subscribe({
-      next: () => {
-        this.cookieService.delete('token');
-        this.router.navigate(['/auth']);
-      },
-    });
   }
 }

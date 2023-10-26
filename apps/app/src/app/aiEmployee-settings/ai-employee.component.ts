@@ -7,8 +7,8 @@ import {
 
 } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { NotificationsService } from '../../services/notifications/notifications.service';
-import { EmployeeService } from '../../workspaces/ai-employee/ai-employee.service';
+import { NotificationsService } from '../services/notifications/notifications.service';
+import { EmployeeService } from '../workspaces/ai-employee/ai-employee.service';
 import { IAIEmployee } from '@cognum/interfaces';
 
 

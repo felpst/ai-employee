@@ -70,7 +70,7 @@ export class AiEmployeeComponent implements OnInit {
 
   editEmployee(employee: IAIEmployee) {
     const employeeId = employee._id;
-    this.router.navigate(['settings/employee', employeeId]);
+    this.router.navigate(['editEmployee', employeeId]);
   }
 
   deleteEmployee(employee: IAIEmployee) {

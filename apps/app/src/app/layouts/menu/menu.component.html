@@ -58,8 +58,13 @@
         </div>
 
         <div class="full-width">
-          <cognum-workspace-members></cognum-workspace-members>
-
+          <div class="text-container">
+            <h3>Workspace members</h3>
+          </div>
+          <cognum-users-avatar
+            [routerLink]="['./', workspace._id, 'settings']"
+            [users]="users"
+          ></cognum-users-avatar>
           <div class="divider"><hr /></div>
         </div>
       </div>
@@ -81,19 +86,13 @@
         </div>
       </div>
 
-      <div class="personal-data">
+      <div class="account" routerLink="/account">
         <img [src]="user.photo" />
-        <div class="person-name">
-          <strong class="font-outfit">{{ user.name }}</strong>
-        </div>
+        <h3>{{ user.name }}</h3>
       </div>
     </mat-sidenav-content>
   </mat-sidenav-container>
   <mat-toolbar class="workspace-info menu-footer">
-    <img
-      src="../../../assets/icons/logout.svg"
-      title="LogOut"
-      (click)="onLogOut()"
-    />
+    <img src="../../../assets/icons/logout.svg" title="LogOut" />
   </mat-toolbar>
 </div>

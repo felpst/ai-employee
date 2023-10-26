@@ -5,15 +5,14 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatToolbarModule } from '@angular/material/toolbar';
-import { LayoutsModule } from '../layouts/layouts.module';
 
 import { MatIconModule } from '@angular/material/icon';
-import { SettingsRoutingModule } from './settings-routing.module';
-import { YourAccountComponent } from './your-account/your-account.component';
-import { AiEmployeeComponentSettings } from './ai-employee/ai-employee.component';
+import { LayoutsModule } from '../layouts/layouts.module';
+import { SettingsRoutingModule } from './account-routing.module';
+import { AccountSettingsComponent } from './account-settings/account-settings.component';
 
 @NgModule({
-  declarations: [YourAccountComponent, AiEmployeeComponentSettings],
+  declarations: [AccountSettingsComponent],
   imports: [
     CommonModule,
     SettingsRoutingModule,
@@ -27,4 +26,4 @@ import { AiEmployeeComponentSettings } from './ai-employee/ai-employee.component
     LayoutsModule,
   ],
 })
-export class SettingsComponentModule {}
+export class AccountModule {}

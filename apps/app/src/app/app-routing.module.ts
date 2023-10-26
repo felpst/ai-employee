@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from './auth/auth.guard';
 import { AdminComponent } from './layouts/admin/admin.component';
 import { CreateWorkspaceComponent } from './workspaces/create-workspace/create-workspace.component';
+import { AiEmployeeComponentSettings } from './aiEmployee-settings/ai-employee.component';
 
 const routes: Routes = [
   // Public routes
@@ -22,10 +23,18 @@ const routes: Routes = [
           import('./home/home.module').then((m) => m.HomeComponentModule),
       },
       {
-        path: 'settings',
+        path: 'account',
         loadChildren: () =>
-          import('./settings/settings.module').then(
-            (m) => m.SettingsComponentModule
+          import('./account/account.module').then(
+            (m) => m.AccountModule
+          ),
+      },
+      {
+        path: 'editEmployee/:id',
+        component: AiEmployeeComponentSettings,
+        loadChildren: () =>
+          import('./aiEmployee-settings/ai-employee-settings.module').then(
+            (m) => m.AiEmployeeSettingsModule
           ),
       },
       {
