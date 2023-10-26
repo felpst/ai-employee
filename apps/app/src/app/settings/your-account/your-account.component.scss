@@ -56,6 +56,10 @@
       justify-content: center;
       gap: 3px;
 
+      button > mat-icon {
+        width: 20px;
+      }
+
       .workspace-name {
         font-weight: 600;
         font-size: 18px;
@@ -214,6 +218,21 @@
 
 .container-group {
   padding: 0 20px;
+}
+
+@media (max-width: 430px) {
+  .container-group,
+  .image-group {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
+  .adjust-name {
+    padding: 0 10px;
+    text-align: center;
+  }
 }
 
 @media (max-width: 800px) {

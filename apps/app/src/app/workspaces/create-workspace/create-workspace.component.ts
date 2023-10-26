@@ -169,7 +169,10 @@ export class CreateWorkspaceComponent {
       },
     };
 
-    if (typeof this.selectedAvatar === 'string') {
+    if (
+      typeof this.selectedAvatar === 'string' &&
+      this.selectedFiles.length < 2
+    ) {
       const extension = this.selectedAvatar.split('.').pop();
       const blob = new Blob([this.selectedAvatar], { type: 'text/plain' });
       const file = new File([blob], `avatar.${extension}`);

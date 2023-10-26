@@ -14,6 +14,10 @@ export class AppComponent {
       sanitizer.bypassSecurityTrustResourceUrl('/assets/icons/cognum.svg')
     ),
       iconRegistry.addSvgIcon(
+        'arrow-left',
+        sanitizer.bypassSecurityTrustResourceUrl('/assets/icons/arrow-left.svg')
+      ),
+      iconRegistry.addSvgIcon(
         'logo',
         sanitizer.bypassSecurityTrustResourceUrl('/assets/icons/logo.svg')
       ),

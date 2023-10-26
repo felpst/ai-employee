@@ -27,6 +27,9 @@ export class YourAccountComponent implements OnInit {
   showUpdateError = false;
   errors = [];
   showDeleteConfirmation = false;
+  image = '';
+  selectedImage: string | null = null;
+  workspaceId: string | null = null;
 
   constructor(
     private location: Location,
@@ -64,10 +67,9 @@ export class YourAccountComponent implements OnInit {
     const userId = this.authService.user?._id;
 
     this.settingsService.deleteUserById(userId).subscribe({
-      next: (response) => {
+      next: () => {
         this.router.navigate(['/auth/register']);
       },
-      // error: () => {},
     });
 
     this.showDeleteConfirmation = false;

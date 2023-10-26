@@ -1,9 +1,11 @@
 import { IChat, IUser } from '@cognum/interfaces';
 import { ChatModel } from '@cognum/llm';
 import {
-  AIEmployeeIdentity, AIEmployeeMemory, AIEmployeeOutputParser,
+  AIEmployeeIdentity,
+  AIEmployeeMemory,
+  AIEmployeeOutputParser,
   AIEmployeePromptTemplate,
-  KnowledgeBaseTool
+  KnowledgeBaseTool,
 } from '@cognum/tools';
 import { AgentExecutor, LLMSingleActionAgent } from 'langchain/agents';
 import { LLMChain } from 'langchain/chains';
@@ -49,11 +51,9 @@ export class AIEmployee {
       streaming: true,
       callbacks: this._callbacks,
       // verbose: true,
-    }
+    };
 
-    this._model = new ChatModel(configChatModel)
-
-
+    this._model = new ChatModel(configChatModel);
 
     this.memory = new AIEmployeeMemory({
       chat: this._chat,
