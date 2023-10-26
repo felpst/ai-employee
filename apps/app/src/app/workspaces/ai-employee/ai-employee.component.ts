@@ -28,18 +28,17 @@ export class AiEmployeeComponent implements OnInit {
     private router: Router,
     private employeeService: EmployeeService,
     private workspacesService: WorkspacesService,
-    private dialog: MatDialog)
-   {}
+    private dialog: MatDialog) { }
 
-   
-   ngOnInit() {
+
+  ngOnInit() {
     this.activeButton = '';
     const workspaceId = this.route.snapshot.params['id'];
-    this.loadEmployees({ workspace: workspaceId }); // Passe um objeto como filtro
+    this.loadEmployees(workspaceId);
   }
-  
-  loadEmployees(filterParams: any) { // Aceite um objeto de filtro como parâmetro
-    this.employeeService.listByWorkspace(filterParams).subscribe(
+
+  loadEmployees(workspaceId: string) {
+    this.employeeService.listByWorkspace(workspaceId).subscribe(
       employees => {
         this.originalEmployees = employees;
         this.filterEmployees();
@@ -49,14 +48,15 @@ export class AiEmployeeComponent implements OnInit {
       }
     );
   }
-  
+
+
 
 
   createEmployee() {
     const dialogRef = this.dialog.open(WhiteAiEmployeeComponent, {
       height: '80%',
-      data: { workspaceId: this.route.snapshot.params['id'] } 
-  });
+      data: { workspaceId: this.route.snapshot.params['id'] }
+    });
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result === 'success') {
@@ -97,7 +97,7 @@ export class AiEmployeeComponent implements OnInit {
         }
       });
   }
-  
+
 
   filterEmployees() {
     this.employees = this.originalEmployees.filter(employee =>

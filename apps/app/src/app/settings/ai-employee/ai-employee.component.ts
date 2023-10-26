@@ -1,8 +1,8 @@
 
 import { Component, OnInit } from '@angular/core';
 import {
- 
-  FormBuilder, 
+
+  FormBuilder,
   Validators
 
 } from '@angular/forms';
@@ -19,11 +19,11 @@ import { IAIEmployee } from '@cognum/interfaces';
 })
 export class AiEmployeeComponentSettings implements OnInit {
   name = '';
-  role='';
+  role = '';
   updateForm = this.formBuilder.group({
     name: [this.name, [Validators.required]],
     role: [this.role, [Validators.required]],
-   
+
   });
   submitting = false;
   showUpdateError = false;
@@ -46,7 +46,7 @@ export class AiEmployeeComponentSettings implements OnInit {
     this.updateForm.valueChanges.subscribe(() => {
       this.showUpdateError = false;
     });
-    
+
   }
 
   openDeleteAccountModal() {
@@ -55,12 +55,12 @@ export class AiEmployeeComponentSettings implements OnInit {
 
 
   selectAvatar(avatarPath: string) {
- 
+
     this.selectedAvatar = avatarPath;
- 
+
     this.isAvatarSelected = true;
 
-}
+  }
 
 
   ngOnInit() {
@@ -76,20 +76,20 @@ export class AiEmployeeComponentSettings implements OnInit {
     });
   }
 
-  confirmDeleteAccount() {  
- 
-  
-      const employeeId = this.route.snapshot.params['id']; 
-      const updateData: Partial<IAIEmployee> = {
-        _id: employeeId, 
-      };
-      console.log(employeeId);
-      this.aiEmployeeService.delete(updateData).subscribe({
-        next: () => {
-          this.router.navigate(['/'], { relativeTo: this.route });
-        },
-      });
-    
+  confirmDeleteAccount() {
+
+
+    const employeeId = this.route.snapshot.params['id'];
+    const updateData: Partial<IAIEmployee> = {
+      _id: employeeId,
+    };
+    console.log(employeeId);
+    this.aiEmployeeService.delete(updateData).subscribe({
+      next: () => {
+        this.router.navigate(['/'], { relativeTo: this.route });
+      },
+    });
+
 
     this.showDeleteConfirmation = false;
   }
@@ -97,11 +97,6 @@ export class AiEmployeeComponentSettings implements OnInit {
   cancelDeleteAccount() {
     this.showDeleteConfirmation = false;
   }
-
-
-
-
-
 
   async onSubmit() {
     if (!this.updateForm.valid) return;
@@ -124,7 +119,7 @@ export class AiEmployeeComponentSettings implements OnInit {
       },
     });
   }
-  
+
   selectedItem: number | null = 1;
 
   selectItem(itemNumber: number): void {

@@ -32,20 +32,20 @@ export class WhiteAiEmployeeComponent {
     @Inject(MAT_DIALOG_DATA) private data: any,
     private employeeService: EmployeeService) {
 
-      this.form = this.formBuilder.group({
-        description: ['', [Validators.required]],
-        name: ['', [Validators.required]],
-        workspace: [data.workspaceId, [Validators.required]] 
-      });
+    this.form = this.formBuilder.group({
+      description: ['', [Validators.required]],
+      name: ['', [Validators.required]],
+      workspace: [data.workspaceId, [Validators.required]]
+    });
 
   }
 
 
   selectAvatar(avatarPath: string) {
- 
-        this.selectedAvatar = avatarPath;
-        this.form.patchValue({ avatar: this.selectedAvatar });
-        this.isAvatarSelected = true;
+
+    this.selectedAvatar = avatarPath;
+    this.form.patchValue({ avatar: this.selectedAvatar });
+    this.isAvatarSelected = true;
 
   }
 
@@ -68,7 +68,7 @@ export class WhiteAiEmployeeComponent {
     if (this.form && this.form.valid) {
       const descriptionControl = this.form.get('description');
       const nameControl = this.form.get('name');
-        
+
 
       if (descriptionControl && nameControl) {
         const avatarValue: string = this.selectedAvatar || '';
@@ -78,7 +78,7 @@ export class WhiteAiEmployeeComponent {
           role: descriptionControl.value,
           avatar: avatarValue,
           workspace: this.form.get('workspace')?.value ?? null
-    
+
         };
         console.log(aiEmployeeData)
         this.isLoading = true;

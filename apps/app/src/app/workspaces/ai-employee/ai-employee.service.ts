@@ -23,10 +23,8 @@ export class EmployeeService {
   }
 
   listByWorkspace(workspaceId: string): Observable<IAIEmployee[]> {
-    const params = { filter: { workspace: workspaceId } };
-    return this.coreApiService.get(this.route, { params }) as Observable<IAIEmployee[]>;
+     return this.coreApiService.get(`${this.route}?filter[workspace]=${workspaceId}`) as Observable<IAIEmployee[]>;
   }
-
   getById(employeeId: string): Observable<IAIEmployee> {
     return this.coreApiService.get(`${this.route}/${employeeId}`) as Observable<IAIEmployee>;
   }

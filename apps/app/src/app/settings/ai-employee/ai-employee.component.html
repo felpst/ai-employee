@@ -9,15 +9,11 @@
 <header class="header">
   <nav>
     <div class="workspace-info-group">
-      <button >
-        <mat-icon  routerLink="/" svgIcon="arrow-left"></mat-icon>
+      <button>
+        <mat-icon routerLink="/" svgIcon="arrow-left"></mat-icon>
       </button>
       <div style="display: flex; align-items: center; gap: 2px">
-        <img
-          class="image-style"
-          src=""
-          alt="avatar"
-        />
+        <img class="image-style" src="" alt="avatar" />
         <span>{{ name }}'s Settings</span>
       </div>
     </div>
@@ -41,34 +37,49 @@
       >
     </nav>
     <div class="content">
-      <ng-container >
-        <form [formGroup]="updateForm" (ngSubmit)="onSubmit()" class="container-group" enctype="multipart/form-data">
+      <ng-container>
+        <form
+          [formGroup]="updateForm"
+          (ngSubmit)="onSubmit()"
+          class="container-group"
+          enctype="multipart/form-data"
+        >
           <p>Select your AI employee avatar</p>
           <div class="avatar">
             <div
-            *ngFor="let avatar of availableAvatars"
-            (click)="selectAvatar(avatar)"
-            [ngClass]="{ 'avatar-selected': selectedAvatar === avatar }"
-          >
-            <img [src]="avatar" alt="avatar" />
+              *ngFor="let avatar of availableAvatars"
+              (click)="selectAvatar(avatar)"
+              [ngClass]="{ 'avatar-selected': selectedAvatar === avatar }"
+            >
+              <img [src]="avatar" alt="avatar" />
+            </div>
           </div>
-          </div>
-        
+
           <div style="flex-direction: column" class="input">
             <p>Ai employee name</p>
             <div style="display: flex; gap: 2px">
-              <input type="text" placeholder="Felipe Telles" formControlName="name" [value]="name" />
+              <input
+                type="text"
+                placeholder="Felipe Telles"
+                formControlName="name"
+                [value]="name"
+              />
             </div>
           </div>
           <div style="flex-direction: column" class="input">
             <p>Create a short description for your AI employee</p>
             <div style="display: flex; gap: 2px">
-              <input type="text" placeholder="Felipe Telles" formControlName="role" [value]="role" />
+              <input
+                type="text"
+                placeholder="Felipe Telles"
+                formControlName="role"
+                [value]="role"
+              />
             </div>
           </div>
           <button class="button" type="submit">Submit</button>
         </form>
-        
+
         <div class="footer">
           <div>
             <span>Delete your account</span>

@@ -35,6 +35,6 @@ const MaterialModules: any[] = [
 @NgModule({
   declarations,
   exports: declarations,
-  imports: [CommonModule, RouterModule, MaterialModules],
+  imports: [CommonModule, RouterModule, ...MaterialModules],
 })
 export class LayoutsModule {}

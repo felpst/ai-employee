@@ -1,53 +1,50 @@
 <mat-dialog-content>
-    <div class="actions-container">
-  
-      <mat-dialog-actions align="end">
-        <button (click)="closeModal() "mat-button ><mat-icon>close</mat-icon></button>
-      </mat-dialog-actions>
-    </div>    
-    <div class="content">
-      <h2>What you need help with?</h2>
-      <div class="white-content">
-        <form [formGroup]="form" >
-          <p>Create a short description for you AI employee</p>
-          <input
-            formControlName="description"
-            name="aiEmployeeDescription"
-            placeholder="Ex. marketing specialist, customer support..."
-          />
-          <p>Give your AI employee a name</p>
-          <input
-            formControlName="name"
-            name="aiEmployeeName"
-            placeholder="Ex. Adam"
-          />
-        </form>
-      </div>
+  <div class="actions-container">
+    <mat-dialog-actions align="end">
+      <button (click)="closeModal()" mat-button>
+        <mat-icon>close</mat-icon>
+      </button>
+    </mat-dialog-actions>
+  </div>
+  <div class="content">
+    <h2>What you need help with?</h2>
+    <div class="white-content">
+      <form [formGroup]="form">
+        <p>Create a short description for you AI employee</p>
+        <input
+          formControlName="description"
+          name="aiEmployeeDescription"
+          placeholder="Ex. marketing specialist, customer support..."
+        />
+        <p>Give your AI employee a name</p>
+        <input
+          formControlName="name"
+          name="aiEmployeeName"
+          placeholder="Ex. Adam"
+        />
+      </form>
+    </div>
 
-      <div class="white-content">
-        <p>Select your AI employee avatar</p>
-        <div class="avatar">
-          <div
-            *ngFor="let avatar of availableAvatars"
-            (click)="selectAvatar(avatar)"
-            [ngClass]="{ 'avatar-selected': selectedAvatar === avatar }"
-          >
-            <img [src]="avatar" alt="avatar" />
-          </div>
+    <div class="white-content">
+      <p>Select your AI employee avatar</p>
+      <div class="avatar">
+        <div
+          *ngFor="let avatar of availableAvatars"
+          (click)="selectAvatar(avatar)"
+          [ngClass]="{ 'avatar-selected': selectedAvatar === avatar }"
+        >
+          <img [src]="avatar" alt="avatar" />
         </div>
       </div>
-        <div class="warning-message" *ngIf="showWarning">
-          Please fill in all fields.
-        </div>
-        <div style="display: flex; flex: 1; gap: 8px">
-          <button (click)="createAiEmployee()" class="conclude" >
-            <span *ngIf="isLoading" >Creating Ai Employee...</span>
-            <span *ngIf="!isLoading" >Create AI employee</span>
-          </button>
-      </div>
-      </div>
-  
-   
-  </mat-dialog-content>
-   
-    
+    </div>
+    <div class="warning-message" *ngIf="showWarning">
+      Please fill in all fields.
+    </div>
+    <div style="display: flex; flex: 1; gap: 8px">
+      <button (click)="createAiEmployee()" class="conclude">
+        <span *ngIf="isLoading">Creating Ai Employee...</span>
+        <span *ngIf="!isLoading">Create AI employee</span>
+      </button>
+    </div>
+  </div>
+</mat-dialog-content>
