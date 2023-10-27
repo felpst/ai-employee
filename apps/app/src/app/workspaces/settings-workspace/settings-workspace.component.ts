@@ -2,7 +2,7 @@ import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { IWorkspace } from '@cognum/interfaces';
 import { AuthService } from '../../auth/auth.service';
-import { SettingsService } from '../../settings/settings.service';
+import { UsersService } from '../../services/users/users.service';
 import { WorkspacesService } from '../workspaces.service';
 
 @Component({
@@ -28,7 +28,7 @@ export class SettingsWorkspaceComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private authService: AuthService,
-    private settingsService: SettingsService,
+    private usersService: UsersService,
     private workspacesService: WorkspacesService
   ) {
     this.route.params.subscribe((params) => {
@@ -40,8 +40,8 @@ export class SettingsWorkspaceComponent implements OnInit {
   ngOnInit(): void {
     const userId = this.authService.user?._id;
 
-    this.settingsService.getUserById(userId).subscribe({
-      next: (response) => {
+    this.usersService.create(userId).subscribe({
+      next: (response: any) => {
         this.image = response.profilePhoto;
         this.name = response.name;
       },
