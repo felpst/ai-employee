@@ -42,11 +42,5 @@ export async function splitDocuments<T extends MongoDoc>(
     langChainDocs.push(data);
   }
 
-  const result = await Promise.all(
-    langChainDocs.map((data) =>
-      splitter.splitBySection([data])
-    )
-  ).then((result) => result.flat() as KnowledgeDocument[]);
-
-  return result
+  return splitter.splitBySection(langChainDocs) as Promise<KnowledgeDocument[]>
 }

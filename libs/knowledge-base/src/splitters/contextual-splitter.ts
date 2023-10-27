@@ -1,5 +1,4 @@
 import { ChatModel } from '@cognum/llm';
-import { writeFile } from 'fs/promises';
 import { Document } from 'langchain/document';
 import { StructuredOutputParser } from 'langchain/output_parsers';
 import { ChatPromptTemplate, HumanMessagePromptTemplate, SystemMessagePromptTemplate } from 'langchain/prompts';
@@ -21,7 +20,6 @@ export default class ContextualTextSplitter extends RecursiveCharacterTextSplitt
       document.pageContent = this.removeDoubleLineBreaks(document.pageContent)
 
       const { documentName, sections: documentSections } = await this.generateContextualData(document.pageContent)
-      await writeFile('./nameAndSections.json', JSON.stringify({ documentName, documentSections}))
 
       const splitted: Document[] = []
 
