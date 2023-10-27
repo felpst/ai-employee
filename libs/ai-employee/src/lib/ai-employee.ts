@@ -60,6 +60,7 @@ export class AIEmployee {
       user: this._user,
     });
 
+    const workspaceId = this._chat.workspace.toString();
     // Tools
     this._tools = [
       // new DatabaseConnect(),
@@ -67,7 +68,7 @@ export class AIEmployee {
       new Calculator(),
       // new ChatHistoryTool(this.memory),
       // new ZapierTool(),
-      new KnowledgeBaseTool(),
+      new KnowledgeBaseTool(workspaceId),
     ];
 
     this._chain = new LLMChain({
