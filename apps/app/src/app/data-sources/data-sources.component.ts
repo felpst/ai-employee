@@ -25,7 +25,6 @@ export class DataSourcesComponent implements OnInit {
     this.dataSourcesTree = [];
     this.dataSourcesService.list().subscribe(() => {
       const root: Partial<IDataSource> | any = {
-        name: this.authService.company?.name,
         type: 'folder',
         children: this.dataSourcesService.listFrom(),
         metadata: {

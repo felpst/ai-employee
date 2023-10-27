@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ICompany, IUser } from '@cognum/interfaces';
+import { IUser } from '@cognum/interfaces';
 import { Observable } from 'rxjs';
 import { CoreApiService } from '../services/apis/core-api.service';
 
@@ -8,7 +8,6 @@ import { CoreApiService } from '../services/apis/core-api.service';
 })
 export class AuthService {
   user!: IUser;
-  company!: ICompany;
   authToken!: string;
 
   constructor(private coreApiService: CoreApiService) {}
@@ -94,7 +93,6 @@ export class AuthService {
       this.coreApiService.get('auth/protected').subscribe({
         next: (data: any) => {
           this.user = data.user;
-          this.company = data.company;
           this.authToken = data.token;
           observer.next(true);
         },

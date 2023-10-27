@@ -6,7 +6,7 @@ export const addEmployeeSchema = yup.object({
       name: yup.string().required(),
       role: yup.string().required(),
       avatar: yup.string().notRequired(),
-      workspaces: yup.array().of(yup.string()).notRequired(),
+      workspace: yup.string().notRequired(),
     })
     .noUnknown()
     .required(),

@@ -22,13 +22,13 @@ export class WorkspaceController extends ModelController<typeof Workspace> {
       const files = req.files ? Array.from(req.files) : [];
       const docs = [];
       for (const data of dataset) {
-        const { users, usersEmails, employee } = data;
-        const arrayUsers = Array.isArray(users) ? [...users] : [users];
+        const { usersEmails, employee } = data;
         const arrayEmails = Array.isArray(usersEmails)
           ? [...usersEmails]
           : [usersEmails];
         const _id = new mongoose.Types.ObjectId();
-        let photo = process.env.DEFAULT_PHOTO_URL;
+        let photo =
+          'https://storage.googleapis.com/factory-assets/workspace-avatar-default.png';
         const [workspaceFile, employeeFile] = files;
         if (workspaceFile?.path) {
           photo = await UploadUtils.uploadFile(
@@ -43,10 +43,7 @@ export class WorkspaceController extends ModelController<typeof Workspace> {
         }
         data.updatedBy = userId;
         const _users = await User.find({
-          $or: [
-            { _id: { $in: [...arrayUsers, userId] } },
-            { email: { $in: arrayEmails } },
-          ],
+          $or: [{ _id: { $in: [userId] } }, { email: { $in: arrayEmails } }],
         });
         const doc = await Workspace.create({
           ...data,
@@ -67,7 +64,7 @@ export class WorkspaceController extends ModelController<typeof Workspace> {
           await AIEmployee.create({
             ...employee,
             _id: _employeeId,
-            workspaces: [doc._id],
+            workspace: doc._id,
             avatar: avatarPhoto,
             createdBy: userId,
             updatedBy: userId,
@@ -76,7 +73,6 @@ export class WorkspaceController extends ModelController<typeof Workspace> {
         docs.push(doc);
       }
       res.status(201).json(docs.length > 1 ? docs : docs[0]);
-      console.log(req.files);
     } catch (error) {
       next(error);
     }
@@ -110,21 +106,14 @@ export class WorkspaceController extends ModelController<typeof Workspace> {
     }
   }
 
-  public async findByUser(
+  public async filterByUser(
     req: Request,
     res: Response,
     next: NextFunction
   ): Promise<void> {
-    try {
-      const userId = req['userId'];
-      const sort = (req.query.sort as string) || [];
-      const list = await Workspace.find({ users: { $in: [userId] } }).sort(
-        sort
-      );
-      res.json(list);
-    } catch (error) {
-      next(error);
-    }
+    if (!req.query.filter) req.query.filter = {};
+    req.query.filter['users'] = { $in: req['userId'] };
+    next();
   }
 }
 

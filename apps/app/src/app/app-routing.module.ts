@@ -22,10 +22,10 @@ const routes: Routes = [
           import('./home/home.module').then((m) => m.HomeComponentModule),
       },
       {
-        path: 'settings',
+        path: 'account',
         loadChildren: () =>
-          import('./settings/settings.module').then(
-            (m) => m.SettingsComponentModule
+          import('./account/account.module').then(
+            (m) => m.AccountModule
           ),
       },
       {

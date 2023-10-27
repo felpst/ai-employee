@@ -58,10 +58,9 @@ export class UserController extends ModelController<typeof User> {
   ): Promise<void> {
     try {
       const { name, email, password } = req.body;
-      const _name = name.toUpperCase();
       const user = await User.create({
-        name: _name,
-        email,
+        name: name,
+        email: email.toLowerCase(),
         password,
       });
       const expiresIn = new Date();

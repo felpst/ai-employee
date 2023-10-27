@@ -1,8 +1,13 @@
 <div class="menu" [class.is-mobile]="mobileQuery.matches" role="link">
   <mat-toolbar class="menu-header" (click)="toggleMenu()" mat-icon-button>
     <div class="info-container">
-      <img [src]="workspace.photo" />
-      <strong class="font-outfit">{{ workspace.name }}</strong>
+      <img
+        [src]="
+          workspace.photo ||
+          'https://storage.googleapis.com/factory-assets/workspace-avatar-default.png'
+        "
+      />
+      <h3 class="text-strong">{{ workspace.name }}</h3>
     </div>
   </mat-toolbar>
 
@@ -37,7 +42,7 @@
       <div class="workspace-info">
         <div class="full-width">
           <div class="text-container">
-            <strong class="font-outfit">Workspace usage</strong>
+            <h3>Workspace usage</h3>
           </div>
 
           <div class="usage">
@@ -46,7 +51,7 @@
               value="30"
               class="full-width"
             ></mat-progress-bar>
-            <strong class="font-outfit">{{ workspaceUsage }}%</strong>
+            <h3>{{ workspaceUsage }}%</h3>
           </div>
 
           <div class="divider"><hr /></div>
@@ -54,32 +59,12 @@
 
         <div class="full-width">
           <div class="text-container">
-            <strong class="font-outfit">Workspace members</strong>
+            <h3>Workspace members</h3>
           </div>
-
-          <div class="members">
-            <ng-container *ngFor="let user of usersId; let i = index">
-              <ng-container *ngIf="i < 2">
-                <ng-container *ngIf="user.photo">
-                  <img [src]="user.photo" />
-                </ng-container>
-                <ng-container *ngIf="!user.photo">
-                  <div class="initials" [style.background-color]="background">
-                    {{ getInitials(user.name) }}
-                  </div>
-                </ng-container>
-              </ng-container>
-            </ng-container>
-            <ng-container *ngIf="remainingUsersCount > 0">
-              <div class="more-users" [style.background-color]="background">
-                {{ remainingUsersCount }}+
-              </div>
-              <button (click)="onRedirect()" class="add-user">
-                <mat-icon svgIcon="whiteUser"></mat-icon>
-              </button>
-            </ng-container>
-          </div>
-
+          <cognum-users-avatar
+            [routerLink]="['./', workspace._id, 'settings']"
+            [users]="users"
+          ></cognum-users-avatar>
           <div class="divider"><hr /></div>
         </div>
       </div>
@@ -101,19 +86,13 @@
         </div>
       </div>
 
-      <div class="personal-data">
+      <div class="account" routerLink="/account">
         <img [src]="user.photo" />
-        <div class="person-name">
-          <strong class="font-outfit">{{ user.name }}</strong>
-        </div>
+        <h3>{{ user.name }}</h3>
       </div>
     </mat-sidenav-content>
   </mat-sidenav-container>
   <mat-toolbar class="workspace-info menu-footer">
-    <img
-      src="../../../assets/icons/logout.svg"
-      title="LogOut"
-      (click)="onLogOut()"
-    />
+    <img src="../../../assets/icons/logout.svg" title="LogOut" />
   </mat-toolbar>
 </div>

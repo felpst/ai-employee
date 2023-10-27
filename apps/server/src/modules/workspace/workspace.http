@@ -20,8 +20,8 @@ Content-Type: application/json
 Authorization: Bearer {{$authToken}}
 
 {
-  "name": "Name Test",
-  "description": "Description Test",
+  "name": "Name Test2",
+  "description": "Description Test2",
   "users": [
     "64f639468e8b9083fd223d47",
     "6508b5f675f3ccdaa673fd76",
@@ -32,7 +32,8 @@ Authorization: Bearer {{$authToken}}
 ### Get all ###
 # @name ListAPI
 
-GET {{baseUrl}}/{{apiRoute}}
+# GET {{baseUrl}}/{{apiRoute}}?populate[0][path]=users&populate[0][select]=name
+GET {{baseUrl}}/{{apiRoute}}?select=name
 Authorization: Bearer {{$authToken}}
 
 ### Get a Workspace by ID ###

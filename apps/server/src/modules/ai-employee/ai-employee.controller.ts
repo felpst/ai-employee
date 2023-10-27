@@ -1,4 +1,4 @@
-import { AIEmployee, Workspace } from '@cognum/models';
+import { AIEmployee } from '@cognum/models';
 import { NextFunction, Request, Response } from 'express';
 import mongoose from 'mongoose';
 import ModelController from '../../controllers/model.controller';
@@ -19,17 +19,11 @@ export class AiEmployeeController extends ModelController<typeof AIEmployee> {
       const userId = req['userId'];
       const docs = [];
       for (const data of dataset) {
-        const { workspaces } = data;
-        const arrayWorkspaces = Array.isArray(workspaces)
-          ? [...workspaces]
-          : [workspaces];
+        const { workspace } = data;
         if (!data.createdBy) {
           data.createdBy = userId;
         }
         data.updatedBy = userId;
-        const _workspaces = await Workspace.find({
-          _id: { $in: arrayWorkspaces },
-        });
         const _id = new mongoose.Types.ObjectId();
         let avatar = process.env.DEFAULT_PHOTO_URL;
         if (req.file?.path) {
@@ -43,7 +37,7 @@ export class AiEmployeeController extends ModelController<typeof AIEmployee> {
           ...data,
           _id,
           avatar,
-          workspaces: _workspaces,
+          workspace,
         });
         docs.push(doc);
       }

@@ -1,0 +1,63 @@
+import { Component, Input } from '@angular/core';
+import { IUser } from '@cognum/interfaces';
+
+interface Avatar {
+  _id: string;
+  initials: string;
+  photo?: string;
+  backgroundColor: string;
+}
+
+@Component({
+  selector: 'cognum-users-avatar',
+  templateUrl: './users-avatar.component.html',
+  styleUrls: ['./users-avatar.component.scss'],
+})
+export class UsersAvatarComponent {
+  @Input() users: IUser[] = [];
+
+  avatars: Avatar[] = [];
+  private _nextColor = 0;
+
+  ngOnInit(): void {
+    this.loadAvatars();
+  }
+
+  loadAvatars() {
+    for (const user of this.users) {
+      this.avatars.push({
+        _id: user._id,
+        initials: user.name.charAt(0),
+        photo: user.photo,
+        backgroundColor: this.getRandomColorFromSet(),
+      });
+    }
+  }
+
+  get showAvatars(): Avatar[] {
+    return this.avatars.slice(0, 3);
+  }
+
+  get remainingUsersCount(): number {
+    return Math.max(this.avatars.length - 3, 0);
+  }
+
+  getRandomColorFromSet(): string {
+    const predefinedColors = [
+      '#22333B',
+      '#0A0908',
+      '#BFCC94',
+      '#E6AACE',
+      '#0D1821',
+      '#344966',
+      '#A9927D',
+      '#5E503F',
+      '#1C1F33',
+      '#666370',
+      '#D33E43',
+    ];
+    const color = predefinedColors[this._nextColor];
+    this._nextColor = (this._nextColor + 1) % predefinedColors.length;
+    return color;
+  }
+}

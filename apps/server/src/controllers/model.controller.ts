@@ -63,8 +63,17 @@ class ModelController<T extends Model<any>> {
     next: NextFunction
   ): Promise<void> {
     try {
+      const select = (req.query.select as string) || '';
       const sort = (req.query.sort as string) || [];
-      const list = await this.model.find().sort(sort);
+      const filter = (req.query.filter as any) || {};
+      const populate = (req.query.populate as any) || [];
+      for (const p of populate) {
+        this._populate.push(p);
+      }
+
+      const list = await this._populateQuery(
+        this.model.find(filter).sort(sort).select(select)
+      );
       // const list = await this._populateQuery(this.model.find());
       res.json(list);
     } catch (error) {
@@ -78,6 +87,11 @@ class ModelController<T extends Model<any>> {
     next: NextFunction
   ): Promise<void> {
     try {
+      const populate = (req.query.populate as any) || [];
+      for (const p of populate) {
+        this._populate.push(p);
+      }
+
       const id: string = req.params.id;
       const item = await this._populateQuery(this.model.findById(id));
       if (!item) {
