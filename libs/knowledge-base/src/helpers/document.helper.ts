@@ -1,8 +1,7 @@
 import { Document as LangChainDoc } from 'langchain/document';
-import { RecursiveCharacterTextSplitter } from 'langchain/text_splitter';
 import { Document as MongoDoc } from 'mongodb';
+import ContextualTextSplitter from '../splitters/contextual-splitter';
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export interface KnowledgeDocument extends Omit<LangChainDoc, 'metadata'> {
   metadata: KnowledgeMetadata;
 }
@@ -20,23 +19,28 @@ export interface KnowledgeMetadata extends Record<string, any> {
  * @returns Plain array of splitted knowledge documents with metadata
  */
 export async function splitDocuments<T extends MongoDoc>(
-  docsToSplit: T[]
+  docsToSplit: T[],
+  chunkSize?: number
 ): Promise<KnowledgeDocument[]> {
-  const splitter = new RecursiveCharacterTextSplitter({
-    chunkSize: 255,
+  const splitter = new ContextualTextSplitter({
+    chunkSize: chunkSize || 512,
     chunkOverlap: 0,
+    separators: ['\n', '.'],
+    keepSeparator: true,
   });
 
-  const documents = docsToSplit.map(
-    (doc) =>
-      new LangChainDoc(<KnowledgeDocument>{
-        pageContent: doc.data,
-        metadata: {
-          ownerDocumentId: doc._id?.toString(),
-          updatedAt: doc.updatedAt?.toISOString(),
-        },
-      })
-  );
+  const langChainDocs: LangChainDoc[] = [];
+  for (const doc of docsToSplit) {
+    const data = new LangChainDoc(<KnowledgeDocument>{
+      pageContent: doc.data,
+      metadata: {
+        ownerDocumentId: doc._id?.toString(),
+        updatedAt: doc.updatedAt?.toISOString(),
+      },
+    });
 
-  return splitter.splitDocuments(documents) as Promise<KnowledgeDocument[]>;
+    langChainDocs.push(data);
+  }
+
+  return splitter.splitBySection(langChainDocs) as Promise<KnowledgeDocument[]>
 }
