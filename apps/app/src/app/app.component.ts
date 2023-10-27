@@ -36,6 +36,12 @@ export class AppComponent {
         sanitizer.bypassSecurityTrustResourceUrl('/assets/icons/user.svg')
       ),
       iconRegistry.addSvgIcon(
+        'delete',
+        sanitizer.bypassSecurityTrustResourceUrl(
+          '/assets/icons/DeleteOutlined.svg'
+        )
+      ),
+      iconRegistry.addSvgIcon(
         'whiteUser',
         sanitizer.bypassSecurityTrustResourceUrl('/assets/icons/whiteUser.svg')
       );

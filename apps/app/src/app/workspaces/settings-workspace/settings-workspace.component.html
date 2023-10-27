@@ -5,7 +5,7 @@
         <mat-icon svgIcon="arrow-left"></mat-icon>
       </button>
 
-      <span class="workspace-name">potato</span>
+      <span class="workspace-name">{{ workspaceName || 'Workspace' }}</span>
     </div>
     <div class="user-details">
       <img class="imageProfile" src="{{ image }}" alt="" />
@@ -35,10 +35,23 @@
     </nav>
     <div class="content">
       <ng-container *ngIf="selectedItem === 1">
-        <div class="container-group">
+        <form (ngSubmit)="onSubmit()" class="container-group">
           <span class="workspace-image">Workspace photo (optional)</span>
           <div class="image-group">
-            <div class="image"></div>
+            <label for="profilePhotoInput" class="image-label">
+              <img
+                class="image"
+                [src]="selectedImage || selectedWorkspace.photo"
+                alt="User Image"
+              />
+            </label>
+            <input
+              style="display: none"
+              type="file"
+              id="profilePhotoInput"
+              name="profilePhoto"
+              (change)="onFileSelected($event)"
+            />
             <span>Help teammates know that this is right place.</span>
           </div>
 
@@ -46,9 +59,10 @@
             <div class="input">
               <span>Company or team name</span>
               <input type="text" placeholder="potato" [value]="workspaceName" />
+              <button class="delete" type="submit">Submit</button>
             </div>
           </div>
-        </div>
+        </form>
         <div class="footer">
           <div>
             <span>Delete workspace</span>
@@ -65,7 +79,7 @@
         <div class="container-group">
           <span>Add a new workspace member</span>
           <div class="input">
-            <input type="text" placeholder="potato" value="potato" />
+            <input type="text" placeholder="potato" />
             <select
               class="form-select no-focus-outline"
               aria-label="Default select example"
@@ -76,9 +90,30 @@
               <mat-icon svgIcon="button-submit"></mat-icon>
             </button>
           </div>
-          <div>
-            <span>Linecker Amorim</span>
-            <img class="image-style" alt="User Image" />
+          <div class="users-items" *ngFor="let user of usersId; let i = index">
+            <span>{{ user.name }}</span>
+            <div class="users-content">
+              <div class="users-info">
+                <ng-container *ngIf="user.photo">
+                  <img [src]="user.photo" />
+                </ng-container>
+                <ng-container *ngIf="!user.photo">
+                  <div class="initials" [style.background-color]="background">
+                    {{ getInitials(user.name) }}
+                  </div>
+                </ng-container>
+                <span>{{ user.email }}</span>
+              </div>
+              <div class="users-actions">
+                <mat-icon svgIcon="delete"></mat-icon>
+                <select
+                  class="form-select no-focus-outline"
+                  aria-label="Default select example"
+                >
+                  <option value="1">Admin</option>
+                </select>
+              </div>
+            </div>
           </div>
         </div>
       </ng-container>

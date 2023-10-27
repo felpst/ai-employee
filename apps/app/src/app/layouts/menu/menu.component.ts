@@ -3,7 +3,7 @@ import { MediaMatcher } from '@angular/cdk/layout';
 import { ChangeDetectorRef, Component, OnDestroy } from '@angular/core';
 import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { IUser } from '@cognum/interfaces';
 import { CookieService } from 'ngx-cookie-service';
 import { forkJoin } from 'rxjs';
@@ -62,9 +62,7 @@ export class MenuComponent implements OnDestroy {
     private authService: AuthService,
     changeDetectorRef: ChangeDetectorRef,
     media: MediaMatcher,
-    private cookieService: CookieService,
-    private route: ActivatedRoute,
-    private cdRef: ChangeDetectorRef
+    private cookieService: CookieService
   ) {
     this.mobileQuery = media.matchMedia('(max-width: 600px)');
     this._mobileQueryListener = () => changeDetectorRef.detectChanges();
@@ -103,8 +101,8 @@ export class MenuComponent implements OnDestroy {
     return predefinedColors[randomIndex];
   }
 
-  onRedirect() {
-    this.router.navigate(['/settings/workspaces']);
+  onRedirect(url: string) {
+    this.router.navigate([url]);
   }
 
   loadProfilePhotos() {

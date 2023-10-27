@@ -74,7 +74,10 @@
               <div class="more-users" [style.background-color]="background">
                 {{ remainingUsersCount }}+
               </div>
-              <button (click)="onRedirect()" class="add-user">
+              <button
+                (click)="onRedirect('/settings/workspaces')"
+                class="add-user"
+              >
                 <mat-icon svgIcon="whiteUser"></mat-icon>
               </button>
             </ng-container>
@@ -104,7 +107,12 @@
       <div class="personal-data">
         <img [src]="user.photo" />
         <div class="person-name">
-          <strong class="font-outfit">{{ user.name }}</strong>
+          <button
+            (click)="onRedirect('settings/your-account')"
+            class="button-font-outfit"
+          >
+            {{ user.name }}
+          </button>
         </div>
       </div>
     </mat-sidenav-content>

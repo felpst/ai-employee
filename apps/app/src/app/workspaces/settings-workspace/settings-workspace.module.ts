@@ -1,8 +1,11 @@
-import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
+
+import { CommonModule } from '@angular/common';
+import { SettingsWorkspaceComponent } from './settings-workspace.component';
 
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
@@ -11,33 +14,30 @@ import { MatListModule } from '@angular/material/list';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MarkdownModule } from 'ngx-markdown';
-import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
-import { LayoutsModule } from '../layouts/layouts.module';
-import { KnowledgeBaseModule } from './knowledge-base/knowledge-base.module';
-import { SettingsWorkspaceModule } from './settings-workspace/settings-workspace.module';
-import { WorkspaceComponent } from './workspace/workspace.component';
-import { WorkspacesRoutingModule } from './workspaces-routing.module';
+
+import { MatMenuModule } from '@angular/material/menu';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { LMarkdownEditorModule } from 'ngx-markdown-editor';
 
 @NgModule({
-  declarations: [WorkspaceComponent],
+  declarations: [SettingsWorkspaceComponent],
   imports: [
     CommonModule,
-    WorkspacesRoutingModule,
+    ReactiveFormsModule,
     FormsModule,
     MarkdownModule,
-    MatIconModule,
     MatButtonModule,
-    SettingsWorkspaceModule,
+    MatIconModule,
     MatListModule,
-    MatFormFieldModule,
-    MatSelectModule,
-    MatInputModule,
     MatTooltipModule,
     MatDialogModule,
-    ReactiveFormsModule,
-    NgxSkeletonLoaderModule,
-    LayoutsModule,
-    KnowledgeBaseModule,
+    MatInputModule,
+    MatFormFieldModule,
+    MatCardModule,
+    MatSelectModule,
+    MatProgressSpinnerModule,
+    MatMenuModule,
+    LMarkdownEditorModule,
   ],
 })
-export class WorkspacesModule {}
+export class SettingsWorkspaceModule {}

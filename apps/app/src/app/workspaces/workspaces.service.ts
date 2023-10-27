@@ -34,11 +34,23 @@ export class WorkspacesService {
     ) as Observable<IWorkspace>;
   }
 
-  update(workspace: Partial<IWorkspace>): Observable<IWorkspace> {
-    return this.coreApiService.put(
-      `${this.route}/${workspace._id}`,
-      workspace
-    ) as Observable<IWorkspace>;
+  update(
+    workspaceId: string,
+    updateData: string,
+    profilePhoto: File | null = null
+  ) {
+    const formData = new FormData();
+    formData.append('json', updateData);
+    if (profilePhoto) formData.append('profilePhoto', profilePhoto);
+
+    return this.coreApiService.put(`${this.route}/${workspaceId}`, formData, {
+      headers: {
+        Accept: 'application/json, text/plain, */*',
+      },
+      observe: 'events',
+      reportProgress: true,
+      responseType: 'json',
+    });
   }
 
   list(): Observable<Map<string, IWorkspace>> {
