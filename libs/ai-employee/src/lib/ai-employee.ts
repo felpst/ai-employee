@@ -1,11 +1,15 @@
-import { IChat, ICompany, IUser } from '@cognum/interfaces';
+import { IChat, IUser } from '@cognum/interfaces';
+import { ChatModel } from '@cognum/llm';
 import {
-  AIEmployeeIdentity, AIEmployeeMemory, AIEmployeeOutputParser,
-  AIEmployeePromptTemplate, KnowledgeBaseTool
+  AIEmployeeIdentity,
+  AIEmployeeMemory,
+  AIEmployeeOutputParser,
+  AIEmployeePromptTemplate,
+  KnowledgeBaseTool,
 } from '@cognum/tools';
 import { AgentExecutor, LLMSingleActionAgent } from 'langchain/agents';
 import { LLMChain } from 'langchain/chains';
-import { ChatOpenAI } from 'langchain/chat_models/openai';
+import { ChatOpenAI as LangchainChatOpenAI } from 'langchain/chat_models/openai';
 import { Callbacks } from 'langchain/dist/callbacks';
 import { Tool } from 'langchain/tools';
 import { Calculator } from 'langchain/tools/calculator';
@@ -14,7 +18,7 @@ export class AIEmployee {
   private _chat: IChat;
   private _user: IUser;
 
-  private _model: ChatOpenAI;
+  private _model: LangchainChatOpenAI;
   private _callbacks: Callbacks;
   private _tools: Tool[];
   memory: AIEmployeeMemory;
@@ -43,13 +47,13 @@ export class AIEmployee {
       this._identity = data.identity;
     }
 
-    this._model = new ChatOpenAI({
-      modelName: 'gpt-4',
-      temperature: 0,
+    const configChatModel = {
       streaming: true,
       callbacks: this._callbacks,
       // verbose: true,
-    });
+    };
+
+    this._model = new ChatModel(configChatModel);
 
     this.memory = new AIEmployeeMemory({
       chat: this._chat,
@@ -75,7 +79,6 @@ export class AIEmployee {
         identity: this._identity,
         memory: this.memory,
         user: this._user,
-        company: this._chat.company as ICompany,
       }),
     });
 
@@ -105,10 +108,17 @@ export class AIEmployee {
     // Executor
     const chainValues = await this._executor.call({ input }, callbacks);
     const response = chainValues.output;
+    // @ts-ignore
+    const thought = this._agent.outputParser.getLastThought();
 
     // Save response
     this.memory
-      .addMessage({ content: response, role: 'AI', question: message._id })
+      .addMessage({
+        content: response,
+        role: 'AI',
+        question: message._id,
+        thought,
+      })
       .then((responseMessage) => {
         if (callbacks.onSaveAIMessage) {
           callbacks.onSaveAIMessage(responseMessage);
@@ -137,6 +147,7 @@ export class AIEmployee {
       content: message.content,
       role: message.role,
       feedbacks: message.feedbacks,
+      thought: message.thought,
       createdBy: message.createdBy,
       createdAt: message.createdAt,
     }));

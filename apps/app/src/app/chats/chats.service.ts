@@ -17,10 +17,8 @@ export class ChatsService {
   ) {}
 
   create(workspaceId: string): Observable<IChat> {
-    const company = this.authService.company?._id;
     const workspace = workspaceId;
     return this.coreApiService.post('chats', {
-      company,
       workspace,
     }) as Observable<IChat>;
   }

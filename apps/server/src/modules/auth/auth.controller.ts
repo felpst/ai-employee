@@ -1,4 +1,4 @@
-import { Company, User } from '@cognum/models';
+import { User } from '@cognum/models';
 import bcrypt from 'bcrypt';
 import { Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
@@ -15,6 +15,13 @@ export class AuthController {
         return;
       }
 
+      if (!user.active) {
+        res
+          .status(401)
+          .json({ error: 'Inactive user, please validate your email' });
+        return;
+      }
+
       const validPassword = await bcrypt.compare(password, user.password);
 
       if (!validPassword) {
@@ -23,17 +30,17 @@ export class AuthController {
       }
 
       const token = jwt.sign(
-        { userId: user._id, companyId: user?.company || null },
+        { userId: user._id.toString() },
         process.env.AUTH_SECRET_KEY,
         { expiresIn: '14d' }
       );
 
-      const { password: passwd, ..._user } = user.toObject();
       const expires = new Date();
       expires.setDate(expires.getDate() + 14);
       AuthController._setTokenCookie(res, token, expires);
       res.setHeader('X-Auth-Token', token);
-      res.json(_user);
+      
+      res.json(user.toObject());
     } catch (error) {
       console.log(error);
 
@@ -53,19 +60,13 @@ export class AuthController {
       const decodedToken: any = jwt.verify(token, process.env.AUTH_SECRET_KEY);
 
       const userId = decodedToken.userId;
-      const user = await User.findById(userId).select('name email');
+      const user = await User.findById(userId).select('-password');
       if (!user) {
         res.status(404).json({ error: 'User not found' });
         return;
       }
 
-      const companyId = decodedToken.companyId;
-      user.company = companyId;
-      const company = companyId
-        ? await Company.findById(companyId).select('name')
-        : null;
-
-      res.json({ user, company, token });
+      res.json({ user, token });
     } catch (error) {
       res.status(403).json({ error: 'Invalid token' });
     }

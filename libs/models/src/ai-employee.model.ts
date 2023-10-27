@@ -6,7 +6,8 @@ import Workspace from './workspace.model';
 const schema = new Schema<IAIEmployee>({
   name: { type: String, required: true },
   role: { type: String, required: true },
-  workspaces: [{ type: Schema.Types.ObjectId, ref: 'Workspace' }],
+  avatar: { type: String, required: false },
+  workspace: { type: Schema.Types.ObjectId, ref: 'Workspace', required: true },
   ...defaultSchemaProps,
 });
 triggers(schema);
