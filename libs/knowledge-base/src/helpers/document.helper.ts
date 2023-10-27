@@ -7,7 +7,7 @@ export interface KnowledgeDocument extends Omit<LangChainDoc, 'metadata'> {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-interface KnowledgeMetadata extends Record<string, any> {
+export interface KnowledgeMetadata extends Record<string, any> {
   ownerDocumentId: string;
   updatedAt: string;
 }

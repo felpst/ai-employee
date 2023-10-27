@@ -51,3 +51,25 @@ Authorization: Bearer {{$authToken}}
 
 DELETE {{baseUrl}}/{{apiRoute}}/{{id}}
 Authorization: Bearer {{$authToken}}
+
+### Create Recovery ###
+
+POST {{baseUrl}}/{{apiRoute}}/recovery
+Content-Type: application/json
+
+{
+  "email": "wermesonrocha2@gmail.com"
+}
+
+### Check token ###
+
+GET {{baseUrl}}/{{apiRoute}}/recovery/651ec6c77e09ea8018dc3400
+
+### Recovery password ###
+
+PATCH {{baseUrl}}/{{apiRoute}}/recovery/651ec6c77e09ea8018dc3400
+Content-Type: application/json
+
+{
+  "password": "dMEg64427*>8"
+}

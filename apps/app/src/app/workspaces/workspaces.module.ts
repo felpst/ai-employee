@@ -12,20 +12,16 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MarkdownModule } from 'ngx-markdown';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
-import { CreateWorkspaceFormComponent } from './create-workspace-form/create-workspace-form.component';
+import { LayoutsModule } from '../layouts/layouts.module';
+import { KnowledgeBaseModule } from './knowledge-base/knowledge-base.module';
 import { WorkspaceComponent } from './workspace/workspace.component';
-import { ChatsRoutingModule } from './workspaces-routing.module';
-import { WorkspacesComponent } from './workspaces.component';
+import { WorkspacesRoutingModule } from './workspaces-routing.module';
 
 @NgModule({
-  declarations: [
-    WorkspacesComponent,
-    CreateWorkspaceFormComponent,
-    WorkspaceComponent,
-  ],
+  declarations: [WorkspaceComponent],
   imports: [
     CommonModule,
-    ChatsRoutingModule,
+    WorkspacesRoutingModule,
     FormsModule,
     MarkdownModule,
     MatIconModule,
@@ -38,6 +34,8 @@ import { WorkspacesComponent } from './workspaces.component';
     MatDialogModule,
     ReactiveFormsModule,
     NgxSkeletonLoaderModule,
+    LayoutsModule,
+    KnowledgeBaseModule,
   ],
 })
 export class WorkspacesModule {}

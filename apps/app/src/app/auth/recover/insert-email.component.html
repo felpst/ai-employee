@@ -1,0 +1,40 @@
+<div class="background">
+  <div class="intro font-outfit">
+    <div class="logo">
+      <mat-icon svgIcon="logo"></mat-icon>
+      <span>Cognum</span>
+    </div>
+
+    <div class="email-text">
+      <h1>First, enter your email</h1>
+      <p>We suggest using the email address you use at work</p>
+    </div>
+  </div>
+
+  <form [formGroup]="insertEmailForm" (ngSubmit)="onSubmit()" class="form">
+    <div class="input">
+      <mat-icon class="user" svgIcon="user"></mat-icon>
+      <input
+        id="email"
+        formControlName="email"
+        placeholder="john@example.com"
+        type="email"
+      />
+    </div>
+    <button
+      type="submit"
+      [disabled]="insertEmailForm.invalid || submitting"
+      [ngClass]="{ 'inactive-button': submitSuccess }"
+    >
+      Submit
+    </button>
+  </form>
+
+  <footer>
+    <p>
+      By clicking “Continue with Apple/Google/Email/SAML” above, you acknowledge
+      that you have read and understood, and agree to Notion's Terms &
+      Conditions and Privacy Policy.
+    </p>
+  </footer>
+</div>

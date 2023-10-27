@@ -8,7 +8,7 @@ import { CoreApiService } from '../services/apis/core-api.service';
 })
 export class WorkspacesService {
   private route = 'workspaces';
-  selectedWorkspace: string | null = null;
+  selectedWorkspace!: IWorkspace;
   workspaces: Map<string, IWorkspace> = new Map<string, IWorkspace>();
 
   constructor(private coreApiService: CoreApiService) {}
@@ -20,9 +20,18 @@ export class WorkspacesService {
     ) as Observable<IWorkspace>;
   }
 
-  get(id: string): Observable<IWorkspace> {
+  createWorkspace(formData: FormData): Observable<IWorkspace> {
+    return this.coreApiService.post(`${this.route}`, formData, {
+      headers: {
+        Accept: 'application/json',
+      },
+    }) as Observable<IWorkspace>;
+  }
+
+  get(id: string, options?: any): Observable<IWorkspace> {
     return this.coreApiService.get(
-      `${this.route}/${id}`
+      `${this.route}/${id}`,
+      options
     ) as Observable<IWorkspace>;
   }
 
@@ -36,12 +45,14 @@ export class WorkspacesService {
   list(): Observable<Map<string, IWorkspace>> {
     return new Observable((observer) => {
       (
-        this.coreApiService.get(`${this.route}/user`, {
+        this.coreApiService.get(`${this.route}`, {
           params: { sort: '-createdAt' },
         }) as Observable<IWorkspace[]>
       ).subscribe({
         next: (workspaces: IWorkspace[]) => {
-          workspaces.forEach((chat) => this.workspaces.set(chat._id, chat));
+          workspaces.forEach((workspace) =>
+            this.workspaces.set(workspace._id, workspace)
+          );
           observer.next(this.workspaces);
         },
       });

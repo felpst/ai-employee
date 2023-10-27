@@ -5,9 +5,6 @@ import { Storage } from '@google-cloud/storage';
 import crypto from 'crypto';
 import { Request, Response } from 'express';
 import fs from 'fs';
-import multer from 'multer';
-import os from 'os';
-import path from 'path';
 import ModelController from '../../controllers/model.controller';
 import { BigQueryHelper } from '../../helpers/big-query.helper';
 import { Unstructured } from '../../helpers/unstructured.helper';
@@ -24,32 +21,8 @@ export class DataSourcesController extends ModelController<typeof DataSource> {
     super(DataSource);
   }
 
-  get middleware() {
-    const storage = multer.diskStorage({
-      destination: function (req, file, cb) {
-        const uploadPath = path.join(os.tmpdir(), 'uploads');
-        if (!fs.existsSync(uploadPath)) {
-          fs.mkdirSync(uploadPath, { recursive: true });
-        }
-        cb(null, uploadPath);
-      },
-      filename: function (req, file, cb) {
-        const hash = crypto
-          .createHash('sha256')
-          .update(file.originalname + Date.now())
-          .digest('hex');
-        const newName = `${hash}_${file.originalname}`;
-        cb(null, newName);
-      },
-    });
-
-    const upload = multer({ storage: storage });
-    return upload;
-  }
-
   upload(req: Request, res: Response) {
     const filePath = req.file.path;
-    const companyId = (req as any).companyId;
 
     const hash = crypto
       .createHash('sha256')
@@ -57,7 +30,7 @@ export class DataSourcesController extends ModelController<typeof DataSource> {
       .digest('hex');
     const newName = `${hash}_${req.file.originalname}`;
 
-    const destinationPath = `${companyId}/${newName}`;
+    const destinationPath = `${newName}`;
 
     googleStorageBucket
       .upload(filePath, {
@@ -66,7 +39,6 @@ export class DataSourcesController extends ModelController<typeof DataSource> {
       .then(async () => {
         const dataSource: Partial<IDataSource> = {
           name: req.file.originalname,
-          company: companyId,
           type: 'file',
           metadata: {
             bucket: googleStorageBucket.name,

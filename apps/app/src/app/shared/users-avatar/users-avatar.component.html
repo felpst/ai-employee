@@ -1,0 +1,18 @@
+<div class="users">
+  <div
+    class="item"
+    *ngFor="let avatar of showAvatars; let i = index"
+    [style.background-color]="avatar.backgroundColor"
+  >
+    <img *ngIf="avatar.photo" [src]="avatar.photo" />
+    <span *ngIf="!avatar.photo" class="initials">
+      {{ avatar.initials }}
+    </span>
+  </div>
+  <div class="item" *ngIf="remainingUsersCount > 0">
+    <div class="more-users">{{ remainingUsersCount }}+</div>
+  </div>
+  <div class="item icon">
+    <mat-icon svgIcon="whiteUser"></mat-icon>
+  </div>
+</div>
