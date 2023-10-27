@@ -1,8 +1,8 @@
 import { IKnowledge } from '@cognum/interfaces';
+import { ChatModel } from '@cognum/llm';
 import { Knowledge } from '@cognum/models';
 import { NextFunction, Request, Response } from 'express';
 import { LLMChain } from 'langchain/chains';
-import { OpenAI } from 'langchain/llms/openai';
 import { PromptTemplate } from 'langchain/prompts';
 import ModelController from '../../controllers/model.controller';
 
@@ -13,9 +13,8 @@ export class KnowledgeController extends ModelController<typeof Knowledge> {
 
   private async _generateTitle(data: string) {
     try {
-      const model = new OpenAI({
-        temperature: 0,
-        streaming: true,
+      const model = new ChatModel({
+        temperature: 0
       });
       const prompt = PromptTemplate.fromTemplate(
         `Create a short title that summarizes the text. The text is: ${data}. Text title: `
@@ -31,9 +30,8 @@ export class KnowledgeController extends ModelController<typeof Knowledge> {
 
   private async _generateSummary(data: string) {
     try {
-      const model = new OpenAI({
-        temperature: 0,
-        streaming: true,
+      const model = new ChatModel({
+        temperature: 0
       });
       const prompt = PromptTemplate.fromTemplate(
         `Create a summary that summarizes the entire idea brought up in the text. The text is: ${data}. Text summary: `
