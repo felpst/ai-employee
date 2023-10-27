@@ -1,6 +1,6 @@
+import { EmbeddingsModel } from '@cognum/llm';
 import { MetricType } from '@zilliz/milvus2-sdk-node';
 import { Document } from 'langchain/document';
-import { OpenAIEmbeddings } from 'langchain/embeddings/openai';
 import { Milvus } from 'langchain/vectorstores/milvus';
 import { collectionConfig, milvusConfig } from './config/database-index.config';
 
@@ -11,7 +11,7 @@ export default class KnowledgeBase {
   constructor(collectionName: string) {
     this._collectionName = `_${collectionName}`;
 
-    const embeddings = new OpenAIEmbeddings();
+    const embeddings = new EmbeddingsModel();
     this._vectorStore = new Milvus(embeddings, {
       collectionName: this._collectionName,
       ...milvusConfig,
