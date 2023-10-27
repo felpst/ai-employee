@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { AiEmployeeComponentSettings } from './ai-employee.component';
+import { AiEmployeeComponentSettings } from './ai-employee-settings.component';
 
 describe('AiEmployeeComponent', () => {
   let component: AiEmployeeComponentSettings;

@@ -11,8 +11,9 @@
     border-radius: 0.25rem;
     background: lightgray 50% / cover no-repeat;
   }
+
   
-  .delete-account-modal {
+  .delete-ai-employee-modal {
     position: absolute;
     height: 300px;
     width: 500px;
@@ -42,43 +43,23 @@
     }
   }
   
-  .header {
-    background-color: #fff;
-    nav {
-      display: flex;
-      align-items: center;
-      flex-wrap: wrap;
-      justify-content: space-between;
-      padding: 10px 20px;
-  
-      .workspace-info-group {
-        display: flex;
-        flex-wrap: wrap;
-        align-items: center;
-        justify-content: center;
-        gap: 3px;
-  
-        button > mat-icon {
-          width: 20px;
-        }
-      }
-  
-      div > button {
-        background-color: transparent;
-        border: none;
-      }
-    }
-  }
+
   
   .body {
     background-color: #f0f2f5;
     height: 100%;
     width: 100%;
-  
+    position: relative;
     display: flex;
     align-items: center;
     flex-direction: column;
   
+    mat-icon{
+      cursor: pointer;
+      position: absolute;
+      left: 2px;
+      margin: 3rem;
+    }
     .description {
       display: flex;
       flex-wrap: wrap;
@@ -94,6 +75,7 @@
         font-size: 38px;
         line-height: 46px;
         text-transform: capitalize;
+        margin-top: 20px;
       }
       span {
         font-weight: 400;

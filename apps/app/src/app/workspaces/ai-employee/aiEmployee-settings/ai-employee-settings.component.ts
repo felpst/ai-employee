@@ -7,15 +7,16 @@ import {
 
 } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { NotificationsService } from '../services/notifications/notifications.service';
-import { EmployeeService } from '../workspaces/ai-employee/ai-employee.service';
+import { NotificationsService } from '../../../services/notifications/notifications.service';
+import { EmployeeService } from '../ai-employee.service';
 import { IAIEmployee } from '@cognum/interfaces';
+import { AuthService } from '../../../auth/auth.service';
 
 
 @Component({
-  selector: 'cognum-ai-employee',
-  templateUrl: './ai-employee.component.html',
-  styleUrls: ['./ai-employee.component.scss'],
+  selector: 'cognum-ai-employee-settings',
+  templateUrl: './ai-employee-settings.component.html',
+  styleUrls: ['./ai-employee-settings.component.scss'],
 })
 export class AiEmployeeComponentSettings implements OnInit {
   name = '';
@@ -40,6 +41,7 @@ export class AiEmployeeComponentSettings implements OnInit {
     private route: ActivatedRoute,
     private formBuilder: FormBuilder,
     private router: Router,
+    private authService: AuthService,
     private notificationsService: NotificationsService,
     private aiEmployeeService: EmployeeService
   ) {
@@ -49,10 +51,17 @@ export class AiEmployeeComponentSettings implements OnInit {
 
   }
 
-  openDeleteAccountModal() {
+  openDeleteAiEmployeeModal() {
     this.showDeleteConfirmation = true;
   }
 
+  get userName() {
+    return this.authService.user ? this.authService.user.name : '';
+  }
+
+  get photo() {
+    return this.authService.user ? this.authService.user.photo: '';
+  }
 
   selectAvatar(avatarPath: string) {
 
@@ -66,7 +75,6 @@ export class AiEmployeeComponentSettings implements OnInit {
   ngOnInit() {
     this.route.params.subscribe(params => {
       const employeeId = params['id'];
-      console.log(employeeId);
       this.aiEmployeeService.getById(employeeId).subscribe({
         next: (response) => {
           this.name = response.name;
@@ -76,14 +84,13 @@ export class AiEmployeeComponentSettings implements OnInit {
     });
   }
 
-  confirmDeleteAccount() {
+  confirmDeleteAiEmployee() {
 
 
     const employeeId = this.route.snapshot.params['id'];
     const updateData: Partial<IAIEmployee> = {
       _id: employeeId,
     };
-    console.log(employeeId);
     this.aiEmployeeService.delete(updateData).subscribe({
       next: () => {
         this.router.navigate(['/'], { relativeTo: this.route });
@@ -94,7 +101,7 @@ export class AiEmployeeComponentSettings implements OnInit {
     this.showDeleteConfirmation = false;
   }
 
-  cancelDeleteAccount() {
+  cancelDeleteAiEmployee() {
     this.showDeleteConfirmation = false;
   }
 

@@ -1,25 +1,13 @@
-<div class="delete-account-modal" *ngIf="showDeleteConfirmation">
+<div class="delete-ai-employee-modal" *ngIf="showDeleteConfirmation">
   <div class="modal-content">
-    <p>Are you sure you want to delete your account?</p>
-    <button (click)="confirmDeleteAccount()">Delete</button>
-    <button (click)="cancelDeleteAccount()">Cancel</button>
+    <p>Are you sure you want to delete your Ai employee?</p>
+    <button (click)="confirmDeleteAiEmployee()">Delete</button>
+    <button (click)="cancelDeleteAiEmployee()">Cancel</button>
   </div>
 </div>
 
-<header class="header">
-  <nav>
-    <div class="workspace-info-group">
-      <button>
-        <mat-icon routerLink="/" svgIcon="arrow-left"></mat-icon>
-      </button>
-      <div style="display: flex; align-items: center; gap: 2px">
-        <img class="image-style" src="" alt="avatar" />
-        <span>{{ name }}'s Settings</span>
-      </div>
-    </div>
-  </nav>
-</header>
 <div class="body">
+  <mat-icon class="icon" [routerLink]="['../../employees']" svgIcon="arrow-left"></mat-icon>
   <div class="description">
     <h1>{{ name }}'s Settings</h1>
     <span class="adjust-name"
@@ -82,13 +70,13 @@
 
         <div class="footer">
           <div>
-            <span>Delete your account</span>
-            <button class="button" (click)="openDeleteAccountModal()">
+            <span>Delete your Ai employee</span>
+            <button class="button" (click)="openDeleteAiEmployeeModal()">
               delete it
             </button>
           </div>
           <span class="footer-description"
-            >Are you sure you want to permanently delete your account? This
+            >Are you sure you want to permanently delete your Ai employee? This
             action cannot be undone, and all your data will be lost.
           </span>
         </div>

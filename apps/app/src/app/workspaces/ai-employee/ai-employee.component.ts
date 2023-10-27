@@ -70,7 +70,8 @@ export class AiEmployeeComponent implements OnInit {
 
   editEmployee(employee: IAIEmployee) {
     const employeeId = employee._id;
-    this.router.navigate(['editEmployee', employeeId]);
+    const workspaceId = this.route.snapshot.params['id'];
+    this.router.navigate([`workspaces/${workspaceId}/employee/${employeeId}`]);
   }
 
   deleteEmployee(employee: IAIEmployee) {
@@ -88,7 +89,6 @@ export class AiEmployeeComponent implements OnInit {
           this.employeeService.delete(employee).subscribe(
             () => {
               this.employees = this.employees.filter(emp => emp._id !== employee._id);
-              console.log('Funcionário excluído:', employee);
             },
             error => {
               console.error(error);

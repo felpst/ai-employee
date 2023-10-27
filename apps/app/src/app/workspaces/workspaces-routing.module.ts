@@ -4,6 +4,7 @@ import { KnowledgeBaseComponent } from './knowledge-base/knowledge-base.componen
 import { WorkspaceResolver } from './workspace.resolver';
 import { WorkspaceComponent } from './workspace/workspace.component';
 import { AiEmployeeComponent } from './ai-employee/ai-employee.component';
+import { AiEmployeeComponentSettings } from './ai-employee/aiEmployee-settings/ai-employee-settings.component';
 
 const routes: Routes = [
   {
@@ -17,6 +18,10 @@ const routes: Routes = [
       {
         path: 'employees',
         component: AiEmployeeComponent,
+      },
+      {
+        path: 'employee/:id',
+        component: AiEmployeeComponentSettings,
       },
       {
         path: 'history',

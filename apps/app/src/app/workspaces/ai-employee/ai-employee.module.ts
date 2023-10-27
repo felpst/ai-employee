@@ -9,9 +9,11 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule } from '@angular/material/dialog';
 import { WhiteAiEmployeeComponent } from './white-ai-employee/white-ai-employee.component';
+import { AiEmployeeComponentSettings } from './aiEmployee-settings/ai-employee-settings.component';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
-  declarations: [AiEmployeeComponent, WhiteAiEmployeeComponent],
+  declarations: [AiEmployeeComponent, WhiteAiEmployeeComponent, AiEmployeeComponentSettings],
   imports: [
     CommonModule,
     AiEmployeeRoutingModule,
@@ -20,7 +22,8 @@ import { WhiteAiEmployeeComponent } from './white-ai-employee/white-ai-employee.
     MatMenuModule,
     MatIconModule,
     MatButtonModule,
-    MatDialogModule
+    MatDialogModule,
+    HttpClientModule
   ],
 })
 export class AiEmployeeModule {}

@@ -18,8 +18,12 @@ export class EmployeeService {
     private authService: AuthService
   ) {}
 
-  create(data: Partial<IAIEmployee> | FormData): Observable<IAIEmployee>  {
-    return this.coreApiService.post(this.route, data) as Observable<IAIEmployee>;
+  create(formData: FormData): Observable<IAIEmployee> {
+    return this.coreApiService.post(`${this.route}`, formData, {
+      headers: {
+        Accept: 'application/json',
+      },
+    }) as Observable<IAIEmployee>;
   }
 
   listByWorkspace(workspaceId: string): Observable<IAIEmployee[]> {

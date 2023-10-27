@@ -6,6 +6,8 @@ import { EmployeeService } from '../ai-employee.service';
 import { WorkspacesService } from '../../workspaces.service';
 import { NotificationsService } from '../../../services/notifications/notifications.service';
 import { ActivatedRoute } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
+import { Console } from 'console';
 
 
 @Component({
@@ -23,6 +25,7 @@ export class WhiteAiEmployeeComponent {
   isLoading = false;
 
   constructor(
+    private httpClient: HttpClient,
     private route: ActivatedRoute,
     private formBuilder: FormBuilder,
     private dialog: MatDialog,
@@ -32,12 +35,11 @@ export class WhiteAiEmployeeComponent {
     @Inject(MAT_DIALOG_DATA) private data: any,
     private employeeService: EmployeeService) {
 
-    this.form = this.formBuilder.group({
-      description: ['', [Validators.required]],
-      name: ['', [Validators.required]],
-      workspace: [data.workspaceId, [Validators.required]]
-    });
-
+      this.form = this.formBuilder.group({
+        description: ['', [Validators.required]],
+        name: ['', [Validators.required]],
+        workspace: [data.workspaceId, [Validators.required]]
+      });
   }
 
 
@@ -45,19 +47,10 @@ export class WhiteAiEmployeeComponent {
 
     this.selectedAvatar = avatarPath;
     this.form.patchValue({ avatar: this.selectedAvatar });
+    console.log(this.selectedAvatar)
     this.isAvatarSelected = true;
 
   }
-
-  onFileSelected(event: Event): void {
-    const inputElement = event.target as HTMLInputElement;
-    if (inputElement.files && inputElement.files.length > 0) {
-      this.selectedFile = inputElement.files[0];
-      this.form.patchValue({ avatar: this.selectedFile });
-      this.isAvatarSelected = true;
-    }
-  }
-
 
 
   closeModal(): void {
@@ -65,40 +58,56 @@ export class WhiteAiEmployeeComponent {
   }
 
   createAiEmployee(): void {
-    if (this.form && this.form.valid) {
-      const descriptionControl = this.form.get('description');
-      const nameControl = this.form.get('name');
+    const descriptionControl = this.form.get('description');
+    const nameControl = this.form.get('name');
 
-
-      if (descriptionControl && nameControl) {
-        const avatarValue: string = this.selectedAvatar || '';
-        console.log('Selected Avatar:', this.selectedAvatar);
-        const aiEmployeeData = {
-          name: nameControl.value,
-          role: descriptionControl.value,
-          avatar: avatarValue,
-          workspace: this.form.get('workspace')?.value ?? null
-
-        };
-        console.log(aiEmployeeData)
-        this.isLoading = true;
-        this.employeeService.create(aiEmployeeData).subscribe(
-          (createdEmployee) => {
-            this.notificationsService.show('Successfully created Ai Employee');
-            console.log(createdEmployee);
-            this.isLoading = false;
-            this.dialogRef.close('success');
-          },
-          (error) => {
-            console.error('Error creating AI Employee:', error);
-            this.notificationsService.show('Error creating Ai Employee. Please try again.');
-          }
-        );
-      } else {
-        this.showWarning = true;
-        return;
+    if (
+      typeof this.selectedAvatar === 'string' 
+    ) {
+      const extension = this.selectedAvatar.split('.').pop();
+      const blob = new Blob([this.selectedAvatar], { type: 'text/plain' });
+      const file = new File([blob], `avatar.${extension}`);
+      this.selectedFile= file;
+    }
+  
+    if (descriptionControl?.valid && nameControl?.valid) {
+      const formData = new FormData();
+      formData.append('name', nameControl.value);
+      formData.append('role', descriptionControl.value); 
+      formData.append('workspace', this.form.get('workspace')?.value ?? '');
+  
+      const jsonData = {
+        name: nameControl.value,
+        role: descriptionControl.value,
+        workspace: this.form.get('workspace')?.value ?? ''
+      };
+      formData.append('json', JSON.stringify(jsonData));
+   
+    
+      if (this.selectedFile) {
+        formData.append('avatar', this.selectedFile, this.selectedFile.name);
       }
+  
+      this.isLoading = true;
+  
+      this.employeeService.create(formData).subscribe(
+        (createdEmployee) => {
+          this.notificationsService.show('Successfully created Ai Employee');
+          console.log(createdEmployee);
+          this.isLoading = false;
+          this.dialogRef.close('success');
+        },
+        (error) => {
+          console.error('Error creating AI Employee:', error);
+          this.notificationsService.show('Error creating Ai Employee. Please try again.');
+          this.isLoading = false;
+        }
+      );
+    } else {
+      this.showWarning = true;
     }
   }
-
+  
+  
+  
 }
