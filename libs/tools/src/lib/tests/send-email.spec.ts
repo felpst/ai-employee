@@ -1,6 +1,6 @@
 import { ChatModel } from '@cognum/llm';
 import {
-    initializeAgentExecutorWithOptions
+  initializeAgentExecutorWithOptions
 } from 'langchain/agents';
 import { SendEmailTool } from '../send-email.tool';
   
@@ -23,6 +23,22 @@ import { SendEmailTool } from '../send-email.tool';
           }
         );
         const result = await executor.call({ input: 'send email to devrenatorodrigues@gmail.com with the subject TEST and the message olá tenha um bom dia' });
-        expect(result.output).toEqual('Email sent successfully');
+        expect(result.output).toEqual('The email has been sent successfully.');
       })
+
+      it('should retriver an error ', async () => {
+    
+        const executor = await initializeAgentExecutorWithOptions(
+            tools,
+            model,
+            {
+              agentType: 'structured-chat-zero-shot-react-description',
+              verbose: true,
+            }
+          );
+          const result = await executor.call({ input: 'send email to devrenatorodrigues with the subject TEST and the message olá tenha um bom dia' });
+          expect(result.output).toEqual(`Email sending failed: this email not exist`);
+        })
   });
+
+  // usar o google docs
