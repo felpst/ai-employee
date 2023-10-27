@@ -107,7 +107,6 @@ export class AIEmployee {
     // Executor
     const chainValues = await this._executor.call({ input }, callbacks);
     const response = chainValues.output;
-    // @ts-ignore
     const thought = this._agent.outputParser.getLastThought();
 
     // Save response

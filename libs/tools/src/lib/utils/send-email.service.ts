@@ -17,33 +17,40 @@ export class Mail {
         this._to = to || '';
         this._subject = subject || '';
         this._message = message || '';
-        
-        const mailOptions = {
-            from: this._config.user,
-            to: this._to,
-            subject:this._subject,
-            html: this._message
-        };
-        
-        const transporter = nodemailer.createTransport({
-            service: this._config.service,
-            secure: false,
-            auth: {
-                user:this._config.user,
-                pass: this._config.password
-            },
-            tls: { rejectUnauthorized: false }
-        });
-    
-        console.log(mailOptions);
-    
-        transporter.sendMail(mailOptions, function (error) {
-            if (error) {
-                return error;
-            } else {
-                return'Email sent successfully';
-            }
-    });
+    }
 
-        };
-};
+    sendMail(): Promise<string> {
+        return new Promise((resolve, reject) => {
+            const mailOptions = {
+                from: this._config.user,
+                to: this._to,
+                subject: this._subject,
+                html: this._message
+            };
+
+            const transporter = nodemailer.createTransport({
+                service: this._config.service,
+                secure: false,
+                auth: {
+                    user: this._config.user,
+                    pass: this._config.password
+                },
+                tls: { rejectUnauthorized: false }
+            });
+
+            transporter.sendMail(mailOptions, (error) => {
+                if (error) {
+                    reject(error); 
+                } else {
+                    resolve('Email sent successfully'); 
+                }
+            });
+        });
+    }
+}
+
+
+
+
+
+
