@@ -5,7 +5,7 @@
         <mat-icon svgIcon="arrow-left"></mat-icon>
       </button>
 
-      <span class="workspace-name">potato</span>
+      <span class="workspace-name">{{ workspace?.name || 'Workspace' }}</span>
     </div>
     <div class="user-details">
       <img class="imageProfile" src="{{ image }}" alt="" />
@@ -35,24 +35,63 @@
     </nav>
     <div class="content">
       <ng-container *ngIf="selectedItem === 1">
-        <div class="container-group">
+        <form
+          [formGroup]="updateForm"
+          enctype="multipart/form-data"
+          (ngSubmit)="onSubmit()"
+          class="container-group"
+        >
           <span class="workspace-image">Workspace photo (optional)</span>
           <div class="image-group">
-            <div class="image"></div>
+            <div>
+              <label for="workspacePhotoInput" class="image-label">
+                <img
+                  class="image"
+                  src="{{ selectedImage || workspaceImage }}"
+                  alt="User Image"
+                />
+              </label>
+              <input
+                style="display: none"
+                type="file"
+                id="workspacePhotoInput"
+                name="workspacePhoto"
+                (change)="onFileSelected($event)"
+              />
+            </div>
             <span>Help teammates know that this is right place.</span>
           </div>
 
           <div>
             <div class="input">
               <span>Company or team name</span>
-              <input type="text" placeholder="potato" [value]="workspaceName" />
+              <div>
+                <input
+                  type="text"
+                  placeholder="potato"
+                  [value]="workspaceName"
+                />
+                <button class="submit-button">
+                  <mat-icon svgIcon="button-submit"></mat-icon>
+                </button>
+              </div>
             </div>
           </div>
-        </div>
+        </form>
         <div class="footer">
           <div>
             <span>Delete workspace</span>
-            <button class="delete">delete it</button>
+            <button (click)="onModal(true)" class="delete">delete it</button>
+            <form *ngIf="modal" (ngSubmit)="onDelete()" class="item-modal">
+              <mat-icon svgIcon="delete-red"></mat-icon>
+              <h1>Are you sure you want to delete this workspace?</h1>
+              <div>
+                <button (click)="onModal(false)" class="button-no">No</button>
+                <button (click)="onDelete()" type="submit" class="button-yes">
+                  Yes
+                </button>
+              </div>
+            </form>
           </div>
           <span class="footer-description"
             >Lorem ipsum dolor sit amet consectetur. Amet a faucibus
@@ -65,20 +104,42 @@
         <div class="container-group">
           <span>Add a new workspace member</span>
           <div class="input">
-            <input type="text" placeholder="potato" value="potato" />
-            <select
-              class="form-select no-focus-outline"
-              aria-label="Default select example"
-            >
-              <option value="1">Admin</option>
-            </select>
-            <button class="submit-button">
-              <mat-icon svgIcon="button-submit"></mat-icon>
-            </button>
+            <div>
+              <input type="text" placeholder="potato" value="potato" />
+              <select
+                class="form-select no-focus-outline"
+                aria-label="Default select example"
+              >
+                <option value="1">Admin</option>
+              </select>
+              <button class="submit-button">
+                <mat-icon svgIcon="button-submit"></mat-icon>
+              </button>
+            </div>
           </div>
-          <div>
-            <span>Linecker Amorim</span>
-            <img class="image-style" alt="User Image" />
+          <div class="item" *ngFor="let item of users">
+            <div class="item-delete">
+              <span>{{ item.name }}</span>
+              <mat-icon svgIcon="delete"></mat-icon>
+            </div>
+
+            <div class="item-user">
+              <div class="item-email">
+                <img
+                  *ngIf="item.photo"
+                  [src]="item.photo"
+                  class="image-style"
+                  alt="User Image"
+                />
+                <span>{{ item.email }}</span>
+              </div>
+              <select
+                class="form-select no-focus-outline"
+                aria-label="Default select example"
+              >
+                <option value="1">Admin</option>
+              </select>
+            </div>
           </div>
         </div>
       </ng-container>

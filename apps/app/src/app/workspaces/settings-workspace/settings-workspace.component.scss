@@ -134,7 +134,7 @@
     border-bottom: 1px solid #f0f0f0;
 
     .image {
-      background-color: #14b8a6;
+      background-color: transparent;
       height: 129px;
       width: 129px;
     }
@@ -142,14 +142,21 @@
 
   .input {
     display: flex;
+    flex-direction: column;
     flex-wrap: wrap;
     margin-top: 10px;
-    gap: 5px;
     width: 100%;
 
-    input {
-      width: 75%;
-      padding-left: 10px;
+    div {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+
+      input {
+        width: 100%;
+        padding-left: 10px;
+      }
     }
 
     .submit-button {
@@ -193,6 +200,105 @@
 
 .container-group {
   padding: 0 20px;
+}
+
+.item-modal {
+  z-index: 100000;
+  inset: 50%;
+  width: 300px;
+  height: 200px;
+  line-height: 22px;
+  padding: 20px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  text-align: center;
+  position: fixed;
+
+  background-color: #fff;
+  border-radius: 0.15rem;
+  box-shadow: rgba(0, 0, 0, 0.25) 0px 54px 55px,
+    rgba(0, 0, 0, 0.12) 0px -12px 30px, rgba(0, 0, 0, 0.12) 0px 4px 6px,
+    rgba(0, 0, 0, 0.17) 0px 12px 13px, rgba(0, 0, 0, 0.09) 0px -3px 5px;
+
+  h1 {
+    font-size: 16px;
+  }
+
+  div {
+    display: flex;
+    gap: 10px;
+  }
+
+  .button-no {
+    border: 1px solid #d9d9d9;
+    background-color: transparent;
+    border-radius: 2px;
+  }
+
+  .button-yes {
+    border: 1px solid #14b8a6;
+    background-color: #14b8a6;
+    border-radius: 2px;
+    color: #ffff;
+  }
+}
+
+.item {
+  display: flex;
+  flex-direction: column;
+  margin: 10px 0;
+  gap: 5px;
+
+  .item-delete {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    span {
+      font-weight: 400;
+      line-height: 22px;
+    }
+
+    mat-icon {
+      cursor: pointer;
+      height: 25px;
+      width: 25px;
+    }
+  }
+
+  .item-user {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 5px;
+
+    .item-email {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+
+      span {
+        font-weight: 400;
+        line-height: 22px;
+        color: #00000073;
+      }
+
+      img {
+        width: 2.7rem;
+        height: 2.7rem;
+        border-radius: 100%;
+        background-repeat: no-repeat;
+        background-size: cover;
+      }
+    }
+
+    select {
+      width: 100px;
+    }
+  }
 }
 
 @media (max-width: 800px) {

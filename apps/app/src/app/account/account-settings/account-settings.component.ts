@@ -121,7 +121,7 @@ export class AccountSettingsComponent implements OnInit {
 
     let name = this.updateForm.get('name')?.value;
     if (!name) {
-      name = this.name; // Usar o nome atual se o campo name estiver vazio
+      name = this.name;
     }
 
     const photo = this.updateForm.get('photo')?.value;
@@ -131,7 +131,6 @@ export class AccountSettingsComponent implements OnInit {
     this.accountService.updateUserById(userId, updateData, photo).subscribe({
       next: () => {
         this.notificationsService.show('Successfully changed data!');
-        this.router.navigate(['/home']);
       },
     });
   }

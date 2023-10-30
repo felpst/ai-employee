@@ -28,6 +28,18 @@ export class AppComponent {
         )
       ),
       iconRegistry.addSvgIcon(
+        'delete',
+        sanitizer.bypassSecurityTrustResourceUrl(
+          '/assets/icons/delete.svg'
+        )
+      ),
+      iconRegistry.addSvgIcon(
+        'delete-red',
+        sanitizer.bypassSecurityTrustResourceUrl(
+          '/assets/icons/delete-red.svg'
+        )
+      ),
+      iconRegistry.addSvgIcon(
         'lock',
         sanitizer.bypassSecurityTrustResourceUrl('/assets/icons/lock.svg')
       ),
