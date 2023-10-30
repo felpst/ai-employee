@@ -1,11 +1,11 @@
-import axios, { AxiosRequestConfig } from "axios";
+import axios, { AxiosRequestConfig } from 'axios';
 
 export type OpenAIModel = 'gpt-4' | 'gpt-3.5-turbo';
 
 export enum OpenAIRole {
   System = 'system',
   Assistant = 'assistant',
-  User = 'user'
+  User = 'user',
 }
 export interface OpenAIMessage {
   role: string | OpenAIRole;
@@ -18,20 +18,20 @@ export interface OpenAICompletionParams {
 }
 
 export interface OpenAIResponseData {
-  id: string
+  id: string;
   choices: {
     message: {
-      content: string
-    }
-  }[]
+      content: string;
+    };
+  }[];
 }
 
 export class OpenAIHelper {
-  static readonly baseUrl = "https://api.openai.com/v1";
+  static readonly baseUrl = 'https://api.openai.com/v1';
 
-  constructor() {}
-
-  static async completion(params: OpenAICompletionParams): Promise<OpenAIResponseData> {
+  static async completion(
+    params: OpenAICompletionParams
+  ): Promise<OpenAIResponseData> {
     const requestConfig: AxiosRequestConfig = {
       headers: {
         Authorization: `Bearer ${process.env.OPEN_AI_KEY}`,
@@ -48,10 +48,10 @@ export class OpenAIHelper {
       return response.data as OpenAIResponseData;
     } catch (error) {
       // console.error("Error completing chat:", error);
-      console.log(JSON.stringify(error.response.data));      
-      throw new Error("Failed to complete chat");
+      console.log(JSON.stringify(error.response.data));
+      throw new Error('Failed to complete chat');
     }
   }
 }
 
-export default new OpenAIHelper()
+export default new OpenAIHelper();
