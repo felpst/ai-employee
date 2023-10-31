@@ -1,7 +1,6 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import { AbstractControl, FormBuilder, ValidationErrors, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { IWorkspace } from '@cognum/interfaces';
 import { AuthService } from '../../auth/auth.service';
 import { NotificationsService } from '../../services/notifications/notifications.service';
 import { UsersService } from '../../services/users/users.service';
@@ -12,24 +11,17 @@ import { WorkspacesService } from '../workspaces.service';
   templateUrl: './settings-workspace.component.html',
   styleUrls: ['./settings-workspace.component.scss'],
 })
-export class SettingsWorkspaceComponent implements OnInit {
+export class SettingsWorkspaceComponent {
   @ViewChild('overviewContainer', { static: true })
   private overviewContainer!: ElementRef<HTMLDivElement>;
   // user config
-  image = '';
-  name = '';
   users: any = [];
 
   // workspace config
-  workspaceImage = '';
   photo: File | null = null;
   selectedImage: string | null = null;
-  workspace!: IWorkspace | null;
-  workspaceData = '@cognum/selected-workspace';
-  workspacesId!: string;
-  workspaceName: any = '';
   updateForm = this.formBuilder.group({
-    workspaceName: [this.workspaceName, [Validators.minLength(6)]],
+    workspaceName: [this.workspace.name, [Validators.minLength(6)]],
     photo: [this.photo, []],
   });
 
@@ -47,42 +39,14 @@ export class SettingsWorkspaceComponent implements OnInit {
     private workspacesService: WorkspacesService,
     private formBuilder: FormBuilder,
     private notificationsService: NotificationsService,
-  ) {
-    this.route.params.subscribe((params) => {
-      this.workspacesId = params['id'];
-      this.getWorkspace();
-    });
+  ) { }
+  
+  get user() {
+    return this.authService.user
   }
 
-  ngOnInit(): void {
-    const userId = this.authService.user?._id;
-
-    this.usersService.getById(userId).subscribe({
-      next: (response: any) => {
-        this.image = response.photo;
-        this.name = response.name;
-      },
-    });
-
-    this.workspacesService.get(this.workspacesId).subscribe({
-      next: (response: any) => {
-        this.users = response.users
-        this.workspaceName = response.name;
-        this.workspaceImage = response.photo
-      },
-    });
-
-    const workspaces = this.workspacesService.workspaces;
-
-    this.overviewContainer.nativeElement.classList.add('active');
-
-    if (workspaces.size === 0) {
-      return this.onLoadList();
-    } else {
-      this.workspace =
-        this.workspacesService.workspaces.get(this.workspaceId) || null;
-      this.isLoading = false;
-    }
+  get workspace() {
+    return this.workspacesService.selectedWorkspace
   }
 
   validatorFile(control: AbstractControl): ValidationErrors | null {
@@ -119,28 +83,6 @@ export class SettingsWorkspaceComponent implements OnInit {
     }
   }
 
-  getWorkspace() {
-    this.isLoading = true;
-    return this.workspacesService
-      .get(this.workspaceId)
-      .subscribe((workspace) => {
-        this.workspace = workspace;
-        this.isLoading = false;
-      });
-  }
-
-  onLoadList() {
-    this.workspacesService.list().subscribe((data) => {
-      const workspace = data.get(this.workspaceId) || null;
-      this.workspace = workspace;
-      this.isLoading = false;
-    });
-  }
-
-  get workspaceId() {
-    return localStorage.getItem(this.workspaceData) || '';
-  }
-
   selectItem(itemNumber: number): void {
     this.selectedItem = itemNumber;
     this.modal = false;
@@ -155,7 +97,7 @@ export class SettingsWorkspaceComponent implements OnInit {
   }
 
   async onDelete() {
-    const workspaceId = this.workspacesId;
+    const workspaceId = this.workspace._id;
 
     this.workspacesService.delete(workspaceId).subscribe({
       next: () => {
@@ -172,13 +114,13 @@ export class SettingsWorkspaceComponent implements OnInit {
     let workspaceName = this.updateForm.get('workspaceName')?.value;
     
     if (!workspaceName) {
-      workspaceName = this.workspaceName;
+      workspaceName = this.workspace.name;
     }
 
     const photo = this.updateForm.get('photo')?.value;
     const updateData = JSON.stringify({ workspaceName });
 
-    this.workspacesService.update(this.workspacesId, updateData, photo).subscribe({
+    this.workspacesService.update(this.workspace._id, updateData, photo).subscribe({
       next: () => {
         this.notificationsService.show('Successfully changed data!');
       },

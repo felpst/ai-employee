@@ -120,22 +120,36 @@ export class WorkspaceController extends ModelController<typeof Workspace> {
     next();
   }
   
-  public async delete(
+  // public async delete(
+  //   req: Request,
+  //   res: Response,
+  //   next: NextFunction
+  // ): Promise<void> {
+  //   try {
+  //     const taskId: string = req.params.id;
+  //     const deletedTask = await Workspace.findByIdAndDelete(taskId);
+
+  //     if (!deletedTask) {
+  //       const error: any = new Error('Document not found');
+  //       error.status = 404;
+  //       throw error;
+  //     } else await new KnowledgeBase(taskId).deleteCollection();
+
+  //     res.json(deletedTask);
+  //   } catch (error) {
+  //     next(error);
+  //   }
+  // }
+  
+  public async deleteKnowledgeBaseMiddleware(
     req: Request,
     res: Response,
     next: NextFunction
   ): Promise<void> {
     try {
-      const taskId: string = req.params.id;
-      const deletedTask = await Workspace.findByIdAndDelete(taskId);
-
-      if (!deletedTask) {
-        const error: any = new Error('Document not found');
-        error.status = 404;
-        throw error;
-      } else await new KnowledgeBase(taskId).deleteCollection();
-
-      res.json(deletedTask);
+      const workspaceId: string = req.params.id;
+      await new KnowledgeBase(workspaceId).deleteCollection();
+      next()
     } catch (error) {
       next(error);
     }

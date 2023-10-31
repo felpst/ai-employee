@@ -32,6 +32,6 @@ router.put(
   jsonParserMiddleware,
   workspaceController.update
 );
-router.delete('/:id', authMiddleware, workspaceController.delete);
+router.delete('/:id', authMiddleware, workspaceController.delete, workspaceController.deleteKnowledgeBaseMiddleware);
 
 export default router;

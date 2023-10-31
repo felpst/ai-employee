@@ -5,11 +5,11 @@
         <mat-icon svgIcon="arrow-left"></mat-icon>
       </button>
 
-      <span class="workspace-name">{{ workspace?.name || 'Workspace' }}</span>
+      <span class="workspace-name">{{ workspace.name || 'Workspace' }}</span>
     </div>
     <div class="user-details">
-      <img class="imageProfile" src="{{ image }}" alt="" />
-      <span>{{ name }}</span>
+      <img class="imageProfile" [src]="user.photo" alt="" />
+      <span>{{ user.name }}</span>
     </div>
   </nav>
 </header>
@@ -47,7 +47,7 @@
               <label for="workspacePhotoInput" class="image-label">
                 <img
                   class="image"
-                  src="{{ selectedImage || workspaceImage }}"
+                  [src]="selectedImage || workspace.photo"
                   alt="User Image"
                 />
               </label>
@@ -69,7 +69,7 @@
                 <input
                   type="text"
                   placeholder="potato"
-                  [value]="workspaceName"
+                  [value]="workspace.name"
                 />
                 <button class="submit-button">
                   <mat-icon svgIcon="button-submit"></mat-icon>
@@ -82,7 +82,7 @@
           <div>
             <span>Delete workspace</span>
             <button (click)="onModal(true)" class="delete">delete it</button>
-            <form *ngIf="modal" (ngSubmit)="onDelete()" class="item-modal">
+            <div *ngIf="modal" class="item-modal">
               <mat-icon svgIcon="delete-red"></mat-icon>
               <h1>Are you sure you want to delete this workspace?</h1>
               <div>
@@ -91,7 +91,7 @@
                   Yes
                 </button>
               </div>
-            </form>
+            </div>
           </div>
           <span class="footer-description"
             >Lorem ipsum dolor sit amet consectetur. Amet a faucibus
