@@ -1,39 +1,39 @@
-import { AiEmployeeModel, IAiEmployeeModel } from '../entities/AiEmployee';
+import { AiEmployeeProfile, IAiEmployeeProfile } from '../entities/AiEmployee';
 import { IAiEmployeeRepository } from './AiEmployeeRepository';
 
 export class InMemoryAiEmployeeRepository implements IAiEmployeeRepository {
-  private aiEmployee: IAiEmployeeModel[] = [];
+  private aiEmployee: IAiEmployeeProfile[] = [];
 
-  async create(data: Partial<IAiEmployeeModel>): Promise<IAiEmployeeModel> {
+  async create(data: Partial<IAiEmployeeProfile>): Promise<IAiEmployeeProfile> {
 
-    const aiEmployee = new AiEmployeeModel(data);
+    const aiEmployee = new AiEmployeeProfile(data);
 
     this.aiEmployee.push(aiEmployee);
     
     return Promise.resolve(aiEmployee)
   }
 
-  async findAll(): Promise<IAiEmployeeModel[]> {
+  async findAll(): Promise<IAiEmployeeProfile[]> {
     return Promise.resolve(this.aiEmployee)
   }
 
-  async findById(id: string): Promise<IAiEmployeeModel> {
-    const aiEmployee = this.aiEmployee.find(u => u.id === id);
+  async findById(id: string): Promise<IAiEmployeeProfile> {
+    const aiEmployee = this.aiEmployee.find(u => u._id === id);
     return Promise.resolve(aiEmployee);
   }
 
-  async update(id: string, data: Partial<IAiEmployeeModel>): Promise<IAiEmployeeModel> {
-    const index = this.aiEmployee.findIndex(u => u.id === id);
+  async update(id: string, data: Partial<IAiEmployeeProfile>): Promise<IAiEmployeeProfile> {
+    const index = this.aiEmployee.findIndex(u => u._id === id);
     if (index === -1) {
       return Promise.reject(new Error('AiEmployee not found'));
     }
     const updatedAiEmployee = { ...this.aiEmployee[index], ...data };
-    this.aiEmployee[index] = updatedAiEmployee as AiEmployeeModel;
+    this.aiEmployee[index] = updatedAiEmployee as AiEmployeeProfile;
     return Promise.resolve(updatedAiEmployee);
   }
  
   async delete(id: string): Promise<void> {
-    const index = this.aiEmployee.findIndex(u => u.id === id);
+    const index = this.aiEmployee.findIndex(u => u._id === id);
     if (index === -1) {
       return Promise.reject(new Error('AiEmployee not found'));
     }
