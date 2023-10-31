@@ -7,7 +7,7 @@ export class ChatHistory {
     this.aiEmployee = aiEmployee;
   }
 
-  async chatHistory(numberOfMessages = 10) {
+  async execute(numberOfMessages = 10) {
     const messages = this.aiEmployee.memory.getLastMessages(numberOfMessages);
       return messages.map((message) => ({
         _id: message._id,

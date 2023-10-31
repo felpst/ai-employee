@@ -25,7 +25,7 @@ export class UpdateAiEmployee {
     const aiEmployee = await this.aiEmployeeRepository.update(id, dto);
 
     return {
-      id: aiEmployee.id.toString(),
+      id: aiEmployee._id.toString(),
       name: aiEmployee.name,
       profession: aiEmployee.profession
     };

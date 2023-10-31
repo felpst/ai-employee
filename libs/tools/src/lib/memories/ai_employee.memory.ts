@@ -28,10 +28,13 @@ export class AIEmployeeMemory {
   }
 
   async addMessage(message: Partial<IMessage>) {
+
     message.chat = this.chat._id;
     message.createdBy = this.user._id;
     message.updatedBy = this.user._id;
+
     const docMessage = await Message.create(message);
+    console.log(docMessage)
     this.messages.push(docMessage);
 
     // Generate summary and vector store every 10 messages

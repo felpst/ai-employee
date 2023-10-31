@@ -1,4 +1,4 @@
-import { AiEmployee } from "../entities/AiEmployee";
+import { AiEmployeeProfile } from "../entities/AiEmployee";
 import { IAiEmployeeRepository } from "../repositories/AiEmployeeRepository";
 
 interface CreateAiEmployeeRequest {
@@ -27,12 +27,12 @@ export class CreateAiEmployee {
       throw new Error('Ai employee already exists');
     }
 
-    const entity = new AiEmployee(request);
+    const entity = new AiEmployeeProfile(request);
 
     const aiEmployee = await this.aiEmployeeRepository.create(entity);
 
     return {
-      id: aiEmployee.id.toString(),
+      id: aiEmployee._id.toString(),
       name: aiEmployee.name,
       profession: aiEmployee.profession
     };

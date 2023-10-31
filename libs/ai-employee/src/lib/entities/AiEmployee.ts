@@ -1,9 +1,10 @@
 import { Types } from "mongoose";
 
-import { ChatModel } from '@cognum/llm';
+import { IUser } from '@cognum/interfaces';
 import {
   AIEmployeeMemory,
   AIEmployeeOutputParser,
+  AIEmployeePromptTemplate,
   KnowledgeBaseTool
 } from '@cognum/tools';
 import { AgentExecutor, LLMSingleActionAgent } from 'langchain/agents';
@@ -14,15 +15,14 @@ import { Tool } from 'langchain/tools';
 import { Calculator } from 'langchain/tools/calculator';
 
 export interface IAiEmployee {
-  id?: string | Types.ObjectId;
-  name: string;
-  profession: string;
-  callbacks: Callbacks;
-  chain: LLMChain;
+  profile: IAiEmployeeProfile;
+  _model: ChatOpenAI;
+  memory?: AIEmployeeMemory;
+  callbacks?: Callbacks;
 }
 
-export interface IAiEmployeeModel {
-  id?: string | Types.ObjectId;
+export interface IAiEmployeeProfile {
+  _id?: string | Types.ObjectId;
   name: string;
   profession: string;
 }
@@ -32,37 +32,32 @@ export interface IAiEmployeeDTO {
   profession?: string;
 }
 
-export class AiEmployeeModel implements IAiEmployeeModel {
-  id = Math.random().toString(36).substring(2, 9);
+export class AiEmployeeProfile implements IAiEmployeeProfile {
+  _id = Math.random().toString(36).substring(2, 9);
   name = '';
   profession = '';
-  constructor(params: Partial<IAiEmployee> = {}) {
+
+  constructor(params: Partial<IAiEmployeeProfile> = {}) {
     Object.assign(this, params);
   }
 }
 
 export class AiEmployee implements IAiEmployee {
-  id = Math.random().toString(36).substring(2, 9);
-  name = '';
-  profession = '';
+  profile: IAiEmployeeProfile;
   callbacks: Callbacks;
-  chain: LLMChain;
   memory: AIEmployeeMemory;
-  private _model: ChatOpenAI;
+  _executor: AgentExecutor;
+  _model: ChatOpenAI;
+  private chain: LLMChain;
   private _tools: Tool[];
   private _agent: LLMSingleActionAgent;
-  private _executor: AgentExecutor;
 
   constructor(params: Partial<IAiEmployee> = {}) {
     Object.assign(this, params);
-
-    const configChatModel = {
-      streaming: true,
-      callbacks: this.callbacks,
-      // verbose: true,
-    }
     
-    this._model = new ChatModel(configChatModel)
+    this._model = params._model
+
+    this.memory = params.memory
   
     this._tools = [
       // new DatabaseConnect(),
@@ -72,6 +67,30 @@ export class AiEmployee implements IAiEmployee {
       // new ZapierTool(),
       new KnowledgeBaseTool(),
     ];
+
+
+    // toDo: remove this _user from here
+    const _user = {
+      _id: "65401efc97740ada74d29cb4",
+      name: 'VENILTON',
+      email: 'venilton@cognum.ai',
+      password: '$2b$10$xxkBKIpQyxdDGwXnyQGacu5YqrlwIsL96rRX0uqhpORZOwR721xXe',
+      createdAt: new Date('2023-10-30T21:24:12.953Z'),
+      updatedAt: new Date('2023-10-30T21:24:12.956Z'),
+      __v: 0
+    }
+
+    this.chain = new LLMChain({
+      llm: this._model,
+      prompt: new AIEmployeePromptTemplate({
+        tools: this._tools,
+        inputVariables: ['input', 'agent_scratchpad', 'intermediate_steps'],
+        identity: this.profile,
+        memory: this.memory,
+        // toDo: remove this _user from here
+        user: _user as IUser
+      }),
+    });
 
     this._agent = new LLMSingleActionAgent({
       llmChain: this.chain,
@@ -88,10 +107,10 @@ export class AiEmployee implements IAiEmployee {
 
 export class AiEmployeeDTO implements IAiEmployeeDTO {
   name?: string
-  role?: string;
+  profession?: string;
 
   constructor(params: Partial<IAiEmployeeDTO> = {}) {
    params.name ? this.name = params.name : undefined;
-   params.profession ? this.role = params.profession : undefined;
+   params.profession ? this.profession = params.profession : undefined;
   }
 }

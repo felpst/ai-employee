@@ -9,11 +9,14 @@ constructor(aiEmployee: AiEmployee) {
 }
 
 async execute(input: string, callbacks?: Callbacks | any) {
-  // Save input
+
   const message = await this.aiEmployee.memory.addMessage({
     content: input,
     role: 'HUMAN',
   });
+  console.log('message', message);
+
+
   if (callbacks.onSaveHumanMessage) {
     callbacks.onSaveHumanMessage(message);
   }
@@ -23,7 +26,7 @@ async execute(input: string, callbacks?: Callbacks | any) {
   const response = chainValues.output;
 
   // Save response
-  this.aiEmployee.memory
+  await this.aiEmployee.memory
     .addMessage({ content: response, role: 'AI', question: message._id })
     .then((responseMessage) => {
       if (callbacks.onSaveAIMessage) {

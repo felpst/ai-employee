@@ -1,8 +1,8 @@
 import { Document, Model, Schema, Types, model } from "mongoose";
-import { IAiEmployee, IAiEmployeeModel } from "../entities/AiEmployee";
+import { IAiEmployeeProfile } from "../entities/AiEmployee";
 
-interface IAiEmployeeDocument extends IAiEmployeeModel, Document {
-  id: Types.ObjectId;
+interface IAiEmployeeDocument extends IAiEmployeeProfile, Document {
+  _id: Types.ObjectId;
 }
 
 const aiEmployeeSchema = new Schema<IAiEmployeeDocument>(
@@ -16,10 +16,10 @@ const aiEmployeeSchema = new Schema<IAiEmployeeDocument>(
 );
 
 export interface IAiEmployeeRepository {
-  create(data: Partial<IAiEmployeeModel>): Promise<IAiEmployeeModel>;
-  findById(id: string): Promise<IAiEmployeeModel>;
-  findAll(): Promise<IAiEmployeeModel[]>;
-  update(id: string, data: Partial<IAiEmployeeModel>): Promise<IAiEmployeeModel>;
+  create(data: Partial<IAiEmployeeProfile>): Promise<IAiEmployeeProfile>;
+  findById(id: string): Promise<IAiEmployeeProfile>;
+  findAll(): Promise<IAiEmployeeProfile[]>;
+  update(id: string, data: Partial<IAiEmployeeProfile>): Promise<IAiEmployeeProfile>;
   delete(id: string): Promise<void>;
 }
 
@@ -32,19 +32,19 @@ export default class AiEmployeeRepository implements IAiEmployeeRepository {
     this.model = model;
   }
 
-  async create(data: Partial<IAiEmployeeModel>): Promise<IAiEmployeeModel> {
+  async create(data: Partial<IAiEmployeeProfile>): Promise<IAiEmployeeProfile> {
     return await this.model.create(data);
   }
 
-  async findAll(): Promise<IAiEmployee[]> {
+  async findAll(): Promise<IAiEmployeeProfile[]> {
     return await this.model.find();
   }
 
-  async findById(id: string): Promise<IAiEmployee> {
+  async findById(id: string): Promise<IAiEmployeeProfile> {
     return await this.model.findById(id);
   }
 
-  async update(id: string, data: Partial<IAiEmployeeModel>): Promise<IAiEmployeeModel> {
+  async update(id: string, data: Partial<IAiEmployeeProfile>): Promise<IAiEmployeeProfile> {
     const aiEmployee = await this.model.findById(id);
     if (!aiEmployee) {
       throw new Error("User not found");
