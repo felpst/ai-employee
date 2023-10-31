@@ -1,0 +1,11 @@
+<div class="cognum-menu">
+  <button
+    *ngFor="let menuItem of menuItems"
+    [routerLink]="['./', workspace._id, menuItem.path]"
+    [routerLinkActive]="['active']"
+    mat-menu-item
+  >
+    <mat-icon [svgIcon]="menuItem.icon"></mat-icon>
+    <span>{{ menuItem.text }}</span>
+  </button>
+</div>

@@ -1,58 +1,60 @@
-<div class="menu" [class.is-mobile]="mobileQuery.matches" role="link">
-  <mat-toolbar class="menu-header" (click)="toggleMenu()" mat-icon-button>
-    <div class="info-container">
-      <img
-        [src]="
-          workspace.photo ||
-          'https://storage.googleapis.com/factory-assets/workspace-avatar-default.png'
-        "
-      />
-      <h3 class="text-strong">{{ workspace.name }}</h3>
-    </div>
-  </mat-toolbar>
+<div class="menu">
+  <header>
+    <cognum-menu-workspace-profile></cognum-menu-workspace-profile>
 
-  <div class="cdk-overlay-container" *ngIf="showMenu">
-    <div
-      class="cdk-overlay-backdrop cdk-overlay-transparent-backdrop cdk-overlay-backdrop-showing"
-      (click)="toggleMenu()"
-    ></div>
-    <div
-      class="cdk-overlay-connected-position-bounding-box"
-      style="top: 0rem; left: 12.5rem"
-    >
-      <div class="cdk-overlay-pane auth-menu">
-        <div class="item" [routerLink]="['./', workspace._id, 'settings']">
-          <img src="../../../assets/icons/setting.svg" alt="Settings" />
-          <span class="font-outfit">settings</span>
-        </div>
-        <div class="item" routerLink="/">
-          <img src="../../../assets/icons/swap.svg" alt="Switch workspace" />
-          <span class="font-outfit">switch workspace</span>
-        </div>
-      </div>
-    </div>
-  </div>
+    <div class="divisor"></div>
 
-  <mat-sidenav-container
+    <div class="pad">
+      <div class="cognum-text">Workspace usage</div>
+      <cognum-menu-workspace-usage [usage]="30"></cognum-menu-workspace-usage>
+    </div>
+
+    <div class="divisor"></div>
+
+    <div class="pad">
+      <div class="cognum-text">Workspace members</div>
+      <cognum-users-avatar
+        [routerLink]="['./', workspace._id, 'settings']"
+        [users]="users"
+        [showAdd]="true"
+      ></cognum-users-avatar>
+    </div>
+
+    <div class="divisor"></div>
+
+    <cognum-menu-items></cognum-menu-items>
+  </header>
+
+  <footer>
+    <div>
+      <button mat-menu-item>
+        <div class="account" routerLink="/account">
+          <cognum-users-avatar [users]="[user]"></cognum-users-avatar>
+          <div class="cognum-text truncate">
+            {{ user.name }}
+          </div>
+        </div>
+      </button>
+    </div>
+  </footer>
+
+  <!-- <mat-sidenav-container
     class="sidenav-container"
     [style.marginTop.px]="mobileQuery.matches ? 56 : 0"
     role="link"
   >
     <mat-sidenav-content class="nav-content">
+      <cognum-menu-workspace-profile></cognum-menu-workspace-profile>
+
       <div class="workspace-info">
         <div class="full-width">
           <div class="text-container">
             <h3>Workspace usage</h3>
           </div>
 
-          <div class="usage">
-            <mat-progress-bar
-              mode="determinate"
-              value="30"
-              class="full-width"
-            ></mat-progress-bar>
-            <h3>{{ workspaceUsage }}%</h3>
-          </div>
+          <cognum-menu-workspace-usage
+            [usage]="50"
+          ></cognum-menu-workspace-usage>
 
           <div class="divider"><hr /></div>
         </div>
@@ -69,22 +71,7 @@
         </div>
       </div>
 
-      <div class="workspaces-links">
-        <div
-          class="menu-item"
-          id="overview"
-          *ngFor="let menuItem of menuItems"
-          [routerLink]="['./', workspace._id, menuItem.path]"
-          [routerLinkActive]="['active']"
-        >
-          <div class="icon">
-            <img [src]="menuItem.icon" [title]="menuItem.text" />
-          </div>
-          <div class="content">
-            <span class="font-outfit">{{ menuItem.text }}</span>
-          </div>
-        </div>
-      </div>
+      <cognum-menu-items></cognum-menu-items>
 
       <div class="account" routerLink="/account">
         <img [src]="user.photo" />
@@ -94,5 +81,5 @@
   </mat-sidenav-container>
   <mat-toolbar class="workspace-info menu-footer">
     <img src="../../../assets/icons/logout.svg" title="LogOut" />
-  </mat-toolbar>
+  </mat-toolbar> -->
 </div>
