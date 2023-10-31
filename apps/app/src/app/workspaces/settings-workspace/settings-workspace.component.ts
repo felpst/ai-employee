@@ -46,7 +46,7 @@ export class SettingsWorkspaceComponent implements OnInit {
     private usersService: UsersService,
     private workspacesService: WorkspacesService,
     private formBuilder: FormBuilder,
-    private notificationsService: NotificationsService
+    private notificationsService: NotificationsService,
   ) {
     this.route.params.subscribe((params) => {
       this.workspacesId = params['id'];
@@ -160,9 +160,7 @@ export class SettingsWorkspaceComponent implements OnInit {
     this.workspacesService.delete(workspaceId).subscribe({
       next: () => {
         this.notificationsService.show("Workspace deleted successfully")
-      },
-      error: () => {
-        this.notificationsService.show("Oops, it looks like there was an error... Please try again in a few minutes")
+        this.router.navigate(['/'])
       }
     })
   }
