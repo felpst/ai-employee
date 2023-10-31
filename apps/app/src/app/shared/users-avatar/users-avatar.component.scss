@@ -17,6 +17,13 @@
     margin-left: -8px;
     border: 2px solid #fff;
 
+    .avatar {
+      width: 100%;
+      height: 100%;
+      border: 2px solid #fff;
+      border-radius: 50%;
+    }
+
     mat-icon {
       width: 1.3rem;
       margin-top: -2px;

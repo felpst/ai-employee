@@ -6,6 +6,7 @@ interface Avatar {
   initials: string;
   photo?: string;
   backgroundColor: string;
+  name: string;
 }
 
 @Component({
@@ -31,6 +32,7 @@ export class UsersAvatarComponent implements OnInit {
         initials: user.name.charAt(0),
         photo: user.photo,
         backgroundColor: this.getRandomColorFromSet(),
+        name: user.name,
       });
     }
   }
