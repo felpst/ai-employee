@@ -12,6 +12,6 @@ export interface IMessage extends DefaultModel {
   role: MessageRole;
   thought?: string;
   user: Schema.Types.ObjectId | IUser;
-  chat: Schema.Types.ObjectId | IChat;
+  chat: Schema.Types.ObjectId | IChat | string;
   question?: Schema.Types.ObjectId | IMessage;
 }
