@@ -12,7 +12,7 @@
   <div class="item" *ngIf="remainingUsersCount > 0">
     <div class="more-users">{{ remainingUsersCount }}+</div>
   </div>
-  <div class="item icon">
+  <div class="item icon" *ngIf="showAdd">
     <mat-icon svgIcon="whiteUser"></mat-icon>
   </div>
 </div>

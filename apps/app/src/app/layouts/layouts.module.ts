@@ -12,15 +12,19 @@ import { RouterModule } from '@angular/router';
 import { UsersAvatarComponent } from '../shared/users-avatar/users-avatar.component';
 import { AdminComponent } from './admin/admin.component';
 import { LoadingComponent } from './loading/loading.component';
+import { MenuItemsComponent } from './menu/menu-items/menu-items.component';
+import { WorkspaceProfileComponent } from './menu/menu-workspace-profile/menu-workspace-profile.component';
+import { WorkspaceUsageComponent } from './menu/menu-workspace-usage/menu-workspace-usage.component';
 import { MenuComponent } from './menu/menu.component';
-import { WorkspaceMembersComponent } from './menu/workspace-members/workspace-members.component';
 
 const declarations: any[] = [
   AdminComponent,
   LoadingComponent,
   MenuComponent,
-  WorkspaceMembersComponent,
-  UsersAvatarComponent
+  UsersAvatarComponent,
+  WorkspaceUsageComponent,
+  MenuItemsComponent,
+  WorkspaceProfileComponent
 ];
 
 const MaterialModules: any[] = [
