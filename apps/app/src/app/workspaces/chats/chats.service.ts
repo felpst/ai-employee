@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { IChat } from '@cognum/interfaces';
 import { Observable } from 'rxjs';
-import { AuthService } from '../auth/auth.service';
-import { CoreApiService } from '../services/apis/core-api.service';
+import { AuthService } from '../../auth/auth.service';
+import { CoreApiService } from '../../services/apis/core-api.service';
 
 @Injectable({
   providedIn: 'root',

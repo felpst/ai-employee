@@ -7,6 +7,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
+import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MarkdownModule } from 'ngx-markdown';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
@@ -25,6 +26,7 @@ import { ChatsComponent } from './chats.component';
     MatIconModule,
     MatButtonModule,
     MatListModule,
+    MatSidenavModule,
     MatTooltipModule,
     MatDialogModule,
     CdkAccordionModule,

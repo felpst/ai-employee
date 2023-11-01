@@ -14,14 +14,11 @@
       </div>
 
       <!-- No messages -->
-      <div
-        class="no-messages"
-        *ngIf="
-          !chatService.loadingMessages && chatService.messages.length === 0
-        "
-      >
+
+      <div class="no-messages">
         No messages yet. Start a conversation by typing a message below.
       </div>
+   
 
       <!-- Messages -->
       <div

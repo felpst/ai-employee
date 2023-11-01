@@ -1,0 +1,62 @@
+<mat-drawer-container class="sidenav-chat">
+  <mat-drawer mode="side" opened>    
+    <div class="mx-2 d-flex justify-content-center">
+      <button class="new text-gray" (click)="onNewChat()" mat-stroked-button>
+        <mat-icon>add</mat-icon>
+        New Chat
+      </button>
+    </div>
+    <hr class="mx-2 text-gray">
+    <div class="last-chats">
+      <div class="chats-24h" *ngIf="categorizedChats.last24h.length > 0">
+        <p class="text-12 text-gray mx-2">Last 24 hours</p>
+        <mat-action-list *ngFor="let chat of categorizedChats.last24h">
+          <button mat-list-item (click)="onChat(chat)" class="chat-item" [ngClass]="{ selected: selectedChat === chat._id }">
+            <div class="button-content">
+              <p class="text-gray text-14">{{ chat.name || 'New chat' }}</p>
+              <mat-icon (click)="$event.stopPropagation(); onDelete(chat)">delete</mat-icon>
+            </div>
+          </button>
+        </mat-action-list>
+      </div>
+      <div class="chats-yesterday" *ngIf="categorizedChats.yesterday.length > 0">
+        <p class="text-12 text-gray mx-2">Yesterday</p>
+        <mat-action-list *ngFor="let chat of categorizedChats.yesterday">
+          <button mat-list-item (click)="onChat(chat)" class="chat-item" [ngClass]="{ selected: selectedChat === chat._id }">
+            <div class="button-content">
+              <p class="text-gray text-14">{{ chat.name || 'New chat' }}</p>
+              <mat-icon (click)="$event.stopPropagation(); onDelete(chat)">delete</mat-icon>
+            </div>
+          </button>
+        </mat-action-list>
+      </div>
+      <div class="chats-7-days" *ngIf="categorizedChats.last7days.length > 0">
+        <p class="text-12 text-gray mx-2">Last 7 days</p>
+        <mat-action-list *ngFor="let chat of categorizedChats.last7days">
+          <button mat-list-item (click)="onChat(chat)" class="chat-item" [ngClass]="{ selected: selectedChat === chat._id }">
+            <div class="button-content">
+              <p class="text-gray text-14">{{ chat.name || 'New chat' }}</p>
+              <mat-icon (click)="$event.stopPropagation(); onDelete(chat)">delete</mat-icon>
+            </div>
+          </button>
+        </mat-action-list>
+      </div>
+      <div class="chats-older" *ngIf="categorizedChats.older.length > 0">
+        <p class="text-12 text-gray mx-2">Older</p>
+        <mat-action-list *ngFor="let chat of categorizedChats.older">
+          <button mat-list-item (click)="onChat(chat)" class="chat-item" [ngClass]="{ selected: selectedChat === chat._id }">
+            <div class="button-content">
+              <p class="text-gray text-14">{{ chat.name || 'New chat' }}</p>
+              <mat-icon (click)="$event.stopPropagation(); onDelete(chat)">delete</mat-icon>
+            </div>
+          </button>
+        </mat-action-list>
+      </div>
+    </div>
+  </mat-drawer>
+  <mat-drawer-content>
+    <div class="chat">
+      <router-outlet></router-outlet>
+    </div>
+  </mat-drawer-content>
+</mat-drawer-container>

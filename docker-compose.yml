@@ -18,7 +18,7 @@ services:
     command: npm run serve:server
     ports:
       - 3000:3000
-      - 8080:8080
+      - 8081:8081
     depends_on:
       - mongodb
     networks:

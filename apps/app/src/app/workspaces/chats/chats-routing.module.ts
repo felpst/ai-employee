@@ -5,9 +5,9 @@ import { ChatsComponent } from './chats.component';
 
 const routes: Routes = [
   {
-    path: ':workspaceId',
+    path: 'workspaces/:workspaceId',
     component: ChatsComponent,
-    children: [{ path: ':id', component: ChatComponent }],
+    children: [{ path: 'chats/:chatId', component: ChatComponent }],
   },
 ];
 
