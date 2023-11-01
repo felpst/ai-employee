@@ -141,6 +141,13 @@
               flex: 1;
               gap: 0.75rem;
 
+              .workspace-photo {
+                width: 64px;
+                height: 64px;
+                border: 2px solid #fff;
+                border-radius: 50%;
+              }
+
               .text-container {
                 display: grid;
                 grid-template-rows: 1fr 1fr;

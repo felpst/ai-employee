@@ -40,7 +40,8 @@
           >
             <div class="display-row details-container">
               <img
-                src="../../../assets/icons/avatar.svg"
+                class="workspace-photo"
+                [src]="workspace.photo || '../../../assets/icons/avatar.svg'"
                 alt="workspace photo"
               />
               <div class="text-container">
@@ -67,7 +68,10 @@
             <strong>Create a new workspace</strong>
             <span>Build and collaborate with AI employees</span>
           </div>
-          <button class="font-outfit display-row button"  (click)="goCreateWorkspace()">
+          <button
+            class="font-outfit display-row button"
+            (click)="goCreateWorkspace()"
+          >
             create workspace
           </button>
         </div>
