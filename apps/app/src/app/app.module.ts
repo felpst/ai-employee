@@ -12,11 +12,10 @@ import { MarkdownModule } from 'ngx-markdown';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { LayoutsModule } from './layouts/layouts.module';
-import { DialogComponent } from './shared/dialog/dialog.component';
-
+import { SharedModule } from './shared/shared.module';
 
 @NgModule({
-  declarations: [AppComponent, DialogComponent],
+  declarations: [AppComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,
@@ -24,6 +23,7 @@ import { DialogComponent } from './shared/dialog/dialog.component';
     MarkdownModule.forRoot(),
     HttpClientModule,
     LayoutsModule,
+    SharedModule,
     MatIconModule,
     MatDialogModule,
     MatButtonModule,
@@ -31,6 +31,6 @@ import { DialogComponent } from './shared/dialog/dialog.component';
     MatToolbarModule,
   ],
   providers: [],
-  bootstrap: [AppComponent],
+  bootstrap: [AppComponent]
 })
 export class AppModule {}

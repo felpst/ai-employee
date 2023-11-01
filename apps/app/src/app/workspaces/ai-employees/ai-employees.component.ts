@@ -1,19 +1,19 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { ActivatedRoute, Router } from '@angular/router';
 import { IAIEmployee } from '@cognum/interfaces';
 import { DialogComponent } from '../../shared/dialog/dialog.component';
-import { EmployeeService } from './ai-employee.service';
 import { WorkspacesService } from '../workspaces.service';
+import { AIEmployeesService } from './ai-employees.service';
 import { WhiteAiEmployeeComponent } from './white-ai-employee/white-ai-employee.component';
-import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'cognum-ai-employee',
-  templateUrl: './ai-employee.component.html',
-  styleUrls: ['./ai-employee.component.scss'],
+  templateUrl: './ai-employees.component.html',
+  styleUrls: ['./ai-employees.component.scss'],
 
 })
-export class AiEmployeeComponent implements OnInit {
+export class AIEmployeesComponent implements OnInit {
   originalEmployees: IAIEmployee[] = [];
   employees: IAIEmployee[] = [];
   searchText = '';
@@ -26,7 +26,7 @@ export class AiEmployeeComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private employeeService: EmployeeService,
+    private employeeService: AIEmployeesService,
     private workspacesService: WorkspacesService,
     private dialog: MatDialog) { }
 

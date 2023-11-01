@@ -1,17 +1,17 @@
 import { Injectable } from '@angular/core';
+import { IAIEmployee } from '@cognum/interfaces';
 import { Observable } from 'rxjs';
-import { IAIEmployee } from '@cognum/interfaces'; 
 import { AuthService } from '../../auth/auth.service';
 import { CoreApiService } from '../../services/apis/core-api.service';
 
 @Injectable({
   providedIn: 'root',
 })
-export class EmployeeService {
+export class AIEmployeesService {
   private route = 'employees';
   employeeId!: IAIEmployee;
   selectedAiEmployees: string | null = null;
- 
+
 
   constructor(
     private coreApiService: CoreApiService,
@@ -36,7 +36,7 @@ export class EmployeeService {
   update(item: Partial<IAIEmployee>): Observable<IAIEmployee> {
     return this.coreApiService.put(`${this.route}/${item._id}`, item) as Observable<IAIEmployee>;
   }
-  
+
 
   delete(item: Partial<IAIEmployee>): Observable<IAIEmployee> {
     return this.coreApiService.delete(`${this.route}/${item._id}`) as Observable<IAIEmployee>;
