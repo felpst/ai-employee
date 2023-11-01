@@ -13,6 +13,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MarkdownModule } from 'ngx-markdown';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { LayoutsModule } from '../layouts/layouts.module';
+import { AiEmployeeModule } from './ai-employee/ai-employee.module';
 import { KnowledgeBaseModule } from './knowledge-base/knowledge-base.module';
 import { SettingsWorkspaceModule } from './settings-workspace/settings-workspace.module';
 import { WorkspaceComponent } from './workspace/workspace.component';
@@ -37,7 +38,8 @@ import { WorkspacesRoutingModule } from './workspaces-routing.module';
     NgxSkeletonLoaderModule,
     LayoutsModule,
     KnowledgeBaseModule,
-    SettingsWorkspaceModule
+    SettingsWorkspaceModule,
+    AiEmployeeModule
   ],
 })
 export class WorkspacesModule {}

@@ -21,29 +21,6 @@ export class MenuComponent implements OnDestroy {
   showAllUsers = false;
   workspaceData = '@cognum/selected-workspace';
 
-  menuItems = [
-    {
-      path: 'overview',
-      text: 'Overview',
-      icon: '../../../assets/icons/home.svg',
-    },
-    {
-      path: 'employees',
-      text: 'Employees',
-      icon: '../../../assets/icons/robot.svg',
-    },
-    {
-      path: 'history',
-      text: 'History',
-      icon: '../../../assets/icons/clock.svg',
-    },
-    {
-      path: 'knowledge-base',
-      text: 'Knowledge Base',
-      icon: '../../../assets/icons/database.svg',
-    },
-  ];
-
   private _mobileQueryListener: () => void;
 
   constructor(
@@ -77,16 +54,9 @@ export class MenuComponent implements OnDestroy {
     return this.workspacesService.selectedWorkspace;
   }
 
-  // TODO
-  get workspaceUsage() {
-    return 25;
-  }
-
   ngOnDestroy(): void {
     this.mobileQuery.removeListener(this._mobileQueryListener);
   }
 
-  toggleMenu() {
-    this.showMenu = !this.showMenu;
-  }
+
 }

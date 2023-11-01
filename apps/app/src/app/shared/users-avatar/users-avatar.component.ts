@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { IUser } from '@cognum/interfaces';
 
 interface Avatar {
@@ -13,8 +13,9 @@ interface Avatar {
   templateUrl: './users-avatar.component.html',
   styleUrls: ['./users-avatar.component.scss'],
 })
-export class UsersAvatarComponent {
+export class UsersAvatarComponent implements OnInit {
   @Input() users: IUser[] = [];
+  @Input() showAdd = false;
 
   avatars: Avatar[] = [];
   private _nextColor = 0;
@@ -45,7 +46,7 @@ export class UsersAvatarComponent {
   getRandomColorFromSet(): string {
     const predefinedColors = [
       '#22333B',
-      '#0A0908',
+      '#D33E43',
       '#BFCC94',
       '#E6AACE',
       '#0D1821',
