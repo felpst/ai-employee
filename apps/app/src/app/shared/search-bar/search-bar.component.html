@@ -1,0 +1,15 @@
+<div class="search-container">
+  <input
+    mat-input
+    type="text"
+    [(ngModel)]="searchText"
+    placeholder="input search text"
+    class="search-input"
+  />
+  <button *ngIf="!searchText" mat-button aria-label="Clear">
+    <mat-icon>search</mat-icon>
+  </button>
+  <button *ngIf="searchText" mat-button aria-label="Clear">
+    <mat-icon>close</mat-icon>
+  </button>
+</div>

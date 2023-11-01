@@ -18,13 +18,13 @@ const routes: Routes = [
         component: WorkspaceComponent,
       },
       {
-        path: 'employees',
-        component: AiEmployeeComponent,
+        path: 'ai-employees',
+        loadChildren: () =>
+          import('./ai-employees/ai-employees.module').then(
+            (m) => m.AIEmployeesModule
+          ),
       },
-      {
-        path: 'employee/:id',
-        component: AiEmployeeComponentSettings,
-      },
+
       {
         path: 'history',
         component: WorkspaceComponent,

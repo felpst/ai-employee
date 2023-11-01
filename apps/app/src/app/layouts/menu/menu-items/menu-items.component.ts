@@ -22,7 +22,7 @@ export class MenuItemsComponent {
       icon: 'cognum-home',
     },
     {
-      path: 'employees',
+      path: 'ai-employees',
       text: 'AI Employees',
       icon: 'cognum-robot',
     },

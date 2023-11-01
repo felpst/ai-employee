@@ -26,28 +26,34 @@ h3 {
   font-family: 'Outfit', sans-serif;
   letter-spacing: 0px;
 
-  &-headline {
+  &-heading {
     @extend .cognum;
-    font-weight: bold;
+    font-weight: 500;
 
     &-1 {
-      @extend .cognum-headline;
-      font-size: 24px;
+      @extend .cognum-heading;
+      font-size: 20px;
     }
 
     &-2 {
-      @extend .cognum-headline;
+      @extend .cognum-heading;
       font-size: 18px;
     }
 
     &-3 {
-      @extend .cognum-headline;
+      @extend .cognum-heading;
       font-size: 16px;
     }
 
     &-4 {
-      @extend .cognum-headline;
+      @extend .cognum-heading;
       font-size: 14px;
+    }
+  }
+
+  &-font {
+    &-strong {
+      font-weight: bold;
     }
   }
 
@@ -137,6 +143,21 @@ h3 {
         }
       }
     }
+  }
+
+  &-page {
+    @extend .cognum;
+    background-color: #f0f2f5;
+    padding: 32px;
+  }
+
+  &-button {
+    @extend .cognum;
+
+    height: 32px !important;
+    line-height: 32px !important;
+    border-radius: 2px !important;
+    font-weight: 300 !important;
   }
 }
 
