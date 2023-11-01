@@ -6,6 +6,7 @@ import {
   AIEmployeeOutputParser,
   AIEmployeePromptTemplate,
   KnowledgeBaseTool,
+  WebBrowserTool,
 } from '@cognum/tools';
 import { AgentExecutor, LLMSingleActionAgent } from 'langchain/agents';
 import { LLMChain } from 'langchain/chains';
@@ -69,6 +70,7 @@ export class AIEmployee {
       // new ChatHistoryTool(this.memory),
       // new ZapierTool(),
       new KnowledgeBaseTool(workspaceId),
+      new WebBrowserTool(this._model)
     ];
 
     this._chain = new LLMChain({

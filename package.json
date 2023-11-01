@@ -28,9 +28,10 @@
     "@ionic/angular": "^7.0.0",
     "@zilliz/milvus2-sdk-node": "^2.3.2",
     "ace-builds": "^1.24.1",
-    "axios": "^1.4.0",
+    "axios": "^1.6.0",
     "bcrypt": "^5.1.0",
     "bootstrap": "^5.3.1",
+    "cheerio": "^1.0.0-rc.12",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
     "event-emitter": "^0.3.5",
@@ -61,8 +62,8 @@
     "ws": "^8.13.0",
     "xlsx": "^0.18.5",
     "yup": "^1.2.0",
-    "zod-to-json-schema": "^3.21.4",
     "zod": "^3.22.4",
+    "zod-to-json-schema": "^3.21.4",
     "zone.js": "~0.13.0"
   },
   "devDependencies": {
