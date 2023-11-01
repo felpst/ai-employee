@@ -9,8 +9,8 @@ import {
 import { FormControl, FormGroup } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { IFeedback } from '@cognum/interfaces';
-import { MessagesService } from '../../../../services/messages/messages.service';
-import { NotificationsService } from '../../../../services/notifications/notifications.service';
+import { MessagesService } from '../../../../../services/messages/messages.service';
+import { NotificationsService } from '../../../../../services/notifications/notifications.service';
 
 type UpdateFeedback = {
   _id: string;

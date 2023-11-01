@@ -92,7 +92,11 @@
 
   <div class="content">
     <div class="list">
-      <div class="white-content" *ngFor="let employee of employees">
+      <div
+        class="white-content"
+        *ngFor="let employee of employees"
+        [routerLink]="[employee._id]"
+      >
         <div class="ai-employee">
           <img [src]="employee.avatar" alt="" />
           <div class="description">

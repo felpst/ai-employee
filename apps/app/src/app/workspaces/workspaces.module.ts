@@ -13,7 +13,6 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MarkdownModule } from 'ngx-markdown';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { LayoutsModule } from '../layouts/layouts.module';
-import { ChatsModule } from './chats/chats.module';
 import { KnowledgeBaseModule } from './knowledge-base/knowledge-base.module';
 import { WorkspaceComponent } from './workspace/workspace.component';
 import { WorkspacesRoutingModule } from './workspaces-routing.module';
@@ -36,8 +35,7 @@ import { WorkspacesRoutingModule } from './workspaces-routing.module';
     ReactiveFormsModule,
     NgxSkeletonLoaderModule,
     LayoutsModule,
-    KnowledgeBaseModule,
-    ChatsModule,
+    KnowledgeBaseModule
   ],
 })
 export class WorkspacesModule {}

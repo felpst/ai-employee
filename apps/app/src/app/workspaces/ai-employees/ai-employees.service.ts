@@ -9,9 +9,13 @@ import { CoreApiService } from '../../services/apis/core-api.service';
 })
 export class AIEmployeesService {
   private route = 'employees';
+  aiEmployee!: IAIEmployee;
+
+
+  // TODO remove
   employeeId!: IAIEmployee;
   selectedAiEmployees: string | null = null;
-
+  //
 
   constructor(
     private coreApiService: CoreApiService,
@@ -29,8 +33,9 @@ export class AIEmployeesService {
   listByWorkspace(workspaceId: string): Observable<IAIEmployee[]> {
      return this.coreApiService.get(`${this.route}?filter[workspace]=${workspaceId}`) as Observable<IAIEmployee[]>;
   }
-  getById(employeeId: string): Observable<IAIEmployee> {
-    return this.coreApiService.get(`${this.route}/${employeeId}`) as Observable<IAIEmployee>;
+
+  get(aiEmployeeId: string): Observable<IAIEmployee> {
+    return this.coreApiService.get(`${this.route}/${aiEmployeeId}`) as Observable<IAIEmployee>;
   }
 
   update(item: Partial<IAIEmployee>): Observable<IAIEmployee> {

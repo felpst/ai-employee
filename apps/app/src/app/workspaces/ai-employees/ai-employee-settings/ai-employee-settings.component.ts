@@ -73,7 +73,7 @@ export class AIEmployeeSettingsComponent implements OnInit {
   ngOnInit() {
     this.route.params.subscribe(params => {
       const employeeId = params['id'];
-      this.aiAIEmployeesService.getById(employeeId).subscribe({
+      this.aiAIEmployeesService.get(employeeId).subscribe({
         next: (response) => {
           this.name = response.name;
           this.role = response.role;

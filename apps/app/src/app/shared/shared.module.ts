@@ -11,6 +11,7 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { RouterModule } from '@angular/router';
+import { NgScrollbarModule } from 'ngx-scrollbar';
 import { DialogComponent } from './dialog/dialog.component';
 import { SearchBarComponent } from './search-bar/search-bar.component';
 import { UsersAvatarComponent } from './users-avatar/users-avatar.component';
@@ -21,7 +22,7 @@ const declarations: any[] = [
   UsersAvatarComponent
 ];
 
-const MaterialModules: any[] = [
+const Modules: any[] = [
   FormsModule,
   ReactiveFormsModule,
   MatButtonModule,
@@ -32,12 +33,13 @@ const MaterialModules: any[] = [
   MatSidenavModule,
   MatToolbarModule,
   MatListModule,
-  MatDialogModule
+  MatDialogModule,
+  NgScrollbarModule
 ];
 
 @NgModule({
   declarations,
-  exports: declarations,
-  imports: [CommonModule, RouterModule, MaterialModules],
+  exports: [declarations, Modules],
+  imports: [CommonModule, RouterModule, Modules],
 })
 export class SharedModule {}

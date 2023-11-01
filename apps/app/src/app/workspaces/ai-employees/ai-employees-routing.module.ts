@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AIEmployeeSettingsComponent } from './ai-employee-settings/ai-employee-settings.component';
+import { AIEmployeeResolver } from './ai-employee.resolver';
 import { AIEmployeesComponent } from './ai-employees.component';
 
 const routes: Routes = [
@@ -10,8 +11,15 @@ const routes: Routes = [
   },
   {
     path: ':id',
-    // TODO create resolver
+    resolve: [AIEmployeeResolver],
     children: [
+      {
+        path: 'chats',
+        loadChildren: () =>
+          import('./chats/chats.module').then(
+            (m) => m.ChatsModule
+          ),
+      },
       {
         path: 'settings',
         component: AIEmployeeSettingsComponent,
