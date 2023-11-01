@@ -101,18 +101,22 @@
       </ng-container>
 
       <ng-container *ngIf="selectedItem === 2">
-        <form class="container-group">
+        <div [formGroup]="teamForm" class="container-group">
           <span>Add a new workspace member</span>
           <div class="input">
             <div>
-              <input type="text" placeholder="potato" value="potato" />
+              <input
+                formControlName="email"
+                type="email"
+                placeholder="potato"
+              />
               <select
                 class="form-select no-focus-outline"
                 aria-label="Default select example"
               >
                 <option value="1">Admin</option>
               </select>
-              <button class="submit-button">
+              <button (click)="onAddUser()" type="submit" class="submit-button">
                 <mat-icon svgIcon="button-submit"></mat-icon>
               </button>
             </div>
@@ -141,7 +145,7 @@
               </select>
             </div>
           </div>
-        </form>
+        </div>
       </ng-container>
     </div>
   </div>

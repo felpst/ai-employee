@@ -1,5 +1,5 @@
 import { Component, ElementRef, ViewChild } from '@angular/core';
-import { AbstractControl, FormBuilder, ValidationErrors, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormControl, FormGroup, ValidationErrors, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '../../auth/auth.service';
 import { NotificationsService } from '../../services/notifications/notifications.service';
@@ -24,6 +24,7 @@ export class SettingsWorkspaceComponent {
     workspaceName: [this.workspace.name, [Validators.minLength(6)]],
     photo: [this.photo, []],
   });
+  teamForm: FormGroup;
 
   // others
   selectedItem: number | null = 1;
@@ -39,7 +40,13 @@ export class SettingsWorkspaceComponent {
     private workspacesService: WorkspacesService,
     private formBuilder: FormBuilder,
     private notificationsService: NotificationsService,
-  ) { }
+  ) { 
+    this.teamForm = this.formBuilder.group({
+      email: ['', [Validators.required, this.emailListValidator]],
+    });
+  
+    this.users = this.workspace.users;
+  }
   
   get user() {
     return this.authService.user
@@ -47,6 +54,10 @@ export class SettingsWorkspaceComponent {
 
   get workspace() {
     return this.workspacesService.selectedWorkspace
+  }
+
+  get email() {
+    return this.authService.user ? this.authService.user.email : '';
   }
 
   validatorFile(control: AbstractControl): ValidationErrors | null {
@@ -83,6 +94,19 @@ export class SettingsWorkspaceComponent {
     }
   }
 
+  emailListValidator(control: FormControl): { [key: string]: any } | null {
+    const emails: string[] = (control.value as string)
+      .split(',')
+      .map((email) => email.trim());
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    for (const email of emails) {
+      if (!emailRegex.test(email)) {
+        return { invalidEmail: true };
+      }
+    }
+    return null;
+  }
+
   selectItem(itemNumber: number): void {
     this.selectedItem = itemNumber;
     this.modal = false;
@@ -103,6 +127,26 @@ export class SettingsWorkspaceComponent {
       next: () => {
         this.notificationsService.show("Workspace deleted successfully")
         this.router.navigate(['/'])
+      }
+    })
+  }
+
+  async onAddUser() {
+    const teamData = this.teamForm.value;
+    const formData = new FormData();
+
+    const submitData = {
+      users: teamData.email.split(','),
+    };
+
+    formData.append('json', JSON.stringify(submitData));
+
+    this.workspacesService.update(this.workspace._id, JSON.stringify(submitData)).subscribe({
+      next: () => {
+        { submitData.users == '' ? this.notificationsService.show('The user does not have a registration!') : this.notificationsService.show('Successfully added users!') }
+      },
+      error: (error) => {
+        this.notificationsService.show("Oops, it looks like there was an error... Please try again in a few minutes")
       }
     })
   }

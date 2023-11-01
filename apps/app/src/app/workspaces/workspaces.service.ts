@@ -44,6 +44,8 @@ export class WorkspacesService {
     formData.append('json', updateData);
     if (photo) formData.append('photo', photo);
 
+    console.log(updateData);
+    
     return this.coreApiService.put(
       `${this.route}/${workspaceId}`, formData, {
         headers: {
