@@ -49,6 +49,11 @@ h3 {
       @extend .cognum-headline;
       font-size: 14px;
     }
+
+    &-4 {
+      @extend .cognum-headline;
+      font-size: 12px;
+    }
   }
 
   &-text {
@@ -67,6 +72,11 @@ h3 {
     &-12 {
       @extend .cognum-text;
       font-size: 12px;
+    }
+
+    &-14 {
+      @extend .cognum-text;
+      font-size: 14px;
     }
   }
 

@@ -17,7 +17,7 @@
   gap: 0.5rem;
   align-self: stretch;
   cursor: pointer;
-  h2{
+  h2 {
     padding-top: 2px;
   }
 }
@@ -29,6 +29,7 @@
   background: #14b8a6;
   border-radius: 0.25rem;
 }
+
 .info-container {
   display: grid;
   grid-template-columns: 1fr auto;
@@ -50,18 +51,6 @@
     cursor: pointer;
     color: #14b8a6;
   }
-}
-
-button {
-  background-color: #14b8a6;
-  border: none;
-  padding: 10px 30px;
-  border-radius: 2px;
-  font-family: 'Outfit', sans-serif;
-  font-weight: 400;
-  font-style: normal;
-  color: #ffffff;
-  margin-top: 10px;
 }
 
 .content {
@@ -121,6 +110,7 @@ button {
       }
     }
   }
+
   .warning-message {
     color: red;
     margin-top: 10px;
@@ -145,12 +135,6 @@ button {
 
   #myCheckbox {
     width: 30px;
-  }
-
-  .workspace {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
   }
 
   .your-team {

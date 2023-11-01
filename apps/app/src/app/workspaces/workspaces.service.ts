@@ -35,7 +35,7 @@ export class WorkspacesService {
     ) as Observable<IWorkspace>;
   }
 
-  update(workspace: Partial<IWorkspace>): Observable<IWorkspace> {
+  update(workspace: any): Observable<IWorkspace> {
     return this.coreApiService.put(
       `${this.route}/${workspace._id}`,
       workspace

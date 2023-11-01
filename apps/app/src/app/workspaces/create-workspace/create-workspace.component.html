@@ -5,17 +5,21 @@
       <h2>cognum</h2>
     </div>
     <div class="info-container">
-      <span class="email" title="{{ email }}">{{ email }}</span>
+      <span class="email" title="{{ user.email }}">{{ user.email }}</span>
       <span class="change" (click)="onLogOut()">change</span>
     </div>
   </div>
 </header>
+<cognum-app-loading></cognum-app-loading>
 
-<div class="content">
+<div class="content" *ngIf="!isLoading">
   <div class="stepper-horizontal">
     <div
       class="step"
-      [ngClass]="{ editing: currentStep === 1, done: currentStep > 1 }"
+      [ngClass]="{
+        editing: currentStep === 'WorkspaceInfo',
+        done: currentStep !== 'WorkspaceInfo'
+      }"
     >
       <div class="step-content">
         <div class="step-circle">
@@ -27,7 +31,10 @@
     </div>
     <div
       class="step"
-      [ngClass]="{ editing: currentStep === 2, done: currentStep > 2 }"
+      [ngClass]="{
+        editing: currentStep === 'UsersInfo',
+        done: currentStep === 'EmployeeInfo'
+      }"
     >
       <div class="step-content">
         <div class="step-circle"><span>2</span></div>
@@ -38,7 +45,7 @@
     </div>
     <div
       class="step"
-      [ngClass]="{ editing: currentStep === 3, done: currentStep > 3 }"
+      [ngClass]="{ editing: currentStep === 'EmployeeInfo', done: false }"
     >
       <div class="step-content">
         <div class="step-circle"><span>3</span></div>
@@ -49,138 +56,23 @@
     </div>
   </div>
 
-  <div class="workspace" *ngIf="currentStep === 1">
-    <h1>What`s the name of you company or team?</h1>
-    <p>
-      This will be the name of your Cognum workspace - choose something your
-      team will recognize.
-    </p>
-    <div class="white-content">
-      <p>Workspace photo (optional)</p>
-      <div class="update-content">
-        <form [formGroup]="workspaceForm">
-          <label class="gray-content" for="workspaceFileInput">
-            <img *ngIf="photo" class="workspaceImage" [src]="photo" alt="" />
-            <img src="../../../assets/icons/Plus.svg" alt="plus" class="plus" />
-            <p *ngIf="!photo">Upload</p>
-          </label>
-          <input
-            type="file"
-            id="workspaceFileInput"
-            (change)="onFileSelected($event, 'workspace')"
-            name="workspaceFile"
-            formControlName="photo"
-            accept="image/*"
-            style="display: none"
-          />
-        </form>
-        <p>Help teammates know that this is right place.</p>
-      </div>
-    </div>
-    <div class="white-content">
-      <form [formGroup]="workspaceForm">
-        <p>Company or team name</p>
-        <input formControlName="name" placeholder="Name" />
-        <p>Your workspace access link</p>
-        <input
-          formControlName="link"
-          name="workspaceLink"
-          placeholder="name.cognum.ai"
-        />
-      </form>
-    </div>
-    <div [formGroup]="workspaceForm" class="check">
-      <input type="checkbox" formControlName="allowJoin" id="myCheckbox" />
-      <label for="myCheckbox"
-        >Let anyone with an @{{
-          workspaceForm.get('name')?.value | lowercase
-        }}.ai email join this workspace.</label
-      >
-    </div>
-    <div class="warning-message" *ngIf="showWarning">
-      Please fill in all fields.
-    </div>
-    <button (click)="nextStep()">Next</button>
-  </div>
+  <cognum-basic-info
+    *ngIf="currentStep === 'WorkspaceInfo'"
+    [workspace]="workspace"
+    (updateWorkspaceEvent)="updateWorkspace($event)"
+    (changeStepEvent)="changeStep($event)"
+  ></cognum-basic-info>
 
-  <div class="your-team" *ngIf="currentStep === 2">
-    <h1>Who else is on the {{ workspaceForm.get('name')?.value }} team?</h1>
-    <p>
-      Adding your name and profile photo helps your teammates recognize and
-      connect with you more easily.
-    </p>
-    <div class="white-content">
-      <form [formGroup]="teamForm">
-        <p>Add coworkers by email</p>
-        <input
-          formControlName="email"
-          placeholder="Ex. joe@potato.ai, mary@potato.ai"
-        />
-      </form>
-    </div>
-    <div class="warning-message" *ngIf="showWarning">
-      Please fill in all fields.
-    </div>
-    <div
-      *ngIf="
-        teamForm.get('email') &&
-        teamForm.get('email')?.hasError('invalidEmail') &&
-        teamForm.get('email')?.touched
-      "
-      class="warning-message"
-    >
-      Invalid email address. Please enter valid email addresses separated by
-      commas.
-    </div>
+  <cognum-users-info
+    *ngIf="currentStep === 'UsersInfo'"
+    [workspace]="workspace"
+    (updateWorkspaceEvent)="updateWorkspace($event)"
+    (changeStepEvent)="changeStep($event)"
+  ></cognum-users-info>
 
-    <div class="buttons">
-      <button class="invite" (click)="prevStep()">Prev</button>
-      <button (click)="nextStep()">Next</button>
-      <button class="invite">Copy invite link</button>
-      <button class="skip" (click)="skipStep()">Skip this step</button>
-    </div>
-  </div>
-
-  <div class="ai-employee" *ngIf="currentStep === 3">
-    <h1>What you need help with?</h1>
-    <div class="white-content">
-      <form [formGroup]="aiEmployeeForm">
-        <p>Create a short description for you AI employee</p>
-        <input
-          formControlName="description"
-          name="aiEmployeeDescription"
-          placeholder="Ex. marketing specialist, customer support..."
-        />
-        <p>Give your AI employee a name</p>
-        <input
-          formControlName="name"
-          name="aiEmployeeName"
-          placeholder="Ex. Adam"
-        />
-      </form>
-    </div>
-    <div class="white-content">
-      <p>Select your AI employee avatar</p>
-      <div class="avatar">
-        <div
-          *ngFor="let avatar of availableAvatars"
-          (click)="selectAvatar(avatar)"
-          [ngClass]="{ 'avatar-selected': selectedAvatar === avatar }"
-        >
-          <img [src]="avatar" alt="avatar" />
-        </div>
-      </div>
-    </div>
-
-    <div class="warning-message" *ngIf="showWarning">
-      Please fill in all fields.
-    </div>
-    <div style="display: flex; flex: 1; gap: 8px">
-      <button class="invite" (click)="prevStep()">Prev</button>
-      <button (click)="conclude()">
-        <span *ngIf="isLoading">Creating Workspace...</span>
-        <span *ngIf="!isLoading">Complete setup</span>
-      </button>
-    </div>
-  </div>
+  <cognum-employee-info
+    *ngIf="currentStep === 'EmployeeInfo'"
+    [workspace]="workspace"
+    (changeStepEvent)="changeStep($event)"
+  ></cognum-employee-info>
 </div>

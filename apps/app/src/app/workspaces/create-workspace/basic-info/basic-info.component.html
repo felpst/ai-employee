@@ -1,0 +1,80 @@
+<form [formGroup]="workspaceForm" (ngSubmit)="onSubmit()">
+  <div class="workspace">
+    <h1>What`s the name of you company or team?</h1>
+    <p>
+      This will be the name of your Cognum workspace - choose something your
+      team will recognize.
+    </p>
+    <div class="white-content">
+      <p class="cognum-headline-3">Workspace photo (optional)</p>
+      <div class="update-content">
+        <div class="file-container">
+          <label class="gray-content" for="workspaceFileInput">
+            <img
+              *ngIf="photo"
+              class="workspaceImage"
+              src="{{ selectedImage || photo }}"
+              alt=""
+            />
+            <img src="../../../assets/icons/Plus.svg" alt="plus" class="plus" />
+            <p *ngIf="!photo">Upload</p>
+          </label>
+          <input
+            class="input-style"
+            type="file"
+            id="workspaceFileInput"
+            (change)="onFileSelected($event, 'workspaces', 'photo')"
+            name="workspaceFile"
+            accept="image/*"
+            style="display: none"
+          />
+          <mat-error
+            class="cognum-text-12 warning-message"
+            *ngIf="hasInputError('photo', 'invalidFormat')"
+          >
+            Valid formats: .png, .jpg, .jpeg and .svg
+          </mat-error>
+          <mat-error
+            class="cognum-text-12 warning-message"
+            *ngIf="hasInputError('photo', 'invalidSize')"
+          >
+            Maximum size: 10MB
+          </mat-error>
+        </div>
+        <p class="cognum-text-14">
+          Help teammates know that this is right place.
+        </p>
+      </div>
+    </div>
+    <div class="white-content">
+      <p class="cognum-headline-4">Company or team name</p>
+      <input class="input-style" formControlName="name" placeholder="Name" />
+      <mat-error
+        class="cognum-text-12 warning-message"
+        *ngIf="hasInputError('name', 'required')"
+      >
+        Name field is required
+      </mat-error>
+      <p class="cognum-headline-4">Your workspace access link</p>
+      <input
+        class="input-style"
+        formControlName="link"
+        name="workspaceLink"
+        placeholder="name.cognum.ai"
+      />
+      <mat-error
+        class="cognum-text-12 warning-message"
+        *ngIf="hasInputError('link', 'required')"
+      >
+        Link field is required
+      </mat-error>
+    </div>
+    <button
+      type="submit"
+      class="submit-button"
+      [disabled]="!workspaceForm.valid"
+    >
+      Next
+    </button>
+  </div>
+</form>
