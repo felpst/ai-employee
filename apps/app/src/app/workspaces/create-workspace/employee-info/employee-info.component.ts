@@ -1,13 +1,7 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import {
-  FormBuilder,
-  FormControl,
-  FormGroup,
-  Validators,
-} from '@angular/forms';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { IUser, IWorkspace } from '@cognum/interfaces';
-import { AuthService } from '../../../auth/auth.service';
+import { IWorkspace } from '@cognum/interfaces';
 import { NotificationsService } from '../../../services/notifications/notifications.service';
 import { EmployeeService } from '../../ai-employee/ai-employee.service';
 
@@ -16,7 +10,7 @@ import { EmployeeService } from '../../ai-employee/ai-employee.service';
   templateUrl: './employee-info.component.html',
   styleUrls: ['./employee-info.component.scss'],
 })
-export class EmployeeInfoComponent implements OnInit {
+export class EmployeeInfoComponent {
   @Input({ required: true }) workspace!: IWorkspace;
   @Output() changeStepEvent = new EventEmitter();
   aiEmployeeForm!: FormGroup;
@@ -31,7 +25,6 @@ export class EmployeeInfoComponent implements OnInit {
 
   constructor(
     private formBuilder: FormBuilder,
-    private authService: AuthService,
     private employeeService: EmployeeService,
     private notificationsService: NotificationsService,
     private router: Router
@@ -41,31 +34,6 @@ export class EmployeeInfoComponent implements OnInit {
       description: ['', Validators.required],
       name: ['', Validators.required],
     });
-  }
-
-  ngOnInit(): void {
-    const user = this.authService.user;
-    const users = this.workspace.users as IUser[];
-    const _emails = users?.length
-      ? users
-          .map(({ email }) => email)
-          .filter((email) => email !== user.email)
-          .join(', ')
-      : '';
-    this.aiEmployeeForm.get('emails')?.patchValue(_emails);
-  }
-
-  emailListValidator(control: FormControl): { [key: string]: any } | null {
-    const emails: string[] = (control.value as string)
-      .split(',')
-      .map((email) => email.trim());
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    for (const email of emails) {
-      if (!emailRegex.test(email)) {
-        return { invalidEmail: true };
-      }
-    }
-    return null;
   }
 
   hasInputError(inputName: string, errorName: string) {

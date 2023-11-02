@@ -1,59 +1,69 @@
 <form [formGroup]="aiEmployeeForm" (ngSubmit)="onSubmit()">
   <div class="ai-employee">
     <h1>What you need help with?</h1>
-    <div class="white-content">
-      <p class="cognum-headline-4">
-        Create a short description for you AI employee
-      </p>
-      <input
-        class="input-style"
-        formControlName="description"
-        name="aiEmployeeDescription"
-        placeholder="Ex. marketing specialist, customer support..."
-      />
-      <mat-error
-        class="cognum-text-12 warning-message"
-        *ngIf="hasInputError('description', 'required')"
-      >
-        Description field is required
-      </mat-error>
-      <p class="cognum-headline-4">Give your AI employee a name</p>
-      <input
-        class="input-style"
-        formControlName="name"
-        name="aiEmployeeName"
-        placeholder="Ex. Adam"
-      />
-      <mat-error
-        class="cognum-text-12 warning-message"
-        *ngIf="hasInputError('name', 'required')"
-      >
-        Name field is required
-      </mat-error>
-    </div>
-    <div class="white-content">
-      <p class="cognum-headline-4">Select your AI employee avatar</p>
-      <div class="avatar">
-        <div
-          *ngFor="let avatar of availableAvatars"
-          (click)="selectAvatar(avatar)"
-          [ngClass]="{ 'avatar-selected': selectedAvatar === avatar }"
-        >
-          <img [src]="avatar" alt="avatar" />
+    <div class="form-container">
+      <div class="cognum-white-content-w720 form-container-box">
+        <div class="cognum-form-row-4">
+          <span class="cognum-headline-4">
+            Create a short description for you AI employee
+          </span>
+          <input
+            class="input-style"
+            formControlName="description"
+            name="aiEmployeeDescription"
+            placeholder="Ex. marketing specialist, customer support..."
+          />
+          <mat-error
+            class="cognum-text-12 warning-message"
+            *ngIf="hasInputError('description', 'required')"
+          >
+            Description field is required
+          </mat-error>
+        </div>
+
+        <div class="cognum-form-row-4">
+          <span class="cognum-headline-4">Give your AI employee a name</span>
+          <input
+            class="input-style"
+            formControlName="name"
+            name="aiEmployeeName"
+            placeholder="Ex. Adam"
+          />
+          <mat-error
+            class="cognum-text-12 warning-message"
+            *ngIf="hasInputError('name', 'required')"
+          >
+            Name field is required
+          </mat-error>
+        </div>
+      </div>
+
+      <div class="cognum-white-content-w720 form-container-box">
+        <span class="cognum-headline-4">Select your AI employee avatar</span>
+        <div class="avatar">
+          <div
+            *ngFor="let avatar of availableAvatars"
+            (click)="selectAvatar(avatar)"
+            [ngClass]="{ 'avatar-selected': selectedAvatar === avatar }"
+          >
+            <img [src]="avatar" alt="avatar" />
+          </div>
         </div>
       </div>
     </div>
+
     <mat-error
       class="cognum-text-12 warning-message"
       *ngIf="hasInputError('avatar', 'required')"
     >
       Avatar is required
     </mat-error>
+
     <div class="buttons">
       <button class="invite" (click)="prevStep()">Prev</button>
       <button
         type="submit"
-        class="submit-button"
+        class="cognum-form-buttons-submit"
         [disabled]="!aiEmployeeForm.valid"
       >
         <span *ngIf="isLoading">Creating Workspace...</span>
