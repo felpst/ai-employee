@@ -13,48 +13,7 @@
 <cognum-app-loading></cognum-app-loading>
 
 <div class="content" *ngIf="!isLoading">
-  <div class="stepper-horizontal">
-    <div
-      class="step"
-      [ngClass]="{
-        editing: currentStep === 'WorkspaceInfo',
-        done: currentStep !== 'WorkspaceInfo'
-      }"
-    >
-      <div class="step-content">
-        <div class="step-circle">
-          <span>1</span>
-        </div>
-        <div class="step-title">workspace</div>
-      </div>
-      <div class="step-bar-right"></div>
-    </div>
-    <div
-      class="step"
-      [ngClass]="{
-        editing: currentStep === 'UsersInfo',
-        done: currentStep === 'EmployeeInfo'
-      }"
-    >
-      <div class="step-content">
-        <div class="step-circle"><span>2</span></div>
-        <div class="step-title">your team</div>
-      </div>
-
-      <div class="step-bar-right"></div>
-    </div>
-    <div
-      class="step"
-      [ngClass]="{ editing: currentStep === 'EmployeeInfo', done: false }"
-    >
-      <div class="step-content">
-        <div class="step-circle"><span>3</span></div>
-        <div class="step-title">ai employee</div>
-      </div>
-
-      <div class="step-bar-right"></div>
-    </div>
-  </div>
+  <cognum-stepper [currentStep]="currentStep"></cognum-stepper>
 
   <cognum-basic-info
     *ngIf="currentStep === 'WorkspaceInfo'"

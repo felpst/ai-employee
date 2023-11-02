@@ -57,6 +57,7 @@ export class EmployeeInfoComponent {
 
   onSubmit() {
     if (!this.aiEmployeeForm.valid) return;
+    this.isLoading = true;
     const id = this.workspace._id;
     const { name, description, avatar } = this.aiEmployeeForm.value;
     const json = { name, role: description, avatar, workspace: id };

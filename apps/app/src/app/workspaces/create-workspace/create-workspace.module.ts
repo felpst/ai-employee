@@ -7,12 +7,14 @@ import { LayoutsModule } from '../../layouts/layouts.module';
 import { BasicInfoComponent } from './basic-info/basic-info.component';
 import { CreateWorkspaceComponent } from './create-workspace.component';
 import { EmployeeInfoComponent } from './employee-info/employee-info.component';
+import { StepperComponent } from './stepper/stepper.component';
 import { UsersInfoComponent } from './users-info/users-info.component';
 @NgModule({
   declarations: [
     BasicInfoComponent,
     CreateWorkspaceComponent,
     EmployeeInfoComponent,
+    StepperComponent,
     UsersInfoComponent,
   ],
   imports: [
