@@ -4,17 +4,13 @@
   flex-direction: row;
 }
 
-.menu-scroll {
-  width: 168px;
-  height: 100%;
-}
-
 .chat {
   flex: 1;
-  margin-left: -8px;
 }
 
 .cognum-menu {
+  z-index: 1;
+
   header {
     padding-top: 12px;
   }
