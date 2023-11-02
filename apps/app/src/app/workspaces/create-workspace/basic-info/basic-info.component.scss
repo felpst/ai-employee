@@ -3,25 +3,16 @@
   flex-direction: column;
   align-items: center;
 
-  .white-content {
-    border-radius: 2px;
-    width: 720px;
-    padding: 20px;
-    background-color: white;
-
-    .input-style {
-      width: 100%;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-      padding: 8px;
-      transition: border-color 0.3s;
-      margin-bottom: 8px;
-    }
+  .form-container {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: 8px;
 
     .update-content {
       display: flex;
       align-items: center;
-      gap: 25px;
+      justify-content: space-between;
 
       .file-container {
         display: flex;
@@ -44,10 +35,6 @@
       background-color: #f0f2f5;
       border: 1px dotted #bfbfc2;
 
-      p {
-        color: #00000073;
-      }
-
       .workspaceImage {
         position: absolute;
         width: calc(100% - 0rem);
@@ -58,25 +45,11 @@
     }
   }
 
-  .warning-message {
-    color: red;
+  .inform-style {
+    color: #00000073;
   }
 
-  .submit-button {
-    background-color: #14b8a6;
-    border: none;
-    padding: 10px 30px;
-    border-radius: 2px;
-    font-family: 'Outfit', sans-serif;
-    font-weight: 400;
-    font-style: normal;
-    color: #ffffff;
-    margin-top: 10px;
-
-    &:disabled {
-      background: #dddddd;
-      border: none;
-      cursor: not-allowed;
-    }
+  .warning-message {
+    color: red;
   }
 }
