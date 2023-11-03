@@ -10,6 +10,16 @@ class DatabaseHelper {
       throw error;
     }
   }
+
+  public static async disconnect(): Promise<void> {
+    try {
+      await mongoose.disconnect();
+      console.log("Disconnected to MongoDB");
+    } catch (error) {
+      console.error("Error disconnecting to MongoDB:", error);
+      throw error;
+    }
+  }
 }
 
 export default DatabaseHelper;

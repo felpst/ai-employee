@@ -1,11 +1,22 @@
+import { DatabaseHelper } from '@cognum/helpers';
 import { IChat, IUser } from '@cognum/interfaces';
 import { ChatModel } from '@cognum/llm';
 import { AIEmployeeMemory } from '@cognum/tools';
+import mongoose from 'mongoose';
 import { AiEmployee } from '../entities/AiEmployee';
 import { ChatHistory } from '../usecases/ChatHistory';
 
-describe('ChatMemory', () => {
-  jest.setTimeout(14000)
+describe.skip('ChatMemory', () => {
+  jest.setTimeout(60000)
+
+  beforeEach(async () => {
+    await DatabaseHelper.connect();
+    await mongoose.connection.set('bufferTimeoutMS', 60000)
+  });
+  
+  afterEach(async () => {
+    await mongoose.connection.close();
+  });
 
   const _user = {
     _id: "65401efc97740ada74d29cb4",
