@@ -109,6 +109,7 @@
                 formControlName="email"
                 type="email"
                 placeholder="potato"
+                #inputEmail
               />
               <select
                 class="form-select no-focus-outline"
@@ -121,28 +122,30 @@
               </button>
             </div>
           </div>
-          <div class="item" *ngFor="let item of users">
-            <div class="item-delete">
-              <span>{{ item.name }}</span>
-              <mat-icon svgIcon="delete"></mat-icon>
-            </div>
-
-            <div class="item-user">
-              <div class="item-email">
-                <img
-                  *ngIf="item.photo"
-                  [src]="item.photo"
-                  class="image-style"
-                  alt="User Image"
-                />
-                <span>{{ item.email }}</span>
+          <div class="item-scroll">
+            <div class="item" *ngFor="let item of users">
+              <div class="item-delete">
+                <span>{{ item.name }}</span>
+                <mat-icon svgIcon="delete"></mat-icon>
               </div>
-              <select
-                class="form-select no-focus-outline"
-                aria-label="Default select example"
-              >
-                <option value="1">Admin</option>
-              </select>
+
+              <div class="item-user">
+                <div class="item-email">
+                  <img
+                    *ngIf="item.photo"
+                    [src]="item.photo"
+                    class="image-style"
+                    alt="User Image"
+                  />
+                  <span>{{ item.email }}</span>
+                </div>
+                <select
+                  class="form-select no-focus-outline"
+                  aria-label="Default select example"
+                >
+                  <option value="1">Admin</option>
+                </select>
+              </div>
             </div>
           </div>
         </div>

@@ -1,9 +1,9 @@
-import { Component, ElementRef, ViewChild } from '@angular/core';
+import { Component } from '@angular/core';
 import { AbstractControl, FormBuilder, FormControl, FormGroup, ValidationErrors, Validators } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
+import { debounceTime, distinctUntilChanged, filter, map } from 'rxjs';
 import { AuthService } from '../../auth/auth.service';
 import { NotificationsService } from '../../services/notifications/notifications.service';
-import { UsersService } from '../../services/users/users.service';
 import { WorkspacesService } from '../workspaces.service';
 
 @Component({
@@ -12,8 +12,6 @@ import { WorkspacesService } from '../workspaces.service';
   styleUrls: ['./settings-workspace.component.scss'],
 })
 export class SettingsWorkspaceComponent {
-  @ViewChild('overviewContainer', { static: true })
-  private overviewContainer!: ElementRef<HTMLDivElement>;
   // user config
   users: any = [];
 
@@ -25,27 +23,57 @@ export class SettingsWorkspaceComponent {
     photo: [this.photo, []],
   });
   teamForm: FormGroup;
+  idUserSubmit = ''
 
   // others
-  selectedItem: number | null = 1;
+  selectedItem: number | null = 2;
   isLoading = true;
   submitting = false;
   modal = false;
 
   constructor(
     private router: Router,
-    private route: ActivatedRoute,
     private authService: AuthService,
-    private usersService: UsersService,
     private workspacesService: WorkspacesService,
     private formBuilder: FormBuilder,
     private notificationsService: NotificationsService,
-  ) { 
+  ) {
     this.teamForm = this.formBuilder.group({
       email: ['', [Validators.required, this.emailListValidator]],
     });
-  
+
+    const controlEmail = this.teamForm.get('email');
+    
     this.users = this.workspace.users;
+    controlEmail?.valueChanges
+      .pipe(
+        map((value: any) => {
+          return value;
+        }),
+        filter((email) => {
+          return email && this.isEmail(email);
+        }),
+        debounceTime(500),
+        distinctUntilChanged()
+      )
+      .subscribe((email) => {
+        this.authService.checkEmailRegistered(email).subscribe({
+          
+          next: (response) => {
+            this.idUserSubmit = response._id
+            controlEmail.setErrors({
+              emailAlreadyExists: true,
+            });
+          },
+          error: () => {
+            controlEmail.setErrors({
+              emailAlreadyExists: null,
+            });
+            controlEmail.updateValueAndValidity();
+          },
+        });
+      });
+    
   }
   
   get user() {
@@ -132,20 +160,17 @@ export class SettingsWorkspaceComponent {
   }
 
   async onAddUser() {
-    const teamData = this.teamForm.value;
     const formData = new FormData();
+    this.users.push(this.idUserSubmit);
 
-    const submitData = {
-      users: teamData.email.split(','),
-    };
+    formData.append('json', JSON.stringify({ users: this.users }));
 
-    formData.append('json', JSON.stringify(submitData));
-
-    this.workspacesService.update(this.workspace._id, JSON.stringify(submitData)).subscribe({
+    this.workspacesService.update(this.workspace._id, JSON.stringify({ users: this.users })).subscribe({
       next: () => {
-        { submitData.users == '' ? this.notificationsService.show('The user does not have a registration!') : this.notificationsService.show('Successfully added users!') }
+        this.notificationsService.show('Successfully added users!')
+        window.location.reload();
       },
-      error: (error) => {
+      error: () => {
         this.notificationsService.show("Oops, it looks like there was an error... Please try again in a few minutes")
       }
     })
@@ -168,10 +193,14 @@ export class SettingsWorkspaceComponent {
       next: () => {
         this.notificationsService.show('Successfully changed data!');
       },
-      error: (error) => {
+      error: () => {
         this.notificationsService.show("Oops, it looks like there was an error... Please try again in a few minutes")
       }
     });
+  }
+
+  private isEmail(s: string) {
+    return s?.indexOf('@') !== -1;
   }
 
 }

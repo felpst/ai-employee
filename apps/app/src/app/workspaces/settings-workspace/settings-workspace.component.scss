@@ -246,6 +246,30 @@
   }
 }
 
+.item-scroll {
+  height: 400px;
+  overflow-y: auto;
+  margin-top: 10px;
+  padding-right: 10px;
+
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background-color: #f0f0f0;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: #ccc;
+    border-radius: 4px;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background-color: #aaa;
+  }
+}
+
 .item {
   display: flex;
   flex-direction: column;
