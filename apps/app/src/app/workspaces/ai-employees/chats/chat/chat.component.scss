@@ -188,11 +188,27 @@
   }
 }
 
+.messages.no-messages-visible{
+  display: flex;
+  align-items: center;
+}
+
 .no-messages {
   text-align: center;
-  font-style: italic;
-  color: #bbb;
+  color: #848587;
+  font-size: 24px;
+
+  img {
+    width: 5rem;
+  }
+
+  .employee-name {
+    color: #000;
+    font-weight: 500;
+    margin-top: 0.7rem;
+  }
 }
+
 
 .accordion {
   display: flex;

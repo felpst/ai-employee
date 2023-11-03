@@ -1,5 +1,5 @@
 <div class="chat">
-  <div class="messages" #chatContent>
+  <div class="messages" #chatContent [ngClass]="{'no-messages-visible': chatService.messages.length === 0}">
     <div class="messages-wrapper">
       <!-- Skeleton loader -->
       <div class="skeleton" *ngIf="chatService.loadingMessages">
@@ -15,8 +15,10 @@
 
       <!-- No messages -->
 
-      <div class="no-messages">
-        No messages yet. Start a conversation by typing a message below.
+      <div class="no-messages" *ngIf="!chatService.loadingMessages && chatService.messages.length === 0">
+        <p>Start a new chat with</p>
+        <img src="../../../../../assets/icons/avatar.svg" alt="workspace photo"/>
+        <p class="employee-name">{{ employeeName }}</p>
       </div>
    
 
