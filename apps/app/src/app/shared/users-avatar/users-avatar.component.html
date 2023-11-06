@@ -4,7 +4,12 @@
     *ngFor="let avatar of showAvatars; let i = index"
     [style.background-color]="avatar.backgroundColor"
   >
-    <img *ngIf="avatar.photo" [src]="avatar.photo" />
+    <img
+      class="avatar"
+      *ngIf="avatar.photo"
+      [src]="avatar.photo"
+      [title]="avatar.name"
+    />
     <span *ngIf="!avatar.photo" class="initials">
       {{ avatar.initials }}
     </span>

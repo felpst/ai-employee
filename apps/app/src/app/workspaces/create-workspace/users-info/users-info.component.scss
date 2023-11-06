@@ -1,0 +1,33 @@
+.your-team {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  .inform-style {
+    color: #00000073;
+  }
+
+  .buttons {
+    display: flex;
+    gap: 20px;
+    padding: 16px 0;
+
+    .skip {
+      border: none;
+      background-color: #f0f2f5;
+      color: #00000073;
+    }
+
+    .invite {
+      border: 1px solid black;
+      background-color: #f0f2f5;
+      color: black;
+      padding: 7px 12px;
+      font-weight: 400;
+    }
+  }
+
+  .warning-message {
+    color: red;
+  }
+}

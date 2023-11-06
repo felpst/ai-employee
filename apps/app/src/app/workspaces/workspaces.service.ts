@@ -35,27 +35,17 @@ export class WorkspacesService {
     ) as Observable<IWorkspace>;
   }
 
-  update(
-    workspaceId: string,
-    updateData: string,
-    photo: File | null = null
-  ) {
-    const formData = new FormData();
-    formData.append('json', updateData);
-    if (photo) formData.append('photo', photo);
-
-    console.log(formData);
-    
-    return this.coreApiService.put(
-      `${this.route}/${workspaceId}`, formData, {
-        headers: {
-        Accept: 'application/json, text/plain, */*',
-      },
-      observe: 'events',
-      reportProgress: true,
-      responseType: 'json',
-      }
-    );
+  update(workspace: any): Observable<IWorkspace> {
+    // return this.coreApiService.put(
+    //   `${this.route}/${workspaceId}`, formData, {
+    //     headers: {
+    //     Accept: 'application/json, text/plain, */*',
+    //   },
+    //   observe: 'events',
+    //   reportProgress: true,
+    //   responseType: 'json',
+    //   }
+    // );
   }
 
   list(): Observable<Map<string, IWorkspace>> {

@@ -51,6 +51,11 @@ h3 {
       @extend .cognum-heading;
       font-size: 14px;
     }
+
+    &-4 {
+      @extend .cognum-headline;
+      font-size: 12px;
+    }
   }
 
   &-font {
@@ -87,6 +92,11 @@ h3 {
     &-12 {
       @extend .cognum-text;
       font-size: 12px;
+    }
+
+    &-14 {
+      @extend .cognum-text;
+      font-size: 14px;
     }
   }
 
@@ -215,12 +225,87 @@ h3 {
       }
     }
   }
+<<<<<<< HEAD
+=======
+
+  &-white-content {
+    @extend .cognum;
+
+    width: 100%;
+    height: 100%;
+    padding: 20px;
+    border-radius: 2px;
+    background-color: #fff;
+
+    &-w720 {
+      @extend .cognum-white-content;
+
+      width: 720px;
+    }
+  }
+
+  &-form {
+    @extend .cognum;
+
+    &-row {
+      @extend .cognum-form;
+      display: flex;
+      flex: 1;
+      flex-direction: column;
+      gap: 8px;
+
+      &-4 {
+        @extend .cognum-form-row;
+        gap: 4px;
+      }
+
+      &-2 {
+        @extend .cognum-form-row;
+        gap: 2px;
+      }
+    }
+
+    &-buttons {
+      @extend .cognum-form;
+
+      &-submit {
+        @extend .cognum-form-buttons;
+
+        background-color: #14b8a6;
+        border: none;
+        padding: 10px 30px;
+        border-radius: 2px;
+        font-family: 'Outfit', sans-serif;
+        font-weight: 400;
+        font-style: normal;
+        color: #ffffff;
+
+        &:disabled {
+          background: #dddddd;
+          border: none;
+          cursor: not-allowed;
+        }
+      }
+    }
+  }
+}
+
+input {
+  width: 100%;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 8px;
+  transition: border-color 0.3s;
+  margin-bottom: 8px;
+}
+>>>>>>> 41f2f3275e612542af6fcf42e05194fdce640fbc
 
   &-page {
     @extend .cognum;
     background-color: #f0f2f5;
     padding: 32px;
   }
+<<<<<<< HEAD
 
   &-button {
     @extend .cognum;
@@ -230,6 +315,8 @@ h3 {
     border-radius: 2px !important;
     font-weight: 300 !important;
   }
+=======
+>>>>>>> 41f2f3275e612542af6fcf42e05194fdce640fbc
 }
 
 .truncate {
