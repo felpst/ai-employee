@@ -1,3 +1,22 @@
+<div class="cognum-page">
+  <header>
+    <div class="left cognum-heading-1">AI employees</div>
+    <div class="right">
+      <cognum-search-bar></cognum-search-bar>
+
+      <button
+        (click)="createEmployee()"
+        mat-raised-button
+        class="cognum-button"
+        color="primary"
+      >
+        <mat-icon>add</mat-icon>
+        New AI employee
+      </button>
+    </div>
+  </header>
+</div>
+
 <div class="main">
   <div class="header">
     <div class="title">
@@ -73,7 +92,11 @@
 
   <div class="content">
     <div class="list">
-      <div class="white-content" *ngFor="let employee of employees">
+      <div
+        class="white-content"
+        *ngFor="let employee of employees"
+        [routerLink]="[employee._id, 'chats']"
+      >
         <div class="ai-employee">
           <img [src]="employee.avatar" alt="" />
           <div class="description">

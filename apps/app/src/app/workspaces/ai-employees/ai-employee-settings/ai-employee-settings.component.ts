@@ -1,16 +1,14 @@
 
 import { Component, OnInit } from '@angular/core';
 import {
-
   FormBuilder,
   Validators
-
 } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { NotificationsService } from '../../../services/notifications/notifications.service';
-import { EmployeeService } from '../ai-employee.service';
 import { IAIEmployee } from '@cognum/interfaces';
 import { AuthService } from '../../../auth/auth.service';
+import { NotificationsService } from '../../../services/notifications/notifications.service';
+import { AIEmployeesService } from '../ai-employees.service';
 
 
 @Component({
@@ -18,7 +16,7 @@ import { AuthService } from '../../../auth/auth.service';
   templateUrl: './ai-employee-settings.component.html',
   styleUrls: ['./ai-employee-settings.component.scss'],
 })
-export class AiEmployeeComponentSettings implements OnInit {
+export class AIEmployeeSettingsComponent implements OnInit {
   name = '';
   role = '';
   updateForm = this.formBuilder.group({
@@ -43,7 +41,7 @@ export class AiEmployeeComponentSettings implements OnInit {
     private router: Router,
     private authService: AuthService,
     private notificationsService: NotificationsService,
-    private aiEmployeeService: EmployeeService
+    private aiAIEmployeesService: AIEmployeesService
   ) {
     this.updateForm.valueChanges.subscribe(() => {
       this.showUpdateError = false;
@@ -75,7 +73,7 @@ export class AiEmployeeComponentSettings implements OnInit {
   ngOnInit() {
     this.route.params.subscribe(params => {
       const employeeId = params['id'];
-      this.aiEmployeeService.getById(employeeId).subscribe({
+      this.aiAIEmployeesService.get(employeeId).subscribe({
         next: (response) => {
           this.name = response.name;
           this.role = response.role;
@@ -91,7 +89,7 @@ export class AiEmployeeComponentSettings implements OnInit {
     const updateData: Partial<IAIEmployee> = {
       _id: employeeId,
     };
-    this.aiEmployeeService.delete(updateData).subscribe({
+    this.aiAIEmployeesService.delete(updateData).subscribe({
       next: () => {
         this.router.navigate(['/'], { relativeTo: this.route });
       },
@@ -120,7 +118,7 @@ export class AiEmployeeComponentSettings implements OnInit {
       updateData.role = role;
     }
 
-    this.aiEmployeeService.update(updateData).subscribe({
+    this.aiAIEmployeesService.update(updateData).subscribe({
       next: () => {
         this.notificationsService.show('Successfully changed data!');
       },

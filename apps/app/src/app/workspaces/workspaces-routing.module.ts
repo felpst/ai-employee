@@ -3,8 +3,6 @@ import { RouterModule, Routes } from '@angular/router';
 import { KnowledgeBaseComponent } from './knowledge-base/knowledge-base.component';
 import { WorkspaceResolver } from './workspace.resolver';
 import { WorkspaceComponent } from './workspace/workspace.component';
-import { AiEmployeeComponent } from './ai-employee/ai-employee.component';
-import { AiEmployeeComponentSettings } from './ai-employee/aiEmployee-settings/ai-employee-settings.component';
 
 const routes: Routes = [
   {
@@ -16,12 +14,11 @@ const routes: Routes = [
         component: WorkspaceComponent,
       },
       {
-        path: 'employees',
-        component: AiEmployeeComponent,
-      },
-      {
-        path: 'employee/:id',
-        component: AiEmployeeComponentSettings,
+        path: 'ai-employees',
+        loadChildren: () =>
+          import('./ai-employees/ai-employees.module').then(
+            (m) => m.AIEmployeesModule
+          ),
       },
       {
         path: 'history',

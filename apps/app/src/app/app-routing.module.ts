@@ -44,12 +44,6 @@ const routes: Routes = [
             (m) => m.WorkspacesModule
           ),
       },
-      {
-        path: 'chats',
-        component: AdminComponent,
-        loadChildren: () =>
-          import('./chats/chats.module').then((m) => m.ChatsModule),
-      },
       { path: '**', redirectTo: 'home', pathMatch: 'full' },
     ],
   },

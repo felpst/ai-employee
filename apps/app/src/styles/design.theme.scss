@@ -1,3 +1,5 @@
+@import './cognum.variables.scss';
+
 html,
 body {
   height: 100%;
@@ -26,28 +28,46 @@ h3 {
   font-family: 'Outfit', sans-serif;
   letter-spacing: 0px;
 
-  &-headline {
+  &-heading {
     @extend .cognum;
-    font-weight: bold;
+    font-weight: 500;
 
     &-1 {
-      @extend .cognum-headline;
-      font-size: 24px;
+      @extend .cognum-heading;
+      font-size: 20px;
     }
 
     &-2 {
-      @extend .cognum-headline;
+      @extend .cognum-heading;
       font-size: 18px;
     }
 
     &-3 {
-      @extend .cognum-headline;
+      @extend .cognum-heading;
       font-size: 16px;
     }
 
     &-4 {
-      @extend .cognum-headline;
+      @extend .cognum-heading;
       font-size: 14px;
+    }
+  }
+
+  &-font {
+    &-strong {
+      font-weight: bold;
+    }
+
+    &-color {
+      &-grey-dark {
+        color: $cognum-color-grey-dark;
+      }
+      &-grey {
+        color: $cognum-color-grey;
+      }
+      &-grey-light {
+        color: $cognum-color-grey-light;
+      }
     }
   }
 
@@ -72,9 +92,60 @@ h3 {
 
   &-menu {
     @extend .cognum;
+    width: 160px;
+    height: 100%;
+    box-shadow: 4px 4px 8px 0px #00000026;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    background-color: #fff;
+    border-left: 1px solid #f0f2f5;
+    z-index: 1;
+
+    .pad {
+      padding: 0 12px 12px 12px;
+    }
+
+    header {
+      display: flex;
+      flex-direction: column;
+    }
+
+    &-divisor {
+      border: 1px solid #f5f5f5;
+      margin: 0 12px;
+      margin-bottom: 12px;
+    }
 
     button {
       color: #595959;
+      border-radius: 2px;
+
+      .mat-mdc-menu-item-text {
+        width: 100%;
+      }
+
+      .content {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        align-content: center;
+
+        .actions {
+          display: flex;
+          flex-direction: row;
+          align-items: center;
+
+          mat-icon {
+            display: none;
+            font-size: 16px;
+            width: 16px;
+            height: 16px;
+            margin-right: 0px !important;
+          }
+        }
+      }
 
       span {
         font-family: 'Outfit', sans-serif !important;
@@ -83,7 +154,7 @@ h3 {
         font-weight: 400 !important;
       }
 
-      mat-icon {
+      mat-icon.small {
         width: 14px;
         height: 14px;
         line-height: 10px;
@@ -98,6 +169,12 @@ h3 {
 
         mat-icon {
           fill: #0d9488;
+        }
+
+        .actions {
+          mat-icon {
+            display: block;
+          }
         }
       }
     }
@@ -138,19 +215,20 @@ h3 {
       }
     }
   }
-}
 
-button {
-  border-radius: 0px !important;
-
-  span {
-    max-width: 100%;
+  &-page {
+    @extend .cognum;
+    background-color: #f0f2f5;
+    padding: 32px;
   }
 
-  &.active,
-  &:active,
-  &:hover {
-    background: #f5f5f5;
+  &-button {
+    @extend .cognum;
+
+    height: 32px !important;
+    line-height: 32px !important;
+    border-radius: 2px !important;
+    font-weight: 300 !important;
   }
 }
 

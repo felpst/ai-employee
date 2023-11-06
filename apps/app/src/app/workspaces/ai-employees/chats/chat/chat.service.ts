@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { env } from 'apps/app/src/environments/environment';
-import { AuthService } from '../../auth/auth.service';
+import { env } from '../../../../../environments/environment';
+import { AuthService } from '../../../../auth/auth.service';
 import { ChatsService } from '../chats.service';
 
 export interface WebSocketMessage {

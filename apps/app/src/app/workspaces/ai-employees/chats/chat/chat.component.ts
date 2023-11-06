@@ -8,9 +8,10 @@ import { NgForm } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import { IFeedback } from '@cognum/interfaces';
-import { AuthService } from '../../auth/auth.service';
-import { MessagesService } from '../../services/messages/messages.service';
-import { NotificationsService } from '../../services/notifications/notifications.service';
+import { AuthService } from '../../../../auth/auth.service';
+import { MessagesService } from '../../../../services/messages/messages.service';
+import { NotificationsService } from '../../../../services/notifications/notifications.service';
+import { AIEmployeesService } from '../../ai-employees.service';
 import { ChatsService } from '../chats.service';
 import { ChatService } from './chat.service';
 import { FeedbackFormComponent } from './feedback-form/feedback-form.component';
@@ -31,6 +32,7 @@ export class ChatComponent implements AfterViewChecked {
   @ViewChild('inputMessage', { static: true })
   private inputMessage!: ElementRef;
   status = 'Ready';
+  employeeName: string = '';
 
   constructor(
     public chatService: ChatService,
@@ -39,11 +41,14 @@ export class ChatComponent implements AfterViewChecked {
     private chatsService: ChatsService,
     private messagesService: MessagesService,
     private notificationsService: NotificationsService,
+    private aiEmployeesService: AIEmployeesService,
     private dialog: MatDialog
   ) {
     route.params.subscribe((params) => {
-      this.chatsService.selectedChat = params['id'];
-      this.chatService.connect(params['id']);
+   
+      this.chatsService.selectedChat = params['chatId'];
+      this.chatService.connect(params['chatId']);
+      this.employeeName = this.aiEmployeesService.aiEmployee.name;
     });
   }
 

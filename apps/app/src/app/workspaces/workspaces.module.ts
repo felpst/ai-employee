@@ -16,7 +16,6 @@ import { LayoutsModule } from '../layouts/layouts.module';
 import { KnowledgeBaseModule } from './knowledge-base/knowledge-base.module';
 import { WorkspaceComponent } from './workspace/workspace.component';
 import { WorkspacesRoutingModule } from './workspaces-routing.module';
-import { AiEmployeeModule } from './ai-employee/ai-employee.module';
 
 @NgModule({
   declarations: [WorkspaceComponent],
@@ -36,8 +35,7 @@ import { AiEmployeeModule } from './ai-employee/ai-employee.module';
     ReactiveFormsModule,
     NgxSkeletonLoaderModule,
     LayoutsModule,
-    KnowledgeBaseModule,
-    AiEmployeeModule
+    KnowledgeBaseModule
   ],
 })
 export class WorkspacesModule {}

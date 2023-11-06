@@ -1,13 +1,9 @@
 import { Component, Inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { AiEmployeeComponent } from '../ai-employee.component';
-import { EmployeeService } from '../ai-employee.service';
-import { WorkspacesService } from '../../workspaces.service';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { NotificationsService } from '../../../services/notifications/notifications.service';
-import { ActivatedRoute } from '@angular/router';
-import { HttpClient } from '@angular/common/http';
-import { Console } from 'console';
+import { AIEmployeesComponent } from '../ai-employees.component';
+import { AIEmployeesService } from '../ai-employees.service';
 
 
 @Component({
@@ -25,15 +21,11 @@ export class WhiteAiEmployeeComponent {
   isLoading = false;
 
   constructor(
-    private httpClient: HttpClient,
-    private route: ActivatedRoute,
     private formBuilder: FormBuilder,
-    private dialog: MatDialog,
-    private dialogRef: MatDialogRef<AiEmployeeComponent>,
+    private dialogRef: MatDialogRef<AIEmployeesComponent>,
     private notificationsService: NotificationsService,
-    private workspacesService: WorkspacesService,
     @Inject(MAT_DIALOG_DATA) private data: any,
-    private employeeService: EmployeeService) {
+    private employeeService: AIEmployeesService) {
 
       this.form = this.formBuilder.group({
         description: ['', [Validators.required]],
@@ -62,34 +54,34 @@ export class WhiteAiEmployeeComponent {
     const nameControl = this.form.get('name');
 
     if (
-      typeof this.selectedAvatar === 'string' 
+      typeof this.selectedAvatar === 'string'
     ) {
       const extension = this.selectedAvatar.split('.').pop();
       const blob = new Blob([this.selectedAvatar], { type: 'text/plain' });
       const file = new File([blob], `avatar.${extension}`);
       this.selectedFile= file;
     }
-  
+
     if (descriptionControl?.valid && nameControl?.valid) {
       const formData = new FormData();
       formData.append('name', nameControl.value);
-      formData.append('role', descriptionControl.value); 
+      formData.append('role', descriptionControl.value);
       formData.append('workspace', this.form.get('workspace')?.value ?? '');
-  
+
       const jsonData = {
         name: nameControl.value,
         role: descriptionControl.value,
         workspace: this.form.get('workspace')?.value ?? ''
       };
       formData.append('json', JSON.stringify(jsonData));
-   
-    
+
+
       if (this.selectedFile) {
         formData.append('avatar', this.selectedFile, this.selectedFile.name);
       }
-  
+
       this.isLoading = true;
-  
+
       this.employeeService.create(formData).subscribe(
         (createdEmployee) => {
           this.notificationsService.show('Successfully created Ai Employee');
@@ -107,7 +99,7 @@ export class WhiteAiEmployeeComponent {
       this.showWarning = true;
     }
   }
-  
-  
-  
+
+
+
 }

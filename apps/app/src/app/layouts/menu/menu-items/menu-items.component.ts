@@ -8,7 +8,6 @@ const ROBOT_ICON = `<svg width="14" height="14" viewBox="0 0 14 14" xmlns="http:
 const CLOCK_ICON = `<svg width="14" height="14" viewBox="0 0 14 14" xmlns="http://www.w3.org/2000/svg"> <g id="wrapper" clip-path="url(#clip0_180461_3156)"> <path id="Union" d="M7 0.875366C3.61758 0.875366 0.875 3.61794 0.875 7.00037C0.875 10.3828 3.61758 13.1254 7 13.1254C10.3824 13.1254 13.125 10.3828 13.125 7.00037C13.125 3.61794 10.3824 0.875366 7 0.875366ZM9.41309 8.88298L9.02207 9.41619C9.01357 9.4278 9.00285 9.43761 8.99054 9.44507C8.97823 9.45253 8.96457 9.45747 8.95034 9.45963C8.93611 9.46179 8.92159 9.46112 8.90763 9.45765C8.89366 9.45419 8.88051 9.44799 8.86895 9.43943L6.60762 7.7906C6.59353 7.78048 6.58208 7.76713 6.57423 7.75167C6.56638 7.7362 6.56235 7.71908 6.5625 7.70173V3.93787C6.5625 3.87771 6.61172 3.82849 6.67188 3.82849H7.32949C7.38965 3.82849 7.43887 3.87771 7.43887 3.93787V7.32166L9.38848 8.73123C9.4377 8.7654 9.44863 8.83377 9.41309 8.88298Z" /> </g> <defs> <clipPath id="clip0_180461_3156"> <rect width="14" height="14" fill="white" transform="translate(0 0.000244141)"/> </clipPath> </defs> </svg> `
 const DATABASE_ICON = `<svg width="14" height="14" viewBox="0 0 14 14" xmlns="http://www.w3.org/2000/svg"> <g id="wrapper" clip-path="url(#clip0_180461_4507)"> <path id="Union" d="M11.375 0.875366H2.625C2.38301 0.875366 2.1875 1.07087 2.1875 1.31287V4.37537H11.8125V1.31287C11.8125 1.07087 11.617 0.875366 11.375 0.875366ZM3.9375 3.17224C3.63535 3.17224 3.39062 2.92751 3.39062 2.62537C3.39062 2.32322 3.63535 2.07849 3.9375 2.07849C4.23965 2.07849 4.48438 2.32322 4.48438 2.62537C4.48438 2.92751 4.23965 3.17224 3.9375 3.17224ZM2.1875 12.6879C2.1875 12.9299 2.38301 13.1254 2.625 13.1254H11.375C11.617 13.1254 11.8125 12.9299 11.8125 12.6879V9.62537H2.1875V12.6879ZM3.9375 10.8285C4.23965 10.8285 4.48438 11.0732 4.48438 11.3754C4.48438 11.6775 4.23965 11.9222 3.9375 11.9222C3.63535 11.9222 3.39062 11.6775 3.39062 11.3754C3.39062 11.0732 3.63535 10.8285 3.9375 10.8285ZM2.1875 8.75037H11.8125V5.25037H2.1875V8.75037ZM3.9375 6.45349C4.23965 6.45349 4.48438 6.69822 4.48438 7.00037C4.48438 7.30251 4.23965 7.54724 3.9375 7.54724C3.63535 7.54724 3.39062 7.30251 3.39062 7.00037C3.39062 6.69822 3.63535 6.45349 3.9375 6.45349Z" /> </g> <defs> <clipPath id="clip0_180461_4507"> <rect width="14" height="14" fill="white" transform="translate(0 0.000244141)"/> </clipPath> </defs> </svg> `
 
-
 @Component({
   selector: 'cognum-menu-items',
   templateUrl: './menu-items.component.html',
@@ -22,7 +21,7 @@ export class MenuItemsComponent {
       icon: 'cognum-home',
     },
     {
-      path: 'employees',
+      path: 'ai-employees',
       text: 'AI Employees',
       icon: 'cognum-robot',
     },
@@ -47,7 +46,6 @@ export class MenuItemsComponent {
     iconRegistry.addSvgIconLiteral('cognum-robot', sanitizer.bypassSecurityTrustHtml(ROBOT_ICON));
     iconRegistry.addSvgIconLiteral('cognum-clock', sanitizer.bypassSecurityTrustHtml(CLOCK_ICON));
     iconRegistry.addSvgIconLiteral('cognum-database', sanitizer.bypassSecurityTrustHtml(DATABASE_ICON));
-
   }
 
   get workspace() {
