@@ -14,6 +14,7 @@ import { MarkdownModule } from 'ngx-markdown';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { LayoutsModule } from '../layouts/layouts.module';
 import { KnowledgeBaseModule } from './knowledge-base/knowledge-base.module';
+import { SettingsWorkspaceModule } from './settings-workspace/settings-workspace.module';
 import { WorkspaceComponent } from './workspace/workspace.component';
 import { WorkspacesRoutingModule } from './workspaces-routing.module';
 
@@ -35,7 +36,8 @@ import { WorkspacesRoutingModule } from './workspaces-routing.module';
     ReactiveFormsModule,
     NgxSkeletonLoaderModule,
     LayoutsModule,
-    KnowledgeBaseModule
+    KnowledgeBaseModule,
+    SettingsWorkspaceModule,
   ],
 })
 export class WorkspacesModule {}

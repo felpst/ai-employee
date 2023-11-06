@@ -35,11 +35,27 @@ export class WorkspacesService {
     ) as Observable<IWorkspace>;
   }
 
-  update(workspace: Partial<IWorkspace>): Observable<IWorkspace> {
+  update(
+    workspaceId: string,
+    updateData: string,
+    photo: File | null = null
+  ) {
+    const formData = new FormData();
+    formData.append('json', updateData);
+    if (photo) formData.append('photo', photo);
+
+    console.log(formData);
+    
     return this.coreApiService.put(
-      `${this.route}/${workspace._id}`,
-      workspace
-    ) as Observable<IWorkspace>;
+      `${this.route}/${workspaceId}`, formData, {
+        headers: {
+        Accept: 'application/json, text/plain, */*',
+      },
+      observe: 'events',
+      reportProgress: true,
+      responseType: 'json',
+      }
+    );
   }
 
   list(): Observable<Map<string, IWorkspace>> {
@@ -59,10 +75,10 @@ export class WorkspacesService {
     });
   }
 
-  delete(chat: IWorkspace): Observable<IWorkspace> {
-    this.workspaces.delete(chat._id);
+  delete(workspacesId: string): Observable<IWorkspace> {
+    this.workspaces.delete(workspacesId);
     return this.coreApiService.delete(
-      `${this.route}/${chat._id}`
+      `${this.route}/${workspacesId}`
     ) as Observable<IWorkspace>;
   }
 }

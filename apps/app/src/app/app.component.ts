@@ -22,6 +22,24 @@ export class AppComponent {
         sanitizer.bypassSecurityTrustResourceUrl('/assets/icons/logo.svg')
       ),
       iconRegistry.addSvgIcon(
+        'button-submit',
+        sanitizer.bypassSecurityTrustResourceUrl(
+          '/assets/icons/button-submit.svg'
+        )
+      ),
+      iconRegistry.addSvgIcon(
+        'delete',
+        sanitizer.bypassSecurityTrustResourceUrl(
+          '/assets/icons/delete.svg'
+        )
+      ),
+      iconRegistry.addSvgIcon(
+        'delete-red',
+        sanitizer.bypassSecurityTrustResourceUrl(
+          '/assets/icons/delete-red.svg'
+        )
+      ),
+      iconRegistry.addSvgIcon(
         'lock',
         sanitizer.bypassSecurityTrustResourceUrl('/assets/icons/lock.svg')
       ),

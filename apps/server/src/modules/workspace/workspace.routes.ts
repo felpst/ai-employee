@@ -28,10 +28,10 @@ router.get('/:id', authMiddleware, workspaceController.getById);
 router.put(
   '/:id',
   authMiddleware,
-  multer(multerConfig).single('profilePhoto'),
+  multer(multerConfig).single('photo'),
   jsonParserMiddleware,
   workspaceController.update
 );
-router.delete('/:id', authMiddleware, workspaceController.delete);
+router.delete('/:id', authMiddleware, workspaceController.delete, workspaceController.deleteKnowledgeBaseMiddleware);
 
 export default router;
