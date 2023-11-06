@@ -225,8 +225,6 @@ h3 {
       }
     }
   }
-<<<<<<< HEAD
-=======
 
   &-white-content {
     @extend .cognum;
@@ -288,24 +286,21 @@ h3 {
       }
     }
   }
-}
 
-input {
-  width: 100%;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  padding: 8px;
-  transition: border-color 0.3s;
-  margin-bottom: 8px;
-}
->>>>>>> 41f2f3275e612542af6fcf42e05194fdce640fbc
+  input {
+    width: 100%;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 8px;
+    transition: border-color 0.3s;
+    margin-bottom: 8px;
+  }
 
   &-page {
     @extend .cognum;
     background-color: #f0f2f5;
     padding: 32px;
   }
-<<<<<<< HEAD
 
   &-button {
     @extend .cognum;
@@ -315,8 +310,6 @@ input {
     border-radius: 2px !important;
     font-weight: 300 !important;
   }
-=======
->>>>>>> 41f2f3275e612542af6fcf42e05194fdce640fbc
 }
 
 .truncate {
