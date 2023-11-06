@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { IWorkspace } from '@cognum/interfaces';
 import { NotificationsService } from '../../../services/notifications/notifications.service';
-import { EmployeeService } from '../../ai-employee/ai-employee.service';
+import { AIEmployeesService } from '../../ai-employees/ai-employees.service';
 
 @Component({
   selector: 'cognum-employee-info',
@@ -25,7 +25,7 @@ export class EmployeeInfoComponent {
 
   constructor(
     private formBuilder: FormBuilder,
-    private employeeService: EmployeeService,
+    private employeeService: AIEmployeesService,
     private notificationsService: NotificationsService,
     private router: Router
   ) {
@@ -64,12 +64,12 @@ export class EmployeeInfoComponent {
     const formData = new FormData();
     formData.append('json', JSON.stringify(json));
     return this.employeeService.create(formData).subscribe(
-      (_) => {
+      (_: any) => {
         this.notificationsService.show('Workspace created successfully');
         this.isLoading = false;
         this.router.navigate(['/workspaces', id]);
       },
-      (error) => {
+      (error: any) => {
         console.error('Error creating Workspace:', error);
         this.notificationsService.show(
           'Error creating Workspace. Please try again.'

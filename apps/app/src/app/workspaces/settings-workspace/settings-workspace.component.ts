@@ -17,7 +17,6 @@ export class SettingsWorkspaceComponent {
 
   // workspace config
   photo: File | null = null;
-  selectedImage: string | null = null;
   updateForm = this.formBuilder.group({
     workspaceName: [this.workspace.name, [Validators.minLength(6)]],
     photo: [this.photo, []],
@@ -33,12 +32,6 @@ export class SettingsWorkspaceComponent {
 
   usersId: any = [];
 
-  photo: File | null = null;
-  updateForm = this.formBuilder.group({
-    name: [this.name, [Validators.minLength(6)]],
-    photo: [this.photo, []],
-  });
-  submitting = false;
   showUpdateError = false;
   errors = [];
   showDeleteConfirmation = false;
@@ -178,15 +171,15 @@ export class SettingsWorkspaceComponent {
 
     formData.append('json', JSON.stringify({ users: this.users }));
 
-    this.workspacesService.update(this.workspace._id, JSON.stringify({ users: this.users })).subscribe({
-      next: () => {
-        this.notificationsService.show('Successfully added users!')
-        window.location.reload();
-      },
-      error: () => {
-        this.notificationsService.show("Oops, it looks like there was an error... Please try again in a few minutes")
-      }
-    })
+    // this.workspacesService.update(this.workspace._id, JSON.stringify({ users: this.users })).subscribe({
+    //   next: () => {
+    //     this.notificationsService.show('Successfully added users!')
+    //     window.location.reload();
+    //   },
+    //   error: () => {
+    //     this.notificationsService.show("Oops, it looks like there was an error... Please try again in a few minutes")
+    //   }
+    // })
   }
 
   async onSubmit() {
@@ -202,14 +195,14 @@ export class SettingsWorkspaceComponent {
     const photo = this.updateForm.get('photo')?.value;
     const updateData = JSON.stringify({ workspaceName });
 
-    this.workspacesService.update(this.workspace._id, updateData, photo).subscribe({
-      next: () => {
-        this.notificationsService.show('Successfully changed data!');
-      },
-      error: () => {
-        this.notificationsService.show("Oops, it looks like there was an error... Please try again in a few minutes")
-      }
-    });
+    // this.workspacesService.update(this.workspace._id, updateData, photo).subscribe({
+    //   next: () => {
+    //     this.notificationsService.show('Successfully changed data!');
+    //   },
+    //   error: () => {
+    //     this.notificationsService.show("Oops, it looks like there was an error... Please try again in a few minutes")
+    //   }
+    // });
   }
 
   private isEmail(s: string) {

@@ -113,7 +113,7 @@ export class BasicInfoComponent implements OnInit {
     const { photo, ...rest } = this.workspaceForm.value;
     return this.workspacesService
       .update({ ...this.workspace, ...rest })
-      .subscribe((result) => {
+      .subscribe((result: any) => {
         this.updateWorkspaceEvent.emit(result);
         this.changeStepEvent.emit('UsersInfo');
       });

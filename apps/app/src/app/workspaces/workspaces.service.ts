@@ -35,7 +35,7 @@ export class WorkspacesService {
     ) as Observable<IWorkspace>;
   }
 
-  update(workspace: any): Observable<IWorkspace> {
+  update(workspace: any): any {
     // return this.coreApiService.put(
     //   `${this.route}/${workspaceId}`, formData, {
     //     headers: {

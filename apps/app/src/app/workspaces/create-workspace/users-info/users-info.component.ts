@@ -84,7 +84,7 @@ export class UsersInfoComponent implements OnInit {
     const _emails = emails.split(',').map((email: string) => email.trim());
     return this.workspacesService
       .update({ ...this.workspace, users: _emails })
-      .subscribe((result) => {
+      .subscribe((result: any) => {
         this.updateWorkspaceEvent.emit(result);
         this.changeStepEvent.emit('EmployeeInfo');
       });
