@@ -17,6 +17,7 @@ import { KnowledgeBaseModule } from './knowledge-base/knowledge-base.module';
 import { WorkspaceComponent } from './workspace/workspace.component';
 import { WorkspacesRoutingModule } from './workspaces-routing.module';
 import { AiEmployeeModule } from './ai-employee/ai-employee.module';
+import { HistoryModule } from './history/history.module';
 
 @NgModule({
   declarations: [WorkspaceComponent],
@@ -37,7 +38,8 @@ import { AiEmployeeModule } from './ai-employee/ai-employee.module';
     NgxSkeletonLoaderModule,
     LayoutsModule,
     KnowledgeBaseModule,
-    AiEmployeeModule
+    AiEmployeeModule,
+    HistoryModule
   ],
 })
 export class WorkspacesModule {}
