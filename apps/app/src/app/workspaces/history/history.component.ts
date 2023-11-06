@@ -6,6 +6,7 @@ import { IChat } from '@cognum/interfaces';
 import { AuthService } from '../../auth/auth.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ChatsService } from '../../chats/chats.service';
+import { IUser } from '@cognum/interfaces';
 
 @Component({
   selector: 'cognum-history',
@@ -37,6 +38,11 @@ export class HistoryComponent implements OnInit {
       this.originalChat = Array.from(chats.values()).filter(chat => chat.workspace === workspaceId);
       this.filterChats();
     });
+  }
+
+
+  get users(): IUser[] {
+    return this.workspacesService.selectedWorkspace.users as IUser[];
   }
 
   deleteChat(chat: IChat) {

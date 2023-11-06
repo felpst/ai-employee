@@ -70,7 +70,7 @@
     <div class="list">
       <div class="white-content" *ngFor="let chat of chats">
         <div class="chats">
-          <cognum-users-avatar [showAdd]="true"> </cognum-users-avatar>
+          <cognum-users-avatar   [users]="users"> </cognum-users-avatar>
           <div class="description">
             <p>{{ chat.name }}</p>
             <p> {{ getLastUpdatedTime(chat) }}</p>
