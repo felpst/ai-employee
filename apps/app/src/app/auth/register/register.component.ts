@@ -32,7 +32,6 @@ export class RegisterComponent {
     ],
     confirm: ['', [Validators.required]],
   });
-  cacheInfoData = '@cognum/data';
   submitting = false;
   showRegisterError = false;
   errors = [];
@@ -111,18 +110,23 @@ export class RegisterComponent {
     if (!this.registerForm.valid) return;
     this.submitting = true;
     const { confirm, ...rest } = this.registerForm.value;
-    const data = JSON.stringify({ email: rest.email, password: rest.password });
 
     // Process register
     this.usersService.register({ ...rest }).subscribe({
       next: (token) => {
-        const { _id } = token;
-        localStorage.setItem(this.cacheInfoData, btoa(data));
-        this.submitting = false;
-        this.router.navigate([`/auth/register/${_id}`]);
-        this.notificationsService.show(
-          'An email has been sent to you containing a token to confirm your account'
-        );
+        const { email, name, password } = rest;
+        // Process login
+        this.authService.login({ email, password }).subscribe({
+          next: () => {
+            this.submitting = false;
+            this.router.navigate(['/']);
+            this.notificationsService.show(`Welcome, ${name}!`);
+          },
+          error: (error) => {
+            this.submitting = false;
+            console.log('An error ocurred on login: ', { error });
+          },
+        });
       },
       error: (err) => {
         const { error } = err;

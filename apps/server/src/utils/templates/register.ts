@@ -73,18 +73,12 @@ export const registerEmailTemplate = `
           alt="Logo"
           class="logo"
         />
-        <h1>Cognum - Register</h1>
+        <h1>Register</h1>
       </div>
       <div class="content">
-        <p>Hello!!</p>
+        <p>Hello, {{name}}!!</p>
         <p>
-        We received a request to register for Cognum services via this email. To continue the process, use this validation token:
-        </p>
-        <div class='redefine' style='justify-content: center;align-items: center;'>
-          <strong style='font-family: Outfit, sans-serif;font-weight:600;'>{{token}}</a>
-        </div>
-        <p>
-          We guarantee that the link lasts 30 minutes, after the deadline a new one must be requested.
+        We are excited to welcome you to the Cognum! We are excited to have you on board this exciting journey.
         </p>
         <p>
           If you have not requested your registration, please ignore this email.
