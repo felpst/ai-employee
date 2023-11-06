@@ -35,17 +35,8 @@ export class WorkspacesService {
     ) as Observable<IWorkspace>;
   }
 
-  update(workspace: any): any {
-    // return this.coreApiService.put(
-    //   `${this.route}/${workspaceId}`, formData, {
-    //     headers: {
-    //     Accept: 'application/json, text/plain, */*',
-    //   },
-    //   observe: 'events',
-    //   reportProgress: true,
-    //   responseType: 'json',
-    //   }
-    // );
+  update(workspace: Partial<IWorkspace>): Observable<IWorkspace> {
+    return this.coreApiService.put( `${this.route}/${workspace._id}`, workspace );
   // update(
   //   workspaceId: string,
   //   updateData: string,

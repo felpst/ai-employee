@@ -1,3 +1,18 @@
+.email {
+  color: rgba(0, 0, 0, 0.85);
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.change {
+  cursor: pointer;
+  color: #14b8a6;
+  font-weight: 400;
+}
+
+//
+
 .display-row {
   display: flex;
   flex-direction: row;
@@ -46,18 +61,6 @@
     font-size: 0.875rem;
     font-weight: 500;
     line-height: 1.375rem;
-
-    .email {
-      color: rgba(0, 0, 0, 0.85);
-      overflow: hidden;
-      white-space: nowrap;
-      text-overflow: ellipsis;
-    }
-
-    .change {
-      cursor: pointer;
-      color: #14b8a6;
-    }
   }
 }
 

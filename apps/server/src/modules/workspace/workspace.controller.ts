@@ -9,37 +9,37 @@ export class WorkspaceController extends ModelController<typeof Workspace> {
     super(Workspace);
   }
 
-  public async create(
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ): Promise<void> {
-    try {
-      const dataset = Array.isArray(req.body) ? [...req.body] : [req.body];
-      const userId = req['userId'];
-      const docs = [];
-      for (const data of dataset) {
-        const { users } = data;
-        const usersEmails = Array.isArray(users) ? [...users] : [users];
+  // public async create(
+  //   req: Request,
+  //   res: Response,
+  //   next: NextFunction
+  // ): Promise<void> {
+  //   try {
+  //     const dataset = Array.isArray(req.body) ? [...req.body] : [req.body];
+  //     const userId = req['userId'];
+  //     const docs = [];
+  //     for (const data of dataset) {
+  //       const { users } = data;
+  //       const usersEmails = Array.isArray(users) ? [...users] : [users];
 
-        if (!data.createdBy) {
-          data.createdBy = userId;
-        }
-        data.updatedBy = userId;
+  //       if (!data.createdBy) {
+  //         data.createdBy = userId;
+  //       }
+  //       data.updatedBy = userId;
 
-        const _users = await User.find({
-          $or: [{ _id: { $in: [userId] } }, { email: { $in: usersEmails } }],
-        });
+  //       const _users = await User.find({
+  //         $or: [{ _id: { $in: [userId] } }, { email: { $in: usersEmails } }],
+  //       });
 
-        const doc = await Workspace.create({ ...data, users: _users });
-        await new KnowledgeBase(doc._id.toString()).setupCollection();
-        docs.push(doc);
-      }
-      res.status(201).json(docs.length > 1 ? docs : docs[0]);
-    } catch (error) {
-      next(error);
-    }
-  }
+  //       const doc = await Workspace.create({ ...data, users: _users });
+  //       await new KnowledgeBase(doc._id.toString()).setupCollection();
+  //       docs.push(doc);
+  //     }
+  //     res.status(201).json(docs.length > 1 ? docs : docs[0]);
+  //   } catch (error) {
+  //     next(error);
+  //   }
+  // }
 
   public async update(
     req: Request,

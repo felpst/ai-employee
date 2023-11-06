@@ -4,11 +4,11 @@ import { defaultSchemaProps, triggers } from './default.model';
 import User from './user.model';
 
 const schema = new Schema<IWorkspace>({
-  name: { type: String, required: true },
-  description: { type: String, required: false },
-  accessLink: { type: String, required: false },
-  photo: { type: String, required: false },
-  private: { type: Boolean, required: false },
+  name: { type: String },
+  description: { type: String },
+  accessLink: { type: String },
+  photo: { type: String },
+  private: { type: Boolean },
   users: [{ type: Schema.Types.ObjectId, ref: 'User' }],
   ...defaultSchemaProps,
 });

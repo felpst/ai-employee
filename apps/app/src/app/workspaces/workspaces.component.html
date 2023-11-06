@@ -1,18 +1,15 @@
-<mat-toolbar class="display-row toolbar">
-  <div class="font-outfit display-row logo-container" (click)="goHome()">
-    <img
-      src="../../../assets/icons/cognum_filled.svg"
-      alt="Cognum"
-      class="logo"
-    />
-    <span>cognum</span>
-  </div>
-  <div class="font-outfit info-container">
-    <span class="email" title="{{ email }}">{{ email }}</span>
-    <span class="change" (click)="onLogOut()">change</span>
-  </div>
-</mat-toolbar>
-<cognum-app-loading></cognum-app-loading>
+<cognum-header title="cognum" logo="../../assets/icons/icon.png">
+  <ng-container right>
+    <span class="cognum-font-strong">{{ email }}</span>
+    <div
+      class="cognum-font-strong cognum-font-color-primary cursor-pointer"
+      (click)="onLogOut()"
+      mat-ripple
+    >
+      change
+    </div>
+  </ng-container>
+</cognum-header>
 
 <div class="font-outfit display-column content">
   <div class="display-column data-content">
@@ -45,7 +42,9 @@
                 alt="workspace photo"
               />
               <div class="text-container">
-                <strong class="font-outfit">{{ workspace.name }}</strong>
+                <strong class="font-outfit">{{
+                  workspace.name || 'New Workspace'
+                }}</strong>
                 <span class="font-outfit"
                   >{{ workspace.users.length }} members</span
                 >
@@ -70,7 +69,7 @@
           </div>
           <button
             class="font-outfit display-row button"
-            (click)="goCreateWorkspace()"
+            (click)="onCreateWorkspace()"
           >
             create workspace
           </button>

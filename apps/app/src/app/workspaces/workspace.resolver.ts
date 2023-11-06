@@ -28,6 +28,20 @@ export class WorkspaceResolver implements Resolve<IWorkspace> {
         .subscribe({
           next: (workspace) => {
             this.workspacesService.selectedWorkspace = workspace;
+
+            // Redirect to onboarding workspace route if workspace name is not set
+            const isOnboardingWorkspaceRoute = route.firstChild?.firstChild?.routeConfig?.path === 'workspace';
+            if (!workspace.name && !isOnboardingWorkspaceRoute) {
+              this._router.navigate(['/workspaces', workspace._id, 'onboarding', 'workspace']);
+            }
+
+            // TODO Redirect to onboarding ai employee route if workspace not have any ai employee
+            const isOnboardingAIEmployeesRoute = route.firstChild?.firstChild?.routeConfig?.path === 'ai-employee';
+            const aiEmployees = [] // TODO load ai employees
+            if (!aiEmployees.length && !isOnboardingAIEmployeesRoute) {
+              this._router.navigate(['/workspaces', workspace._id, 'onboarding', 'workspace']);
+            }
+
             observer.next(workspace);
           },
           error: (error) => {

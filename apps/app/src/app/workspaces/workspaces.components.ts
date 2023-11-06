@@ -7,11 +7,11 @@ import { LoadingService } from '../layouts/loading/loading.service';
 import { WorkspacesService } from '../workspaces/workspaces.service';
 
 @Component({
-  selector: 'cognum-home',
-  templateUrl: 'home.component.html',
-  styleUrls: ['home.component.scss'],
+  selector: 'cognum-workspaces',
+  templateUrl: 'workspaces.component.html',
+  styleUrls: ['workspaces.component.scss'],
 })
-export class HomeComponent implements OnInit {
+export class WorkspacesComponent implements OnInit {
   constructor(
     private authService: AuthService,
     private workspacesService: WorkspacesService,
@@ -22,6 +22,10 @@ export class HomeComponent implements OnInit {
 
   ngOnInit() {
     this.onLoadList();
+  }
+
+  get user() {
+    return this.authService.user;
   }
 
   get workspaces() {
@@ -35,8 +39,10 @@ export class HomeComponent implements OnInit {
     );
   }
 
-  goCreateWorkspace() {
-    this.router.navigate(['/create-workspace']);
+  onCreateWorkspace() {
+    this.workspacesService.create({ users: [this.user._id] } as IWorkspace).subscribe((data) => {
+      this.router.navigate(['workspaces', data._id, 'onboarding']);
+    });
   }
 
   goHome() {
