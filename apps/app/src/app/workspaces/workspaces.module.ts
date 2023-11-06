@@ -27,6 +27,7 @@ import { WorkspacesRoutingModule } from './workspaces-routing.module';
     MarkdownModule,
     MatIconModule,
     MatButtonModule,
+    SettingsWorkspaceModule,
     MatListModule,
     MatFormFieldModule,
     MatSelectModule,

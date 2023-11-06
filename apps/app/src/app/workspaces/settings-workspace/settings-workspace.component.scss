@@ -115,6 +115,7 @@
   border: 1px solid #d9d9d9;
   background-color: transparent;
   border-radius: 2px;
+  margin-left: auto;
 }
 
 .content {
@@ -134,7 +135,11 @@
     border-bottom: 1px solid #f0f0f0;
 
     .image {
+<<<<<<< HEAD
       background-color: transparent;
+=======
+      background-color: #fff;
+>>>>>>> 9eff4f730a9b0e97b486c3e58956447ac5490a07
       height: 129px;
       width: 129px;
     }
@@ -144,7 +149,12 @@
     display: flex;
     flex-direction: column;
     flex-wrap: wrap;
+<<<<<<< HEAD
     margin-top: 10px;
+=======
+    margin: 10px 0;
+    gap: 5px;
+>>>>>>> 9eff4f730a9b0e97b486c3e58956447ac5490a07
     width: 100%;
 
     div {
@@ -200,6 +210,50 @@
 
 .container-group {
   padding: 0 20px;
+
+  .users-items {
+    gap: 10px;
+    border-bottom: 1px solid #f0f0f0;
+    padding: 10px 0;
+
+    img,
+    .initials {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+
+      color: #fff;
+      background-color: #fff;
+      border-radius: 62.4375rem;
+      border: 1px solid #fff;
+      font-weight: 600;
+
+      width: 2rem;
+      height: 2rem;
+    }
+
+    .users-content {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      .users-info {
+        display: flex;
+        gap: 10px;
+      }
+      mat-icon {
+        width: 16px;
+      }
+
+      .users-actions {
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+        align-items: flex-end;
+      }
+    }
+  }
 }
 
 .item-modal {
