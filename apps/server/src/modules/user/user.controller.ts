@@ -58,44 +58,19 @@ export class UserController extends ModelController<typeof User> {
   ): Promise<void> {
     try {
       const { name, email, password } = req.body;
-      const user = await User.create({
+      await User.create({
         name: name,
         email: email.toLowerCase(),
         password,
+        active: true,
       });
-      const expiresIn = new Date();
-      expiresIn.setMinutes(expiresIn.getMinutes() + 30);
-      const tokens = await Token.find({ email })
-        .sort({ createdAt: 'desc' })
-        .limit(1);
-      const lastRecovery = tokens && tokens.length ? tokens[0] : null;
-      let doc = null;
-      const newToken = Math.floor(100000 + Math.random() * 900000).toString();
-      if (!lastRecovery || (lastRecovery && lastRecovery.used)) {
-        doc = await Token.create({
-          expiresIn,
-          email,
-          used: false,
-          token: newToken,
-          user,
-        });
-      } else {
-        doc = await Token.findOneAndUpdate(
-          { _id: lastRecovery._id },
-          { $set: { expiresIn, token: newToken } },
-          {
-            returnDocument: 'after',
-            runValidators: true,
-          }
-        );
-      }
-      const html = registerEmailTemplate.replace('{{token}}', doc.token);
+      const html = registerEmailTemplate.replace('{{name}}', name);
       emailEmitter.emit('sendEmail', {
         to: email,
         subject: 'Cognum - Register',
         html,
       });
-      res.status(201).json(doc);
+      res.status(200).json();
     } catch (error) {
       next(error);
     }
