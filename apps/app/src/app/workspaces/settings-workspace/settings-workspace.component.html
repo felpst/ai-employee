@@ -5,11 +5,7 @@
         <mat-icon svgIcon="arrow-left"></mat-icon>
       </button>
 
-<<<<<<< HEAD
       <span class="workspace-name">{{ workspace.name || 'Workspace' }}</span>
-=======
-      <span class="workspace-name">{{ workspaceName || 'Workspace' }}</span>
->>>>>>> 9eff4f730a9b0e97b486c3e58956447ac5490a07
     </div>
     <div class="user-details">
       <img class="imageProfile" [src]="user.photo" alt="" />
@@ -39,7 +35,6 @@
     </nav>
     <div class="content">
       <ng-container *ngIf="selectedItem === 1">
-<<<<<<< HEAD
         <form
           [formGroup]="updateForm"
           enctype="multipart/form-data"
@@ -64,32 +59,12 @@
                 (change)="onFileSelected($event)"
               />
             </div>
-=======
-        <form (ngSubmit)="onSubmit()" class="container-group">
-          <span class="workspace-image">Workspace photo (optional)</span>
-          <div class="image-group">
-            <label for="profilePhotoInput" class="image-label">
-              <img
-                class="image"
-                [src]="selectedImage || selectedWorkspace.photo"
-                alt="User Image"
-              />
-            </label>
-            <input
-              style="display: none"
-              type="file"
-              id="profilePhotoInput"
-              name="profilePhoto"
-              (change)="onFileSelected($event)"
-            />
->>>>>>> 9eff4f730a9b0e97b486c3e58956447ac5490a07
             <span>Help teammates know that this is right place.</span>
           </div>
 
           <div>
             <div class="input">
               <span>Company or team name</span>
-<<<<<<< HEAD
               <div>
                 <input
                   type="text"
@@ -100,10 +75,6 @@
                   <mat-icon svgIcon="button-submit"></mat-icon>
                 </button>
               </div>
-=======
-              <input type="text" placeholder="potato" [value]="workspaceName" />
-              <button class="delete" type="submit">Submit</button>
->>>>>>> 9eff4f730a9b0e97b486c3e58956447ac5490a07
             </div>
           </div>
         </form>
@@ -133,7 +104,6 @@
         <div [formGroup]="teamForm" class="container-group">
           <span>Add a new workspace member</span>
           <div class="input">
-<<<<<<< HEAD
             <div>
               <input
                 formControlName="email"
@@ -169,35 +139,6 @@
                   />
                   <span>{{ item.email }}</span>
                 </div>
-=======
-            <input type="text" placeholder="potato" />
-            <select
-              class="form-select no-focus-outline"
-              aria-label="Default select example"
-            >
-              <option value="1">Admin</option>
-            </select>
-            <button class="submit-button">
-              <mat-icon svgIcon="button-submit"></mat-icon>
-            </button>
-          </div>
-          <div class="users-items" *ngFor="let user of usersId; let i = index">
-            <span>{{ user.name }}</span>
-            <div class="users-content">
-              <div class="users-info">
-                <ng-container *ngIf="user.photo">
-                  <img [src]="user.photo" />
-                </ng-container>
-                <ng-container *ngIf="!user.photo">
-                  <div class="initials" [style.background-color]="background">
-                    {{ getInitials(user.name) }}
-                  </div>
-                </ng-container>
-                <span>{{ user.email }}</span>
-              </div>
-              <div class="users-actions">
-                <mat-icon svgIcon="delete"></mat-icon>
->>>>>>> 9eff4f730a9b0e97b486c3e58956447ac5490a07
                 <select
                   class="form-select no-focus-outline"
                   aria-label="Default select example"
