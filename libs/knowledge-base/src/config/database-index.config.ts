@@ -29,7 +29,7 @@ export const collectionConfig:
       name: 'text',
       description: 'Text field',
       data_type: DataType.VarChar,
-      max_length: 1024,
+      max_length: 65535 // milvus max
     },
     {
       name: 'ownerDocumentId',
