@@ -5,7 +5,7 @@ import { DialogComponent } from '../../shared/dialog/dialog.component';
 import { IChat } from '@cognum/interfaces';
 import { AuthService } from '../../auth/auth.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ChatsService } from '../../chats/chats.service';
+import { ChatsService } from '../ai-employees/chats/chats.service';
 import { IUser } from '@cognum/interfaces';
 
 @Component({
@@ -34,7 +34,7 @@ export class HistoryComponent implements OnInit {
 
   ngOnInit() {
     const workspaceId = this.route.snapshot.params['id'];
-    this.chatService.getAllFromWorkspace(workspaceId).subscribe(chats => {
+    this.chatService.list(workspaceId).subscribe(chats => {
       this.originalChat = Array.from(chats.values()).filter(chat => chat.workspace === workspaceId);
       this.filterChats();
     });

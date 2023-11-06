@@ -33,7 +33,8 @@ import { HistoryModule } from './history/history.module';
     WorkspaceOnboardingWorkspaceComponent,
     WorkspaceOnboardingYourTeamComponent,
     WorkspaceOnboardingAIEmployeeComponent,
-    WorkspaceComponent
+    WorkspaceComponent, 
+ 
   ],
   imports: [
     CommonModule,
@@ -57,6 +58,7 @@ import { HistoryModule } from './history/history.module';
     MatToolbarModule,
     SharedModule,
     HistoryModule
+   
   ],
 })
 export class WorkspacesModule {}

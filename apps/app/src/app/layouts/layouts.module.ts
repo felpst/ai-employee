@@ -23,7 +23,7 @@ const declarations: any[] = [
   MenuComponent,
   WorkspaceUsageComponent,
   MenuItemsComponent,
-  WorkspaceProfileComponent
+  WorkspaceProfileComponent,
 ];
 
 const MaterialModules: any[] = [

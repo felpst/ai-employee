@@ -45,7 +45,7 @@ const Modules: any[] = [
 
 @NgModule({
   declarations,
-  exports: [declarations, Modules],
-  imports: [CommonModule, RouterModule, Modules],
+  exports: [declarations, ...Modules],
+  imports: [CommonModule, RouterModule, ...Modules],
 })
 export class SharedModule {}
