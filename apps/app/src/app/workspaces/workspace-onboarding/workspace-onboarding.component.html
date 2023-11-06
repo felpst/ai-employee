@@ -1,0 +1,19 @@
+<div class="cognum-page">
+  <cognum-header
+    logo="../../../assets/icons/icon.png"
+    [title]="workspacesService.selectedWorkspace.name || 'cognum'"
+  >
+    <ng-container right>
+      <cognum-users-avatar [users]="[user]"></cognum-users-avatar>
+      {{ user.name }}
+    </ng-container>
+  </cognum-header>
+
+  <div class="content-w720">
+    <div class="cognum-mb-32">
+      <cognum-stepper [steps]="steps"></cognum-stepper>
+    </div>
+
+    <router-outlet></router-outlet>
+  </div>
+</div>

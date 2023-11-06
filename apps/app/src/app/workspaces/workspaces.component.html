@@ -1,0 +1,98 @@
+<cognum-header title="cognum" logo="../../assets/icons/icon.png">
+  <ng-container right>
+    <span class="cognum-font-strong">{{ email }}</span>
+    <div
+      class="cognum-font-strong cognum-font-color-primary cursor-pointer"
+      (click)="onLogOut()"
+      mat-ripple
+    >
+      change
+    </div>
+  </ng-container>
+</cognum-header>
+
+<div class="font-outfit display-column content">
+  <div class="display-column data-content">
+    <div class="display-column center">
+      <p class="font-outfit greeting-text">
+        {{ workspaces.length ? 'Welcome back' : 'Welcome' }}
+      </p>
+
+      <div
+        class="display-column workspaces-container"
+        *ngIf="workspaces.length"
+      >
+        <div class="font-outfit display-column header">
+          <div class="font-outfit display-row card-title">
+            <span
+              >workspaces for <strong>{{ email }}</strong></span
+            >
+          </div>
+        </div>
+
+        <div class="display-column workspaces">
+          <div
+            class="font-outfit display-row info"
+            *ngFor="let workspace of workspaces"
+          >
+            <div class="display-row details-container">
+              <img
+                class="workspace-photo"
+                [src]="workspace.photo || '../../../assets/icons/avatar.svg'"
+                alt="workspace photo"
+              />
+              <div class="text-container">
+                <strong class="font-outfit">{{
+                  workspace.name || 'New Workspace'
+                }}</strong>
+                <span class="font-outfit"
+                  >{{ workspace.users.length }} members</span
+                >
+              </div>
+            </div>
+
+            <button
+              class="font-outfit display-row button"
+              (click)="onSelectWorkspace(workspace._id)"
+            >
+              access workspace
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="display-row new">
+        <div class="display-row info-new-container">
+          <div class="display-column info-new-text">
+            <strong>Create a new workspace</strong>
+            <span>Build and collaborate with AI employees</span>
+          </div>
+          <button
+            class="font-outfit display-row button"
+            (click)="onCreateWorkspace()"
+          >
+            create workspace
+          </button>
+        </div>
+      </div>
+
+      <div class="display-row new">
+        <div class="display-row info-new-container">
+          <div class="display-column info-new-text" style="max-width: 75%">
+            <strong>Not finding the workspace you’re looking for?</strong>
+            <span
+              >We have already listed all the workspaces associated with the
+              email {{ email }}</span
+            >
+          </div>
+          <button
+            class="font-outfit display-row help-button"
+            (click)="onLogOut()"
+          >
+            try a different email
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

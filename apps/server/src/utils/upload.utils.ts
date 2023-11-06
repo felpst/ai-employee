@@ -15,15 +15,23 @@ export class UploadUtils {
   }
 
   // Upload file to Google Storage bucket
-  async uploadFile(id: string, file: Express.Multer.File, folder: string) {
+  async uploadFile(
+    id: string,
+    file: Express.Multer.File,
+    folder: string,
+    filename?: string
+  ) {
     try {
       const hash = crypto
         .createHash('sha256')
         .update(file.originalname + Date.now())
         .digest('hex');
-      const newName = `${hash}_${file.originalname}`;
+      const newName = filename || `${hash}_${file.originalname}`;
       const destination = `${folder}/${id}/${newName}`;
-      await this._bucket.upload(file.path, { destination });
+      await this._bucket.upload(file.path, {
+        destination,
+        metadata: { 'Cache-Control': 'no-cache' },
+      });
       const upload = await this._bucket.file(destination);
       await upload.acl.add({ entity: 'allUsers', role: 'READER' });
 

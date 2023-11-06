@@ -9,18 +9,32 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatListModule } from '@angular/material/list';
 import { MatSelectModule } from '@angular/material/select';
+import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MarkdownModule } from 'ngx-markdown';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { LayoutsModule } from '../layouts/layouts.module';
+import { SharedModule } from '../shared/shared.module';
 import { KnowledgeBaseModule } from './knowledge-base/knowledge-base.module';
+import { SettingsWorkspaceModule } from './settings-workspace/settings-workspace.module';
+import { WorkspaceOnboardingAIEmployeeComponent } from './workspace-onboarding/workspace-onboarding-ai-employee/workspace-onboarding-ai-employee.component';
+import { WorkspaceOnboardingWorkspaceComponent } from './workspace-onboarding/workspace-onboarding-workspace/workspace-onboarding-workspace.component';
+import { WorkspaceOnboardingYourTeamComponent } from './workspace-onboarding/workspace-onboarding-your-team/workspace-onboarding-your-team.component';
+import { WorkspaceOnboardingComponent } from './workspace-onboarding/workspace-onboarding.component';
 import { WorkspaceComponent } from './workspace/workspace.component';
 import { WorkspacesRoutingModule } from './workspaces-routing.module';
-import { AiEmployeeModule } from './ai-employee/ai-employee.module';
+import { WorkspacesComponent } from './workspaces.components';
 import { HistoryModule } from './history/history.module';
 
 @NgModule({
-  declarations: [WorkspaceComponent],
+  declarations: [
+    WorkspacesComponent,
+    WorkspaceOnboardingComponent,
+    WorkspaceOnboardingWorkspaceComponent,
+    WorkspaceOnboardingYourTeamComponent,
+    WorkspaceOnboardingAIEmployeeComponent,
+    WorkspaceComponent
+  ],
   imports: [
     CommonModule,
     WorkspacesRoutingModule,
@@ -28,6 +42,7 @@ import { HistoryModule } from './history/history.module';
     MarkdownModule,
     MatIconModule,
     MatButtonModule,
+    SettingsWorkspaceModule,
     MatListModule,
     MatFormFieldModule,
     MatSelectModule,
@@ -38,7 +53,9 @@ import { HistoryModule } from './history/history.module';
     NgxSkeletonLoaderModule,
     LayoutsModule,
     KnowledgeBaseModule,
-    AiEmployeeModule,
+    SettingsWorkspaceModule,
+    MatToolbarModule,
+    SharedModule,
     HistoryModule
   ],
 })

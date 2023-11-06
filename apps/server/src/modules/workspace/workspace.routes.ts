@@ -2,22 +2,25 @@ import express, { Router } from 'express';
 import multer from 'multer';
 import jsonParserMiddleware from '../../middlewares/jsonParserMiddleware';
 import multerConfig from '../../middlewares/multerConfig';
-import YupValidatorMiddleware from '../../middlewares/yup.validator';
 import { authMiddleware } from '../auth/auth.middleware';
 import workspaceController from './workspace.controller';
-import { addWorkspace } from './workspace.schemas';
 
 const router: Router = express.Router();
 
-// TODO created a separeted route for upload files
 router.post(
   '/',
   authMiddleware,
-  multer(multerConfig).array('files', 2),
-  jsonParserMiddleware,
-  YupValidatorMiddleware(addWorkspace),
   workspaceController.create
-);
+  );
+  // TODO created a separeted route for upload files
+// router.post(
+//   '/',
+//   authMiddleware,
+//   multer(multerConfig).array('files', 2),
+//   jsonParserMiddleware,
+//   YupValidatorMiddleware(addWorkspace),
+//   workspaceController.create
+// );
 router.get(
   '/',
   authMiddleware,
@@ -28,10 +31,10 @@ router.get('/:id', authMiddleware, workspaceController.getById);
 router.put(
   '/:id',
   authMiddleware,
-  multer(multerConfig).single('profilePhoto'),
+  multer(multerConfig).single('photo'),
   jsonParserMiddleware,
   workspaceController.update
 );
-router.delete('/:id', authMiddleware, workspaceController.delete);
+router.delete('/:id', authMiddleware, workspaceController.delete, workspaceController.deleteKnowledgeBaseMiddleware);
 
 export default router;

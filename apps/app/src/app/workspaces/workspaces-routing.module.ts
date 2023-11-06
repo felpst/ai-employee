@@ -1,38 +1,87 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { AdminComponent } from '../layouts/admin/admin.component';
+import { CreateWorkspaceComponent } from './create-workspace/create-workspace.component';
 import { KnowledgeBaseComponent } from './knowledge-base/knowledge-base.component';
+import { SettingsWorkspaceComponent } from './settings-workspace/settings-workspace.component';
+import { WorkspaceOnboardingAIEmployeeComponent } from './workspace-onboarding/workspace-onboarding-ai-employee/workspace-onboarding-ai-employee.component';
+import { WorkspaceOnboardingWorkspaceComponent } from './workspace-onboarding/workspace-onboarding-workspace/workspace-onboarding-workspace.component';
+import { WorkspaceOnboardingYourTeamComponent } from './workspace-onboarding/workspace-onboarding-your-team/workspace-onboarding-your-team.component';
+import { WorkspaceOnboardingComponent } from './workspace-onboarding/workspace-onboarding.component';
 import { WorkspaceResolver } from './workspace.resolver';
 import { WorkspaceComponent } from './workspace/workspace.component';
-import { AiEmployeeComponent } from './ai-employee/ai-employee.component';
-import { AiEmployeeComponentSettings } from './ai-employee/aiEmployee-settings/ai-employee-settings.component';
+import { WorkspacesComponent } from './workspaces.components';
 import { HistoryComponent } from './history/history.component';
-
 const routes: Routes = [
+  {
+    path: '',
+    component: WorkspacesComponent,
+  },
   {
     path: ':id',
     resolve: [WorkspaceResolver],
     children: [
       {
-        path: 'overview',
-        component: WorkspaceComponent,
+        path: 'onboarding',
+        component: WorkspaceOnboardingComponent,
+        children: [
+          {
+            path: 'workspace',
+            data: { stepper: { select: 0 } },
+            component: WorkspaceOnboardingWorkspaceComponent,
+          },
+          {
+            path: 'your-team',
+            data: { stepper: { select: 1 } },
+            component: WorkspaceOnboardingYourTeamComponent,
+          },
+          {
+            path: 'ai-employee',
+            data: { stepper: { select: 2 } },
+            component: WorkspaceOnboardingAIEmployeeComponent,
+          },
+          { path: '**', redirectTo: 'workspace', pathMatch: 'full' },
+        ]
+      },
+      // Admin
+      {
+        path: '',
+        component: AdminComponent,
+        children: [
+          {
+            path: 'overview',
+            component: WorkspaceComponent,
+          },
+          {
+            path: 'ai-employees',
+            loadChildren: () =>
+              import('./ai-employees/ai-employees.module').then(
+                (m) => m.AIEmployeesModule
+              ),
+          },
+          {
+            path: 'history',
+            component: HistoryComponent,
+          },
+          {
+            path: 'settings',
+            component: SettingsWorkspaceComponent,
+          },
+          {
+            path: 'knowledge-base',
+            component: KnowledgeBaseComponent,
+          },
+        ]
       },
       {
-        path: 'employees',
-        component: AiEmployeeComponent,
+        path: 'create-workspace',
+        component: CreateWorkspaceComponent,
+        loadChildren: () =>
+          import('./create-workspace/create-workspace.module').then(
+            (m) => m.CreateWorkspaceModule
+          ),
       },
-      {
-        path: 'employee/:id',
-        component: AiEmployeeComponentSettings,
-      },
-      {
-        path: 'history',
-        component: HistoryComponent,
-      },
-      {
-        path: 'knowledge-base',
-        component: KnowledgeBaseComponent,
-      },
-      { path: '**', redirectTo: 'overview', pathMatch: 'full' },
+      // { path: '**', redirectTo: 'overview', pathMatch: 'full' },
     ],
   },
   { path: '**', redirectTo: '/', pathMatch: 'full' },

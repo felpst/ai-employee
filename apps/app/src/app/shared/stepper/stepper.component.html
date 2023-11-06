@@ -1,0 +1,13 @@
+<div class="stepper">
+  <div
+    class="step"
+    *ngFor="let step of steps; let i = index"
+    [ngClass]="{ selected: selected.routerLink === step.routerLink }"
+    [routerLink]="step.routerLink"
+    (click)="onSelectStep(i)"
+    matRipple
+  >
+    <div class="number">{{ i + 1 }}</div>
+    <div class="title">{{ step.title }}</div>
+  </div>
+</div>

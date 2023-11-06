@@ -9,7 +9,7 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { RouterModule } from '@angular/router';
-import { UsersAvatarComponent } from '../shared/users-avatar/users-avatar.component';
+import { SharedModule } from '../shared/shared.module';
 import { AdminComponent } from './admin/admin.component';
 import { LoadingComponent } from './loading/loading.component';
 import { MenuItemsComponent } from './menu/menu-items/menu-items.component';
@@ -21,7 +21,6 @@ const declarations: any[] = [
   AdminComponent,
   LoadingComponent,
   MenuComponent,
-  UsersAvatarComponent,
   WorkspaceUsageComponent,
   MenuItemsComponent,
   WorkspaceProfileComponent
@@ -40,7 +39,7 @@ const MaterialModules: any[] = [
 
 @NgModule({
   declarations,
-  exports: declarations,
-  imports: [CommonModule, RouterModule, MaterialModules],
+  exports: [declarations],
+  imports: [CommonModule, RouterModule, MaterialModules, SharedModule],
 })
 export class LayoutsModule {}

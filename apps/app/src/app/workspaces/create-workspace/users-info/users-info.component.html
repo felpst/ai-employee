@@ -1,0 +1,37 @@
+<form [formGroup]="teamForm" (ngSubmit)="onSubmit()">
+  <div class="your-team">
+    <h1 *ngIf="!!workspace">Who else is on the {{ workspace.name }} team?</h1>
+    <p class="inform-style">
+      Adding your name and profile photo helps your teammates recognize and
+      connect with you more easily.
+    </p>
+    <div class="cognum-white-content-w720 cognum-form-row-4">
+      <span class="cognum-headline-4">Add coworkers by email</span>
+      <input
+        class="input-style"
+        formControlName="emails"
+        placeholder="Ex. joe@potato.ai, mary@potato.ai"
+      />
+      <mat-error
+        class="cognum-text-12 warning-message"
+        *ngIf="hasInputError('emails', 'invalidEmail')"
+      >
+        Invalid email address(es). Enter valid email addresses separated by
+        commas.
+      </mat-error>
+    </div>
+
+    <div class="buttons">
+      <button class="invite" (click)="prevStep()">Prev</button>
+      <button
+        [disabled]="!teamForm.valid"
+        class="cognum-form-buttons-submit"
+        type="submit"
+      >
+        Next
+      </button>
+      <button class="invite">Copy invite link</button>
+      <button class="skip" (click)="skipStep()">Skip this step</button>
+    </div>
+  </div>
+</form>
