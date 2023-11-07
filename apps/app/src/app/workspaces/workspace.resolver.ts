@@ -36,11 +36,11 @@ export class WorkspaceResolver implements Resolve<IWorkspace> {
             }
 
             // TODO Redirect to onboarding ai employee route if workspace not have any ai employee
-            const isOnboardingAIEmployeesRoute = route.firstChild?.firstChild?.routeConfig?.path === 'ai-employee';
-            const aiEmployees = [] // TODO load ai employees
-            if (!aiEmployees.length && !isOnboardingAIEmployeesRoute) {
-              this._router.navigate(['/workspaces', workspace._id, 'onboarding', 'workspace']);
-            }
+            // const isOnboardingAIEmployeesRoute = route.firstChild?.firstChild?.routeConfig?.path === 'ai-employee';
+            // const aiEmployees = [] // TODO load ai employees
+            // if (!aiEmployees.length && !isOnboardingAIEmployeesRoute) {
+            //   this._router.navigate(['/workspaces', workspace._id, 'onboarding', 'workspace']);
+            // }
 
             observer.next(workspace);
           },
