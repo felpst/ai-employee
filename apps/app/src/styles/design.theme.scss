@@ -58,14 +58,18 @@ h3 {
       font-size: 14px;
     }
 
-    &-4 {
+    &-5 {
       @extend .cognum-heading;
       font-size: 12px;
     }
   }
 
   &-font {
+    @extend .cognum;
+
     &-strong {
+      @extend .cognum-font;
+
       font-weight: bold;
     }
 
@@ -292,6 +296,11 @@ h3 {
           border: none;
           cursor: not-allowed;
         }
+      }
+
+      &-submit:not(:disabled) {
+        background-color: #14b8a6 !important;
+        color: #ffffff !important;
       }
     }
   }

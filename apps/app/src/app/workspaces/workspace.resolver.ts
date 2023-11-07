@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, Resolve, Router } from '@angular/router';
 import { IWorkspace } from '@cognum/interfaces';
 import { Observable } from 'rxjs';
+import { NotificationsService } from '../services/notifications/notifications.service';
 import { WorkspacesService } from './workspaces.service';
 
 @Injectable({
@@ -11,6 +12,7 @@ import { WorkspacesService } from './workspaces.service';
 export class WorkspaceResolver implements Resolve<IWorkspace> {
   constructor(
     private workspacesService: WorkspacesService,
+    private notificationsService: NotificationsService,
     private _router: Router
   ) {}
 
@@ -30,23 +32,43 @@ export class WorkspaceResolver implements Resolve<IWorkspace> {
             this.workspacesService.selectedWorkspace = workspace;
 
             // Redirect to onboarding workspace route if workspace name is not set
-            const isOnboardingWorkspaceRoute = route.firstChild?.firstChild?.routeConfig?.path === 'workspace';
+            const isOnboardingWorkspaceRoute =
+              route.firstChild?.firstChild?.routeConfig?.path === 'workspace';
             if (!workspace.name && !isOnboardingWorkspaceRoute) {
-              this._router.navigate(['/workspaces', workspace._id, 'onboarding', 'workspace']);
+              this._router.navigate([
+                '/workspaces',
+                workspace._id,
+                'onboarding',
+                'workspace',
+              ]);
             }
 
-            // TODO Redirect to onboarding ai employee route if workspace not have any ai employee
-            const isOnboardingAIEmployeesRoute = route.firstChild?.firstChild?.routeConfig?.path === 'ai-employee';
-            const aiEmployees = [] // TODO load ai employees
-            if (!aiEmployees.length && !isOnboardingAIEmployeesRoute) {
-              this._router.navigate(['/workspaces', workspace._id, 'onboarding', 'workspace']);
-            }
-
+            // Redirect to AI employee onboarding route if workspace is named and has no AI employees
+            const isOnboardingAIEmployeesRoute =
+              route.firstChild?.firstChild?.routeConfig?.path === 'ai-employee';
+            this.workspacesService.getEmployees(id).subscribe((employees) => {
+              if (
+                !!workspace.name &&
+                !employees.length &&
+                !isOnboardingAIEmployeesRoute
+              ) {
+                this._router.navigate([
+                  '/workspaces',
+                  workspace._id,
+                  'onboarding',
+                  'ai-employee',
+                ]);
+              }
+            });
             observer.next(workspace);
           },
           error: (error) => {
+            console.log({ error });
             // TODO show error message to user
             this._router.navigate(['/']);
+            this.notificationsService.show(
+              `An error occurred while fetching workspace details, please try again in a moment`
+            );
           },
         });
     });

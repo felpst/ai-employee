@@ -5,7 +5,6 @@ import { NotificationsService } from '../../../services/notifications/notificati
 import { AIEmployeesComponent } from '../ai-employees.component';
 import { AIEmployeesService } from '../ai-employees.service';
 
-
 @Component({
   selector: 'cognum-white-ai-employee',
   templateUrl: './white-ai-employee.component.html',
@@ -17,7 +16,9 @@ export class WhiteAiEmployeeComponent {
   selectedFile: File | null = null;
   selectedAvatar: string | null = null;
   isAvatarSelected = false;
-  availableAvatars = ['../../../assets/icons/avatar(2).svg'];
+  availableAvatars = [
+    'https://storage.googleapis.com/cognum-data-sources/avatars/photo.svg',
+  ];
   isLoading = false;
 
   constructor(
@@ -25,25 +26,21 @@ export class WhiteAiEmployeeComponent {
     private dialogRef: MatDialogRef<AIEmployeesComponent>,
     private notificationsService: NotificationsService,
     @Inject(MAT_DIALOG_DATA) private data: any,
-    private employeeService: AIEmployeesService) {
-
-      this.form = this.formBuilder.group({
-        description: ['', [Validators.required]],
-        name: ['', [Validators.required]],
-        workspace: [data.workspaceId, [Validators.required]]
-      });
+    private employeeService: AIEmployeesService
+  ) {
+    this.form = this.formBuilder.group({
+      description: ['', [Validators.required]],
+      name: ['', [Validators.required]],
+      workspace: [data.workspaceId, [Validators.required]],
+    });
   }
-
 
   selectAvatar(avatarPath: string) {
-
     this.selectedAvatar = avatarPath;
     this.form.patchValue({ avatar: this.selectedAvatar });
-    console.log(this.selectedAvatar)
+    console.log(this.selectedAvatar);
     this.isAvatarSelected = true;
-
   }
-
 
   closeModal(): void {
     this.dialogRef.close();
@@ -53,36 +50,19 @@ export class WhiteAiEmployeeComponent {
     const descriptionControl = this.form.get('description');
     const nameControl = this.form.get('name');
 
-    if (
-      typeof this.selectedAvatar === 'string'
-    ) {
+    if (typeof this.selectedAvatar === 'string') {
       const extension = this.selectedAvatar.split('.').pop();
       const blob = new Blob([this.selectedAvatar], { type: 'text/plain' });
       const file = new File([blob], `avatar.${extension}`);
-      this.selectedFile= file;
+      this.selectedFile = file;
     }
 
     if (descriptionControl?.valid && nameControl?.valid) {
-      const formData = new FormData();
-      formData.append('name', nameControl.value);
-      formData.append('role', descriptionControl.value);
-      formData.append('workspace', this.form.get('workspace')?.value ?? '');
-
-      const jsonData = {
-        name: nameControl.value,
-        role: descriptionControl.value,
-        workspace: this.form.get('workspace')?.value ?? ''
-      };
-      formData.append('json', JSON.stringify(jsonData));
-
-
-      if (this.selectedFile) {
-        formData.append('avatar', this.selectedFile, this.selectedFile.name);
-      }
+      const { description: role, name, workspace, avatar } = this.form.value;
 
       this.isLoading = true;
 
-      this.employeeService.create(formData).subscribe(
+      this.employeeService.create({ name, role, workspace, avatar }).subscribe(
         (createdEmployee) => {
           this.notificationsService.show('Successfully created Ai Employee');
           console.log(createdEmployee);
@@ -91,7 +71,9 @@ export class WhiteAiEmployeeComponent {
         },
         (error) => {
           console.error('Error creating AI Employee:', error);
-          this.notificationsService.show('Error creating Ai Employee. Please try again.');
+          this.notificationsService.show(
+            'Error creating Ai Employee. Please try again.'
+          );
           this.isLoading = false;
         }
       );
@@ -99,7 +81,4 @@ export class WhiteAiEmployeeComponent {
       this.showWarning = true;
     }
   }
-
-
-
 }

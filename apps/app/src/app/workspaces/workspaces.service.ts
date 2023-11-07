@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { IWorkspace } from '@cognum/interfaces';
+import { IAIEmployee, IWorkspace } from '@cognum/interfaces';
 import { Observable } from 'rxjs';
 import { CoreApiService } from '../services/apis/core-api.service';
 
@@ -36,12 +36,12 @@ export class WorkspacesService {
   }
 
   update(workspace: Partial<IWorkspace>): Observable<IWorkspace> {
-    return this.coreApiService.put( `${this.route}/${workspace._id}`, workspace );
-  // update(
-  //   workspaceId: string,
-  //   updateData: string,
-  //   profilePhoto: File | null = null
-  // ) {
+    return this.coreApiService.put(`${this.route}/${workspace._id}`, workspace);
+    // update(
+    //   workspaceId: string,
+    //   updateData: string,
+    //   profilePhoto: File | null = null
+    // ) {
     // const formData = new FormData();
     // formData.append('json', updateData);
     // if (profilePhoto) formData.append('profilePhoto', profilePhoto);
@@ -78,5 +78,11 @@ export class WorkspacesService {
     return this.coreApiService.delete(
       `${this.route}/${workspacesId}`
     ) as Observable<IWorkspace>;
+  }
+
+  getEmployees(id: string): Observable<IAIEmployee[]> {
+    return this.coreApiService.get(
+      `${this.route}/${id}/employees`
+    ) as Observable<IAIEmployee[]>;
   }
 }

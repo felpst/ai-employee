@@ -58,24 +58,23 @@ export class EmployeeInfoComponent {
   onSubmit() {
     if (!this.aiEmployeeForm.valid) return;
     this.isLoading = true;
-    const id = this.workspace._id;
-    const { name, description, avatar } = this.aiEmployeeForm.value;
-    const json = { name, role: description, avatar, workspace: id };
-    const formData = new FormData();
-    formData.append('json', JSON.stringify(json));
-    return this.employeeService.create(formData).subscribe(
-      (_: any) => {
-        this.notificationsService.show('Workspace created successfully');
-        this.isLoading = false;
-        this.router.navigate(['/workspaces', id]);
-      },
-      (error: any) => {
-        console.error('Error creating Workspace:', error);
-        this.notificationsService.show(
-          'Error creating Workspace. Please try again.'
-        );
-        this.isLoading = false;
-      }
-    );
+    const workspace = this.workspace._id;
+    const { name, description: role, avatar } = this.aiEmployeeForm.value;
+    return this.employeeService
+      .create({ name, role, avatar, workspace })
+      .subscribe(
+        (employee) => {
+          this.notificationsService.show('Workspace created successfully');
+          this.isLoading = false;
+          this.router.navigate(['/workspaces', workspace]);
+        },
+        (error: any) => {
+          console.error('Error creating Workspace:', error);
+          this.notificationsService.show(
+            'Error creating Workspace. Please try again.'
+          );
+          this.isLoading = false;
+        }
+      );
   }
 }
