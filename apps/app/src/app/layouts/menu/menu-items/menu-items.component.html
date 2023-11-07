@@ -1,6 +1,6 @@
 <button
   *ngFor="let menuItem of menuItems"
-  [routerLink]="['./', workspace._id, menuItem.path]"
+  [routerLink]="['./', menuItem.path]"
   [routerLinkActive]="['active']"
   mat-menu-item
 >

@@ -12,7 +12,6 @@ router.get(
   workspaceController.find
 );
 router.get('/:id', authMiddleware, workspaceController.getById);
-router.get('/:id/employees', authMiddleware, workspaceController.findEmployees);
 router.put(
   '/:id',
   authMiddleware,

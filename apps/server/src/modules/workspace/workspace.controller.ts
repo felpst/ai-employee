@@ -1,25 +1,11 @@
 import KnowledgeBase from '@cognum/knowledge-base';
-import { AIEmployee, User, Workspace } from '@cognum/models';
+import { User, Workspace } from '@cognum/models';
 import { NextFunction, Request, Response } from 'express';
 import ModelController from '../../controllers/model.controller';
 
 export class WorkspaceController extends ModelController<typeof Workspace> {
   constructor() {
     super(Workspace);
-  }
-
-  public async findEmployees(
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ): Promise<void> {
-    try {
-      const workspaceId = req.params.id;
-      const employees = await AIEmployee.find({ workspace: workspaceId });
-      res.json(employees);
-    } catch (error) {
-      next(error);
-    }
   }
 
   public async filterByUser(

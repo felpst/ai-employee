@@ -4,6 +4,7 @@ import { ActivatedRouteSnapshot, Resolve, Router } from '@angular/router';
 import { IWorkspace } from '@cognum/interfaces';
 import { Observable } from 'rxjs';
 import { NotificationsService } from '../services/notifications/notifications.service';
+import { AIEmployeesService } from './ai-employees/ai-employees.service';
 import { WorkspacesService } from './workspaces.service';
 
 @Injectable({
@@ -12,6 +13,7 @@ import { WorkspacesService } from './workspaces.service';
 export class WorkspaceResolver implements Resolve<IWorkspace> {
   constructor(
     private workspacesService: WorkspacesService,
+    private employeeService: AIEmployeesService,
     private notificationsService: NotificationsService,
     private _router: Router
   ) {}
@@ -30,14 +32,15 @@ export class WorkspaceResolver implements Resolve<IWorkspace> {
         .subscribe({
           next: (workspace) => {
             this.workspacesService.selectedWorkspace = workspace;
+            const { _id: id, name } = workspace;
 
             // Redirect to onboarding workspace route if workspace name is not set
             const isOnboardingWorkspaceRoute =
               route.firstChild?.firstChild?.routeConfig?.path === 'workspace';
-            if (!workspace.name && !isOnboardingWorkspaceRoute) {
+            if (!name && !isOnboardingWorkspaceRoute) {
               this._router.navigate([
                 '/workspaces',
-                workspace._id,
+                id,
                 'onboarding',
                 'workspace',
               ]);
@@ -46,15 +49,16 @@ export class WorkspaceResolver implements Resolve<IWorkspace> {
             // Redirect to AI employee onboarding route if workspace is named and has no AI employees
             const isOnboardingAIEmployeesRoute =
               route.firstChild?.firstChild?.routeConfig?.path === 'ai-employee';
-            this.workspacesService.getEmployees(id).subscribe((employees) => {
+
+            this.employeeService.listByWorkspace(id).subscribe((employees) => {
               if (
-                !!workspace.name &&
+                !!name &&
                 !employees.length &&
                 !isOnboardingAIEmployeesRoute
               ) {
                 this._router.navigate([
                   '/workspaces',
-                  workspace._id,
+                  id,
                   'onboarding',
                   'ai-employee',
                 ]);

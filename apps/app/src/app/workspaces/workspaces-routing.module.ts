@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AdminComponent } from '../layouts/admin/admin.component';
-import { CreateWorkspaceComponent } from './create-workspace/create-workspace.component';
 import { KnowledgeBaseComponent } from './knowledge-base/knowledge-base.component';
 import { SettingsWorkspaceComponent } from './settings-workspace/settings-workspace.component';
 import { WorkspaceOnboardingAIEmployeeComponent } from './workspace-onboarding/workspace-onboarding-ai-employee/workspace-onboarding-ai-employee.component';
@@ -41,7 +40,7 @@ const routes: Routes = [
             component: WorkspaceOnboardingAIEmployeeComponent,
           },
           { path: '**', redirectTo: 'workspace', pathMatch: 'full' },
-        ]
+        ],
       },
       // Admin
       {
@@ -71,15 +70,7 @@ const routes: Routes = [
             path: 'knowledge-base',
             component: KnowledgeBaseComponent,
           },
-        ]
-      },
-      {
-        path: 'create-workspace',
-        component: CreateWorkspaceComponent,
-        loadChildren: () =>
-          import('./create-workspace/create-workspace.module').then(
-            (m) => m.CreateWorkspaceModule
-          ),
+        ],
       },
       // { path: '**', redirectTo: 'overview', pathMatch: 'full' },
     ],
