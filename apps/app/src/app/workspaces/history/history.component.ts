@@ -8,6 +8,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ChatsService } from '../ai-employees/chats/chats.service';
 import { IUser } from '@cognum/interfaces';
 
+
 @Component({
   selector: 'cognum-history',
   templateUrl: './history.component.html',
@@ -18,6 +19,7 @@ export class HistoryComponent implements OnInit {
   originalChat: IChat[] = [];
   chats: IChat[] = [];
   searchText = '';
+  createdByUser: IUser | null = null; 
 
 
   sortingType: 'newFirst' | 'oldFirst' | 'mix' = 'newFirst';
@@ -32,13 +34,28 @@ export class HistoryComponent implements OnInit {
     private workspacesService: WorkspacesService,
     private dialog: MatDialog) { }
 
-  ngOnInit() {
-    const workspaceId = this.route.snapshot.params['id'];
-    this.chatService.list(workspaceId).subscribe(chats => {
-      this.originalChat = Array.from(chats.values()).filter(chat => chat.workspace === workspaceId);
-      this.filterChats();
-    });
-  }
+    ngOnInit() {
+      this.route.params.subscribe(params => {
+        const workspaceId = params['id'];
+        console.log(workspaceId);
+        this.chatService.listWorkspaceId(workspaceId).subscribe(chats => {
+          this.originalChat = chats;
+          this.filterChats();
+    
+          // Obter o usuário criador usando o createdBy id, lidando com o caso undefined
+          const createdByUserId = this.originalChat[0]?.createdBy as string;
+          console.log(createdByUserId)
+          if (createdByUserId) {
+            this.authService.getUserById(createdByUserId).subscribe(user => {
+              this.createdByUser = user;
+            });
+          }
+        });
+      });
+    }
+    
+    
+    
 
 
   get users(): IUser[] {
