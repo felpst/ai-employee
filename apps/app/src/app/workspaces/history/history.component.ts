@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { WorkspacesService } from '../workspaces.service';
-import { DialogComponent } from '../../shared/dialog/dialog.component';
-import { IChat } from '@cognum/interfaces';
-import { AuthService } from '../../auth/auth.service';
 import { ActivatedRoute, Router } from '@angular/router';
+import { IChat, IUser } from '@cognum/interfaces';
+import { AuthService } from '../../auth/auth.service';
+import { DialogComponent } from '../../shared/dialog/dialog.component';
+import { AIEmployeesService } from '../ai-employees/ai-employees.service';
 import { ChatsService } from '../ai-employees/chats/chats.service';
-import { IUser } from '@cognum/interfaces';
+import { WorkspacesService } from '../workspaces.service';
 
 
 @Component({
@@ -19,7 +19,7 @@ export class HistoryComponent implements OnInit {
   originalChat: IChat[] = [];
   chats: IChat[] = [];
   searchText = '';
-  createdByUser: IUser | null = null; 
+  createdByUser: IUser | null = null;
 
 
   sortingType: 'newFirst' | 'oldFirst' | 'mix' = 'newFirst';
@@ -32,16 +32,36 @@ export class HistoryComponent implements OnInit {
     private authService: AuthService,
     private chatService: ChatsService,
     private workspacesService: WorkspacesService,
+    private aiEmployeesService: AIEmployeesService,
     private dialog: MatDialog) { }
 
     ngOnInit() {
+      const history = []
+      for (const aiEmployee of this.aiEmployeesService.aiEmployees.values()) {
+        for (const chat of aiEmployee.chats) {
+          history.push({
+            _id: chat._id,
+            users: [ chat.createdBy, aiEmployee ],
+            date: chat.updatedAt,
+            historyTitle: `${(chat.createdBy as unknown as IUser).name || ''} started a new conversation with ${aiEmployee.name}`,
+            chatName: chat.name,
+            summary: chat.summary
+          })
+        }
+      }
+      console.log(history);
+
+
+
+
+      //---
       this.route.params.subscribe(params => {
         const workspaceId = params['id'];
         console.log(workspaceId);
         this.chatService.listWorkspaceId(workspaceId).subscribe(chats => {
           this.originalChat = chats;
           this.filterChats();
-    
+
           // Obter o usuário criador usando o createdBy id, lidando com o caso undefined
           const createdByUserId = this.originalChat[0]?.createdBy as string;
           console.log(createdByUserId)
@@ -53,9 +73,9 @@ export class HistoryComponent implements OnInit {
         });
       });
     }
-    
-    
-    
+
+
+
 
 
   get users(): IUser[] {
@@ -76,7 +96,7 @@ export class HistoryComponent implements OnInit {
         if (result) {
           this.chatService.delete(chat).subscribe(
             () => {
-              this.chats = this.chats.filter(c => c._id !== chat._id); 
+              this.chats = this.chats.filter(c => c._id !== chat._id);
             },
             error => {
               console.error(error);
@@ -85,7 +105,7 @@ export class HistoryComponent implements OnInit {
         }
       });
   }
-  
+
   getLastUpdatedTime(chat: IChat): string {
     if (!chat.updatedAt) {
       return 'Nunca atualizado'; // ou qualquer outra mensagem que você queira exibir para casos em que updatedAt é undefined
@@ -93,13 +113,13 @@ export class HistoryComponent implements OnInit {
     const updatedAt = new Date(chat.updatedAt);
     const currentTime = new Date();
     const timeDifference = Math.abs(currentTime.getTime() - updatedAt.getTime());
-  
+
     const minute = 60 * 1000;
     const hour = minute * 60;
     const day = hour * 24;
     const week = day * 7;
     const month = day * 30; // Aproximadamente 30 dias por mês
-  
+
     if (timeDifference < minute) {
       return 'Há menos de um minuto';
     } else if (timeDifference < hour) {
@@ -119,7 +139,7 @@ export class HistoryComponent implements OnInit {
       return `Há ${months} ${months === 1 ? 'mês' : 'meses'} atrás`;
     }
   }
-  
+
 
   filterChats() {
     this.chats = this.originalChat.filter(chat =>
