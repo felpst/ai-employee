@@ -19,7 +19,7 @@ export class ChatModel extends LangchainChatOpenAI {
       'modelName' | 'azureOpenAIApiDeploymentName'
     >
   ) {
-    const azureOpenAIApiDeploymentName = 'gpt-35';
+    const azureOpenAIApiDeploymentName = 'gpt-4';
 
     const callbacks: (BaseCallbackHandler | CallbackHandlerMethods)[] = [
       new LLMCallbackHandler(),

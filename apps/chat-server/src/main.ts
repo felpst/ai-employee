@@ -1,6 +1,7 @@
-import { AIEmployee } from '@cognum/ai-employee';
-import { IChat, IMessage, IUser } from '@cognum/interfaces';
-import { Chat, User } from '@cognum/models';
+import { AIEmployeeAgent } from '@cognum/ai-employee';
+import { DatabaseHelper } from '@cognum/helpers';
+import { IAIEmployee, IChat, IMessage, IUser } from '@cognum/interfaces';
+import { AIEmployee, Chat, User } from '@cognum/models';
 import express from 'express';
 import { Server as HTTPServer, IncomingMessage, createServer } from 'http';
 import jwt from 'jsonwebtoken';
@@ -8,14 +9,14 @@ import { Callbacks } from 'langchain/callbacks';
 import * as url from 'url';
 import { v4 as uuidv4 } from 'uuid';
 import WebSocket, { Server as WebSocketServer } from 'ws';
-import { Adam } from '../agents/adam';
 
 export interface WebSocketSession {
   id: string;
   webSocket: WebSocket;
-  user: IUser;
-  chat: IChat;
-  aiEmployee: AIEmployee;
+  user?: IUser;
+  chat?: IChat;
+  aiEmployee?: IAIEmployee;
+  agent?: AIEmployeeAgent;
 }
 
 export interface WebSocketMessage {
@@ -53,6 +54,7 @@ export class ChatServer {
   }) {
     return (event: any) => {
       const data: WebSocketMessage = JSON.parse(event.toString());
+      console.log('Message', data);
       this.onMessageType[data.type](context, data.content);
     };
   }
@@ -67,23 +69,23 @@ export class ChatServer {
         },
         data: any
       ) => {
-        const { token } = data;
-        if (token) {
-          const decodedToken: any = jwt.verify(
-            token,
-            process.env.AUTH_SECRET_KEY
-          );
-          if (!decodedToken) {
-            this.webSocketServer.close();
-            return;
-          }
+        try {
+          const { token } = data;
+          if (token) {
+            const decodedToken: any = jwt.verify(
+              token,
+              process.env.AUTH_SECRET_KEY
+            );
+            if (!decodedToken) {
+              this.webSocketServer.close();
+              return;
+            }
 
-          // Set user id
-          const { userId } = decodedToken;
-          const session = this.sessions.get(context.sessionId);
-          if (session) {
-            User.findById(userId)
-              .then(async (user) => {
+            // Set user id
+            const { userId } = decodedToken;
+            const session = this.sessions.get(context.sessionId);
+            if (session) {
+              User.findById(userId).then(async (user) => {
                 // Set user
                 const session = this.sessions.get(context.sessionId);
                 session.user = user;
@@ -105,31 +107,38 @@ export class ChatServer {
                   },
                 ];
 
-                // Initiate AI Employee: Adam
-                const aiEmployee = new Adam({
-                  chat: session.chat,
-                  user,
-                  callbacks,
+                // Load Custom AI Employee
+                const aiEmployee = await AIEmployee.findById(session.chat.aiEmployee);
+                const agent = new AIEmployeeAgent({
+                  profile: {
+                    name: aiEmployee.name
+                  },
+                  callbacks
                 });
-                session.aiEmployee = aiEmployee;
+
+                session.aiEmployee = aiEmployee as any;
+                session.agent = agent;
                 this.sessions.set(context.sessionId, session);
 
-                // Load chat messages
-                await aiEmployee.memory.loadAllMessages();
-                const messages = await aiEmployee.chatHistory();
+                // TODO Load chat messages
+                // await aiEmployee.memory.loadAllMessages();
+                // const messages = await aiEmployee.chatHistory();
 
                 // Send
                 this.send(context.sessionId, {
                   type: 'auth',
                   content: {
                     user,
-                    aiEmployee: session.aiEmployee.getIdentity(),
+                    aiEmployee,
                     chat: session.chat,
-                    messages,
+                    messages: [],
                   },
                 });
               });
+            }
           }
+        } catch (error) {
+          console.error('Auth error', error);
         }
       },
       message: (
@@ -149,9 +158,9 @@ export class ChatServer {
           console.log(`Message from ${session.user.name}:`, messageContent);
 
           // Send message to AI Employee
-          const aiEmployee = session.aiEmployee;
+          const agent = session.agent;
 
-          aiEmployee.call(messageContent, {
+          agent.call(messageContent, {
             onSaveHumanMessage: (message: IMessage) => {
               this.send(context.sessionId, {
                 type: 'message',
@@ -220,10 +229,7 @@ export class ChatServer {
         // Set session
         this.sessions.set(sessionId, {
           id: sessionId,
-          webSocket,
-          user: null,
-          chat: null,
-          aiEmployee: null,
+          webSocket
         });
 
         // Load Chat
@@ -232,12 +238,11 @@ export class ChatServer {
         if (!chatId) {
           throw new Error('Chat ID not found');
         }
-        const chat = await Chat.findById(chatId)
+        const chat = await Chat.findById(chatId);
         if (!chat) {
           throw new Error('Chat not exists');
         }
 
-        
         // Set chat
         const session = this.sessions.get(sessionId);
         session.chat = chat;
@@ -282,3 +287,16 @@ export class ChatServer {
     });
   }
 }
+
+// Initialize database connection
+DatabaseHelper.connect()
+  .then(() => {
+    // Database connection successful, start the server
+    const chatServer = new ChatServer();
+    chatServer.run();
+  })
+  .catch((error) => {
+    // Database connection failed, log the error and exit the application
+    console.error('Failed to connect to the database:', error);
+    process.exit(1);
+  });

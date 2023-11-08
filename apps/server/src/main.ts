@@ -5,7 +5,6 @@ import 'dotenv/config';
 import express, { Application, Request, Response } from 'express';
 import errorHandler from './middlewares/error.handler';
 import router from './routes';
-import { ChatServer } from './chat/servers/chat.server';
 
 class App {
   private app: Application;
@@ -50,9 +49,6 @@ class App {
     DatabaseHelper.connect()
       .then(() => {
         // Database connection successful, start the server
-        const chatServer = new ChatServer();
-        chatServer.run();
-
         this.app.listen(this.port, () => {
           console.log(`Server is running on port ${this.port}`);
         });

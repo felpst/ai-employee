@@ -42,6 +42,10 @@ const routes: Routes = [
           { path: '**', redirectTo: 'workspace', pathMatch: 'full' },
         ],
       },
+      {
+        path: 'settings',
+        component: SettingsWorkspaceComponent,
+      },
       // Admin
       {
         path: '',
@@ -62,10 +66,7 @@ const routes: Routes = [
             path: 'history',
             component: WorkspaceComponent,
           },
-          {
-            path: 'settings',
-            component: SettingsWorkspaceComponent,
-          },
+
           {
             path: 'knowledge-base',
             component: KnowledgeBaseComponent,

@@ -1,3 +1,7 @@
-export * from './lib/ai-employee';
-export { AIEmployee } from './lib/ai-employee-bkp';
+export * from './lib/ai-employee-agent';
+export { AIEmployeeAgent } from './lib/ai-employee-agent';
+export {
+  AIEmployeeOutputParser,
+  AIEmployeePromptTemplate
+} from './lib/prompts/prompts.helper';
 

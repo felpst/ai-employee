@@ -15,12 +15,12 @@ import {
   PartialValues,
 } from 'langchain/schema';
 import { Tool } from 'langchain/tools';
-import { AIEmployeeMemory } from '../memories/ai_employee.memory';
-import { ToolsHelper } from './tools.helper';
+import { ToolsHelper } from '../../../../tools/src/lib/helpers/tools.helper';
+import { Profile } from '../interfaces';
 
-const formatIdentity = (identity: AIEmployeeIdentity) =>
-  `Your name is ${identity.name || 'Atlas'}. Your a ${
-    identity.profession || 'Assistant'
+const formatIdentity = (profile: Profile) =>
+  `Your name is ${profile.name || 'Atlas'}. Your a ${
+    profile.role || 'Assistant'
   }.`;
 
 const formatPrefix = (user: IUser) =>
@@ -55,34 +55,29 @@ ${messages.length > 10 ? '(old messages...)\n' : ''}${messages
 Question: {input}
 Thought:{agent_scratchpad}`;
 
-export interface AIEmployeeIdentity {
-  name: string;
-  profession: string;
-}
-
 export class AIEmployeePromptTemplate extends BaseChatPromptTemplate {
   tools: Tool[];
   _toolsHelper: ToolsHelper;
-  identity: AIEmployeeIdentity = {
+  profile: Profile = {
     name: 'Atlas',
-    profession: 'Assistant',
+    role: 'Assistant',
   };
-  private _memory: AIEmployeeMemory;
+  // private _memory: AIEmployeeMemory;
   user: IUser;
 
   constructor(args: {
     tools: Tool[];
     inputVariables: string[];
-    identity: AIEmployeeIdentity;
-    memory: AIEmployeeMemory;
-    user: IUser;
+    profile: Profile;
+    // memory: AIEmployeeMemory;
+    // user: IUser;
   }) {
     super({ inputVariables: args.inputVariables });
     this.tools = args.tools;
     this._toolsHelper = new ToolsHelper(this.tools);
-    this.identity = args.identity;
-    this._memory = args.memory;
-    this.user = args.user;
+    this.profile = args.profile;
+    // this._memory = args.memory;
+    // this.user = args.user;
   }
 
   _getPromptType(): string {
@@ -101,7 +96,7 @@ export class AIEmployeePromptTemplate extends BaseChatPromptTemplate {
     const toolNames = this.tools.map((tool) => tool.name).join('\n');
 
     // Identity
-    const identity = formatIdentity(this.identity);
+    const profile = formatIdentity(this.profile);
 
     const prefix = formatPrefix(this.user);
 
@@ -109,11 +104,11 @@ export class AIEmployeePromptTemplate extends BaseChatPromptTemplate {
     const instructions = formatInstructions(toolNames);
 
     // Summary
-    const summary = this._memory.chat.summary || '';
-    const suffix = formatSuffix(summary, this._memory.getLastMessages());
+    const summary = '';
+    const suffix = formatSuffix(summary, []);
 
     // Template
-    const template = [identity, prefix, toolStrings, instructions, suffix].join(
+    const template = [profile, prefix, toolStrings, instructions, suffix].join(
       '\n\n'
     );
 
