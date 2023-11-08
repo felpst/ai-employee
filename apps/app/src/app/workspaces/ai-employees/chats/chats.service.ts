@@ -2,6 +2,8 @@ import { HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { IAIEmployee, IChat } from '@cognum/interfaces';
 import { Observable } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
+import { throwError } from 'rxjs';
 import { AuthService } from '../../../auth/auth.service';
 import { CoreApiService } from '../../../services/apis/core-api.service';
 
@@ -57,6 +59,24 @@ export class ChatsService {
       });
     });
   }
+
+ listWorkspaceId(workspaceId: string): Observable<IChat[]> {
+  const endpoint = `${this.route}?workspace=${workspaceId}`;
+
+  return this.coreApiService.get(endpoint).pipe(
+    map((chats: IChat[]) => {
+      this.chats.clear(); // Limpa o mapa de chats antes de adicionar os novos chats
+      chats.forEach(chat => this.chats.set(chat._id, chat));
+      return chats;
+    }),
+    catchError(error => {
+      console.error(error);
+      return [];
+    })
+  );
+}
+
+  
 
   delete(chat: IChat): Observable<IChat> {
     this.chats.delete(chat._id);

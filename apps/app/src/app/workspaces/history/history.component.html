@@ -1,0 +1,106 @@
+<div class="main">
+  <div class="header">
+    <div class="title">
+      <h2>General History</h2>
+    </div>
+    <div class="filters">
+      <div class="sorting-buttons">
+        <button
+          mat-stroked-button
+          [ngClass]="{
+            'active-button': activeButton === 'newFirst',
+            'inactive-button': activeButton !== 'newFirst'
+          }"
+          (click)="onButtonClick('newFirst')"
+        >
+          New
+        </button>
+        <button
+          mat-stroked-button
+          [ngClass]="{
+            'active-button': activeButton === 'oldFirst',
+            'inactive-button': activeButton !== 'oldFirst'
+          }"
+          (click)="onButtonClick('oldFirst')"
+        >
+          Old
+        </button>
+        <button
+          mat-stroked-button
+          [ngClass]="{
+            'active-button': activeButton === 'mix',
+            'inactive-button': activeButton !== 'mix'
+          }"
+          (click)="onButtonClick('mix')"
+        >
+          Access
+        </button>
+      </div>
+
+      <div class="search-container">
+        <input
+          type="text"
+          [(ngModel)]="searchText"
+          (keyup)="onSearch($event)"
+          placeholder="input search text"
+          class="search-input"
+        />
+        <button
+          *ngIf="!searchText"
+          mat-icon-button
+          aria-label="Clear"
+          (click)="clearSearch()"
+        >
+          <mat-icon>search</mat-icon>
+        </button>
+        <button
+          *ngIf="searchText"
+          matSuffix
+          mat-icon-button
+          aria-label="Clear"
+          (click)="clearSearch()"
+        >
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="content">
+    <div class="list">
+      <div class="white-content" *ngFor="let chat of chats">
+        <div class="chats">
+          <cognum-users-avatar  [users]="users"></cognum-users-avatar>
+          <div class="description">
+            <p>{{ chat.name }}</p>
+            <p> {{ getLastUpdatedTime(chat) }}</p>
+          </div>
+        </div>
+
+        <button class="subject">Chat Subject</button>
+
+        <p class="conversation" *ngIf="chat && chat.summary">
+          {{ chat.summary.slice(0, 300)
+          }}{{ chat.summary.length > 300 ? '...' : '' }}
+        </p>
+
+        <div class="menu">
+          <button
+            mat-icon-button
+            [matMenuTriggerFor]="menu"
+            aria-label="Example icon-button with a menu"
+          >
+            <mat-icon>more_horizon</mat-icon>
+          </button>
+          <mat-menu #menu="matMenu">
+            <button (click)="deleteChat(chat)" mat-menu-item>
+              <mat-icon>delete_outline</mat-icon>
+              <span>delete</span>
+            </button>
+          </mat-menu>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<router-outlet></router-outlet>

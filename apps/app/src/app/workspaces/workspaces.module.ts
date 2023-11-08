@@ -24,6 +24,7 @@ import { WorkspaceOnboardingComponent } from './workspace-onboarding/workspace-o
 import { WorkspaceComponent } from './workspace/workspace.component';
 import { WorkspacesRoutingModule } from './workspaces-routing.module';
 import { WorkspacesComponent } from './workspaces.components';
+import { HistoryModule } from './history/history.module';
 
 @NgModule({
   declarations: [
@@ -32,7 +33,8 @@ import { WorkspacesComponent } from './workspaces.components';
     WorkspaceOnboardingWorkspaceComponent,
     WorkspaceOnboardingYourTeamComponent,
     WorkspaceOnboardingAIEmployeeComponent,
-    WorkspaceComponent
+    WorkspaceComponent, 
+ 
   ],
   imports: [
     CommonModule,
@@ -54,7 +56,9 @@ import { WorkspacesComponent } from './workspaces.components';
     KnowledgeBaseModule,
     SettingsWorkspaceModule,
     MatToolbarModule,
-    SharedModule
+    SharedModule,
+    HistoryModule
+   
   ],
 })
 export class WorkspacesModule {}

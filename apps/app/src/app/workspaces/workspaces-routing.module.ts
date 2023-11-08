@@ -10,6 +10,7 @@ import { WorkspaceOnboardingComponent } from './workspace-onboarding/workspace-o
 import { WorkspaceResolver } from './workspace.resolver';
 import { WorkspaceComponent } from './workspace/workspace.component';
 import { WorkspacesComponent } from './workspaces.components';
+import { HistoryComponent } from './history/history.component';
 
 const routes: Routes = [
   {
@@ -64,7 +65,7 @@ const routes: Routes = [
           },
           {
             path: 'history',
-            component: WorkspaceComponent,
+            component:  HistoryComponent,
           },
 
           {

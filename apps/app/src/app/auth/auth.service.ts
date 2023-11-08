@@ -84,6 +84,10 @@ export class AuthService {
     });
   }
 
+  getUserById(userId: string): Observable<IUser> {
+    return this.coreApiService.get(`users/${userId}`);
+  }
+
   validateRecoveryToken(recoveryId: string): Observable<{ isValid: boolean }> {
     return this.coreApiService.get(`users/token/${recoveryId}`);
   }
