@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { WorkspacesService } from '../workspaces.service';
+import { Observable, of } from 'rxjs';
 import { DialogComponent } from '../../shared/dialog/dialog.component';
 import { IChat } from '@cognum/interfaces';
 import { AuthService } from '../../auth/auth.service';
@@ -18,8 +19,8 @@ import { IUser } from '@cognum/interfaces';
 export class HistoryComponent implements OnInit {
   originalChat: IChat[] = [];
   chats: IChat[] = [];
-  searchText = '';
-  createdByUser: IUser | null = null; 
+  searchText = ''; 
+  createdByUser: IUser | null = null;
 
 
   sortingType: 'newFirst' | 'oldFirst' | 'mix' = 'newFirst';
@@ -34,30 +35,27 @@ export class HistoryComponent implements OnInit {
     private workspacesService: WorkspacesService,
     private dialog: MatDialog) { }
 
+ 
     ngOnInit() {
-      this.route.params.subscribe(params => {
-        const workspaceId = params['id'];
-        console.log(workspaceId);
-        this.chatService.listWorkspaceId(workspaceId).subscribe(chats => {
-          this.originalChat = chats;
-          this.filterChats();
-    
-          // Obter o usuário criador usando o createdBy id, lidando com o caso undefined
-          const createdByUserId = this.originalChat[0]?.createdBy as string;
-          console.log(createdByUserId)
-          if (createdByUserId) {
-            this.authService.getUserById(createdByUserId).subscribe(user => {
-              this.createdByUser = user;
-            });
-          }
-        });
+      const workspaceId = this.workspacesService.selectedWorkspace._id;
+      this.chatService.listByWorkspace(workspaceId).subscribe((chats: IChat[]) => {
+        this.originalChat = chats;
+        this.filterChats();
+        const createdByUserId = this.originalChat[0]?.createdBy as string;
+        console.log(createdByUserId);
+        if (createdByUserId) {
+          this.authService.getUserById(createdByUserId).subscribe((user: IUser) => {
+            if (user) {
+              this.createdByUser= user; 
+            } 
+            console.log(this.createdByUser); // Dados do usuário obtidos com sucesso
+          });
+        }
       });
     }
     
     
     
-
-
   get users(): IUser[] {
     return this.workspacesService.selectedWorkspace.users as IUser[];
   }
