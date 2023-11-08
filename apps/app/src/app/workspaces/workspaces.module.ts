@@ -15,6 +15,7 @@ import { MarkdownModule } from 'ngx-markdown';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { LayoutsModule } from '../layouts/layouts.module';
 import { SharedModule } from '../shared/shared.module';
+import { HistoryComponent } from './history/history.component';
 import { KnowledgeBaseModule } from './knowledge-base/knowledge-base.module';
 import { SettingsWorkspaceModule } from './settings-workspace/settings-workspace.module';
 import { WorkspaceOnboardingAIEmployeeComponent } from './workspace-onboarding/workspace-onboarding-ai-employee/workspace-onboarding-ai-employee.component';
@@ -24,7 +25,6 @@ import { WorkspaceOnboardingComponent } from './workspace-onboarding/workspace-o
 import { WorkspaceComponent } from './workspace/workspace.component';
 import { WorkspacesRoutingModule } from './workspaces-routing.module';
 import { WorkspacesComponent } from './workspaces.components';
-import { HistoryModule } from './history/history.module';
 
 @NgModule({
   declarations: [
@@ -33,8 +33,8 @@ import { HistoryModule } from './history/history.module';
     WorkspaceOnboardingWorkspaceComponent,
     WorkspaceOnboardingYourTeamComponent,
     WorkspaceOnboardingAIEmployeeComponent,
-    WorkspaceComponent, 
- 
+    WorkspaceComponent,
+    HistoryComponent
   ],
   imports: [
     CommonModule,
@@ -56,9 +56,8 @@ import { HistoryModule } from './history/history.module';
     KnowledgeBaseModule,
     SettingsWorkspaceModule,
     MatToolbarModule,
-    SharedModule,
-    HistoryModule
-   
+    SharedModule
+
   ],
 })
 export class WorkspacesModule {}

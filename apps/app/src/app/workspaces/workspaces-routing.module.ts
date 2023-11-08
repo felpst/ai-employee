@@ -1,6 +1,8 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AdminComponent } from '../layouts/admin/admin.component';
+import { HistoryComponent } from './history/history.component';
+import { WorkspaceHistoryResolver } from './history/workspace-history.resolver';
 import { KnowledgeBaseComponent } from './knowledge-base/knowledge-base.component';
 import { SettingsWorkspaceComponent } from './settings-workspace/settings-workspace.component';
 import { WorkspaceOnboardingAIEmployeeComponent } from './workspace-onboarding/workspace-onboarding-ai-employee/workspace-onboarding-ai-employee.component';
@@ -10,7 +12,6 @@ import { WorkspaceOnboardingComponent } from './workspace-onboarding/workspace-o
 import { WorkspaceResolver } from './workspace.resolver';
 import { WorkspaceComponent } from './workspace/workspace.component';
 import { WorkspacesComponent } from './workspaces.components';
-import { HistoryComponent } from './history/history.component';
 
 const routes: Routes = [
   {
@@ -65,9 +66,9 @@ const routes: Routes = [
           },
           {
             path: 'history',
+            resolve: [WorkspaceHistoryResolver],
             component:  HistoryComponent,
           },
-
           {
             path: 'knowledge-base',
             component: KnowledgeBaseComponent,

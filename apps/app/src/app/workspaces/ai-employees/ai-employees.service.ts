@@ -15,14 +15,14 @@ export interface IAIEmployeeWithChats extends IAIEmployee {
 export class AIEmployeesService {
   private route = 'employees';
   aiEmployee!: IAIEmployee;
-  aiEmployees: IAIEmployeeWithChats[] = [];
+  aiEmployees: Map<string, IAIEmployeeWithChats> = new Map<string, IAIEmployeeWithChats>();
 
   constructor(
     private coreApiService: CoreApiService,
     private chatsService: ChatsService
   ) {}
 
-  load(workspace: IWorkspace): Observable<IAIEmployeeWithChats[]> {
+  load(workspace: IWorkspace, chatsLimit = 3): Observable<IAIEmployeeWithChats[]> {
     let params = new HttpParams();
     params = params.set('filter[workspace]', workspace._id);
     params = params.set('sort', '-updatedAt');
@@ -30,20 +30,28 @@ export class AIEmployeesService {
     return new Observable((observer) => {
       this.list({ params }).subscribe({
         next: async (aiEmployees) => {
-          this.aiEmployees = aiEmployees as IAIEmployeeWithChats[];
-
-          // Load last 3 chats for each employee
-          for (const aiEmployee of this.aiEmployees) {
+          this.aiEmployees.clear()
+          for (const aiEmployee of aiEmployees as IAIEmployeeWithChats[]) {
             let params = new HttpParams();
             params = params.set('filter[aiEmployee]', aiEmployee._id);
             params = params.set('sort', '-updatedAt');
-            params = params.set('limit', '3');
+            params = params.set('limit', chatsLimit);
+
+            // populate user
+            params = params.set('populate[0][path]', 'createdBy');
+            params = params.set('populate[0][select]', 'name email photo');
+
+            // populate ai employee
+            params = params.set('populate[1][path]', 'aiEmployee');
+            params = params.set('populate[1][select]', 'name avatar');
 
             aiEmployee.chats =
             await firstValueFrom(this.chatsService.list({ params })) || [];
+
+            this.aiEmployees.set(aiEmployee._id, aiEmployee);
           }
 
-          observer.next(this.aiEmployees);
+          observer.next(Array.from(this.aiEmployees.values()));
         },
         error: (error) => {
           console.error(error);

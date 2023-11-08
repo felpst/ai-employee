@@ -38,7 +38,7 @@ export class AIEmployeesComponent implements OnInit {
   }
 
   get originalEmployees() {
-    return this.aiEmployeesService.aiEmployees;
+    return Array.from(this.aiEmployeesService.aiEmployees.values());
   }
 
   onNewChat(aiEmployee: ObjectId) {
