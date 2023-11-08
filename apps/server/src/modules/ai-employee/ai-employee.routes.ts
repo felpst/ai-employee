@@ -12,8 +12,6 @@ const router: Router = express.Router();
 router.post(
   '/',
   authMiddleware,
-  multer(multerConfig).single('avatar'),
-  jsonParserMiddleware,
   YupValidatorMiddleware(addEmployeeSchema),
   employeeController.create
 );

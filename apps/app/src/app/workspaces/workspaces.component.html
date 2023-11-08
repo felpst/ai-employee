@@ -1,8 +1,8 @@
 <cognum-header title="cognum" logo="../../assets/icons/icon.png">
   <ng-container right>
-    <span class="cognum-font-strong">{{ email }}</span>
+    <span class="cognum-font-strong cognum-heading-4">{{ email }}</span>
     <div
-      class="cognum-font-strong cognum-font-color-primary cursor-pointer"
+      class="cognum-font-strong cognum-heading-4 cognum-font-color-primary cursor-pointer"
       (click)="onLogOut()"
       mat-ripple
     >
@@ -38,7 +38,10 @@
             <div class="display-row details-container">
               <img
                 class="workspace-photo"
-                [src]="workspace.photo || '../../../assets/icons/avatar.svg'"
+                [src]="
+                  workspace.photo ||
+                  'https://storage.googleapis.com/factory-assets/workspace-avatar-default.png'
+                "
                 alt="workspace photo"
               />
               <div class="text-container">
@@ -53,6 +56,8 @@
 
             <button
               class="font-outfit display-row button"
+              mat-button
+              color="primary"
               (click)="onSelectWorkspace(workspace._id)"
             >
               access workspace
@@ -69,6 +74,7 @@
           </div>
           <button
             class="font-outfit display-row button"
+            mat-button
             (click)="onCreateWorkspace()"
           >
             create workspace
@@ -78,7 +84,7 @@
 
       <div class="display-row new">
         <div class="display-row info-new-container">
-          <div class="display-column info-new-text" style="max-width: 75%">
+          <div class="display-column info-new-text width">
             <strong>Not finding the workspace you’re looking for?</strong>
             <span
               >We have already listed all the workspaces associated with the
@@ -87,6 +93,7 @@
           </div>
           <button
             class="font-outfit display-row help-button"
+            mat-button
             (click)="onLogOut()"
           >
             try a different email

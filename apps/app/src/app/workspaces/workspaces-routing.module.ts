@@ -40,7 +40,7 @@ const routes: Routes = [
             component: WorkspaceOnboardingAIEmployeeComponent,
           },
           { path: '**', redirectTo: 'workspace', pathMatch: 'full' },
-        ]
+        ],
       },
       // Admin
       {

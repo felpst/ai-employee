@@ -11,8 +11,6 @@
   font-weight: 400;
 }
 
-//
-
 .display-row {
   display: flex;
   flex-direction: row;
@@ -205,6 +203,10 @@
               line-height: 1.375rem;
             }
           }
+
+          .width {
+            max-width: 70%;
+          }
         }
       }
     }
@@ -223,12 +225,12 @@
 
   box-shadow: 0px 2px 0px 0px rgba(0, 0, 0, 0.04);
 
-  color: #fff;
-  text-align: center;
+  color: #fff !important;
+  text-align: center !important;
 
   font-size: 1rem;
   font-weight: 400;
-  line-height: 1.5rem;
+  line-height: 24px;
 }
 
 .help-button {
@@ -237,19 +239,19 @@
   align-items: center;
   gap: 0.625rem;
 
-  background: #fff;
+  background: #fff !important;
+  color: rgba(0, 0, 0, 0.85) !important;
 
   border-radius: 0.125rem;
   border: 1px solid #000;
 
   box-shadow: 0px 2px 0px 0px rgba(0, 0, 0, 0.02);
 
-  color: rgba(0, 0, 0, 0.85);
   text-align: center;
 
   font-size: 1rem;
   font-weight: 400;
-  line-height: 1.5rem;
+  line-height: 24px;
 }
 
 @media screen and (max-width: 930px) {

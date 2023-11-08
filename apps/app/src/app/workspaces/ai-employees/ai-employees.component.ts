@@ -11,13 +11,11 @@ import { WhiteAiEmployeeComponent } from './white-ai-employee/white-ai-employee.
   selector: 'cognum-ai-employee',
   templateUrl: './ai-employees.component.html',
   styleUrls: ['./ai-employees.component.scss'],
-
 })
 export class AIEmployeesComponent implements OnInit {
   originalEmployees: IAIEmployee[] = [];
   employees: IAIEmployee[] = [];
   searchText = '';
-
 
   sortingType: 'newFirst' | 'oldFirst' | 'mix' = 'newFirst';
   sortingDirection: 'asc' | 'desc' = 'desc';
@@ -28,50 +26,45 @@ export class AIEmployeesComponent implements OnInit {
     private router: Router,
     private employeeService: AIEmployeesService,
     private workspacesService: WorkspacesService,
-    private dialog: MatDialog) { }
-
+    private dialog: MatDialog
+  ) {}
 
   ngOnInit() {
     this.activeButton = '';
-    const workspaceId = this.route.snapshot.params['id'];
-    this.loadEmployees(workspaceId);
+    this.loadEmployees(this.workspace._id);
   }
 
   loadEmployees(workspaceId: string) {
     this.employeeService.listByWorkspace(workspaceId).subscribe(
-      employees => {
+      (employees) => {
         this.originalEmployees = employees;
         this.filterEmployees();
       },
-      error => {
+      (error) => {
         console.error(error);
       }
     );
   }
 
-
-
-
   createEmployee() {
     const dialogRef = this.dialog.open(WhiteAiEmployeeComponent, {
-      height: '80%',
-      data: { workspaceId: this.route.snapshot.params['id'] }
+      height: '75%',
+      maxHeight: '650px',
     });
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result === 'success') {
-        const workspaceId = this.route.snapshot.params['id'];
-        this.loadEmployees(workspaceId);
+        this.loadEmployees(this.workspace._id);
         this.activeButton = '';
       }
     });
   }
 
-
   editEmployee(employee: IAIEmployee) {
     const employeeId = employee._id;
-    const workspaceId = this.route.snapshot.params['id'];
-    this.router.navigate([`workspaces/${workspaceId}/employee/${employeeId}`]);
+    this.router.navigate([
+      `workspaces/${this.workspace._id}/employee/${employeeId}`,
+    ]);
   }
 
   deleteEmployee(employee: IAIEmployee) {
@@ -88,9 +81,11 @@ export class AIEmployeesComponent implements OnInit {
         if (result) {
           this.employeeService.delete(employee).subscribe(
             () => {
-              this.employees = this.employees.filter(emp => emp._id !== employee._id);
+              this.employees = this.employees.filter(
+                (emp) => emp._id !== employee._id
+              );
             },
-            error => {
+            (error) => {
               console.error(error);
             }
           );
@@ -98,9 +93,8 @@ export class AIEmployeesComponent implements OnInit {
       });
   }
 
-
   filterEmployees() {
-    this.employees = this.originalEmployees.filter(employee =>
+    this.employees = this.originalEmployees.filter((employee) =>
       employee.name.toLowerCase().includes(this.searchText.toLowerCase())
     );
   }
@@ -149,5 +143,9 @@ export class AIEmployeesComponent implements OnInit {
   onButtonClick(button: string) {
     this.activeButton = button;
     this.sortKnowledgeBase(button);
+  }
+
+  get workspace() {
+    return this.workspacesService.selectedWorkspace;
   }
 }

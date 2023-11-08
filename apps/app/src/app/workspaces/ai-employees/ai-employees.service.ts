@@ -11,7 +11,6 @@ export class AIEmployeesService {
   private route = 'employees';
   aiEmployee!: IAIEmployee;
 
-
   // TODO remove
   employeeId!: IAIEmployee;
   selectedAiEmployees: string | null = null;
@@ -22,8 +21,8 @@ export class AIEmployeesService {
     private authService: AuthService
   ) {}
 
-  create(formData: FormData): Observable<IAIEmployee> {
-    return this.coreApiService.post(`${this.route}`, formData, {
+  create(employee: Partial<IAIEmployee>): Observable<IAIEmployee> {
+    return this.coreApiService.post(`${this.route}`, employee, {
       headers: {
         Accept: 'application/json',
       },
@@ -31,19 +30,27 @@ export class AIEmployeesService {
   }
 
   listByWorkspace(workspaceId: string): Observable<IAIEmployee[]> {
-     return this.coreApiService.get(`${this.route}?filter[workspace]=${workspaceId}`) as Observable<IAIEmployee[]>;
+    return this.coreApiService.get(
+      `${this.route}?filter[workspace]=${workspaceId}`
+    ) as Observable<IAIEmployee[]>;
   }
 
   get(aiEmployeeId: string): Observable<IAIEmployee> {
-    return this.coreApiService.get(`${this.route}/${aiEmployeeId}`) as Observable<IAIEmployee>;
+    return this.coreApiService.get(
+      `${this.route}/${aiEmployeeId}`
+    ) as Observable<IAIEmployee>;
   }
 
   update(item: Partial<IAIEmployee>): Observable<IAIEmployee> {
-    return this.coreApiService.put(`${this.route}/${item._id}`, item) as Observable<IAIEmployee>;
+    return this.coreApiService.put(
+      `${this.route}/${item._id}`,
+      item
+    ) as Observable<IAIEmployee>;
   }
 
-
   delete(item: Partial<IAIEmployee>): Observable<IAIEmployee> {
-    return this.coreApiService.delete(`${this.route}/${item._id}`) as Observable<IAIEmployee>;
+    return this.coreApiService.delete(
+      `${this.route}/${item._id}`
+    ) as Observable<IAIEmployee>;
   }
 }
