@@ -1,5 +1,6 @@
+import { HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { IChat } from '@cognum/interfaces';
+import { IAIEmployee, IChat } from '@cognum/interfaces';
 import { Observable } from 'rxjs';
 import { AuthService } from '../../../auth/auth.service';
 import { CoreApiService } from '../../../services/apis/core-api.service';
@@ -24,6 +25,23 @@ export class ChatsService {
     private authService: AuthService
   ) {}
 
+  load(aiEmployee: IAIEmployee): Observable<IChat[]> {
+    let params = new HttpParams();
+    params = params.set('filter[aiEmployee]', aiEmployee._id);
+    params = params.set('sort', '-updatedAt');
+    return new Observable((observer) => {
+      this.list({ params }).subscribe({
+        next: (chats) => {
+          this.chats.clear();
+          for (const chat of chats) {
+            this.chats.set(chat._id, chat);
+          }
+          observer.next(chats);
+        },
+      });
+    });
+  }
+
   create(chat: Partial<IChat>): Observable<IChat> {
     return this.coreApiService.post('chats', chat) as Observable<IChat>;
   }
@@ -34,9 +52,6 @@ export class ChatsService {
         this.coreApiService.get(`${this.route}`, options) as Observable<IChat[]>
       ).subscribe({
         next: (chats: IChat[]) => {
-          for (const chat of chats) {
-            this.chats.set(chat._id, chat)
-          }
           observer.next(chats);
         },
       });

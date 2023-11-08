@@ -60,7 +60,7 @@ export class AIEmployee {
       user: this._user,
     });
 
-    const workspaceId = this._chat.workspace.toString();
+    const workspaceId = this._chat.aiEmployee.toString();
     // Tools
     this._tools = [
       // new DatabaseConnect(),

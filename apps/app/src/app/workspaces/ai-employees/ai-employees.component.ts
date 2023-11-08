@@ -1,10 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
-import { IAIEmployee } from '@cognum/interfaces';
+import { IAIEmployee, IChat } from '@cognum/interfaces';
+import { ObjectId } from 'mongoose';
+import { firstValueFrom } from 'rxjs';
 import { DialogComponent } from '../../shared/dialog/dialog.component';
 import { WorkspacesService } from '../workspaces.service';
-import { AIEmployeesService } from './ai-employees.service';
+import { AIEmployeesService, IAIEmployeeWithChats } from './ai-employees.service';
+import { ChatsService } from './chats/chats.service';
 import { WhiteAiEmployeeComponent } from './white-ai-employee/white-ai-employee.component';
 
 @Component({
@@ -13,8 +16,7 @@ import { WhiteAiEmployeeComponent } from './white-ai-employee/white-ai-employee.
   styleUrls: ['./ai-employees.component.scss'],
 })
 export class AIEmployeesComponent implements OnInit {
-  originalEmployees: IAIEmployee[] = [];
-  employees: IAIEmployee[] = [];
+  employees: IAIEmployeeWithChats[] = [];
   searchText = '';
 
   sortingType: 'newFirst' | 'oldFirst' | 'mix' = 'newFirst';
@@ -24,26 +26,35 @@ export class AIEmployeesComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private employeeService: AIEmployeesService,
+    private aiEmployeesService: AIEmployeesService,
     private workspacesService: WorkspacesService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private chatsService: ChatsService
   ) {}
 
   ngOnInit() {
     this.activeButton = '';
-    this.loadEmployees(this.workspace._id);
+    this.filterEmployees();
   }
 
-  loadEmployees(workspaceId: string) {
-    this.employeeService.listByWorkspace(workspaceId).subscribe(
-      (employees) => {
-        this.originalEmployees = employees;
-        this.filterEmployees();
+  get originalEmployees() {
+    return this.aiEmployeesService.aiEmployees;
+  }
+
+  onNewChat(aiEmployee: ObjectId) {
+    const chat: Partial<IChat> = {
+      aiEmployee
+    }
+
+    this.chatsService.create(chat).subscribe({
+      next: (newChat) => {
+        this.router.navigate([aiEmployee, 'chats', newChat._id], { relativeTo: this.route });
       },
-      (error) => {
-        console.error(error);
-      }
-    );
+    });
+  }
+
+  onChat(aiEmployee: ObjectId, chat: IChat) {
+    this.router.navigate([aiEmployee, 'chats', chat._id], { relativeTo: this.route });
   }
 
   createEmployee() {
@@ -52,9 +63,10 @@ export class AIEmployeesComponent implements OnInit {
       maxHeight: '650px',
     });
 
-    dialogRef.afterClosed().subscribe((result) => {
+    dialogRef.afterClosed().subscribe(async (result) => {
       if (result === 'success') {
-        this.loadEmployees(this.workspace._id);
+        await firstValueFrom(this.aiEmployeesService.load(this.workspace));
+        this.filterEmployees();
         this.activeButton = '';
       }
     });
@@ -77,18 +89,11 @@ export class AIEmployeesComponent implements OnInit {
         },
       })
       .afterClosed()
-      .subscribe((result) => {
+      .subscribe(async (result) => {
         if (result) {
-          this.employeeService.delete(employee).subscribe(
-            () => {
-              this.employees = this.employees.filter(
-                (emp) => emp._id !== employee._id
-              );
-            },
-            (error) => {
-              console.error(error);
-            }
-          );
+          await firstValueFrom(this.aiEmployeesService.delete(employee))
+          await firstValueFrom(this.aiEmployeesService.load(this.workspace));
+          this.filterEmployees();
         }
       });
   }

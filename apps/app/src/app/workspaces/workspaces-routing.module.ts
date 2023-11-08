@@ -70,9 +70,9 @@ const routes: Routes = [
             path: 'knowledge-base',
             component: KnowledgeBaseComponent,
           },
+          { path: '**', redirectTo: 'overview', pathMatch: 'full' },
         ]
       },
-      { path: '**', redirectTo: 'overview', pathMatch: 'full' },
     ],
   },
   { path: '**', redirectTo: '/', pathMatch: 'full' },

@@ -3,10 +3,12 @@ import { RouterModule, Routes } from '@angular/router';
 import { AIEmployeeSettingsComponent } from './ai-employee-settings/ai-employee-settings.component';
 import { AIEmployeeResolver } from './ai-employee.resolver';
 import { AIEmployeesComponent } from './ai-employees.component';
+import { AIEmployeesResolver } from './ai-employees.resolver';
 
 const routes: Routes = [
   {
     path: '',
+    resolve: [AIEmployeesResolver],
     component: AIEmployeesComponent,
   },
   {

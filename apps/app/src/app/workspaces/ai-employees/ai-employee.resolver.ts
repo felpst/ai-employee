@@ -16,10 +16,6 @@ export class AIEmployeeResolver {
   resolve(route: ActivatedRouteSnapshot): Observable<IAIEmployee> {
     const id = route.paramMap.get('id') as string;
     return new Observable((observer) => {
-      // let params = new HttpParams();
-      // params = params.set('populate[0][path]', 'users');
-      // params = params.set('populate[0][select]', 'name email photo');
-
       this.aiEmployeesService
         .get(id)
         .subscribe({

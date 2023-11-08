@@ -204,6 +204,7 @@ h3 {
 
     &-profile {
       @extend .cognum-menu;
+      width: 170px;
       position: relative;
       top: -48px;
       left: (160 + 16) + px;

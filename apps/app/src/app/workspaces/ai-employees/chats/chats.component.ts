@@ -1,10 +1,11 @@
-import { HttpParams } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { IChat, IWorkspace } from '@cognum/interfaces';
+import { firstValueFrom } from 'rxjs';
 import { DialogComponent } from '../../../shared/dialog/dialog.component';
 import { WorkspacesService } from '../../workspaces.service';
+import { AIEmployeesService } from '../ai-employees.service';
 import { ChatsService, ICategorizedChats } from './chats.service';
 
 @Component({
@@ -29,6 +30,7 @@ export class ChatsComponent {
     private route: ActivatedRoute,
     private chatsService: ChatsService,
     private workspacesService: WorkspacesService,
+    private aiEmployeesService: AIEmployeesService,
     private dialog: MatDialog
   ) {
     this.categorizedChats = this.chatsService.categorizedList();
@@ -53,20 +55,14 @@ export class ChatsComponent {
     );
   }
 
-  reloadWorkspaceChats() {
-    this.chatsService.chats.clear();
-    let params = new HttpParams();
-    params = params.set('filter[workspace]', this.workspacesService.selectedWorkspace._id);
-    params = params.set('sort', '-createdAt');
-    this.chatsService.list({ params }).subscribe(() => {
-      this.categorizedChats = this.chatsService.categorizedList();
-    })
+  async reloadWorkspaceChats() {
+    await firstValueFrom(this.chatsService.load(this.aiEmployeesService.aiEmployee));
+    this.categorizedChats = this.chatsService.categorizedList();
   }
 
   onNewChat() {
-    const workspace = this.workspacesService.selectedWorkspace._id;
     const chat: Partial<IChat> = {
-      workspace
+      aiEmployee: this.aiEmployeesService.aiEmployee._id
     }
 
     this.chatsService.create(chat).subscribe({
@@ -78,10 +74,7 @@ export class ChatsComponent {
   }
 
   onChat(chat: IChat) {
-    console.log(chat)
     const { _id } = chat;
-    console.log(_id)
-    console.log(this.workspace._id)
     this.chatsService.selectedChat = _id;
     this.router.navigate([`/workspaces/${this.workspace._id}/chats/${_id}`]);
   }

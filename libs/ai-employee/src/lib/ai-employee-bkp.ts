@@ -59,7 +59,7 @@ export class AIEmployee {
       new Calculator(),
       // new ChatHistoryTool(this.memory),
       // new ZapierTool(),
-      new KnowledgeBaseTool(this._chat.workspace.toString()),
+      new KnowledgeBaseTool(this._chat.aiEmployee.toString()),
     ];
 
     this._chain = new LLMChain({

@@ -13,7 +13,7 @@ import { WorkspacesService } from './workspaces.service';
 export class WorkspaceResolver implements Resolve<IWorkspace> {
   constructor(
     private workspacesService: WorkspacesService,
-    private employeeService: AIEmployeesService,
+    private aiEmployeeService: AIEmployeesService,
     private notificationsService: NotificationsService,
     private _router: Router
   ) {}
@@ -47,23 +47,24 @@ export class WorkspaceResolver implements Resolve<IWorkspace> {
             }
 
             // Redirect to AI employee onboarding route if workspace is named and has no AI employees
-            const isOnboardingAIEmployeesRoute =
-              route.firstChild?.firstChild?.routeConfig?.path === 'ai-employee';
+            // const isOnboardingAIEmployeesRoute =
+            //   route.firstChild?.firstChild?.routeConfig?.path === 'ai-employee';
+            // this.aiEmployeeService.listByWorkspace(id).subscribe((employees) => {
+            //   if (
+            //     !!name &&
+            //     !employees.length &&
+            //     !isOnboardingAIEmployeesRoute
+            //   ) {
+            //     this._router.navigate([
+            //       '/workspaces',
+            //       id,
+            //       'onboarding',
+            //       'ai-employee',
+            //     ]);
+            //   }
+            // });
 
-            this.employeeService.listByWorkspace(id).subscribe((employees) => {
-              if (
-                !!name &&
-                !employees.length &&
-                !isOnboardingAIEmployeesRoute
-              ) {
-                this._router.navigate([
-                  '/workspaces',
-                  id,
-                  'onboarding',
-                  'ai-employee',
-                ]);
-              }
-            });
+
             observer.next(workspace);
           },
           error: (error) => {

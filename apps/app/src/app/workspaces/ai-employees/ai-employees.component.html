@@ -73,11 +73,7 @@
 
   <div class="content">
     <div class="list">
-      <div
-        class="white-content"
-        *ngFor="let employee of employees"
-        [routerLink]="[employee._id, 'chats']"
-      >
+      <div class="white-content" *ngFor="let employee of employees">
         <div class="ai-employee">
           <img [src]="employee.avatar" alt="" />
           <div class="description">
@@ -86,8 +82,16 @@
           </div>
         </div>
         <div class="buttons">
-          <button class="subject">Chat Subject</button>
-          <button class="new">New Chat</button>
+          <button
+            class="subject"
+            *ngFor="let chat of employee.chats"
+            (click)="onChat(employee._id, chat)"
+          >
+            {{ chat.name }}
+          </button>
+          <button class="new" (click)="onNewChat(employee._id)">
+            New Chat
+          </button>
         </div>
         <div class="menu">
           <button
