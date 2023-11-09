@@ -69,14 +69,14 @@ class ModelController<T extends Model<any>> {
       const sort = (req.query.sort as string) || [];
       const filter = (req.query.filter as any) || {};
       const populate = (req.query.populate as any) || [];
+      const limit = (req.query.limit as any) || 100;
       for (const p of populate) {
         this._populate.push(p);
       }
 
       const list = await this._populateQuery(
-        this.model.find(filter).sort(sort).select(select)
+        this.model.find(filter).sort(sort).limit(limit).select(select)
       );
-      // const list = await this._populateQuery(this.model.find());
       res.json(list);
     } catch (error) {
       next(error);
