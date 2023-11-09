@@ -47,3 +47,5 @@ Thumbs.db
 cognum.secrets.json
 credentials.json
 docs
+
+.venv
