@@ -1,176 +1,180 @@
-.signin-container {
-  display: flex;
-  flex: 1;
-  justify-content: center;
-  background-color: #f0f0f0;
-
-  width: 100vw;
-  height: 100vh;
-
-  font-family: 'Outfit', sans-serif;
-  font-style: normal;
-  font-weight: 400;
-
-  color: rgba(0, 0, 0, 0.25);
-}
-
-.form-container {
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-  max-width: 550px;
-  padding: 16px;
-
-  justify-content: space-between;
-}
+@import '../../../styles/cognum.variables.scss';
 
 .margin {
-  margin-bottom: 8px;
+  margin: 1.2rem;
 }
 
-.title-container {
+.cognum-page {
   display: flex;
-  align-items: center;
   justify-content: center;
-  gap: 16px;
-  padding: 16px;
-}
-
-.logo {
-  width: 50px;
-  min-width: 20px;
-  height: 50px;
-  min-height: 20px;
-}
-
-.company-style {
-  color: rgba(0, 0, 0, 0.85);
-  font-size: 2.0625rem;
-  font-weight: 600;
-  line-height: 2.375rem;
-  letter-spacing: 0.01031rem;
-}
-
-.help-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  gap: 8px;
-
-  p {
-    color: rgba(0, 0, 0, 0.85);
-    font-size: 2.375rem;
-    font-weight: 500;
-    line-height: 2.875rem;
-  }
-
-  small {
-    color: rgba(0, 0, 0, 0.45);
-    font-size: 0.875rem;
-    font-weight: 400;
-    line-height: 1.375rem;
-  }
-}
-
-.login-form {
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-  margin-top: 32px;
-  gap: 16px;
-  align-self: center;
   width: 100%;
-  max-width: 500px;
-}
+  height: 100vh;
+  padding-top: 60px;
+  padding-bottom: 20px;
 
-.mat-item-wrap {
-  width: 100%;
-  --mdc-filled-text-field-container-color: #f0f0f0;
-}
+  .login-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    background-image: url('../../../assets/background/login_bg.svg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: left top;
+  
 
-.remember-container {
-  display: flex;
-  justify-content: space-around;
-  align-items: baseline;
-}
+    .form-container {
+      display: flex;
+      flex-direction: column;
+      max-width: 550px;
+      justify-content: space-between;
 
-.mat-input-style {
-  width: 100%;
-  background-color: #f0f0f0;
-}
+      .title-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 16px;
+        padding: 16px;
+      }
+          
+      .logo {
+        width: 50px;
+        min-width: 20px;
+        height: 50px;
+        min-height: 20px;
+      }
 
-.remove-bottom {
-  margin-bottom: -1.25em;
-}
+      .company-style {
+        color: rgba(0, 0, 0, 0.85);
+        font-size: 2.0625rem;
+        font-weight: 600;
+        line-height: 2.375rem;
+        letter-spacing: 0.01031rem;
+      }
 
-.font {
-  font-family: 'Outfit', sans-serif;
-  font-style: normal;
-  font-weight: 300;
-}
+      .help-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        gap: 8px;
 
-.email-icon {
-  width: 0.875rem;
-  height: 0.875rem;
-  padding: 2px 5px;
-  color: #14b8a6;
-}
+        p {
+          color: rgba(0, 0, 0, 0.85);
+          font-size: 2.375rem;
+          font-weight: 500;
+          line-height: 2.875rem;
+        }
 
-.errorContainer {
-  text-align: center;
-  font-weight: 400;
-  color: #d9534f;
-}
+        small {
+          color: rgba(0, 0, 0, 0.45);
+          font-size: 0.875rem;
+          font-weight: 400;
+          line-height: 1.375rem;
+        }
+      }
 
-.button-submit {
-  height: 2.5rem;
-  border-radius: 0.125rem;
-  border: 1px solid #14b8a6;
-  background: #14b8a6;
-  box-shadow: 0px 2px 0px 0px rgba(0, 0, 0, 0.04);
-  color: #fff;
-  text-align: center;
-  font-weight: 400;
-  line-height: 1.5rem;
-}
+      .login-form {
+        display: flex;
+        flex: 1;
+        flex-direction: column;
+        margin-top: 32px;
+        gap: 16px;
+        align-self: center;
+        width: 24.375rem;
+        max-width: 500px;
+      }
 
-.button-submit:disabled {
-  background: #dddddd;
-  border: none;
-  cursor: not-allowed;
-}
+      .mat-item-wrap {
+        width: 100%;
+        --mdc-filled-text-field-container-color: #f0f0f0;
+      }
 
-.footer {
-  color: rgba(0, 0, 0, 0.45);
-  text-align: center;
-  font-size: 0.875rem;
-  font-weight: 400;
-  line-height: 1.375rem;
-}
+      .mat-input-style {
+        display: flex;
+        align-items: center;
+        border: 1px solid #D9D9D9; 
+        border-radius: 2px; 
+        background-color: #FFF;
+        width: 100%;
+        height: 40px;
+        padding: 8px 12px 8px 12px;
+        border-radius: 2px;
+        border: 1px;
+        gap: 8px;
+      }
 
-.forgot,
-.register {
-  text-align: center;
-  font-size: 0.8rem;
-  text-decoration: underline;
-  color: #000;
-  cursor: pointer;
-  margin-top: 16px;
-}
+      .mat-input-style input {
+        margin: 0;
+        padding: 0;
+      }
+      
+      .mat-input-style mat-icon {
+        margin-right: 6px; 
+        color: $cognum-color-primary; 
+        font-size: 14px;
+        height: 14px;
+        width: 14px;
+      }
+      
+      .mat-input-style input {
+        flex: 1;
+        border: none;
+        outline: none;
+        width: 100%;
+      }
 
-.register {
-  font-size: 0.85rem;
-}
+      .errorContainer {
+        text-align: center;
+        font-weight: 400;
+        color: #d9534f;
+      }
 
-.forgot:hover,
-.register:hover {
-  color: #0000ee;
-}
+      .button-submit {
+        height: 2.5rem;
+        border-radius: 0.125rem;
+        border: 1px solid $cognum-color-primary; 
+        background: $cognum-color-primary; 
+        box-shadow: 0px 2px 0px 0px rgba(0, 0, 0, 0.04);
+        color: #fff;
+        text-align: center;
+        padding: 6.4px 15px 6.4px 15px;
+        line-height: 1.5rem;
+        font-size: 16px;
+      }
 
-@media screen and (max-width: 400px) {
-  .footer {
-    font-size: 0.7rem;
+      .button-submit:disabled {
+        background: #dddddd;
+        border: none;
+        cursor: not-allowed;
+      }
+    }
+
+    .register {
+      text-align: center;
+      font-size: 0.875rem;
+      color: $cognum-color-grey;
+      cursor: pointer;
+      margin-top: 16px;
+    }
+
+    .register span,
+    .footer label span {
+      color: $cognum-color-primary;
+    }
+
+    .footer {
+      color: $cognum-color-grey;
+      text-align: center;
+      font-size: 0.875rem;
+      line-height: 1.375rem;
+    }
+
+    @media screen and (max-width: 400px) {
+      .footer {
+        font-size: 0.7rem;
+      }
+    }
   }
 }
+

@@ -3,7 +3,7 @@ export const env = {
   apis: {
     core: {
       url: 'http://localhost:3000',
-      chatUrl: 'ws://localhost:3030/chat',
+      chatUrl: 'ws://localhost:8080/chat',
     },
   },
 };

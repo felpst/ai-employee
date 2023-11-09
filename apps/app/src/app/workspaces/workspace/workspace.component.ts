@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { IWorkspace } from '@cognum/interfaces';
 import { WorkspacesService } from '../workspaces.service';
 
 @Component({
@@ -9,27 +8,14 @@ import { WorkspacesService } from '../workspaces.service';
   styleUrls: ['./workspace.component.scss'],
 })
 export class WorkspaceComponent {
-  workspace!: IWorkspace;
-  workspaceId!: string;
-  isLoading = true;
+  isLoading = false;
 
   constructor(
     private route: ActivatedRoute,
     private workspacesService: WorkspacesService
-  ) {
-    this.route.params.subscribe((params) => {
-      this.workspaceId = params['id'];
-      this.getWorkspace();
-    });
-  }
+  ) {}
 
-  getWorkspace() {
-    this.isLoading = true;
-    return this.workspacesService
-      .get(this.workspaceId)
-      .subscribe((workspace) => {
-        this.workspace = workspace;
-        this.isLoading = false;
-      });
+  get workspace() {
+    return this.workspacesService.selectedWorkspace;
   }
 }

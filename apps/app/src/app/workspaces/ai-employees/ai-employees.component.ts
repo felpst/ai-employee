@@ -1,23 +1,23 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
-import { IAIEmployee } from '@cognum/interfaces';
+import { IAIEmployee, IChat } from '@cognum/interfaces';
+import { ObjectId } from 'mongoose';
+import { firstValueFrom } from 'rxjs';
 import { DialogComponent } from '../../shared/dialog/dialog.component';
 import { WorkspacesService } from '../workspaces.service';
-import { AIEmployeesService } from './ai-employees.service';
+import { AIEmployeesService, IAIEmployeeWithChats } from './ai-employees.service';
+import { ChatsService } from './chats/chats.service';
 import { WhiteAiEmployeeComponent } from './white-ai-employee/white-ai-employee.component';
 
 @Component({
   selector: 'cognum-ai-employee',
   templateUrl: './ai-employees.component.html',
   styleUrls: ['./ai-employees.component.scss'],
-
 })
 export class AIEmployeesComponent implements OnInit {
-  originalEmployees: IAIEmployee[] = [];
-  employees: IAIEmployee[] = [];
+  employees: IAIEmployeeWithChats[] = [];
   searchText = '';
-
 
   sortingType: 'newFirst' | 'oldFirst' | 'mix' = 'newFirst';
   sortingDirection: 'asc' | 'desc' = 'desc';
@@ -26,52 +26,57 @@ export class AIEmployeesComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private employeeService: AIEmployeesService,
+    private aiEmployeesService: AIEmployeesService,
     private workspacesService: WorkspacesService,
-    private dialog: MatDialog) { }
-
+    private dialog: MatDialog,
+    private chatsService: ChatsService
+  ) {}
 
   ngOnInit() {
     this.activeButton = '';
-    const workspaceId = this.route.snapshot.params['id'];
-    this.loadEmployees(workspaceId);
+    this.filterEmployees();
   }
 
-  loadEmployees(workspaceId: string) {
-    this.employeeService.listByWorkspace(workspaceId).subscribe(
-      employees => {
-        this.originalEmployees = employees;
-        this.filterEmployees();
+  get originalEmployees() {
+    return Array.from(this.aiEmployeesService.aiEmployees.values());
+  }
+
+  onNewChat(aiEmployee: ObjectId) {
+    const chat: Partial<IChat> = {
+      aiEmployee
+    }
+
+    this.chatsService.create(chat).subscribe({
+      next: (newChat) => {
+        this.router.navigate([aiEmployee, 'chats', newChat._id], { relativeTo: this.route });
       },
-      error => {
-        console.error(error);
-      }
-    );
+    });
   }
 
-
-
+  onChat(aiEmployee: ObjectId, chat: IChat) {
+    this.router.navigate([aiEmployee, 'chats', chat._id], { relativeTo: this.route });
+  }
 
   createEmployee() {
     const dialogRef = this.dialog.open(WhiteAiEmployeeComponent, {
-      height: '80%',
-      data: { workspaceId: this.route.snapshot.params['id'] }
+      height: '75%',
+      maxHeight: '650px',
     });
 
-    dialogRef.afterClosed().subscribe((result) => {
+    dialogRef.afterClosed().subscribe(async (result) => {
       if (result === 'success') {
-        const workspaceId = this.route.snapshot.params['id'];
-        this.loadEmployees(workspaceId);
+        await firstValueFrom(this.aiEmployeesService.load(this.workspace));
+        this.filterEmployees();
         this.activeButton = '';
       }
     });
   }
 
-
   editEmployee(employee: IAIEmployee) {
     const employeeId = employee._id;
-    const workspaceId = this.route.snapshot.params['id'];
-    this.router.navigate([`workspaces/${workspaceId}/employee/${employeeId}`]);
+    this.router.navigate([
+      `workspaces/${this.workspace._id}/employee/${employeeId}`,
+    ]);
   }
 
   deleteEmployee(employee: IAIEmployee) {
@@ -84,23 +89,17 @@ export class AIEmployeesComponent implements OnInit {
         },
       })
       .afterClosed()
-      .subscribe((result) => {
+      .subscribe(async (result) => {
         if (result) {
-          this.employeeService.delete(employee).subscribe(
-            () => {
-              this.employees = this.employees.filter(emp => emp._id !== employee._id);
-            },
-            error => {
-              console.error(error);
-            }
-          );
+          await firstValueFrom(this.aiEmployeesService.delete(employee))
+          await firstValueFrom(this.aiEmployeesService.load(this.workspace));
+          this.filterEmployees();
         }
       });
   }
 
-
   filterEmployees() {
-    this.employees = this.originalEmployees.filter(employee =>
+    this.employees = this.originalEmployees.filter((employee) =>
       employee.name.toLowerCase().includes(this.searchText.toLowerCase())
     );
   }
@@ -149,5 +148,9 @@ export class AIEmployeesComponent implements OnInit {
   onButtonClick(button: string) {
     this.activeButton = button;
     this.sortKnowledgeBase(button);
+  }
+
+  get workspace() {
+    return this.workspacesService.selectedWorkspace;
   }
 }

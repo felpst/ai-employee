@@ -19,7 +19,10 @@
   #menu="matMenu"
   (closed)="isActivedMenu = false"
 >
-  <button [routerLink]="['./', workspace._id, 'settings']" mat-menu-item>
+  <button
+    [routerLink]="['/', 'workspaces', workspace._id, 'settings']"
+    mat-menu-item
+  >
     <mat-icon svgIcon="cognum-settings" aria-label="Settings"></mat-icon>
     settings
   </button>

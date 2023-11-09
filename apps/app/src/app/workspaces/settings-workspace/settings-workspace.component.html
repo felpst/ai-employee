@@ -1,7 +1,7 @@
 <header class="header">
   <nav>
     <div class="workspace-info-group">
-      <button (click)="onRedirect()">
+      <button [routerLink]="['/workspaces', workspace._id]">
         <mat-icon svgIcon="arrow-left"></mat-icon>
       </button>
 
