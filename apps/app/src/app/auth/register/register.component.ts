@@ -17,8 +17,9 @@ import { AuthService } from '../auth.service';
   styleUrls: ['./register.component.scss'],
 })
 export class RegisterComponent {
+  title = 'First, enter your email';
+  message = 'We suggest using the email address you use at work';
   registerForm: FormGroup = this.formBuilder.group({
-    name: ['', [Validators.required, Validators.minLength(6)]],
     email: ['', [Validators.required, Validators.email]],
     password: [
       '',
@@ -30,9 +31,8 @@ export class RegisterComponent {
         ),
       ],
     ],
-    confirm: ['', [Validators.required]],
   });
-  submitting = false;
+  isSubmitting = false;
   showRegisterError = false;
   errors = [];
 
@@ -48,7 +48,7 @@ export class RegisterComponent {
     const controlEmail = this.registerForm.get('email');
 
     this.registerForm.valueChanges.subscribe(() => {
-      this.submitting = false;
+      this.isSubmitting = false;
       this.showRegisterError = false;
       this.errors = [];
     });
@@ -108,22 +108,21 @@ export class RegisterComponent {
   // Function to handle form submission
   onSubmit() {
     if (!this.registerForm.valid) return;
-    this.submitting = true;
-    const { confirm, ...rest } = this.registerForm.value;
+    this.isSubmitting = true;
+    const values = this.registerForm.value;
 
     // Process register
-    this.usersService.register({ ...rest }).subscribe({
+    this.usersService.register({ ...values }).subscribe({
       next: (token) => {
-        const { email, name, password } = rest;
+        const { email, password } = values;
         // Process login
         this.authService.login({ email, password }).subscribe({
           next: () => {
-            this.submitting = false;
-            this.router.navigate(['/']);
-            this.notificationsService.show(`Welcome, ${name}!`);
+            this.isSubmitting = false;
+            this.router.navigate(['/account/onboarding']);
           },
           error: (error) => {
-            this.submitting = false;
+            this.isSubmitting = false;
             console.log('An error ocurred on login: ', { error });
           },
         });
@@ -133,7 +132,7 @@ export class RegisterComponent {
         const { errors } = error ?? { errors: [] };
         this.showRegisterError = true;
         this.errors = errors;
-        this.submitting = false;
+        this.isSubmitting = false;
       },
     });
   }

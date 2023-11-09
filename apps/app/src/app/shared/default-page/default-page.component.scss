@@ -1,0 +1,19 @@
+.full-width {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  height: 100vh;
+  padding-top: 60px;
+  padding-bottom: 20px;
+}
+
+.image {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  justify-content: center;
+  background-image: url('../../../assets/background/login_bg.svg');
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: left top;
+}

@@ -8,11 +8,13 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 
 import { MatIconModule } from '@angular/material/icon';
 import { LayoutsModule } from '../layouts/layouts.module';
+import { SharedModule } from '../shared/shared.module';
 import { SettingsRoutingModule } from './account-routing.module';
 import { AccountSettingsComponent } from './account-settings/account-settings.component';
+import { OnboardingComponent } from './onboarding/onboarding.component';
 
 @NgModule({
-  declarations: [AccountSettingsComponent],
+  declarations: [AccountSettingsComponent, OnboardingComponent],
   imports: [
     CommonModule,
     SettingsRoutingModule,
@@ -24,6 +26,7 @@ import { AccountSettingsComponent } from './account-settings/account-settings.co
     MatFormFieldModule,
     MatToolbarModule,
     LayoutsModule,
+    SharedModule,
   ],
 })
 export class AccountModule {}
