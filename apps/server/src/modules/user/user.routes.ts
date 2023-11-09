@@ -1,7 +1,4 @@
 import express, { Router } from 'express';
-import multer from 'multer';
-import jsonParserMiddleware from '../../middlewares/jsonParserMiddleware';
-import multerConfig from '../../middlewares/multerConfig';
 import YupValidatorMiddleware from '../../middlewares/yup.validator';
 import { authMiddleware } from '../auth/auth.middleware';
 import userController from './user.controller';
@@ -21,13 +18,7 @@ router.post(
 router.post('/', authMiddleware, userController.create);
 router.get('/', authMiddleware, userController.find);
 router.get('/:id', authMiddleware, userController.getById);
-router.put(
-  '/:id',
-  authMiddleware,
-  multer(multerConfig).single('photo'),
-  jsonParserMiddleware,
-  userController.update
-);
+router.put('/:id', authMiddleware, userController.update);
 router.delete('/:id', authMiddleware, userController.delete);
 
 // Verify tokens

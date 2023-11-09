@@ -3,7 +3,7 @@ import * as yup from 'yup';
 export const addUserSchema = yup.object({
   body: yup
     .object({
-      name: yup.string().required(),
+      name: yup.string().notRequired(),
       email: yup.string().required().email('Invalid email'),
       password: yup
         .string()
