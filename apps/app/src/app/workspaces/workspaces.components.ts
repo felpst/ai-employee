@@ -18,7 +18,11 @@ export class WorkspacesComponent implements OnInit {
     private loadingService: LoadingService,
     private router: Router,
     private cookieService: CookieService
-  ) {}
+  ) {
+    if (!this.authService.user.name) {
+      this.router.navigate(['/account/onboarding']);
+    }
+  }
 
   ngOnInit() {
     this.onLoadList();
@@ -40,9 +44,11 @@ export class WorkspacesComponent implements OnInit {
   }
 
   onCreateWorkspace() {
-    this.workspacesService.create({ users: [this.user._id] } as IWorkspace).subscribe((data) => {
-      this.router.navigate(['workspaces', data._id, 'onboarding']);
-    });
+    this.workspacesService
+      .create({ users: [this.user._id] } as IWorkspace)
+      .subscribe((data) => {
+        this.router.navigate(['workspaces', data._id, 'onboarding']);
+      });
   }
 
   goHome() {

@@ -1,0 +1,85 @@
+<cognum-default-page [title]="title" [message]="message">
+  <ng-container data>
+    <form [formGroup]="onboardingForm" (ngSubmit)="onSubmit()">
+      <div class="onboard">
+        <div class="cognum-white-content form-container">
+          <div class="cognum-form-row-4">
+            <span class="cognum-headline-4">Your name</span>
+            <input
+              class="input-style"
+              formControlName="name"
+              placeholder="Name"
+            />
+            <mat-error
+              *ngIf="hasInputError('name', 'required')"
+              class="cognum-text-12 warning-message"
+            >
+              Name field is required
+            </mat-error>
+            <mat-error
+              *ngIf="hasInputError('name', 'minlength')"
+              class="cognum-text-12 warning-message"
+            >
+              <small>Minimum <strong>6 letters</strong></small>
+            </mat-error>
+          </div>
+        </div>
+
+        <div class="cognum-white-content form-container">
+          <div class="cognum-form-row-4">
+            <span class="cognum-headline-4">Your profile photo (optional)</span>
+            <div class="update-content">
+              <div class="file-container">
+                <label class="gray-content" for="workspaceFileInput">
+                  <img
+                    *ngIf="!!photo; else withoutFile"
+                    class="user-image"
+                    [src]="selectedImage || photo"
+                  />
+                  <ng-template #withoutFile>
+                    <img src="../../../assets/icons/Plus.svg" alt="plus" />
+                    <p class="inform-style">Upload</p>
+                  </ng-template>
+                </label>
+                <input
+                  class="input-style"
+                  type="file"
+                  id="workspaceFileInput"
+                  (change)="onFileSelected($event, 'users', 'photo')"
+                  name="workspaceFile"
+                  accept="image/*"
+                  style="display: none"
+                />
+                <mat-error
+                  class="cognum-text-12 warning-message"
+                  *ngIf="hasInputError('photo', 'invalidFormat')"
+                >
+                  Valid formats: .png, .jpg, .jpeg and .svg
+                </mat-error>
+                <mat-error
+                  class="cognum-text-12 warning-message"
+                  *ngIf="hasInputError('photo', 'invalidSize')"
+                >
+                  Maximum size: 10MB
+                </mat-error>
+              </div>
+              <p class="cognum-text-12">
+                Help teammates know that this is right place.
+              </p>
+              <p class="cognum-text-12" style="width: 50px">&ensp;&ensp;</p>
+            </div>
+          </div>
+        </div>
+
+        <button
+          type="submit"
+          mat-button
+          class="cognum-form-buttons-submit full-width"
+          [disabled]="!onboardingForm.valid"
+        >
+          Create Account
+        </button>
+      </div>
+    </form>
+  </ng-container>
+</cognum-default-page>

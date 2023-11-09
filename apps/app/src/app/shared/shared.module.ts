@@ -15,6 +15,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { RouterModule } from '@angular/router';
 import { NgScrollbarModule } from 'ngx-scrollbar';
 import { AIEmployeeFormComponent } from './ai-employee-form/ai-employee-form.component';
+import { DefaultPageComponent } from './default-page/default-page.component';
 import { DialogComponent } from './dialog/dialog.component';
 import { HeaderComponent } from './header/header.component';
 import { SearchBarComponent } from './search-bar/search-bar.component';
@@ -28,6 +29,7 @@ const declarations: any[] = [
   HeaderComponent,
   StepperComponent,
   AIEmployeeFormComponent,
+  DefaultPageComponent,
 ];
 
 const Modules: any[] = [

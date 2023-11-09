@@ -4,13 +4,13 @@ import {
   AbstractControl,
   FormBuilder,
   ValidationErrors,
-  Validators
+  Validators,
 } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../../auth/auth.service';
 import { NotificationsService } from '../../services/notifications/notifications.service';
+import { UploadsService } from '../../services/uploads/uploads.service';
 import { UsersService } from '../../services/users/users.service';
-import { AccountService } from '../account.service';
 
 @Component({
   selector: 'cognum-account-settings',
@@ -34,12 +34,12 @@ export class AccountSettingsComponent implements OnInit {
 
   constructor(
     private location: Location,
-    private accountService: AccountService,
     private authService: AuthService,
     private formBuilder: FormBuilder,
     private router: Router,
     private notificationsService: NotificationsService,
-    private usersService: UsersService
+    private usersService: UsersService,
+    private uploadsService: UploadsService
   ) {
     this.updateForm.valueChanges.subscribe(() => {
       this.showUpdateError = false;
@@ -55,9 +55,7 @@ export class AccountSettingsComponent implements OnInit {
   }
 
   ngOnInit() {
-    const userId = this.authService.user?._id;
-
-    this.usersService.getById(userId).subscribe({
+    this.usersService.getById(this.user._id).subscribe({
       next: (response: any) => {
         this.image = response.photo;
         this.name = response.name;
@@ -66,9 +64,7 @@ export class AccountSettingsComponent implements OnInit {
   }
 
   confirmDeleteAccount() {
-    const userId = this.authService.user?._id;
-
-    this.accountService.deleteUserById(userId).subscribe({
+    this.usersService.delete(this.user._id).subscribe({
       next: () => {
         this.router.navigate(['/auth/register']);
       },
@@ -99,16 +95,30 @@ export class AccountSettingsComponent implements OnInit {
     return null;
   }
 
-  onFileSelected(event: any) {
+  onFileSelected(event: any, folder: string, fieldName = 'avatar') {
     try {
       const [file] = event.target.files;
       if (file) {
+        const { name } = file;
+        const extension = name.split('.')?.pop() || 'png';
+        const filename = `${fieldName}.${extension}`;
         this.selectedImage = URL.createObjectURL(file);
         const control = this.updateForm.get('photo');
         control?.patchValue(file);
         control?.setValidators(this.validatorFile);
         control?.updateValueAndValidity();
         this.photo = file;
+        this.uploadsService
+          .single({
+            file,
+            folder,
+            filename,
+            parentId: this.user._id,
+          })
+          .subscribe((result) => {
+            console.log({ result });
+            this.user.photo = result.url;
+          });
       }
     } catch (error) {
       console.log('An error ocurring: ', { error });
@@ -118,17 +128,13 @@ export class AccountSettingsComponent implements OnInit {
   async onSubmit() {
     if (!this.updateForm.valid) return;
     this.submitting = true;
-
-    let name = this.updateForm.get('name')?.value;
-    if (!name) {
-      name = this.name;
+    const { name } = this.updateForm.value;
+    const data = { ...this.user };
+    if (!!name && name.length >= 6) {
+      data.name = name;
     }
 
-    const photo = this.updateForm.get('photo')?.value;
-    const updateData = JSON.stringify({ name });
-    const userId = this.authService.user?._id;
-
-    this.accountService.updateUserById(userId, updateData, photo).subscribe({
+    this.usersService.update(this.user._id, { ...data }).subscribe({
       next: () => {
         this.notificationsService.show('Successfully changed data!');
       },
@@ -139,5 +145,9 @@ export class AccountSettingsComponent implements OnInit {
 
   selectItem(itemNumber: number): void {
     this.selectedItem = itemNumber;
+  }
+
+  get user() {
+    return this.authService.user;
   }
 }

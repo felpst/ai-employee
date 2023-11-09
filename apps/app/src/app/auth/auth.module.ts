@@ -7,6 +7,7 @@ import { MatInputModule } from '@angular/material/input';
 
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { SharedModule } from '../shared/shared.module';
 import { AuthRoutingModule } from './auth-routing.module';
 import { LoginComponent } from './login/login.component';
 import { InsertEmailComponent } from './recover/insert-email.component';
@@ -32,6 +33,7 @@ import { ValidateComponent } from './validate/validate.component';
     MatCheckboxModule,
     MatFormFieldModule,
     MatProgressSpinnerModule,
+    SharedModule,
   ],
 })
 export class AuthModule {}

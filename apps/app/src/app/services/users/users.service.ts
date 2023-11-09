@@ -22,6 +22,17 @@ export class UsersService {
     return this.coreApiService.post(`${this.route}`, item) as Observable<IUser>;
   }
 
+  update(userId: string, data: Partial<IUser>) {
+    return this.coreApiService.put(
+      `${this.route}/${userId}`,
+      data
+    ) as Observable<IUser>;
+  }
+
+  delete(userId: string) {
+    return this.coreApiService.delete(`${this.route}/${userId}`);
+  }
+
   validateToken(
     tokenId: string
   ): Observable<{ isValid: boolean; email?: string }> {

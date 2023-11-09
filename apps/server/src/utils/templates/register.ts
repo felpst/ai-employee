@@ -76,7 +76,7 @@ export const registerEmailTemplate = `
         <h1>Register</h1>
       </div>
       <div class="content">
-        <p>Hello, {{name}}!!</p>
+        <p>Hello!!</p>
         <p>
         We are excited to welcome you to the Cognum! We are excited to have you on board this exciting journey.
         </p>

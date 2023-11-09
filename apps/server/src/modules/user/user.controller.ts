@@ -7,7 +7,6 @@ import emailEmitter from '../../utils/email.utils';
 import { confirmPasswordResetEmailTemplate } from '../../utils/templates/confirm-reset-password';
 import { registerEmailTemplate } from '../../utils/templates/register';
 import { passwordResetEmailTemplate } from '../../utils/templates/reset-password';
-import UploadUtils from '../../utils/upload.utils';
 
 export class UserController extends ModelController<typeof User> {
   constructor() {
@@ -28,47 +27,22 @@ export class UserController extends ModelController<typeof User> {
     }
   }
 
-  public async update(
-    req: Request,
-    res: Response,
-    next: NextFunction
-  ): Promise<void> {
-    try {
-      const userId: string = req.params.id;
-      const data = req.body;
-      data.updatedBy = req['userId'];
-      if (req.file?.path) {
-        data.photo = await UploadUtils.uploadFile(userId, req.file, 'users');
-      }
-      const updated = await User.findByIdAndUpdate(userId, data, {
-        returnDocument: 'after',
-        runValidators: true,
-      });
-
-      res.json(updated);
-    } catch (error) {
-      next(error);
-    }
-  }
-
   public async register(
     req: Request,
     res: Response,
     next: NextFunction
   ): Promise<void> {
     try {
-      const { name, email, password } = req.body;
+      const { email, password } = req.body;
       await User.create({
-        name: name,
         email: email.toLowerCase(),
         password,
         active: true,
       });
-      const html = registerEmailTemplate.replace('{{name}}', name);
       emailEmitter.emit('sendEmail', {
         to: email,
         subject: 'Cognum - Register',
-        html,
+        html: registerEmailTemplate,
       });
       res.status(200).json();
     } catch (error) {
