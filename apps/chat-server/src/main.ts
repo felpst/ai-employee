@@ -107,6 +107,8 @@ export class ChatServer {
                   },
                 ];
 
+                // Initiate AI Employees
+
                 // Load Custom AI Employee
                 const aiEmployee = await AIEmployee.findById(session.chat.aiEmployee);
                 const agent = new AIEmployeeAgent({
