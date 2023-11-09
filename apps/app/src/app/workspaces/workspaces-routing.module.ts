@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AdminComponent } from '../layouts/admin/admin.component';
-import { HistoryComponent } from './history/history.component';
+import { WorkspaceHistoryComponent } from './history/workspace-history.component';
 import { WorkspaceHistoryResolver } from './history/workspace-history.resolver';
 import { KnowledgeBaseComponent } from './knowledge-base/knowledge-base.component';
 import { SettingsWorkspaceComponent } from './settings-workspace/settings-workspace.component';
@@ -67,7 +67,7 @@ const routes: Routes = [
           {
             path: 'history',
             resolve: [WorkspaceHistoryResolver],
-            component:  HistoryComponent,
+            component:  WorkspaceHistoryComponent,
           },
           {
             path: 'knowledge-base',

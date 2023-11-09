@@ -15,7 +15,7 @@ import { MarkdownModule } from 'ngx-markdown';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { LayoutsModule } from '../layouts/layouts.module';
 import { SharedModule } from '../shared/shared.module';
-import { HistoryComponent } from './history/history.component';
+import { WorkspaceHistoryComponent } from './history/workspace-history.component';
 import { KnowledgeBaseModule } from './knowledge-base/knowledge-base.module';
 import { SettingsWorkspaceModule } from './settings-workspace/settings-workspace.module';
 import { WorkspaceOnboardingAIEmployeeComponent } from './workspace-onboarding/workspace-onboarding-ai-employee/workspace-onboarding-ai-employee.component';
@@ -34,7 +34,7 @@ import { WorkspacesComponent } from './workspaces.components';
     WorkspaceOnboardingYourTeamComponent,
     WorkspaceOnboardingAIEmployeeComponent,
     WorkspaceComponent,
-    HistoryComponent
+    WorkspaceHistoryComponent
   ],
   imports: [
     CommonModule,

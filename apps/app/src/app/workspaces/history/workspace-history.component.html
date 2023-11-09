@@ -68,16 +68,16 @@
 
   <div class="content">
     <div class="list">
-      <div class="white-content" *ngFor="let chat of chats">
+      <div class="white-content" *ngFor="let chat of history">
         <div class="chats">
-          <cognum-users-avatar  [users]="users"></cognum-users-avatar>
+          <cognum-users-avatar [users]="chat.users" ></cognum-users-avatar>
           <div class="description">
-            <p>{{ chat.name }}</p>
-            <p> {{ getLastUpdatedTime(chat) }}</p>
+            <p>{{ chat.historyTitle}}</p>
+            <p>{{ formatChatDate(chat.date) }}</p>
           </div>
         </div>
 
-        <button class="subject">Chat Subject</button>
+        <button class="subject"  (click)="onChat(chat.users[1]._id, chat)">Chat Subject</button>
 
         <p class="conversation" *ngIf="chat && chat.summary">
           {{ chat.summary.slice(0, 300)
