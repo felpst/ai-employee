@@ -60,7 +60,12 @@
           <small>Email or password is incorrect.</small>
         </div>
 
-        <button type="submit" class="font button-submit"[disabled]="loginForm.invalid || isSubmitting">
+        <button
+          type="submit"
+          mat-button
+          class="cognum-form-buttons-submit"
+          [disabled]="loginForm.invalid || isSubmitting"
+        >
           Sign In with Email
         </button>
 
@@ -71,8 +76,8 @@
 
       <div class="footer">
         <label>
-          By clicking “Continue with Apple/Google/Email” above, you
-          acknowledge that you have read and understood, and agree to Cognum's
+          By clicking “Continue with Apple/Google/Email” above, you acknowledge
+          that you have read and understood, and agree to Cognum's
           <span>Terms & Conditions and Privacy Policy</span>.
         </label>
       </div>

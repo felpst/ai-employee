@@ -1,44 +1,13 @@
-<div class="register-container">
-  <div class="form-container">
-    <div class="margin">
-      <div class="title-container">
-        <img
-          src="../../../assets/icons/cognum_filled.svg"
-          alt="Cognum"
-          class="logo"
-        />
-        <label class="company-style">cognum</label>
-      </div>
-
-      <div class="help-container">
-        <p>Register at Cognum</p>
-
-        <small>We suggest using the email address you use at work</small>
-      </div>
-    </div>
-
-    <form class="login-form" [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+<cognum-default-page [title]="title" [message]="message">
+  <ng-container data>
+    <form
+      class="register-form"
+      [formGroup]="registerForm"
+      (ngSubmit)="onSubmit()"
+    >
       <div class="mat-item-wrap">
-        <mat-form-field class="mat-input-style">
-          <mat-label>Name</mat-label>
-          <input
-            type="text"
-            matInput
-            formControlName="name"
-            placeholder="Your full name"
-          />
-          <mat-error *ngIf="hasInputError('name', 'required')">
-            Name is required.
-          </mat-error>
-          <mat-error *ngIf="hasInputError('name', 'minlength')">
-            Name must be at least <strong>6 characters long.</strong>
-          </mat-error>
-        </mat-form-field>
-      </div>
-
-      <div class="mat-item-wrap">
-        <mat-form-field class="mat-input-style">
-          <mat-label>Email</mat-label>
+        <div class="mat-input-style">
+          <mat-icon matPrefix>person</mat-icon>
           <input
             type="email"
             matInput
@@ -47,21 +16,20 @@
             #inputEmail
           />
           <mat-error *ngIf="hasInputError('email', 'required')">
-            Email is required.
+            <small>Email is required.</small>
           </mat-error>
           <mat-error *ngIf="hasInputError('email', 'email')">
-            Email is <strong>invalid</strong>
+            <small>Email is <strong>invalid</strong></small>
           </mat-error>
           <mat-error *ngIf="hasInputError('email', 'emailAlreadyExists')">
-            Email already registered, if you don't remember it,
-            <strong>request a reset of your password.</strong>
+            <small>Email <strong>already registered</strong></small>
           </mat-error>
-        </mat-form-field>
+        </div>
       </div>
 
       <div class="mat-item-wrap">
-        <mat-form-field class="mat-input-style remove-bottom">
-          <mat-label>Password</mat-label>
+        <div class="mat-input-style remove-bottom">
+          <mat-icon matPrefix>lock</mat-icon>
           <input
             type="password"
             matInput
@@ -69,59 +37,37 @@
             placeholder="Your password"
           />
           <mat-error *ngIf="hasInputError('password', 'required')">
-            Password is required.
+            <small>Password is required.</small>
           </mat-error>
           <mat-error *ngIf="hasInputError('password', 'minlength')">
-            Password must be at <strong>least 6 characters long.</strong>
+            <small>Minimum <strong>6 characters.</strong></small>
           </mat-error>
-          <mat-error *ngIf="hasInputError('password', 'pattern')">
-            Must contain lowercase and uppercase letters, numbers and special
-            characters (!@#$*.,).
-          </mat-error>
-        </mat-form-field>
-      </div>
-
-      <div class="mat-item-wrap">
-        <mat-form-field class="mat-input-style remove-bottom">
-          <mat-label>Confirm</mat-label>
-          <input
-            type="password"
-            matInput
-            formControlName="confirm"
-            placeholder="Must be the same as password"
-          />
-          <mat-error *ngIf="hasInputError('confirm', 'required')">
-            Confirm password is required.
-          </mat-error>
-          <mat-error *ngIf="hasInputError('confirm', 'match_error')">
-            Password and confirm fields must be equals.
-          </mat-error>
-        </mat-form-field>
+        </div>
+        <mat-error
+          *ngIf="
+            !hasInputError('password', 'minlength') &&
+            hasInputError('password', 'pattern')
+          "
+        >
+          <small
+            >Must contain lowercase and uppercase letters, numbers and special
+            characters (!&#64;#$*.,).</small
+          >
+        </mat-error>
       </div>
 
       <div slot="error" class="errorContainer" *ngIf="showRegisterError">
-        <small
-          >An error occurred with your request, please try again shortly.</small
-        >
+        <small>Email or password is incorrect.</small>
       </div>
 
       <button
         type="submit"
-        class="font button-submit"
-        [disabled]="registerForm.invalid || submitting"
+        mat-button
+        class="cognum-form-buttons-submit"
+        [disabled]="registerForm.invalid || isSubmitting"
       >
-        Register
+        Continue with Email
       </button>
-
-      <span class="font register" (click)="onLogin()">Back to login</span>
     </form>
-
-    <div class="footer">
-      <label>
-        By clicking “Continue with Apple/Google/Email/SAML” above, you
-        acknowledge that you have read and understood, and agree to Notion's
-        Terms & Conditions and Privacy Policy.
-      </label>
-    </div>
-  </div>
-</div>
+  </ng-container>
+</cognum-default-page>
