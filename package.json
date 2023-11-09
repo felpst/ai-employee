@@ -27,9 +27,15 @@
     "@google-cloud/storage": "^6.12.0",
     "@zilliz/milvus2-sdk-node": "^2.3.2",
     "ace-builds": "^1.24.1",
+<<<<<<< HEAD
     "axios": "^1.4.0",
     "bcrypt": "^5.1.1",
+=======
+    "axios": "^1.6.0",
+    "bcrypt": "^5.1.0",
+>>>>>>> d9f249782b1fbeee9656e747b0df596a3db33ec1
     "bootstrap": "^5.3.1",
+    "cheerio": "^1.0.0-rc.12",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
     "event-emitter": "^0.3.5",
