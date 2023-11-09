@@ -1,5 +1,5 @@
 import { ChatRoom, IChatRoom } from '../entities/ChatRoom';
-import { IChatRoomRepository } from './ChatRoomRepository';
+import { IChatRoomRepository } from './chat-room.repository';
 
 export class InMemoryChatRoomRepository implements IChatRoomRepository {
   private chatRooms: IChatRoom[] = [];
@@ -9,7 +9,7 @@ export class InMemoryChatRoomRepository implements IChatRoomRepository {
     const chatRoom = new ChatRoom(data);
 
     this.chatRooms.push(chatRoom);
-    
+
     return Promise.resolve(chatRoom)
   }
 

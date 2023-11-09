@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { IMessage } from '@cognum/interfaces';
+import { IChatMessage } from '@cognum/interfaces';
 import { Observable } from 'rxjs';
 import { CoreApiService } from '../apis/core-api.service';
 
@@ -8,25 +8,25 @@ import { CoreApiService } from '../apis/core-api.service';
 })
 export class MessagesService {
   private route = 'messages';
-  constructor(private coreApiService: CoreApiService) {}
+  constructor(private coreApiService: CoreApiService) { }
 
-  update(item: Partial<IMessage>): Observable<IMessage> {
+  update(item: Partial<IChatMessage>): Observable<IChatMessage> {
     return this.coreApiService.put(
       `${this.route}/${item._id}`,
       item
-    ) as Observable<IMessage>;
+    ) as Observable<IChatMessage>;
   }
 
-  addFeedback({ _id, ...rest }: any): Observable<IMessage> {
+  addFeedback({ _id, ...rest }: any): Observable<IChatMessage> {
     return this.coreApiService.patch(`${this.route}/${_id}`, {
       feedbacks: rest,
-    }) as Observable<IMessage>;
+    }) as Observable<IChatMessage>;
   }
 
-  updateFeedback({ messageId, _id, ...rest }: any): Observable<IMessage> {
+  updateFeedback({ messageId, _id, ...rest }: any): Observable<IChatMessage> {
     return this.coreApiService.put(
       `${this.route}/${messageId}/feedback/${_id}`,
       { ...rest }
-    ) as Observable<IMessage>;
+    ) as Observable<IChatMessage>;
   }
 }

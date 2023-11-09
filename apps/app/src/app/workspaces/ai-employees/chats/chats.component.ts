@@ -1,11 +1,12 @@
 import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
-import { IChat, IWorkspace } from '@cognum/interfaces';
+import { IChatRoom, IWorkspace } from '@cognum/interfaces';
 import { firstValueFrom } from 'rxjs';
 import { DialogComponent } from '../../../shared/dialog/dialog.component';
 import { WorkspacesService } from '../../workspaces.service';
 import { AIEmployeesService } from '../ai-employees.service';
+import { ChatService } from './chat/chat.service';
 import { ChatsService, ICategorizedChats } from './chats.service';
 
 @Component({
@@ -17,10 +18,10 @@ export class ChatsComponent {
   categorizedChats: ICategorizedChats;
 
 
-  selected: IChat | null = null;
+  selected: IChatRoom | null = null;
   workspace!: IWorkspace;
   // categorizedChats: {
-  //   last24h: IChat[], yesterday: IChat[], last7days: IChat[] , older: IChat[]
+  //   last24h: IChatRoom[], yesterday: IChatRoom[], last7days: IChatRoom[] , older: IChatRoom[]
   // } = {
   //   last24h: [], yesterday: [], last7days: [], older: []
   // };
@@ -29,6 +30,7 @@ export class ChatsComponent {
     private router: Router,
     private route: ActivatedRoute,
     private chatsService: ChatsService,
+    private chatService: ChatService,
     private workspacesService: WorkspacesService,
     private aiEmployeesService: AIEmployeesService,
     private dialog: MatDialog
@@ -40,13 +42,13 @@ export class ChatsComponent {
     return Object.keys(this.categorizedChats) as ('today' | 'yesterday' | 'last7days' | 'older')[];
   }
 
-  get selectedChat(): string | null {
-    return this.chatsService.selectedChat;
+  get selectedChat(): IChatRoom | undefined {
+    return this.chatService.selectedChat;
   }
 
   get chats() {
     return Array.from(this.chatsService.chats.values()).sort(
-      (a: IChat, b: IChat) => {
+      (a: IChatRoom, b: IChatRoom) => {
         return (
           // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
           new Date(b.createdAt!).getTime() - new Date(a.createdAt!).getTime()
@@ -61,7 +63,7 @@ export class ChatsComponent {
   }
 
   onNewChat() {
-    const chat: Partial<IChat> = {
+    const chat: Partial<IChatRoom> = {
       aiEmployee: this.aiEmployeesService.aiEmployee._id
     }
 
@@ -73,13 +75,11 @@ export class ChatsComponent {
     });
   }
 
-  onChat(chat: IChat) {
-    const { _id } = chat;
-    this.chatsService.selectedChat = _id;
-    this.router.navigate([`/workspaces/${this.workspace._id}/chats/${_id}`]);
+  onChat(chat: IChatRoom) {
+    this.router.navigate([`/workspaces/${this.workspace._id}/chats/${chat.id}`]);
   }
 
-  onDelete(chat: IChat) {
+  onDelete(chat: IChatRoom) {
     this.dialog
       .open(DialogComponent, {
         data: {

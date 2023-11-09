@@ -11,6 +11,9 @@
     "src/**/*.ts",
     "src/lib/repositories/MessageRepository.ts",
     "../users/src/lib/entities/User.ts",
-    "../users/src/lib/repositories/UserRepository.ts"
+    "../users/src/lib/repositories/UserRepository.ts",
+    "../interfaces/src/chats/chat-message.interface.ts",
+    "../interfaces/src/chats/chat-room.interface.ts",
+    "../interfaces/src/chats/index.ts"
   ]
 }

@@ -1,4 +1,5 @@
-import { IMessage, IUser } from '@cognum/interfaces';
+import { IChatMessage, IUser } from '@cognum/interfaces';
+import { ToolsHelper } from '@cognum/tools';
 import { AgentActionOutputParser } from 'langchain/agents';
 import {
   BaseChatPromptTemplate,
@@ -15,12 +16,10 @@ import {
   PartialValues,
 } from 'langchain/schema';
 import { Tool } from 'langchain/tools';
-import { ToolsHelper } from '../../../../tools/src/lib/helpers/tools.helper';
 import { Profile } from '../interfaces';
 
 const formatIdentity = (profile: Profile) =>
-  `Your name is ${profile.name || 'Atlas'}. Your a ${
-    profile.role || 'Assistant'
+  `Your name is ${profile.name || 'Atlas'}. Your a ${profile.role || 'Assistant'
   }.`;
 
 const formatPrefix = (user: IUser) =>
@@ -42,15 +41,15 @@ Observation: the result of the action
 Thought: I now know the final answer
 Final Answer: the final answer to the original input question`;
 
-const formatSuffix = (summary: string, messages: IMessage[]) => `Begin!
+const formatSuffix = (summary: string, messages: IChatMessage[]) => `Begin!
 
 ${summary ? `\nConversation Summary: ${summary}` : ''}
 
 Conversation History:
 ${messages.length > 10 ? '(old messages...)\n' : ''}${messages
-  .slice(-10)
-  .map((message) => `> ${message.role}: ${message.content}`)
-  .join('\n')}
+    .slice(-10)
+    .map((message) => `> ${message.sender}: ${message.content}`)
+    .join('\n')}
 
 Question: {input}
 Thought:{agent_scratchpad}`;

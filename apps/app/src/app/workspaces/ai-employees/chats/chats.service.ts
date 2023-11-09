@@ -1,15 +1,15 @@
 import { HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { IAIEmployee, IChat } from '@cognum/interfaces';
+import { IAIEmployee, IChatRoom } from '@cognum/interfaces';
 import { Observable } from 'rxjs';
 import { AuthService } from '../../../auth/auth.service';
 import { CoreApiService } from '../../../services/apis/core-api.service';
 
 export interface ICategorizedChats {
-  today: { title: string; chats: IChat[]; },
-  yesterday: { title: string; chats: IChat[]; },
-  last7days: { title: string; chats: IChat[]; },
-  older: { title: string; chats: IChat[]; },
+  today: { title: string; chats: IChatRoom[]; },
+  yesterday: { title: string; chats: IChatRoom[]; },
+  last7days: { title: string; chats: IChatRoom[]; },
+  older: { title: string; chats: IChatRoom[]; },
 }
 
 @Injectable({
@@ -17,15 +17,14 @@ export interface ICategorizedChats {
 })
 export class ChatsService {
   private route = 'chats';
-  selectedChat: string | null = null;
-  chats: Map<string, IChat> = new Map<string, IChat>();
+  chats: Map<string, IChatRoom> = new Map<string, IChatRoom>();
 
   constructor(
     private coreApiService: CoreApiService,
     private authService: AuthService
-  ) {}
+  ) { }
 
-  load(aiEmployee: IAIEmployee): Observable<IChat[]> {
+  load(aiEmployee: IAIEmployee): Observable<IChatRoom[]> {
     let params = new HttpParams();
     params = params.set('filter[aiEmployee]', aiEmployee._id);
     params = params.set('sort', '-updatedAt');
@@ -34,7 +33,7 @@ export class ChatsService {
         next: (chats) => {
           this.chats.clear();
           for (const chat of chats) {
-            this.chats.set(chat._id, chat);
+            this.chats.set(chat._id as string, chat);
           }
           observer.next(chats);
         },
@@ -42,31 +41,33 @@ export class ChatsService {
     });
   }
 
-  create(chat: Partial<IChat>): Observable<IChat> {
-    return this.coreApiService.post('chats', chat) as Observable<IChat>;
+  create(chat: Partial<IChatRoom>): Observable<IChatRoom> {
+    return this.coreApiService.post('chats', chat) as Observable<IChatRoom>;
   }
 
-  list(options?: any): Observable<IChat[]> {
+  get(chatId: string): Observable<IChatRoom> {
+    return this.coreApiService.get(`${this.route}/${chatId}`) as Observable<IChatRoom>;
+  }
+
+  list(options?: any): Observable<IChatRoom[]> {
     return new Observable((observer) => {
       (
-        this.coreApiService.get(`${this.route}`, options) as Observable<IChat[]>
+        this.coreApiService.get(`${this.route}`, options) as Observable<IChatRoom[]>
       ).subscribe({
-        next: (chats: IChat[]) => {
+        next: (chats: IChatRoom[]) => {
           observer.next(chats);
         },
       });
     });
   }
-  
-  listByWorkspace(workspaceId: string): Observable<IChat[]> {
-    return this.coreApiService.get(`${this.route}?filter[workspace]=${workspaceId}`) as Observable<IChat[]>;
- }
 
- 
+  listByWorkspace(workspaceId: string): Observable<IChatRoom[]> {
+    return this.coreApiService.get(`${this.route}?filter[workspace]=${workspaceId}`) as Observable<IChatRoom[]>;
+  }
 
-  delete(chat: IChat): Observable<IChat> {
-    this.chats.delete(chat._id);
-    return this.coreApiService.delete(`chats/${chat._id}`) as Observable<IChat>;
+  delete(chat: IChatRoom): Observable<IChatRoom> {
+    this.chats.delete(chat._id as string);
+    return this.coreApiService.delete(`chats/${chat._id}`) as Observable<IChatRoom>;
   }
 
   categorizedList(): ICategorizedChats {

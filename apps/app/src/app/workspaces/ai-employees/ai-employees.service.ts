@@ -1,12 +1,12 @@
 import { HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { IAIEmployee, IChat, IWorkspace } from '@cognum/interfaces';
+import { IAIEmployee, IChatRoom, IWorkspace } from '@cognum/interfaces';
 import { Observable, firstValueFrom } from 'rxjs';
 import { CoreApiService } from '../../services/apis/core-api.service';
 import { ChatsService } from './chats/chats.service';
 
 export interface IAIEmployeeWithChats extends IAIEmployee {
-  chats: IChat[];
+  chats: IChatRoom[];
 }
 
 @Injectable({
@@ -20,7 +20,7 @@ export class AIEmployeesService {
   constructor(
     private coreApiService: CoreApiService,
     private chatsService: ChatsService
-  ) {}
+  ) { }
 
   load(workspace: IWorkspace, chatsLimit = 3): Observable<IAIEmployeeWithChats[]> {
     let params = new HttpParams();
@@ -46,7 +46,7 @@ export class AIEmployeesService {
             params = params.set('populate[1][select]', 'name avatar');
 
             aiEmployee.chats =
-            await firstValueFrom(this.chatsService.list({ params })) || [];
+              await firstValueFrom(this.chatsService.list({ params })) || [];
 
             this.aiEmployees.set(aiEmployee._id, aiEmployee);
           }

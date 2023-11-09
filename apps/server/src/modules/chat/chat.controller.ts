@@ -1,9 +1,9 @@
-import { Chat } from '@cognum/models';
+import { ChatRoom } from '@cognum/chat';
 import ModelController from '../../controllers/model.controller';
 
-export class ChatController extends ModelController<typeof Chat> {
+export class ChatController extends ModelController<typeof ChatRoom> {
   constructor() {
-    super(Chat);
+    super(ChatRoom);
   }
 }
 

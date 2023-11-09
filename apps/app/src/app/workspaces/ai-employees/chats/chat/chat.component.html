@@ -1,8 +1,12 @@
 <div class="chat">
-  <div class="messages" #chatContent [ngClass]="{'no-messages-visible': chatService.messages.length === 0}">
+  <div
+    class="messages"
+    #chatContent
+    [ngClass]="{ 'no-messages-visible': chatService.messages.length === 0 }"
+  >
     <div class="messages-wrapper">
       <!-- Skeleton loader -->
-      <div class="skeleton" *ngIf="chatService.loadingMessages">
+      <!-- <div class="skeleton" *ngIf="chatService.loadingMessages">
         <ng-container *ngFor="let _ of [].constructor(15)">
           <ngx-skeleton-loader
             class="message"
@@ -11,31 +15,33 @@
             animation="pulse"
           />
         </ng-container>
-      </div>
+      </div> -->
 
       <!-- No messages -->
-
-      <div class="no-messages" *ngIf="!chatService.loadingMessages && chatService.messages.length === 0">
+      <div class="no-messages" *ngIf="chatService.messages.length === 0">
         <p>Start a new chat with</p>
-        <img src="../../../../../assets/icons/avatar.svg" alt="workspace photo"/>
-        <p class="employee-name">{{ employeeName }}</p>
+        <img
+          class="avatar"
+          [src]="aiEmployee.avatar || '../../../../../assets/icons/avatar.svg'"
+          alt="workspace photo"
+        />
+        <p class="employee-name">{{ aiEmployee.name }}</p>
       </div>
-   
 
       <!-- Messages -->
-      <div
+      <div class="chat-messages">
+        <cognum-chat-message
+          [message]="message"
+          *ngFor="let message of chatService.messages"
+        ></cognum-chat-message>
+      </div>
+
+      <!-- <div
         class="message-wrapper"
-        [ngClass]="{
-          system: message.role === 'SYSTEM'
-        }"
+        [ngClass]="{ system: message.role === 'SYSTEM' }"
         *ngFor="let message of chatService.messages"
       >
-        <div
-          class="message"
-          [ngClass]="{
-            system: message.role === 'SYSTEM'
-          }"
-        >
+        <div class="message" [ngClass]="{ system: message.role === 'SYSTEM' }">
           <div class="avatar"></div>
 
           <div class="content">
@@ -103,7 +109,6 @@
               </div>
             </div>
 
-            <!-- Unrated message -->
 
             <div
               class="rating-wrapper"
@@ -126,7 +131,6 @@
           </div>
         </div>
 
-        <!-- Rated message -->
         <ng-template #ratedMessage>
           <div class="rating-wrapper">
             <i
@@ -141,7 +145,7 @@
             ></i>
           </div>
         </ng-template>
-      </div>
+      </div> -->
 
       <!-- Tokens -->
       <div class="message" *ngIf="chatService.tokens">

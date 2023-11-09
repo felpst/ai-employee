@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { IUser } from '@cognum/interfaces';
+import { IAIEmployee, IUser } from '@cognum/interfaces';
 
 interface Avatar {
   _id: string;
@@ -15,7 +15,7 @@ interface Avatar {
   styleUrls: ['./users-avatar.component.scss'],
 })
 export class UsersAvatarComponent implements OnInit {
-  @Input() users: IUser[] = [];
+  @Input() users: (IUser | IAIEmployee)[] = [];
   @Input() showAdd = false;
 
   avatars: Avatar[] = [];
@@ -27,14 +27,24 @@ export class UsersAvatarComponent implements OnInit {
 
   loadAvatars() {
     for (const user of this.users) {
+      if (!user) continue;
       this.avatars.push({
         _id: user._id,
         initials: user.name.charAt(0),
-        photo: user.photo,
+        photo: this.imageURL(user),
         backgroundColor: this.getRandomColorFromSet(),
         name: user.name,
       });
     }
+  }
+
+  imageURL(agent: IUser | IAIEmployee): string {
+    if ('photo' in agent) {
+      return agent.photo as string;
+    } else if ('avatar' in agent) {
+      return agent.avatar as string;
+    }
+    return ''
   }
 
   get showAvatars(): Avatar[] {

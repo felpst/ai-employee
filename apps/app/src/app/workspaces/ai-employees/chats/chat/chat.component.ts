@@ -32,7 +32,6 @@ export class ChatComponent implements AfterViewChecked {
   @ViewChild('inputMessage', { static: true })
   private inputMessage!: ElementRef;
   status = 'Ready';
-  employeeName: string = '';
 
   constructor(
     public chatService: ChatService,
@@ -43,13 +42,10 @@ export class ChatComponent implements AfterViewChecked {
     private notificationsService: NotificationsService,
     private aiEmployeesService: AIEmployeesService,
     private dialog: MatDialog
-  ) {
-    route.params.subscribe((params) => {
-   
-      this.chatsService.selectedChat = params['chatId'];
-      this.chatService.connect(params['chatId']);
-      this.employeeName = this.aiEmployeesService.aiEmployee.name;
-    });
+  ) { }
+
+  get aiEmployee() {
+    return this.aiEmployeesService.aiEmployee;
   }
 
   ngAfterViewChecked(): void {
@@ -61,12 +57,17 @@ export class ChatComponent implements AfterViewChecked {
     if (form.invalid) {
       return;
     }
-    const message = form.value.message;
+    const content = form.value.message;
 
     // Send message over WebSocket
     this.chatService.send({
       type: 'message',
-      content: message,
+      content: {
+        chatRoom: this.chatService.selectedChat._id,
+        role: 'user',
+        sender: this.authService.user?._id,
+        content
+      },
     });
     form.resetForm();
   }
@@ -105,16 +106,16 @@ export class ChatComponent implements AfterViewChecked {
   }
 
   private updateMessage(message: MessageUpdate) {
-    return this.messagesService.addFeedback(message).subscribe((result) => {
-      const feedback = result.feedbacks.find(
-        ({ createdBy }) => createdBy === this.authService.user?._id
-      );
-      this.chatService.updateMessageData(message._id, {
-        feedbacks: result.feedbacks,
-      });
-      this.notificationsService.show('Feedback sent!');
-      if (feedback) this.openModal(message._id, feedback);
-    });
+    // return this.messagesService.addFeedback(message).subscribe((result) => {
+    //   const feedback = result.feedbacks.find(
+    //     ({ createdBy }) => createdBy === this.authService.user?._id
+    //   );
+    //   this.chatService.updateMessageData(message._id, {
+    //     feedbacks: result.feedbacks,
+    //   });
+    //   this.notificationsService.show('Feedback sent!');
+    //   if (feedback) this.openModal(message._id, feedback);
+    // });
   }
 
   private openModal(messageId: string, feedback: IFeedback): void {

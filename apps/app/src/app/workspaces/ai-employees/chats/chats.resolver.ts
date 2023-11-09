@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { IChat } from '@cognum/interfaces';
+import { IChatRoom } from '@cognum/interfaces';
 import { Observable } from 'rxjs';
 import { AIEmployeesService } from '../ai-employees.service';
 import { ChatsService } from './chats.service';
@@ -11,9 +11,9 @@ export class ChatsResolver {
   constructor(
     private aiEmployeesService: AIEmployeesService,
     private chatsService: ChatsService,
-  ) {}
+  ) { }
 
-  resolve(): Observable<IChat[]> {
+  resolve(): Observable<IChatRoom[]> {
     return this.chatsService.load(this.aiEmployeesService.aiEmployee)
   }
 }

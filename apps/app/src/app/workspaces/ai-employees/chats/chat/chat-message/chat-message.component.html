@@ -1,0 +1,15 @@
+<div class="chat-message">
+  <div class="avatar">
+    <cognum-users-avatar [users]="[sender]"></cognum-users-avatar>
+  </div>
+  <div class="content">
+    <div class="header">
+      <div class="name cognum-heading-3">Linecker Amorim</div>
+      <div class="time cognum-font-color-grey-light">
+        {{ utilsService.timeDifference(message.updatedAt) }}
+      </div>
+    </div>
+
+    <div class="message">{{ message.content }}</div>
+  </div>
+</div>

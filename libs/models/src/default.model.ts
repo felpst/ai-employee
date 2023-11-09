@@ -1,4 +1,8 @@
-import { Schema } from 'mongoose';
+import { Document, Schema } from 'mongoose';
+
+interface IDefaultSchema extends Document {
+  updatedAt: Date;
+}
 
 export const defaultSchemaProps = {
   createdAt: { type: Date, default: Date.now },
@@ -14,7 +18,7 @@ export const feedbackSchemaProps = {
   createdBy: { type: Schema.Types.ObjectId, ref: 'User', required: true },
 };
 
-function _updatedAt(next) {
+function _updatedAt(this: IDefaultSchema, next: any) {
   this.set({ updatedAt: new Date() });
   next();
 }

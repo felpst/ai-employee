@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
-import { IAIEmployee, IChat } from '@cognum/interfaces';
+import { IAIEmployee, IChatRoom } from '@cognum/interfaces';
 import { ObjectId } from 'mongoose';
 import { firstValueFrom } from 'rxjs';
 import { DialogComponent } from '../../shared/dialog/dialog.component';
@@ -30,7 +30,7 @@ export class AIEmployeesComponent implements OnInit {
     private workspacesService: WorkspacesService,
     private dialog: MatDialog,
     private chatsService: ChatsService
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.activeButton = '';
@@ -42,7 +42,7 @@ export class AIEmployeesComponent implements OnInit {
   }
 
   onNewChat(aiEmployee: ObjectId) {
-    const chat: Partial<IChat> = {
+    const chat: Partial<IChatRoom> = {
       aiEmployee
     }
 
@@ -53,7 +53,7 @@ export class AIEmployeesComponent implements OnInit {
     });
   }
 
-  onChat(aiEmployee: ObjectId, chat: IChat) {
+  onChat(aiEmployee: ObjectId, chat: IChatRoom) {
     this.router.navigate([aiEmployee, 'chats', chat._id], { relativeTo: this.route });
   }
 

@@ -1,4 +1,6 @@
 import { Injectable } from '@angular/core';
+import { IAIEmployee, IChatRoom, IUser } from '@cognum/interfaces';
+import { Observable } from 'rxjs';
 import { env } from '../../../../../environments/environment';
 import { AuthService } from '../../../../auth/auth.service';
 import { ChatsService } from '../chats.service';
@@ -12,8 +14,11 @@ export interface WebSocketMessage {
   providedIn: 'root',
 })
 export class ChatService {
-  private socket?: WebSocket;
+  private socket!: WebSocket;
+  selectedChat!: IChatRoom;
   messages: any[] = [];
+  senders = new Map<string, IUser | IAIEmployee>();
+
   user: any = null;
   aiEmployee: any = null;
   tokens = '';
@@ -27,18 +32,25 @@ export class ChatService {
   constructor(
     private authService: AuthService,
     private chatsService: ChatsService
-  ) {}
+  ) { }
+
+  load(chatId: string): Observable<IChatRoom> {
+    return new Observable((observer) => {
+      this.chatsService.get(chatId).subscribe({
+        next: (chat) => {
+          this.selectedChat = chat;
+          this.connect(chatId);
+          observer.next(chat);
+        },
+      });
+    });
+  }
 
   public updateMessageData(_id: string, data: any) {
     const updated = this.messages.map((message) =>
       message._id === _id ? { ...message, ...data } : message
     );
     this.messages = updated;
-  }
-
-  get chat() {
-    if (!this.chatsService.selectedChat) return null;
-    return this.chatsService.chats.get(this.chatsService.selectedChat);
   }
 
   private onOpen(event: any) {
@@ -62,38 +74,45 @@ export class ChatService {
     return {
       connection: (data: any) => {
         if (data.isConnected) {
-          this.loadingMessages = true;
-          this.send({
-            type: 'auth',
-            content: {
-              token: this.authService.authToken,
-            },
-          });
+          console.log('Connection confirmed');
+          console.log('Chat messages', data.chatMessages);
+          this.messages = data.chatMessages;
+
+          // senders
+          for (const sender of data.senders || []) {
+            this.senders.set(sender._id, sender);
+          }
+
+        } else {
+          console.error('Connection refused', data.message);
         }
       },
       auth: (data: any) => {
-        this.chatsService.chats.set(data.chat._id, data.chat);
-        this.messages = data.messages;
-        this.user = data.user;
-        this.aiEmployee = data.aiEmployee;
-        this.loadingMessages = false;
+        if (data.isAuthenticated) {
+          console.log('Authenticated');
+          // TODO load messages? -> resolver
+          // this.selectedChatsService.chats.set(data.chat._id, data.chat);
+          // this.messages = data.messages;
+          // this.user = data.user;
+          // this.aiEmployee = data.aiEmployee;
+        }
       },
       message: (data: any) => {
-        console.log('New message received');
+        console.log('New message received', data);
 
-        if (data.role === 'AI') {
-          this.messages.push({
-            role: 'SYSTEM',
-            content: {
-              answer: this.thinking.answer,
-              thought: this.thinking.thought,
-              action: this.thinking.action,
-            },
-            createdAt: new Date(),
-          });
-          this.tokens = '';
-          this.thinking = { action: '', thought: '', answer: '' };
-        }
+        // if (data.role === 'AI') {
+        //   this.messages.push({
+        //     role: 'SYSTEM',
+        //     content: {
+        //       answer: this.thinking.answer,
+        //       thought: this.thinking.thought,
+        //       action: this.thinking.action,
+        //     },
+        //     createdAt: new Date(),
+        //   });
+        //   this.tokens = '';
+        //   this.thinking = { action: '', thought: '', answer: '' };
+        // }
 
         this.messages.push(data);
       },
@@ -112,16 +131,16 @@ export class ChatService {
         if (data.type === 'chatName') {
           console.log(data);
 
-          if (!this.chat) return;
+          if (!this.selectedChat) return;
           console.log('X');
 
-          if (this.chat.name === 'New chat' || !this.chat.name) {
-            this.chat.name = '';
+          if (this.selectedChat.name === 'New chat' || !this.selectedChat.name) {
+            this.selectedChat.name = '';
           }
-          console.log(this.chat.name);
+          console.log(this.selectedChat.name);
 
-          this.chat.name = this.chat.name + data.token;
-          this.chatsService.chats.set(this.chat._id, this.chat);
+          this.selectedChat.name = this.selectedChat.name + data.token;
+          this.chatsService.chats.set(this.selectedChat._id as string, this.selectedChat);
         }
       },
     };
@@ -132,12 +151,16 @@ export class ChatService {
     this.socket.send(JSON.stringify(data));
   }
 
-  connect(chatId: string) {
-    if (this.socket) this.socket.close();
+  connect(chatRoomId: string) {
+    try {
+      if (this.socket) this.socket.close();
 
-    this.socket = new WebSocket(`${env.apis.core.chatUrl}?chatId=${chatId}`);
-    this.socket.onopen = this.onOpen.bind(this);
-    this.socket.onclose = this.onClose.bind(this);
-    this.socket.onmessage = this.onMessage.bind(this);
+      this.socket = new WebSocket(`${env.apis.core.chatUrl}?chatRoomId=${chatRoomId}&token=${this.authService.authToken}`);
+      this.socket.onopen = this.onOpen.bind(this);
+      this.socket.onclose = this.onClose.bind(this);
+      this.socket.onmessage = this.onMessage.bind(this);
+    } catch (error) {
+      console.error(error);
+    }
   }
 }

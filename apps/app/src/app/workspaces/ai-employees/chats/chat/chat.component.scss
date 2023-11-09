@@ -1,3 +1,9 @@
+.chat-messages {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
 .chat-content {
   height: 80vh;
   overflow-y: auto;
@@ -41,7 +47,6 @@
 
       gap: 24px;
     }
-    
 
     .message-wrapper {
       &.ai {
@@ -188,7 +193,7 @@
   }
 }
 
-.messages.no-messages-visible{
+.messages.no-messages-visible {
   display: flex;
   align-items: center;
 }
@@ -208,7 +213,6 @@
     margin-top: 0.7rem;
   }
 }
-
 
 .accordion {
   display: flex;
@@ -251,4 +255,8 @@
       align-self: stretch;
     }
   }
+}
+
+.avatar {
+  border-radius: 50%;
 }

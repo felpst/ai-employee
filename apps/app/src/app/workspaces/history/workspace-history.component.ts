@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
-import { IChat, IUser } from '@cognum/interfaces';
+import { IChatRoom, IUser } from '@cognum/interfaces';
 import { ObjectId } from 'mongoose';
 import { AuthService } from '../../auth/auth.service';
 import { DialogComponent } from '../../shared/dialog/dialog.component';
@@ -17,8 +17,8 @@ import { WorkspacesService } from '../workspaces.service';
 })
 
 export class WorkspaceHistoryComponent implements OnInit {
-  originalChat: IChat[] = [];
-  chats: IChat[] = [];
+  originalChat: IChatRoom[] = [];
+  chats: IChatRoom[] = [];
   searchText = '';
   createdByUser: IUser | null = null;
   history: any[] = [];
@@ -54,7 +54,7 @@ export class WorkspaceHistoryComponent implements OnInit {
     }
   }
 
-  deleteChat(chat: IChat) {
+  deleteChat(chat: IChatRoom) {
     this.dialog
       .open(DialogComponent, {
         data: {
@@ -78,7 +78,7 @@ export class WorkspaceHistoryComponent implements OnInit {
       });
   }
 
-  onChat(aiEmployee: ObjectId, chat: IChat) {
+  onChat(aiEmployee: ObjectId, chat: IChatRoom) {
     this.router.navigate([aiEmployee, 'chats', chat._id], { relativeTo: this.route });
   }
 

@@ -14,13 +14,19 @@ import { MarkdownModule } from 'ngx-markdown';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { LayoutsModule } from '../../../layouts/layouts.module';
 import { SharedModule } from '../../../shared/shared.module';
+import { ChatMessageComponent } from './chat/chat-message/chat-message.component';
 import { ChatComponent } from './chat/chat.component';
 import { FeedbackFormComponent } from './chat/feedback-form/feedback-form.component';
 import { ChatsRoutingModule } from './chats-routing.module';
 import { ChatsComponent } from './chats.component';
 
 @NgModule({
-  declarations: [ChatsComponent, ChatComponent, FeedbackFormComponent],
+  declarations: [
+    ChatsComponent,
+    ChatComponent,
+    ChatMessageComponent,
+    FeedbackFormComponent
+  ],
   imports: [
     CommonModule,
     ChatsRoutingModule,
@@ -40,4 +46,4 @@ import { ChatsComponent } from './chats.component';
     SharedModule
   ],
 })
-export class ChatsModule {}
+export class ChatsModule { }

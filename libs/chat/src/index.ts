@@ -1,4 +1,4 @@
-export * from './lib/chat';
+export * from './lib/models'
+export * from './lib/repositories'
+export * from './lib/usecases'
 
-
-// toDo: correct export
