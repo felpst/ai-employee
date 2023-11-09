@@ -1,0 +1,10 @@
+@import '../../../styles/cognum.variables.scss';
+
+.full-width {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  height: 100vh;
+  padding-top: 60px;
+  padding-bottom: 20px;
+}
