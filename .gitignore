@@ -47,4 +47,8 @@ cognum.secrets.json
 credentials.json
 docs
 
+#python
 .venv
+*.pyc
+tempCodeRunnerFile
+

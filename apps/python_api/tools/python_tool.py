@@ -1,7 +1,7 @@
 from langchain_experimental.tools import PythonREPLTool
-from model import Model
 from langchain_experimental.agents.agent_toolkits import create_python_agent
 from langchain.agents.agent_types import AgentType
+from ..model.azure_model import Model
 
 
 class PythonTool:
@@ -19,7 +19,4 @@ class PythonTool:
         )
 
     def run(self, string):
-        self._agent_executor.run(string)
-
-
-PythonTool().run("What is the 10th fibonacci number?")
+        return self._agent_executor.run(string)
