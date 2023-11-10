@@ -4,8 +4,12 @@
   </div>
   <div class="content">
     <div class="header">
-      <div class="name cognum-heading-3">Linecker Amorim</div>
-      <div class="time cognum-font-color-grey-light">
+      <div class="name cognum-heading-3">{{ sender.name }}</div>
+      <div
+        class="time cognum-font-color-grey-light"
+        matTooltip="{{ message.createdAt | date : 'MM-dd-yyyy HH:mm:ss' }}"
+        matTooltipPosition="above"
+      >
         {{ utilsService.timeDifference(message.updatedAt) }}
       </div>
     </div>

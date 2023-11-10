@@ -95,7 +95,7 @@ export class AIEmployeeAgent {
     const configChatModel = {
       streaming: true,
       callbacks: this._callbacks,
-      // verbose: true,
+      verbose: true,
     };
 
     return new ChatModel(configChatModel);

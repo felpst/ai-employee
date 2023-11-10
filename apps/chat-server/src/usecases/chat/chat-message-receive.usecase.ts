@@ -13,18 +13,24 @@ export class ChatMessageReceive {
     const message = await this.chatMessageCreate.execute(data);
 
     // Send message to client
-    conn.messageSend.execute(conn, {
-      type: 'message',
-      content: message,
-    });
-
-
+    conn.messageSend.execute(conn, { type: 'message', content: message });
 
     // Send to AI Employee
+    const answer = await conn.session.agent.call(message.content);
+    console.log(answer);
 
     // Listener to answer
+
     // Save answer
+    const answerMessage = await this.chatMessageCreate.execute({
+      content: answer,
+      sender: conn.session.aiEmployee._id,
+      role: 'bot',
+      chatRoom: data.chatRoom
+    });
+
     // Send answer to client
+    conn.messageSend.execute(conn, { type: 'message', content: answerMessage });
 
     // Listener to new token
     // Send new token to client

@@ -7,8 +7,8 @@ export class ChatMessageCreate {
     private chatMessageRepository: ChatMessageRepository
   ) { }
 
-  async execute(data: IChatMessage) {
+  async execute(data: Partial<IChatMessage>) {
     this.chatMessageRepository.setUserId(data.sender as string);
-    return this.chatMessageRepository.create(data);
+    return this.chatMessageRepository.create(data) as Promise<IChatMessage>;
   }
 }

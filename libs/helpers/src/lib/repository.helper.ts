@@ -49,7 +49,7 @@ export class RepositoryHelper<T> {
   }
 
   // Create document
-  public async create(data: T | T[]): Promise<T | T[]> {
+  public async create(data: Partial<T> | Partial<T>[]): Promise<T | T[]> {
     const dataset = Array.isArray(data) ? [...data] : [data];
     const docs: T[] = [];
     for (const data of dataset) {

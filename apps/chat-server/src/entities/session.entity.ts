@@ -11,6 +11,7 @@ export class Session implements ISession {
   chatRoom!: IChatRoom;
   chatMessages!: IChatMessage[];
   senders!: (IUser | IAIEmployee)[];
+  aiEmployee!: IAIEmployee;
   agent!: AIEmployeeAgent;
 
   constructor(session: Partial<ISession>) {

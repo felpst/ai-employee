@@ -41,18 +41,19 @@ Observation: the result of the action
 Thought: I now know the final answer
 Final Answer: the final answer to the original input question`;
 
+// const formatSuffix = (summary: string, messages: IChatMessage[]) => `Begin!
+// ${summary ? `\nConversation Summary: ${summary}` : ''}
+// Conversation History:
+// ${messages.length > 10 ? '(old messages...)\n' : ''}${messages
+//     .slice(-10)
+//     .map((message) => `> ${message.sender}: ${message.content}`)
+//     .join('\n')}
+
+// Question: {input}
+// Thought: {agent_scratchpad}`;
 const formatSuffix = (summary: string, messages: IChatMessage[]) => `Begin!
-
-${summary ? `\nConversation Summary: ${summary}` : ''}
-
-Conversation History:
-${messages.length > 10 ? '(old messages...)\n' : ''}${messages
-    .slice(-10)
-    .map((message) => `> ${message.sender}: ${message.content}`)
-    .join('\n')}
-
 Question: {input}
-Thought:{agent_scratchpad}`;
+Thought: {agent_scratchpad}`;
 
 export class AIEmployeePromptTemplate extends BaseChatPromptTemplate {
   tools: Tool[];
@@ -153,6 +154,8 @@ export class AIEmployeeOutputParser extends AgentActionOutputParser {
 
     const match = /Action: (.*)\nAction Input: (.*)/s.exec(text);
     if (!match) {
+      console.log(text);
+
       throw new Error(`Could not parse LLM output: ${text}`);
     }
 

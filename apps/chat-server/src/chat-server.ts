@@ -1,3 +1,4 @@
+import { AIEmployeeAgent } from "@cognum/ai-employee";
 import { ChatMessageCreate, ChatMessageRepository, ChatRoomRepository } from "@cognum/chat";
 import { IAIEmployee, IUser } from "@cognum/interfaces";
 import { IncomingMessage } from "http";
@@ -49,6 +50,16 @@ export class ChatServer {
 
         // Load AI Employee
         const aiEmployee = chatRoom.aiEmployee as IAIEmployee;
+        conn.setAIEmployee(aiEmployee);
+
+        // Load
+        const agent = new AIEmployeeAgent({
+          profile: {
+            name: aiEmployee.name,
+            role: aiEmployee.role,
+          },
+        });
+        conn.setAgent(agent);
 
         // Load senders
         const senders: (IUser | IAIEmployee)[] = [conn.session.user, aiEmployee];
