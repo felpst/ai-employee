@@ -165,6 +165,21 @@ export class SettingsWorkspaceComponent {
     })
   }
 
+  async onRemoveUser(user: any) {
+    const formData = new FormData();
+    this.users = this.users.filter((u: any) => u !== user);
+
+    formData.append('json', JSON.stringify({ users: this.users }));
+
+    try {
+      await this.workspacesService.update({ _id: this.workspace._id, users: this.users }).toPromise();
+      this.notificationsService.show('Successfully removed user!');
+      window.location.reload();
+    } catch (error) {
+      this.notificationsService.show("Oops, it looks like there was an error... Please try again in a few minutes");
+    }
+  }
+
   async onAddUser() {
     const formData = new FormData();
     this.users.push(this.idUserSubmit);
