@@ -14,8 +14,8 @@ export class ChatModel extends LangchainChatOpenAI {
   constructor(
     fields?: Omit<
       Partial<OpenAIChatInput> &
-        Partial<AzureOpenAIInput> &
-        BaseChatModelParams,
+      Partial<AzureOpenAIInput> &
+      BaseChatModelParams,
       'modelName' | 'azureOpenAIApiDeploymentName'
     >
   ) {

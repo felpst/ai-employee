@@ -1,7 +1,5 @@
-export * from './lib/ai-employee-agent';
-export { AIEmployeeAgent } from './lib/ai-employee-agent';
-export {
-  AIEmployeeOutputParser,
-  AIEmployeePromptTemplate
-} from './lib/prompts/prompts.helper';
+export * from './lib/agents'
+export * from './lib/entities'
+export * from './lib/models'
+export * from './lib/repositories'
 

@@ -1,4 +1,4 @@
-import { AIEmployee } from '@cognum/models';
+import { AIEmployee } from '@cognum/ai-employee';
 import { NextFunction, Request, Response } from 'express';
 import ModelController from '../../controllers/model.controller';
 import UploadUtils from '../../utils/upload.utils';

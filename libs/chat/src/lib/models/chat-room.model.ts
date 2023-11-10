@@ -1,6 +1,6 @@
+import { IChatRoom } from '@cognum/interfaces';
 import { defaultSchemaProps, triggers } from '@cognum/models';
 import { Schema, model, models } from 'mongoose';
-import { IChatRoom } from '../../../../interfaces/src/chats/chat-room.interface';
 
 const schema = new Schema<IChatRoom>(
   {

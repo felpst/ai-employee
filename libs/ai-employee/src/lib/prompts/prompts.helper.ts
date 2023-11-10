@@ -16,7 +16,7 @@ import {
   PartialValues,
 } from 'langchain/schema';
 import { Tool } from 'langchain/tools';
-import { Profile } from '../interfaces';
+import { Profile } from '../modules';
 
 const formatIdentity = (profile: Profile) =>
   `Your name is ${profile.name || 'Atlas'}. Your a ${profile.role || 'Assistant'
