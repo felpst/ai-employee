@@ -126,7 +126,10 @@
             <div class="item" *ngFor="let item of users">
               <div class="item-delete">
                 <span>{{ item.name }}</span>
-                <mat-icon svgIcon="delete"></mat-icon>
+                <mat-icon
+                  svgIcon="delete"
+                  (click)="onRemoveUser(item)"
+                ></mat-icon>
               </div>
 
               <div class="item-user">

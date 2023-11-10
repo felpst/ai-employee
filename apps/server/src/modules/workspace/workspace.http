@@ -7,7 +7,7 @@
 POST {{baseUrl}}/auth/login
 Content-Type: application/json
 
-{ "email": "{{email}}", "password": "{{password}}" }
+{ "email": "fragosooliveira773@gmail.com", "password": "@Gabriel127" }
 
 ### authToken
 
@@ -49,7 +49,12 @@ Content-Type: application/json
 Authorization: Bearer {{$authToken}}
 
 {
-  "description": "Description Test - Edited"
+  "users": [
+    "64f70eab7fc12188010bdbbf",
+    "64f70ebf7fc12188010bdbc1",
+    "6508b5f675f3ccdaa673fd76",
+    "651c9f06240ac9e7d5145a65"
+  ]
 }
 
 ### Delete ###
