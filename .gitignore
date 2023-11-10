@@ -50,5 +50,6 @@ docs
 #python
 .venv
 *.pyc
-tempCodeRunnerFile
+__pycache__/
+
 
