@@ -1,4 +1,4 @@
-from model import Model
+from ..model.azure_model import Model
 from langchain.agents.agent_types import AgentType
 from langchain.agents import create_sql_agent
 from langchain.agents.agent_toolkits import SQLDatabaseToolkit
@@ -27,7 +27,4 @@ class SqlTool:
         )
 
     def run(self, string):
-        self._agent_executor.run(string)
-
-
-SqlTool().run("Who are the top 3 best selling artists?")
+        return self._agent_executor.run(string)
