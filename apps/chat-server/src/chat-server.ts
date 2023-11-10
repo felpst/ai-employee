@@ -2,6 +2,8 @@ import { AIEmployeeAgent } from "@cognum/ai-employee";
 import { ChatMessageCreate, ChatMessageRepository, ChatRoomRepository } from "@cognum/chat";
 import { IAIEmployee, IUser } from "@cognum/interfaces";
 import { IncomingMessage } from "http";
+import { SerpAPI } from "langchain/tools";
+import { Calculator } from "langchain/tools/calculator";
 import * as url from 'url';
 import { webSocketService } from "./services/websocket.service";
 import { AuthConfirm } from "./usecases/chat/auth-confirm";
@@ -52,12 +54,17 @@ export class ChatServer {
         const aiEmployee = chatRoom.aiEmployee as IAIEmployee;
         conn.setAIEmployee(aiEmployee);
 
-        // Load
+        // Load Agent
+
         const agent = new AIEmployeeAgent({
           profile: {
             name: aiEmployee.name,
             role: aiEmployee.role,
           },
+          tools: [
+            new SerpAPI(process.env.SERPAPI_API_KEY),
+            new Calculator(),
+          ]
         });
         conn.setAgent(agent);
 

@@ -38,7 +38,7 @@ class ModelController<T extends Model<any>> {
   public async getById(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       this._repository = new RepositoryHelper(this.model, req['userId']);
-      const data = await this._repository.getById(req.params.id);
+      const data = await this._repository.getById(req.params.id, req.query);
       res.json(data);
     } catch (error) {
       next(error);
