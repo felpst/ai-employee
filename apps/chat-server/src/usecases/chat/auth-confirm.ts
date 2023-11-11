@@ -9,7 +9,7 @@ export class AuthConfirm {
   ) { }
 
   execute(conn: Connection, user: IUser) {
-    console.log(`User ${user.name} authenticated`);
+    // console.log(`User ${user.name} authenticated`);
     this.messageSend.execute(conn, {
       type: 'auth',
       content: {

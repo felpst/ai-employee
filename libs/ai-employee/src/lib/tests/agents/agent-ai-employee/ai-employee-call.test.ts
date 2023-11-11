@@ -11,6 +11,7 @@ describe('aiEmployeeCall', () => {
 
   const repository = new AIEmployeeRepository(process.env.USER_ID);
   let aiEmployee: IAIEmployee;
+  let agent: AgentAIEmployee;
   let useCase: AIEmployeeCall;
 
   beforeAll(async () => {
@@ -23,12 +24,14 @@ describe('aiEmployeeCall', () => {
       tools: ['calculator', 'random-number-generator', 'mail-sender'],
     }) as IAIEmployee
 
-    const agent = await new AgentAIEmployee(aiEmployee).init();
+    agent = await new AgentAIEmployee(aiEmployee).init();
     useCase = new AIEmployeeCall(agent);
   })
 
   it('should return a successful response of name', async () => {
     const response = await useCase.execute('What is your name?');
+    // const response = await useCase.execute('Escreva um poema sobre ratos e gatos.');
+    console.log(agent.processes);
     expect(response).toContain('Adam');
   });
 

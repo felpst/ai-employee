@@ -2,7 +2,6 @@ import { HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { IAIEmployee, IChatRoom } from '@cognum/interfaces';
 import { Observable } from 'rxjs';
-import { AuthService } from '../../../auth/auth.service';
 import { CoreApiService } from '../../../services/apis/core-api.service';
 
 export interface ICategorizedChats {
@@ -18,11 +17,13 @@ export interface ICategorizedChats {
 export class ChatsService {
   private route = 'chats';
   chats: Map<string, IChatRoom> = new Map<string, IChatRoom>();
+  categorizedChats: ICategorizedChats;
 
   constructor(
-    private coreApiService: CoreApiService,
-    private authService: AuthService
-  ) { }
+    private coreApiService: CoreApiService
+  ) {
+    this.categorizedChats = this.categorizedList();
+  }
 
   load(aiEmployee: IAIEmployee): Observable<IChatRoom[]> {
     let params = new HttpParams();

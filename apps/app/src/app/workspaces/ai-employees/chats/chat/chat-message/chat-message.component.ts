@@ -1,6 +1,6 @@
 import { Component, Input } from "@angular/core";
 import { IAIEmployee, IChatMessage, IUser } from "@cognum/interfaces";
-import { UtilsService } from "apps/app/src/app/services/utils/utils.service";
+import { UtilsService } from "../../../../../services/utils/utils.service";
 import { ChatService } from "../chat.service";
 
 @Component({
@@ -9,11 +9,11 @@ import { ChatService } from "../chat.service";
   styleUrls: ['./chat-message.component.scss'],
 })
 export class ChatMessageComponent {
-  @Input() message!: IChatMessage;
+  @Input() message!: Partial<IChatMessage>;
 
   constructor(
     public utilsService: UtilsService,
-    private chatServices: ChatService
+    private chatServices: ChatService,
   ) { }
 
   get sender() {

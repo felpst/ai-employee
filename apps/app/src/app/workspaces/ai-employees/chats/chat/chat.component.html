@@ -34,6 +34,10 @@
           [message]="message"
           *ngFor="let message of chatService.messages"
         ></cognum-chat-message>
+        <cognum-chat-message
+          *ngIf="chatService.tempMessage"
+          [message]="chatService.tempMessage"
+        ></cognum-chat-message>
       </div>
 
       <!-- <div

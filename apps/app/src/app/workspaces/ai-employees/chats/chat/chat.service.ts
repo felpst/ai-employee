@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { IAIEmployee, IChatRoom, IUser } from '@cognum/interfaces';
+import { IAIEmployee, IChatMessage, IChatRoom, IUser } from '@cognum/interfaces';
 import { Observable } from 'rxjs';
 import { env } from '../../../../../environments/environment';
 import { AuthService } from '../../../../auth/auth.service';
@@ -18,6 +18,7 @@ export class ChatService {
   selectedChat!: IChatRoom;
   messages: any[] = [];
   senders = new Map<string, IUser | IAIEmployee>();
+  tempMessage!: undefined | Partial<IChatMessage>;
 
   user: any = null;
   aiEmployee: any = null;
@@ -115,6 +116,31 @@ export class ChatService {
         // }
 
         this.messages.push(data);
+      },
+      handleLLMNewToken: (content: any) => {
+        this.tempMessage = {
+          content,
+          sender: this.selectedChat.aiEmployee,
+          role: 'bot',
+          chatRoom: this.selectedChat._id,
+          createdAt: new Date(),
+        } as Partial<IChatMessage>;
+      },
+      handleChainEnd: (data: any) => {
+        this.tempMessage = undefined;
+      },
+      handleLLMNewTokenChatName: (chatName: string) => {
+        if (this.selectedChat.name === 'New chat') {
+          this.selectedChat.name = '';
+        }
+        this.selectedChat.name = this.selectedChat.name + chatName;
+        this.chatsService.chats.set(this.selectedChat._id as string, this.selectedChat);
+        this.chatsService.categorizedChats = this.chatsService.categorizedList();
+      },
+      handleEndChatName: (chatName: string) => {
+        this.selectedChat.name = chatName;
+        this.chatsService.chats.set(this.selectedChat._id as string, this.selectedChat);
+        this.chatsService.categorizedChats = this.chatsService.categorizedList();
       },
       newToken: (data: any) => {
         if (data.type === 'message') {

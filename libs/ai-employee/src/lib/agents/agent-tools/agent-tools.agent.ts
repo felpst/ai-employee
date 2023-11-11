@@ -4,10 +4,11 @@ import { AgentExecutor, initializeAgentExecutorWithOptions } from "langchain/age
 import { BufferMemory } from "langchain/memory";
 import { MessagesPlaceholder } from "langchain/prompts";
 import { AIEmployeeTools } from "../../tools/ai-employee-tools";
-import { Agent } from '../interfaces/agent.interface';
+import { Agent, CallProcess } from '../interfaces/agent.interface';
 
 export class AgentTools implements Agent {
   _executor: AgentExecutor;
+  processes: CallProcess[];
 
   constructor(
     private aiEmployee: IAIEmployee,

@@ -10,14 +10,12 @@
         matTooltip="{{ message.createdAt | date : 'MM-dd-yyyy HH:mm:ss' }}"
         matTooltipPosition="above"
       >
-        {{ utilsService.timeDifference(message.updatedAt) }}
+        {{ utilsService.timeDifference(message.createdAt) }}
       </div>
     </div>
 
-    <div class="message">
-      <markdown>
-        {{ message.content }}
-      </markdown>
+    <div class="message" *ngIf="message.content">
+      <markdown [data]="message.content"></markdown>
     </div>
   </div>
 </div>

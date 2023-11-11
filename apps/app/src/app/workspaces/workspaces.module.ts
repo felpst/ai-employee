@@ -11,7 +11,6 @@ import { MatListModule } from '@angular/material/list';
 import { MatSelectModule } from '@angular/material/select';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { MarkdownModule } from 'ngx-markdown';
 import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { LayoutsModule } from '../layouts/layouts.module';
 import { SharedModule } from '../shared/shared.module';
@@ -40,7 +39,6 @@ import { WorkspacesComponent } from './workspaces.components';
     CommonModule,
     WorkspacesRoutingModule,
     FormsModule,
-    MarkdownModule,
     MatIconModule,
     MatButtonModule,
     SettingsWorkspaceModule,
@@ -57,7 +55,6 @@ import { WorkspacesComponent } from './workspaces.components';
     SettingsWorkspaceModule,
     MatToolbarModule,
     SharedModule
-
   ],
 })
-export class WorkspacesModule {}
+export class WorkspacesModule { }

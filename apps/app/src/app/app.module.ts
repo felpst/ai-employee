@@ -29,8 +29,9 @@ import { SharedModule } from './shared/shared.module';
     MatButtonModule,
     MatSnackBarModule,
     MatToolbarModule,
+    MarkdownModule.forRoot(),
   ],
   providers: [],
   bootstrap: [AppComponent]
 })
-export class AppModule {}
+export class AppModule { }

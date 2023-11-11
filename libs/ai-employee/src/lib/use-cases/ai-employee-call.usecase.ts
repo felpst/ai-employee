@@ -8,14 +8,6 @@ export class AIEmployeeCall {
   ) { }
 
   async execute(input: string, callbacks?: any) {
-    if (!callbacks) callbacks = [];
-
-    callbacks.push({
-      handleLLMNewToken: (token: string) => {
-        // console.log("token", { token });
-      }
-    })
-
     const response = await this.aiEmployeeAgent.call(input, callbacks);
     return response;
   }

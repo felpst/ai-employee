@@ -31,7 +31,9 @@
               >
                 <div class="content">
                   <div>
-                    {{ chat.name || 'New chat' }}
+                    <div class="truncate">
+                      {{ chat.name || 'New chat' }}
+                    </div>
                   </div>
                   <div class="actions">
                     <mat-icon (click)="$event.stopPropagation(); onDelete(chat)"

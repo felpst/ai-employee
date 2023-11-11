@@ -31,7 +31,6 @@ import { ChatsComponent } from './chats.component';
     CommonModule,
     ChatsRoutingModule,
     FormsModule,
-    MarkdownModule,
     MatIconModule,
     MatButtonModule,
     MatListModule,
@@ -43,7 +42,8 @@ import { ChatsComponent } from './chats.component';
     ReactiveFormsModule,
     NgxSkeletonLoaderModule,
     LayoutsModule,
-    SharedModule
+    SharedModule,
+    MarkdownModule.forChild()
   ],
 })
 export class ChatsModule { }

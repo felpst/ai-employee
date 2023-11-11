@@ -15,9 +15,9 @@ export class AIEmployeesResolver {
     private chatsService: ChatsService,
     private workspacesService: WorkspacesService,
     private aiEmployeesService: AIEmployeesService
-  ) {}
+  ) { }
 
   resolve(): Observable<IAIEmployeeWithChats[]> {
-    return this.aiEmployeesService.load(this.workspacesService.selectedWorkspace);
+    return this.aiEmployeesService.load(this.workspacesService.selectedWorkspace, 2);
   }
 }

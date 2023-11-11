@@ -6,9 +6,11 @@ import { BaseChatMessageHistory } from "langchain/schema";
 import { DynamicTool } from "langchain/tools";
 import { AgentTools } from "../agent-tools/agent-tools.agent";
 import { Agent } from "../interfaces/agent.interface";
+import { AgentAIEmployeeHandlers } from "./agent-ai-employee-handlers.handler";
 
 export class AgentAIEmployee implements Agent {
   _executor: AgentExecutor;
+  handlers = new AgentAIEmployeeHandlers();
 
   constructor(
     private aiEmployee: IAIEmployee,
@@ -22,7 +24,7 @@ export class AgentAIEmployee implements Agent {
 
     this._executor = await initializeAgentExecutorWithOptions(tools, model, {
       agentType: "chat-conversational-react-description",
-      verbose: true,
+      // verbose: true,
       memory: new BufferMemory({
         memoryKey: "chat_history",
         returnMessages: true,
@@ -34,6 +36,10 @@ export class AgentAIEmployee implements Agent {
     });
 
     return this;
+  }
+
+  get processes() {
+    return this.handlers.processes;
   }
 
   getTools() {
@@ -70,7 +76,7 @@ export class AgentAIEmployee implements Agent {
   }
 
   async call(input: string, callbacks: unknown[] = []) {
-    const chainValues = await this._executor.call({ input }, [...callbacks]);
+    const chainValues = await this._executor.call({ input }, [...callbacks, this.handlers]);
     const response = chainValues.output;
     return response;
   }
