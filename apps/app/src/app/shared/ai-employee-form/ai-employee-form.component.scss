@@ -13,6 +13,7 @@
 
   .avatar {
     display: flex;
+    flex-wrap: wrap;
     gap: 20px;
   }
 
@@ -22,7 +23,7 @@
 
   .avatar-selected {
     border: 2px solid #14b8a6;
-    width: 44px;
+    width: 68px;
   }
 
   .inform-style {

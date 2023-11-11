@@ -14,7 +14,18 @@ export class AIEmployeeFormComponent {
   @Output() emitter = new EventEmitter();
   aiEmployeeForm!: FormGroup;
   availableAvatars = [
-    'https://storage.googleapis.com/cognum-data-sources/avatars/photo.svg',
+    'https://storage.googleapis.com/factory-assets/avatars/Avatar1.jpeg',
+    'https://storage.googleapis.com/factory-assets/avatars/Avatar2.jpeg',
+    'https://storage.googleapis.com/factory-assets/avatars/Avatar3.jpeg',
+    'https://storage.googleapis.com/factory-assets/avatars/Avatar4.jpeg',
+    'https://storage.googleapis.com/factory-assets/avatars/Avatar5.jpeg',
+    'https://storage.googleapis.com/factory-assets/avatars/Avatar6.jpeg',
+    'https://storage.googleapis.com/factory-assets/avatars/Avatar7.jpeg',
+    'https://storage.googleapis.com/factory-assets/avatars/Avatar8.jpeg',
+    'https://storage.googleapis.com/factory-assets/avatars/Avatar9.jpeg',
+    'https://storage.googleapis.com/factory-assets/avatars/Avatar10.jpeg',
+    'https://storage.googleapis.com/factory-assets/avatars/Avatar11.jpeg'
+
   ];
   selectedAvatar: string | null = null;
   isLoading = false;
