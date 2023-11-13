@@ -30,7 +30,7 @@ export class UsersAvatarComponent implements OnInit {
       if (!user) continue;
       this.avatars.push({
         _id: user._id,
-        initials: user.name.charAt(0),
+        initials: user.name?.charAt(0) || '',
         photo: this.imageURL(user),
         backgroundColor: this.getRandomColorFromSet(),
         name: user.name,
