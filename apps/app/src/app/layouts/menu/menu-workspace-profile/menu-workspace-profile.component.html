@@ -20,6 +20,7 @@
   (closed)="isActivedMenu = false"
 >
   <button
+    *ngIf="isAdmin"
     [routerLink]="['/', 'workspaces', workspace._id, 'settings']"
     mat-menu-item
   >

@@ -7,5 +7,5 @@ export interface IWorkspace extends DefaultModel {
   photo?: string;
   accessLink?: string;
   private?: boolean;
-  users: string[] | IUser[];
+  users: { user: string | IUser, permission: 'Admin' | 'Employee' }[];
 }

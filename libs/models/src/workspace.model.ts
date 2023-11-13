@@ -9,7 +9,12 @@ const schema = new Schema<IWorkspace>({
   accessLink: { type: String },
   photo: { type: String },
   private: { type: Boolean },
-  users: [{ type: Schema.Types.ObjectId, ref: 'User' }],
+  users: [
+    {
+      user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+      permission: { type: String, required: true, enum: ['Admin', 'Employee'] },
+    },
+  ],
   ...defaultSchemaProps,
 });
 triggers(schema);
