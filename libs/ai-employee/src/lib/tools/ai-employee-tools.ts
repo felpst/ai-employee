@@ -1,11 +1,11 @@
 import { MailSenderTool } from "@cognum/tools";
-import { DynamicStructuredTool, Tool } from "langchain/tools";
+import { DynamicStructuredTool, SerpAPI, Tool } from "langchain/tools";
 import { Calculator } from "langchain/tools/calculator";
 import { z } from "zod";
 
 export class AIEmployeeTools {
 
-  static get(toolsIds: string[]) {
+  static get(toolsIds: string[] = []) {
     const tools: Tool[] = [];
 
     for (const id of toolsIds) {
@@ -17,6 +17,7 @@ export class AIEmployeeTools {
 
   private static get tools() {
     return {
+      'serp-api': new SerpAPI(),
       calculator: new Calculator(),
       'random-number-generator': new DynamicStructuredTool({
         name: "random-number-generator",

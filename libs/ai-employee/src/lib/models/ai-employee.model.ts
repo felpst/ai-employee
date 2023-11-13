@@ -8,7 +8,7 @@ const schema = new Schema<IAIEmployee>(
     role: { type: String, default: 'Assistant' },
     avatar: { type: String, default: 'https://storage.googleapis.com/factory-assets/avatars/Avatar1.jpeg' },
     workspace: { type: Schema.Types.ObjectId, ref: 'Workspace' },
-    tools: [{ type: String }],
+    tools: [{ type: String, default: [] }],
     ...defaultSchemaProps,
   },
   {

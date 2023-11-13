@@ -21,7 +21,7 @@ describe('aiEmployeeCall', () => {
     aiEmployee = await repository.create({
       name: 'Adam',
       role: 'Software Engineer',
-      tools: ['calculator', 'random-number-generator', 'mail-sender'],
+      tools: ['calculator', 'random-number-generator', 'mail-sender', 'serp-api'],
     }) as IAIEmployee
 
     agent = await new AgentAIEmployee(aiEmployee).init();

@@ -61,18 +61,19 @@ export class AIEmployeeFormComponent {
     this.isLoading = true;
     const workspace = this.workspacesService.selectedWorkspace._id;
     const { name, description: role, avatar } = this.aiEmployeeForm.value;
+    const tools = ['calculator', 'random-number-generator', 'mail-sender', 'serp-api']
     return this.employeeService
-      .create({ name, role, avatar, workspace })
+      .create({ name, role, avatar, workspace, tools })
       .subscribe(
         (_: any) => {
-          this.notificationsService.show('Workspace created successfully');
+          this.notificationsService.show('AI Employee created successfully');
           this.isLoading = false;
           this.emitter.emit('Finish');
         },
         (error: any) => {
-          console.error('Error creating Workspace:', error);
+          console.error('Error creating AI Employee:', error);
           this.notificationsService.show(
-            'Error creating Workspace. Please try again.'
+            'Error creating AI Employee. Please try again.'
           );
           this.isLoading = false;
         }
