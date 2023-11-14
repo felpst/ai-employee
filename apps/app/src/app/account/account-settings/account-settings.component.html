@@ -12,10 +12,10 @@
       <button (click)="onRedirect()">
         <mat-icon svgIcon="arrow-left"></mat-icon>
       </button>
-      <div style="display: flex; align-items: center; gap: 2px">
+      <div style="display: flex; align-items: center; gap: 2px;">
         <img
           class="image-style"
-          [src]="selectedImage || image"
+          [src]="selectedImage || image || defaultImage"
           alt="User Image"
         />
         <span>{{ name }}</span>
@@ -47,45 +47,49 @@
           class="container-group"
           enctype="multipart/form-data"
         >
-          <span class="workspace-image">Your profile photo (optional)</span>
-          <div class="image-group">
-            <div>
-              <label for="profilePhotoInput" class="image-label">
-                <img
-                  class="image"
-                  src="{{ selectedImage || image }}"
-                  alt="User Image"
-                />
-              </label>
-              <input
-                style="display: none"
-                type="file"
-                id="profilePhotoInput"
-                name="profilePhoto"
-                (change)="onFileSelected($event, 'users', 'photo')"
-              />
-            </div>
-            <span>Help teammates know that you are the right person.</span>
-          </div>
-
-          <div>
+          <div class="input-container">
             <div style="flex-direction: column" class="input">
               <span>Your name</span>
               <div style="display: flex; gap: 2px">
                 <input
                   type="text"
-                  placeholder="Felipe Telles"
                   formControlName="name"
                   [value]="name"
                 />
-                <button class="button" type="submit">Submit</button>
+                <!-- <button class="button" type="submit">Submit</button> -->
               </div>
+            </div>
+          </div>
+          <div class="img-container">
+            <span class="workspace-image">Your profile photo (optional)</span>
+            <div class="image-group">
+              <div class="image-label">
+                <label for="profilePhotoInput" class="image-label">
+                  <img
+                    class="image"
+                    src="{{ selectedImage || image || defaultImage }}"
+                    alt="User Image"
+                  />
+                  <div class="upload-file">
+                    <mat-icon svgIcon="upload-file">Change</mat-icon>
+                    <p>Change</p>
+                  </div>
+                </label>
+                <input
+                  style="display: none"
+                  type="file"
+                  id="profilePhotoInput"
+                  name="profilePhoto"
+                  (change)="onFileSelected($event, 'users', 'photo')"
+                />
+              </div>
+              <span>Help teammates know that you are the right person.</span>
             </div>
           </div>
         </form>
         <div class="footer">
           <div>
-            <span>Delete your account</span>
+            <span class="footer-title">Delete your account</span>
             <button class="button" (click)="openDeleteAccountModal()">
               delete it
             </button>

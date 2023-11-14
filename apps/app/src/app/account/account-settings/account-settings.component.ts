@@ -4,14 +4,13 @@ import {
   AbstractControl,
   FormBuilder,
   ValidationErrors,
-  Validators,
+  Validators
 } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '../../auth/auth.service';
 import { NotificationsService } from '../../services/notifications/notifications.service';
 import { UploadsService } from '../../services/uploads/uploads.service';
 import { UsersService } from '../../services/users/users.service';
-
 @Component({
   selector: 'cognum-account-settings',
   templateUrl: './account-settings.component.html',
@@ -31,6 +30,7 @@ export class AccountSettingsComponent implements OnInit {
   image = '';
   selectedImage: string | null = null;
   workspaceId: string | null = null;
+  defaultImage: string = 'assets/icons/user.svg';
 
   constructor(
     private location: Location,
@@ -39,7 +39,8 @@ export class AccountSettingsComponent implements OnInit {
     private router: Router,
     private notificationsService: NotificationsService,
     private usersService: UsersService,
-    private uploadsService: UploadsService
+    private uploadsService: UploadsService,
+    private route: ActivatedRoute
   ) {
     this.updateForm.valueChanges.subscribe(() => {
       this.showUpdateError = false;
@@ -55,12 +56,14 @@ export class AccountSettingsComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.usersService.getById(this.user._id).subscribe({
-      next: (response: any) => {
-        this.image = response.photo;
-        this.name = response.name;
-      },
-    });
+    const resolvedData = this.route.snapshot.data;
+    if (resolvedData && resolvedData[0]) {
+      this.updateForm.patchValue({
+        name: resolvedData[0].name,
+      });
+      this.name = resolvedData[0].name;
+      this.image = resolvedData[0].photo;
+    }
   }
 
   confirmDeleteAccount() {

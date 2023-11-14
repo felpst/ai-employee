@@ -8,7 +8,8 @@ import { CoreApiService } from '../apis/core-api.service';
 })
 export class UsersService {
   private route = 'users';
-  constructor(private coreApiService: CoreApiService) {}
+  user!: IUser;
+  constructor(private coreApiService: CoreApiService) { }
 
   getById(userId: string) {
     return this.coreApiService.get(`users/${userId}`);
