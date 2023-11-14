@@ -47,7 +47,7 @@ export class MenuComponent implements OnDestroy {
   }
 
   get users(): IUser[] {
-    return this.workspacesService.selectedWorkspace.users as IUser[];
+    return this.workspacesService.selectedWorkspace.users.map(({ user }) => user) as IUser[]
   }
 
   get workspace() {

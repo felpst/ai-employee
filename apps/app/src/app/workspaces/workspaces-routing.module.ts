@@ -5,6 +5,7 @@ import { WorkspaceHistoryComponent } from './history/workspace-history.component
 import { WorkspaceHistoryResolver } from './history/workspace-history.resolver';
 import { KnowledgeBaseComponent } from './knowledge-base/knowledge-base.component';
 import { SettingsWorkspaceComponent } from './settings-workspace/settings-workspace.component';
+import { SettingsTeamFormComponent } from './settings-workspace/team-form/team-form.component';
 import { WorkspaceOnboardingAIEmployeeComponent } from './workspace-onboarding/workspace-onboarding-ai-employee/workspace-onboarding-ai-employee.component';
 import { WorkspaceOnboardingWorkspaceComponent } from './workspace-onboarding/workspace-onboarding-workspace/workspace-onboarding-workspace.component';
 import { WorkspaceOnboardingYourTeamComponent } from './workspace-onboarding/workspace-onboarding-your-team/workspace-onboarding-your-team.component';
@@ -47,6 +48,16 @@ const routes: Routes = [
       {
         path: 'settings',
         component: SettingsWorkspaceComponent,
+        children: [
+          // TODO general component
+
+          {
+            path: 'team',
+            data: { nav: { select: 1 } },
+            component: SettingsTeamFormComponent,
+          },
+          { path: '**', redirectTo: 'team', pathMatch: 'full' },
+        ],
       },
       // Admin
       {
@@ -67,7 +78,7 @@ const routes: Routes = [
           {
             path: 'history',
             resolve: [WorkspaceHistoryResolver],
-            component:  WorkspaceHistoryComponent,
+            component: WorkspaceHistoryComponent,
           },
           {
             path: 'knowledge-base',
@@ -85,4 +96,4 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
 })
-export class WorkspacesRoutingModule {}
+export class WorkspacesRoutingModule { }

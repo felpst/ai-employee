@@ -1,0 +1,11 @@
+<nav class="nav">
+  <span
+    class="nav-item"
+    *ngFor="let nav of navs; let i = index"
+    [ngClass]="{ selected: selected.routerLink === nav.routerLink }"
+    [routerLink]="nav.routerLink"
+    (click)="onSelectStep(i)"
+    matRipple
+    >{{ nav.title }}</span
+  >
+</nav>

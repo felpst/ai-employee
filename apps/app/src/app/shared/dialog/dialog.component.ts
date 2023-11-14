@@ -11,7 +11,7 @@ export class DialogComponent {
   @Input() content = '';
   @Input() confirmText = '';
 
-  constructor(@Inject(MAT_DIALOG_DATA) public data: any) {
+  constructor(@Inject(MAT_DIALOG_DATA) public data: { title: string, content: string, confirmText: string }) {
     Object.assign(this, data);
   }
 }

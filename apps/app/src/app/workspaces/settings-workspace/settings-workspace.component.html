@@ -1,158 +1,26 @@
-<header class="header">
-  <nav>
-    <div class="workspace-info-group">
-      <button [routerLink]="['/workspaces', workspace._id]">
-        <mat-icon svgIcon="arrow-left"></mat-icon>
-      </button>
+<cognum-header
+  [logo]="workspace.photo || '../../../assets/icons/icon.png'"
+  [title]="workspace.name || 'cognum'"
+  [showBackButton]="true"
+>
+  <ng-container right>
+    <cognum-users-avatar [users]="[user]"></cognum-users-avatar>
+    {{ user.name }}
+  </ng-container>
+</cognum-header>
 
-      <span class="workspace-name">{{ workspace.name || 'Workspace' }}</span>
-    </div>
-    <div class="user-details">
-      <img class="imageProfile" [src]="user.photo" alt="" />
-      <span>{{ user.name }}</span>
-    </div>
-  </nav>
-</header>
 <div class="body">
   <div class="description">
     <h1>Settings</h1>
-    <span>Adjust workspace-wide settings and preferences here for potato</span>
-  </div>
-  <div class="settings">
-    <nav>
-      <span
-        class="item"
-        [class.selected]="selectedItem === 1"
-        (click)="selectItem(1)"
-        >General</span
-      >
-      <span
-        class="item"
-        [class.selected]="selectedItem === 2"
-        (click)="selectItem(2)"
-        >Members and Permissions</span
-      >
-    </nav>
-    <div class="content">
-      <ng-container *ngIf="selectedItem === 1">
-        <form
-          [formGroup]="updateForm"
-          enctype="multipart/form-data"
-          (ngSubmit)="onSubmit()"
-          class="container-group"
-        >
-          <span class="workspace-image">Workspace photo (optional)</span>
-          <div class="image-group">
-            <div>
-              <label for="workspacePhotoInput" class="image-label">
-                <img
-                  class="image"
-                  [src]="selectedImage || workspace.photo"
-                  alt="User Image"
-                />
-              </label>
-              <input
-                style="display: none"
-                type="file"
-                id="workspacePhotoInput"
-                name="workspacePhoto"
-                (change)="onFileSelected($event)"
-              />
-            </div>
-            <span>Help teammates know that this is right place.</span>
-          </div>
-
-          <div>
-            <div class="input">
-              <span>Company or team name</span>
-              <div>
-                <input
-                  type="text"
-                  placeholder="potato"
-                  [value]="workspace.name"
-                />
-                <button class="submit-button">
-                  <mat-icon svgIcon="button-submit"></mat-icon>
-                </button>
-              </div>
-            </div>
-          </div>
-        </form>
-        <div class="footer">
-          <div>
-            <span>Delete workspace</span>
-            <button (click)="onModal(true)" class="delete">delete it</button>
-            <div *ngIf="modal" class="item-modal">
-              <mat-icon svgIcon="delete-red"></mat-icon>
-              <h1>Are you sure you want to delete this workspace?</h1>
-              <div>
-                <button (click)="onModal(false)" class="button-no">No</button>
-                <button (click)="onDelete()" type="submit" class="button-yes">
-                  Yes
-                </button>
-              </div>
-            </div>
-          </div>
-          <span class="footer-description"
-            >Lorem ipsum dolor sit amet consectetur. Amet a faucibus
-            pellentesque posuere.
-          </span>
-        </div>
-      </ng-container>
-
-      <ng-container *ngIf="selectedItem === 2">
-        <div [formGroup]="teamForm" class="container-group">
-          <span>Add a new workspace member</span>
-          <div class="input">
-            <div>
-              <input
-                formControlName="email"
-                type="email"
-                placeholder="potato"
-                #inputEmail
-              />
-              <select
-                class="form-select no-focus-outline"
-                aria-label="Default select example"
-              >
-                <option value="1">Admin</option>
-              </select>
-              <button (click)="onAddUser()" type="submit" class="submit-button">
-                <mat-icon svgIcon="button-submit"></mat-icon>
-              </button>
-            </div>
-          </div>
-          <div class="item-scroll">
-            <div class="item" *ngFor="let item of users">
-              <div class="item-delete">
-                <span>{{ item.name }}</span>
-                <mat-icon
-                  svgIcon="delete"
-                  (click)="onRemoveUser(item)"
-                ></mat-icon>
-              </div>
-
-              <div class="item-user">
-                <div class="item-email">
-                  <img
-                    *ngIf="item.photo"
-                    [src]="item.photo"
-                    class="image-style"
-                    alt="User Image"
-                  />
-                  <span>{{ item.email }}</span>
-                </div>
-                <select
-                  class="form-select no-focus-outline"
-                  aria-label="Default select example"
-                >
-                  <option value="1">Admin</option>
-                </select>
-              </div>
-            </div>
-          </div>
-        </div>
-      </ng-container>
+    <span
+      >Adjust workspace-wide settings and preferences here for
+      {{ workspace.name || 'Workspace' }}</span
+    >
+    <div class="cognum-white-content-w720 without-padding">
+      <div class="cognum-mb-0">
+        <cognum-tab-navigator [navs]="navs"></cognum-tab-navigator>
+      </div>
+      <router-outlet></router-outlet>
     </div>
   </div>
 </div>
