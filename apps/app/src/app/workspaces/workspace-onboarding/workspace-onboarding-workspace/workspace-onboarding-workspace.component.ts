@@ -1,14 +1,13 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import {
-  AbstractControl,
   FormBuilder,
   FormGroup,
-  ValidationErrors,
-  Validators,
+  Validators
 } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { IWorkspace } from '@cognum/interfaces';
 import { UploadsService } from '../../../services/uploads/uploads.service';
+import { validatorFile } from '../../../shared/validations';
 import { WorkspacesService } from '../../workspaces.service';
 
 @Component({
@@ -55,28 +54,6 @@ export class WorkspaceOnboardingWorkspaceComponent implements OnInit {
     }
   }
 
-  validatorFile(control: AbstractControl): ValidationErrors | null {
-    const file = control.value;
-    if (!file) return null;
-    const { name, type, size } = file;
-    // Maximum size: 10MB
-    const maxFileSize = 10 * 1024 * 1024;
-    const validFileTypes = [
-      'image/jpeg',
-      'image/png',
-      'application/octet-stream',
-    ];
-    const conditionType =
-      !validFileTypes.includes(type) ||
-      !/jpg$|jpeg$|png$|svg$/g.test(name.toLowerCase());
-    const conditionSize = size > maxFileSize || size <= 0;
-
-    if (conditionType)
-      return { invalidFormat: 'Valid formats: .png, .jpg, .jpeg and .svg' };
-    if (conditionSize) return { invalidSize: 'Maximum size: 10MB' };
-    return null;
-  }
-
   onFileSelected(event: any, folder: string, fieldName = 'avatar') {
     try {
       const [file] = event.target.files;
@@ -87,7 +64,7 @@ export class WorkspaceOnboardingWorkspaceComponent implements OnInit {
         this.selectedImage = URL.createObjectURL(file);
         const control = this.workspaceForm.get('photo');
         control?.patchValue(file);
-        control?.setValidators(this.validatorFile);
+        control?.setValidators(validatorFile);
         control?.updateValueAndValidity();
         this.photo = file;
         this.uploadsService
@@ -118,6 +95,7 @@ export class WorkspaceOnboardingWorkspaceComponent implements OnInit {
     if (!this.workspaceForm.valid) return;
     const data: Partial<IWorkspace> = this.workspaceForm.value;
     data._id = this.workspace._id;
+    data.photo = this.workspace.photo;
     return this.workspacesService
       .update(data)
       .subscribe((workspace) => {

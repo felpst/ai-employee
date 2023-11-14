@@ -65,7 +65,8 @@ export class WorkspaceOnboardingYourTeamComponent implements OnInit {
     const _emails = emails
       .split(',')
       .map((email: string) => email.trim())
-      .filter((value: string) => !!value);
+      .filter((value: string) => !!value)
+      .map((email: string) => ({ user: email, permission: 'Employee' }));
 
     if (_emails.length) {
       return this.workspacesService

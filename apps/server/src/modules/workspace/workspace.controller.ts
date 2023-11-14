@@ -33,6 +33,7 @@ export class WorkspaceController extends ModelController<typeof Workspace> {
       });
       const _users = usersInfo.map((userData) => {
         const { email, _id } = userData.toObject();
+        if (_id.toString() === userId) return ({ user: _id, permission: 'Admin' })
         const userPermission = usersInData.find(({ user }: any) => user === email);
         const permission = userPermission ? userPermission.permission : 'Employee'
         return ({ user: _id, permission });
