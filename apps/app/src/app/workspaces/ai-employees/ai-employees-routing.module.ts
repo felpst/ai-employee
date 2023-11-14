@@ -26,7 +26,7 @@ const routes: Routes = [
         path: 'settings',
         component: AIEmployeeSettingsComponent,
       },
-      { path: '**', redirectTo: '', pathMatch: 'full' },
+      { path: '**', redirectTo: 'settings', pathMatch: 'full' },
     ],
   },
   { path: '**', redirectTo: '', pathMatch: 'full' },
@@ -36,4 +36,4 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
 })
-export class AIEmployeesRoutingModule {}
+export class AIEmployeesRoutingModule { }
