@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AdminComponent } from '../layouts/admin/admin.component';
+import { WorkspaceAdminGuard } from './admin.guard';
 import { WorkspaceHistoryComponent } from './history/workspace-history.component';
 import { WorkspaceHistoryResolver } from './history/workspace-history.resolver';
 import { KnowledgeBaseComponent } from './knowledge-base/knowledge-base.component';
@@ -48,6 +49,7 @@ const routes: Routes = [
       {
         path: 'settings',
         component: SettingsWorkspaceComponent,
+        canActivate: [WorkspaceAdminGuard],
         children: [
           // TODO general component
 
