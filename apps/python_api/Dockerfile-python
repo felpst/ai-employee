@@ -1,0 +1,21 @@
+FROM python:3.11-slim as compiler
+ENV PYTHONUNBUFFERED 1
+
+WORKDIR /python-api/
+
+RUN python -m venv /.venv
+ENV PATH="/.venv/bin:$PATH"
+
+COPY ./requirements.txt /python-api/requirements.txt
+RUN pip install --upgrade pip
+RUN pip install -Ur requirements.txt
+
+FROM python:3.11-slim as runner
+WORKDIR /python-api/
+COPY --from=compiler /.venv /.venv
+
+# Enable venv
+ENV PATH="/.venv/bin:$PATH"
+COPY . /python-api/
+CMD ["flask --app", "app", "run"]
+EXPOSE 8585
