@@ -21,7 +21,7 @@ describe('aiEmployeeCall', () => {
     aiEmployee = await repository.create({
       name: 'Adam',
       role: 'Software Engineer',
-      tools: ['calculator', 'random-number-generator', 'mail-sender', 'serp-api'],
+      tools: ['calculator', 'random-number-generator', 'mail-sender', 'serp-api', 'python'],
     }) as IAIEmployee
 
     agent = await new AgentAIEmployee(aiEmployee).init();
@@ -94,6 +94,11 @@ describe('aiEmployeeCall', () => {
     console.log(response);
     expect(response).toBe('NOT_POSSIBLE_TO_EXECUTE_THIS_ACTION')
   });
+
+  it('should return a successful response usign python api tool', async () => {
+    const response = await useCase.execute('What is the 10th fibonacci number?');
+    expect(response).toContain('55');
+  })
 
   afterAll(async () => {
     await repository.delete(aiEmployee._id)

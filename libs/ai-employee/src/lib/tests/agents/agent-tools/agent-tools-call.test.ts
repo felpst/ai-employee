@@ -20,7 +20,7 @@ describe('Agent Tools', () => {
     aiEmployee = await repository.create({
       name: 'Adam',
       role: 'Software Engineer',
-      tools: ['calculator', 'random-number-generator', 'mail-sender', 'serp-api'],
+      tools: ['calculator', 'random-number-generator', 'mail-sender', 'serp-api', 'python'],
     }) as IAIEmployee
 
     const agent = await new AgentTools(aiEmployee).init();
@@ -46,6 +46,11 @@ describe('Agent Tools', () => {
     const response = await useCase.execute('Send email to lineckeramorim@gmail.com with inviting to dinner tomorrow.');
     expect(response).toContain('email has been sent');
   });
+
+  it('should return a successful response usign python api tool', async () => {
+    const response = await useCase.execute('What is the 10th fibonacci number?');
+    expect(response).toContain('55');
+  })
 
   it('should return a response of dont have a tool to execute', async () => {
     const response = await useCase.execute('How is Linecker Amorim?');
