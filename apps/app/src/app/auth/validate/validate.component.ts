@@ -61,7 +61,7 @@ export class ValidateComponent implements OnInit, AfterViewInit {
         this.loadingData = false;
         this.tokenId = tokenId;
       },
-      (_) => {
+      () => {
         this.router.navigate(['auth/register']);
         this.notificationsService.show('Invalid register token.');
       }
@@ -115,7 +115,7 @@ export class ValidateComponent implements OnInit, AfterViewInit {
     const token = this.token.value.join('');
     this.submitting = true;
     this.usersService.verifyToken(this.tokenId, token).subscribe({
-      next: (_) => {
+      next: () => {
         const data = localStorage.getItem(this.cacheInfoData);
         if (data) {
           const { email, password } = JSON.parse(atob(data));
@@ -146,10 +146,10 @@ export class ValidateComponent implements OnInit, AfterViewInit {
   onResend() {
     this.submitting = true;
     this.usersService.resendVerifyToken(this.tokenId, this.email).subscribe(
-      (success) => {
+      () => {
         this.submitting = false;
       },
-      (error) => {
+      () => {
         this.submitting = false;
       }
     );

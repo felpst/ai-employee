@@ -7,21 +7,20 @@ import { AgentAction, AgentFinish, ChainValues } from 'langchain/schema';
 export class LLMCallbackHandler extends BaseCallbackHandler {
   name = 'LLMCallbackHandler';
   private _logsService = new OpenAILogsService();
-  
 
-   async handleLLMStart(
-     _llm: Serialized,
-     _prompts: string[],
-     _runId: string,
-     _parentRunId?: string,
-     extraParams?: Record<string,unknown>,
-     _tags?: string[],
-     _metadata?: Record<string, unknown>,
-     _name?: string
-     ) 
-     {
-    this._logsService.log(extraParams)
-      }
+
+  async handleLLMStart(
+    _llm: Serialized,
+    _prompts: string[],
+    _runId: string,
+    _parentRunId?: string,
+    extraParams?: Record<string, unknown>,
+    _tags?: string[],
+    _metadata?: Record<string, unknown>,
+    _name?: string
+  ) {
+    // this._logsService.log(extraParams)
+  }
 
   async handleChainStart(chain: Serialized) {
     console.log(`Entering new ${chain.id} chain...`);
