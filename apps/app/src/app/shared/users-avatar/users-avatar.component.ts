@@ -39,6 +39,7 @@ export class UsersAvatarComponent implements OnInit {
   }
 
   imageURL(agent: IUser | IAIEmployee): string {
+    if (!agent) return ''
     if ('photo' in agent) {
       return agent.photo as string;
     } else if ('avatar' in agent) {

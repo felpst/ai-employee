@@ -26,7 +26,7 @@
           <div class="file-container">
             <label class="gray-content" for="workspaceFileInput">
               <img
-                *ngIf="!!photo; else withoutFile"
+                *ngIf="!!photo || selectedImage; else withoutFile"
                 class="workspaceImage"
                 [src]="selectedImage || photo"
               />

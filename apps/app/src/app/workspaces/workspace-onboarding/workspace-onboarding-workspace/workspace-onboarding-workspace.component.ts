@@ -32,7 +32,7 @@ export class WorkspaceOnboardingWorkspaceComponent implements OnInit {
   ) {
     this.workspaceForm = this.formBuilder.group({
       name: [this.workspace.name, [Validators.required, Validators.minLength(3)]],
-      photo: [this.photo, []],
+      photo: [this.workspace.photo, []],
     });
 
     this.workspaceForm.valueChanges.subscribe(() => {
@@ -45,12 +45,15 @@ export class WorkspaceOnboardingWorkspaceComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    const { name, accessLink } = this.workspace;
+    const { name, photo, accessLink } = this.workspace;
     if (name !== 'DEFAULT_WORKSPACE') {
       this.workspaceForm.get('name')?.patchValue(name);
     }
     if (accessLink) {
       this.workspaceForm.get('link')?.patchValue(accessLink);
+    }
+    if (photo) {
+      this.selectedImage = photo;
     }
   }
 

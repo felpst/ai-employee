@@ -3,7 +3,7 @@ import { Token, User } from '@cognum/models';
 import * as bcrypt from 'bcrypt';
 import { NextFunction, Request, Response } from 'express';
 import ModelController from '../../controllers/model.controller';
-import emailEmitter from '../../utils/email.utils';
+import { EmailService } from '../../services/email.service';
 import { confirmPasswordResetEmailTemplate } from '../../utils/templates/confirm-reset-password';
 import { registerEmailTemplate } from '../../utils/templates/register';
 import { passwordResetEmailTemplate } from '../../utils/templates/reset-password';
@@ -27,27 +27,25 @@ export class UserController extends ModelController<typeof User> {
     }
   }
 
-  public async register(
+  public async sendEmail(
     req: Request,
     res: Response,
     next: NextFunction
   ): Promise<void> {
+    req.body.email = req.body.email.toLowerCase();
+    req.body.active = true;
+
     try {
-      const { email, password } = req.body;
-      await User.create({
-        email: email.toLowerCase(),
-        password,
-        active: true,
-      });
-      emailEmitter.emit('sendEmail', {
-        to: email,
-        subject: 'Cognum - Register',
+      await EmailService.send({
+        to: req.body.email,
+        subject: 'Welcome to Cognum!',
         html: registerEmailTemplate,
-      });
-      res.status(200).json();
+      })
     } catch (error) {
-      next(error);
+      next(error)
     }
+
+    next();
   }
 
   public async resendTokenRequest(
@@ -82,11 +80,11 @@ export class UserController extends ModelController<typeof User> {
         );
       }
       const html = registerEmailTemplate.replace('{{token}}', doc.token);
-      emailEmitter.emit('sendEmail', {
+      await EmailService.send({
         to: email,
         subject: 'Cognum - Register',
         html,
-      });
+      })
       res.status(200).json();
     } catch (error) {
       next(error);
@@ -171,11 +169,11 @@ export class UserController extends ModelController<typeof User> {
       const html = passwordResetEmailTemplate
         .replace('{{name}}', user.name)
         .replace('{{link}}', link);
-      emailEmitter.emit('sendEmail', {
+      await EmailService.send({
         to: email,
         subject: 'Password reset',
         html,
-      });
+      })
       res.status(201).json();
     } catch (error) {
       next(error);
@@ -248,11 +246,12 @@ export class UserController extends ModelController<typeof User> {
         '{{name}}',
         user.name
       );
-      emailEmitter.emit('sendEmail', {
+
+      await EmailService.send({
         to: email,
         subject: 'Password Changed Successfully',
         html,
-      });
+      })
 
       await Token.findOneAndUpdate(
         { _id: _recovery._id },

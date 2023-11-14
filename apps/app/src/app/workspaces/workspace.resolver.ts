@@ -22,6 +22,7 @@ export class WorkspaceResolver implements Resolve<IWorkspace> {
     const id = route.paramMap.get('id') as string;
     return new Observable((observer) => {
       let params = new HttpParams();
+      params = params.set('select', 'name photo');
       params = params.set('populate[0][path]', 'users.user');
       params = params.set('populate[0][select]', 'name email photo');
 
