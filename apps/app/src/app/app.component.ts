@@ -54,6 +54,12 @@ export class AppComponent {
         )
       ),
       iconRegistry.addSvgIcon(
+        'upload-file',
+        sanitizer.bypassSecurityTrustResourceUrl(
+          '/assets/icons/upload-file.svg'
+        )
+      ),
+      iconRegistry.addSvgIcon(
         'whiteUser',
         sanitizer.bypassSecurityTrustResourceUrl('/assets/icons/whiteUser.svg')
       );
