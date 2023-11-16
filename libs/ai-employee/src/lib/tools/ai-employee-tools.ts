@@ -32,8 +32,8 @@ export class AIEmployeeTools {
       }),
       'mail-sender': new MailSenderTool({
         service: "gmail",
-        user: "ta.funcionando15@gmail.com",
-        password: "ibzu qzah ihzz sdcg",
+        user: process.env.EMAIL_USER || "ta.funcionando15@gmail.com",
+        password: process.env.EMAIL_PASSWORD || "ibzu qzah ihzz sdcg",
       })
     }
   }

@@ -1,10 +1,15 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AccountSettingsComponent } from './account-settings/account-settings.component';
+import { AccountSettingsResolver } from './account-settings/account-settings.resolver';
 import { OnboardingComponent } from './onboarding/onboarding.component';
 
 const routes: Routes = [
-  { path: '', component: AccountSettingsComponent },
+  {
+    path: '',
+    resolve: [AccountSettingsResolver],
+    component: AccountSettingsComponent
+  },
   { path: 'onboarding', component: OnboardingComponent },
 ];
 
@@ -12,4 +17,4 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
 })
-export class SettingsRoutingModule {}
+export class SettingsRoutingModule { }

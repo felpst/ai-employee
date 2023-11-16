@@ -9,10 +9,17 @@ import ModelController from '../../controllers/model.controller';
 import { BigQueryHelper } from '../../helpers/big-query.helper';
 import { Unstructured } from '../../helpers/unstructured.helper';
 
-const gc = new Storage({
-  keyFilename: 'cognum.secrets.json',
-  projectId: 'cognum',
-});
+let gc: Storage
+if (process.env.PROD === 'true') {
+  gc = new Storage({
+    projectId: 'cognum',
+  });
+} else {
+  gc = new Storage({
+    keyFilename: 'cognum.secrets.json',
+    projectId: 'cognum',
+  });
+}
 
 const googleStorageBucket = gc.bucket('cognum-data-sources');
 
