@@ -17,7 +17,12 @@
   <div class="item" *ngIf="remainingUsersCount > 0">
     <div class="more-users">{{ remainingUsersCount }}+</div>
   </div>
-  <div class="item icon" *ngIf="showAdd">
+  <div
+    class="item icon"
+    [routerLink]="['./', 'settings', 'team']"
+    *ngIf="showAdd"
+    title="Add new members"
+  >
     <mat-icon svgIcon="whiteUser"></mat-icon>
   </div>
 </div>
