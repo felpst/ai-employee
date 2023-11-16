@@ -20,7 +20,7 @@ export class AccountSettingsComponent implements OnInit {
   name = '';
   photo: File | null = null;
   updateForm = this.formBuilder.group({
-    name: [this.name, [Validators.minLength(6)]],
+    name: [this.name, [Validators.required, Validators.minLength(6)]],
     photo: [this.photo, []],
   });
   submitting = false;
@@ -119,13 +119,20 @@ export class AccountSettingsComponent implements OnInit {
             parentId: this.user._id,
           })
           .subscribe((result) => {
-            console.log({ result });
             this.user.photo = result.url;
           });
       }
     } catch (error) {
       console.log('An error ocurring: ', { error });
     }
+  }
+
+  hasInputError(inputName: string, errorName: string) {
+    return (
+      this.updateForm.get(inputName)?.invalid &&
+      this.updateForm.get(inputName)?.touched &&
+      this.updateForm.get(inputName)?.hasError(errorName)
+    );
   }
 
   async onSubmit() {

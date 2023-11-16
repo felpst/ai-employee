@@ -12,6 +12,13 @@
   margin-left: 0.7rem;
 }
 
+.input-error {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 4px;
+}
+
 .delete-account-modal {
   position: absolute;
   height: 300px;
@@ -147,10 +154,10 @@
   border: 1px solid #d9d9d9;
   background-color: transparent;
   border-radius: 2px;
+  max-height: 35px;
 }
 
 .content {
-
   .footer {
     padding: 15px 20px;
   }
@@ -227,13 +234,13 @@
 
   .img-container {
     position: relative;
-    display: inline-block; 
+    display: inline-block;
     padding-top: 20px;
 
     .image-label {
       position: relative;
       display: inline-block;
-  
+
       .upload-file {
         position: absolute;
         top: 50%;
@@ -243,29 +250,25 @@
         cursor: pointer;
         padding: 8px;
         border-radius: 50%;
-  
+        color: transparent;
+
         mat-icon {
           margin-bottom: 2px;
-          // color: #FFF;
         }
-        
+
         p {
-          // color: #FFF;
           margin-bottom: 0;
         }
 
         &:hover {
-          background-color: rgba(255, 255, 255, 0.8);
+          display: block;
+          color: rgba(255, 255, 255, 0.8);
         }
       }
-
     }
   }
-  
-  
 
   .footer {
-
     div {
       display: flex;
       flex-wrap: wrap;
@@ -277,6 +280,10 @@
 
 .container-group {
   padding: 0 20px;
+}
+
+.warning-message {
+  color: red;
 }
 
 @media (max-width: 430px) {

@@ -12,7 +12,7 @@
       <button (click)="onRedirect()">
         <mat-icon svgIcon="arrow-left"></mat-icon>
       </button>
-      <div style="display: flex; align-items: center; gap: 2px;">
+      <div style="display: flex; align-items: center; gap: 2px">
         <img
           class="image-style"
           [src]="selectedImage || image || defaultImage"
@@ -51,12 +51,29 @@
             <div style="flex-direction: column" class="input">
               <span>Your name</span>
               <div style="display: flex; gap: 2px">
-                <input
-                  type="text"
-                  formControlName="name"
-                  [value]="name"
-                />
-                <!-- <button class="button" type="submit">Submit</button> -->
+                <div class="input-error">
+                  <input type="text" formControlName="name" [value]="name" />
+                  <mat-error
+                    *ngIf="hasInputError('name', 'required')"
+                    class="cognum-text-12 warning-message"
+                  >
+                    Name field is required
+                  </mat-error>
+                  <mat-error
+                    *ngIf="hasInputError('name', 'minlength')"
+                    class="cognum-text-12 warning-message"
+                  >
+                    Name must be at
+                    <strong>least 6 characters long.</strong>
+                  </mat-error>
+                </div>
+                <button
+                  class="button"
+                  type="submit"
+                  [disabled]="!updateForm.valid"
+                >
+                  Submit
+                </button>
               </div>
             </div>
           </div>
