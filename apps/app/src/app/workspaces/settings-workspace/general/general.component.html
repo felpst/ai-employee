@@ -1,0 +1,76 @@
+<form [formGroup]="updateForm" (ngSubmit)="onSubmit()">
+  <div class="row">
+    <div class="name-container">
+      <span>Company or team name</span>
+      <div class="name-row">
+        <div class="form-row">
+          <input
+            formControlName="workspaceName"
+            class="input-name"
+            type="name"
+            placeholder="potato"
+            [value]="workspace  .name"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+    <div class="row">
+      <span class="cognum-headline-4">Workspace photo (optional)</span>
+      <div class="update-content">
+        <div class="file-container">
+          <label class="gray-content" for="workspaceFileInput">
+            <img
+              *ngIf="!!workspace.photo || selectedImage; else withoutFile"
+              class="workspaceImage"
+              [src]=" workspace.photo || selectedImage "
+            />
+            <ng-template #withoutFile>
+              <img src="../../../assets/icons/Plus.svg" alt="plus" />
+              <p class="inform-style">Change</p>
+            </ng-template>
+          </label>
+          <input
+            class="input-style"
+            type="file"
+            id="workspaceFileInput"
+            (change)="onFileSelected($event, 'workspaces', 'photo')"
+            name="workspaceFile"
+            accept="image/*"
+            style="display: none"
+          />
+          <mat-error
+            class="cognum-text-12 warning-message"
+            *ngIf="hasInputError('photo', 'invalidFormat')"
+          >
+            Valid formats: .png, .jpg, .jpeg and .svg
+          </mat-error>
+          <mat-error
+            class="cognum-text-12 warning-message"
+            *ngIf="hasInputError('photo', 'invalidSize')"
+          >
+            Maximum size: 10MB
+          </mat-error>
+        </div>
+        <p class="cognum-text-12">
+          Help teammates know that this is right place.
+        </p>
+        <p class="cognum-text-12" style="width: 50px">&ensp;&ensp;</p>
+
+      </div>
+      <button class="button" (click)="onSubmit()">
+        Submit
+      </button>
+  </div>
+</form>
+<div class="footer">
+  <div>
+    <span class="cognum-headline-4">Delete workspace</span>
+    <button class="button" (click)="onRemoveWorkspace()">
+      delete it
+    </button>
+  </div>
+  <span
+    >Are you sure you want to permanently delete your workspace?  
+  </span>
+</div>
