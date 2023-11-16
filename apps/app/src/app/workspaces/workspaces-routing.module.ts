@@ -51,7 +51,7 @@ const routes: Routes = [
       {
         path: 'settings',
         component: SettingsWorkspaceComponent,
-     
+        canActivate:[WorkspaceAdminGuard],
         children: [
           {
             path: 'general',
