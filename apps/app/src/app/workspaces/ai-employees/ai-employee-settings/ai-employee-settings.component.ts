@@ -8,6 +8,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { IAIEmployee } from '@cognum/interfaces';
 import { AuthService } from '../../../auth/auth.service';
 import { NotificationsService } from '../../../services/notifications/notifications.service';
+import { Step } from '../../../shared/stepper/stepper.component';
 import { AIEmployeesService } from '../ai-employees.service';
 
 
@@ -17,6 +18,9 @@ import { AIEmployeesService } from '../ai-employees.service';
   styleUrls: ['./ai-employee-settings.component.scss'],
 })
 export class AIEmployeeSettingsComponent implements OnInit {
+  navs: Step[] = [
+    { title: 'General', routerLink: 'general' }
+  ]
   name = '';
   role = '';
   updateForm = this.formBuilder.group({
@@ -58,7 +62,7 @@ export class AIEmployeeSettingsComponent implements OnInit {
   }
 
   get photo() {
-    return this.authService.user ? this.authService.user.photo: '';
+    return this.authService.user ? this.authService.user.photo : '';
   }
 
   selectAvatar(avatarPath: string) {
@@ -129,5 +133,9 @@ export class AIEmployeeSettingsComponent implements OnInit {
 
   selectItem(itemNumber: number): void {
     this.selectedItem = itemNumber;
+  }
+
+  get employee() {
+    return this.aiAIEmployeesService.aiEmployee;
   }
 }
