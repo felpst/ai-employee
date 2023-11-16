@@ -96,9 +96,6 @@ services:
     ports:
       - '3005:3005'
 
-volumes:
-  mono-node-modules: null
-
 networks:
   default:
     name: cognum_network

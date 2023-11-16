@@ -2,8 +2,7 @@ import { ChatModel } from '@cognum/llm';
 import {
   initializeAgentExecutorWithOptions
 } from 'langchain/agents';
-import { SerpAPI } from 'langchain/tools';
-import { WebBrowserTool } from '../web-browser.tool';
+import { PythonTool } from '../tools/python.tool';
 
 
 describe('Python Tool Test', () => {
@@ -11,12 +10,11 @@ describe('Python Tool Test', () => {
 
   const model = new ChatModel();
   const tools = [
-    new SerpAPI(process.env.SERPAPI_API_KEY),
-    new WebBrowserTool(model),
+    new PythonTool()
   ];
 
 
-  it('should return corrects information of the site', async () => {
+  it('should return correct 10th fibonnaci number', async () => {
 
     const executor = await initializeAgentExecutorWithOptions(
       tools,
