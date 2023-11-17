@@ -8,13 +8,13 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { SharedModule } from '../../shared/shared.module';
-import { AIEmployeeSettingsComponent } from './ai-employee-settings/ai-employee-settings.component';
+import { AIEmployeeSettingsModule } from './ai-employee-settings/ai-employee-settings.module';
 import { AIEmployeesRoutingModule } from './ai-employees-routing.module';
 import { AIEmployeesComponent } from './ai-employees.component';
 import { WhiteAiEmployeeComponent } from './white-ai-employee/white-ai-employee.component';
 
 @NgModule({
-  declarations: [AIEmployeesComponent, WhiteAiEmployeeComponent, AIEmployeeSettingsComponent],
+  declarations: [AIEmployeesComponent, WhiteAiEmployeeComponent],
   imports: [
     CommonModule,
     AIEmployeesRoutingModule,
@@ -25,7 +25,8 @@ import { WhiteAiEmployeeComponent } from './white-ai-employee/white-ai-employee.
     MatButtonModule,
     MatDialogModule,
     HttpClientModule,
-    SharedModule
+    SharedModule,
+    AIEmployeeSettingsModule
   ],
 })
-export class AIEmployeesModule {}
+export class AIEmployeesModule { }

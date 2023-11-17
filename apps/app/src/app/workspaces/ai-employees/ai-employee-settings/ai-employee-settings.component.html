@@ -1,86 +1,13 @@
-<div class="delete-ai-employee-modal" *ngIf="showDeleteConfirmation">
-  <div class="modal-content">
-    <p>Are you sure you want to delete your Ai employee?</p>
-    <button (click)="confirmDeleteAiEmployee()">Delete</button>
-    <button (click)="cancelDeleteAiEmployee()">Cancel</button>
-  </div>
-</div>
-
-<div class="body">
-  <mat-icon class="icon" [routerLink]="['../../employees']" svgIcon="arrow-left"></mat-icon>
-  <div class="description">
-    <h1>{{ name }}'s Settings</h1>
-    <span class="adjust-name"
-      >Adjust ai-employee-wide settings and preferences here for
-      {{ name }}</span
+<div class="cognum-page">
+  <div class="content column">
+    <span class="cognum-heading-1 congum-font-strong title"
+      >{{ name }}'s Settings</span
     >
-  </div>
-  <div class="settings">
-    <nav>
-      <span
-        class="item"
-        [class.selected]="selectedItem === 1"
-        (click)="selectItem(1)"
-        >General</span
-      >
-    </nav>
-    <div class="content">
-      <ng-container>
-        <form
-          [formGroup]="updateForm"
-          (ngSubmit)="onSubmit()"
-          class="container-group"
-          enctype="multipart/form-data"
-        >
-          <p>Select your AI employee avatar</p>
-          <div class="avatar">
-            <div
-              *ngFor="let avatar of availableAvatars"
-              (click)="selectAvatar(avatar)"
-              [ngClass]="{ 'avatar-selected': selectedAvatar === avatar }"
-            >
-              <img [src]="avatar" alt="avatar" />
-            </div>
-          </div>
-
-          <div style="flex-direction: column" class="input">
-            <p>Ai employee name</p>
-            <div style="display: flex; gap: 2px">
-              <input
-                type="text"
-                placeholder="Felipe Telles"
-                formControlName="name"
-                [value]="name"
-              />
-            </div>
-          </div>
-          <div style="flex-direction: column" class="input">
-            <p>Create a short description for your AI employee</p>
-            <div style="display: flex; gap: 2px">
-              <input
-                type="text"
-                placeholder="Felipe Telles"
-                formControlName="role"
-                [value]="role"
-              />
-            </div>
-          </div>
-          <button class="button" type="submit">Submit</button>
-        </form>
-
-        <div class="footer">
-          <div>
-            <span>Delete your Ai employee</span>
-            <button class="button" (click)="openDeleteAiEmployeeModal()">
-              delete it
-            </button>
-          </div>
-          <span class="footer-description"
-            >Are you sure you want to permanently delete your Ai employee? This
-            action cannot be undone, and all your data will be lost.
-          </span>
-        </div>
-      </ng-container>
+    <div class="cognum-white-content p-8">
+      <div class="cognum-mb-0">
+        <cognum-tab-navigator [navs]="navs"></cognum-tab-navigator>
+      </div>
+      <router-outlet></router-outlet>
     </div>
   </div>
 </div>

@@ -1,16 +1,16 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { AiEmployeeComponentSettings } from './ai-employee-settings.component';
+import { AIEmployeeSettingsComponent } from './ai-employee-settings.component';
 
 describe('AiEmployeeComponent', () => {
-  let component: AiEmployeeComponentSettings;
-  let fixture: ComponentFixture<AiEmployeeComponentSettings>;
+  let component: AIEmployeeSettingsComponent;
+  let fixture: ComponentFixture<AIEmployeeSettingsComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [AiEmployeeComponentSettings],
+      declarations: [AIEmployeeSettingsComponent],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(AiEmployeeComponentSettings);
+    fixture = TestBed.createComponent(AIEmployeeSettingsComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

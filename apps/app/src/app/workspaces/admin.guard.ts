@@ -19,7 +19,6 @@ export class WorkspaceAdminGuard {
     return new Observable((observer) => {
       const loggedUser = this.authService.user;
       const users = this.workspaceService.selectedWorkspace?.users as UserType[];
-
       const _users = users && users.length ? users.map(({ user, permission }) => ({ ...user, permission })) : [];
       const find = _users.find(({ _id }) => _id === loggedUser._id);
       if (!find || find.permission !== 'Admin') {
