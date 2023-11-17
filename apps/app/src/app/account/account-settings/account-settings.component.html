@@ -1,122 +1,111 @@
-<div class="delete-account-modal" *ngIf="showDeleteConfirmation">
-  <div class="modal-content">
-    <p>Are you sure you want to delete your account?</p>
-    <button (click)="confirmDeleteAccount()">Delete</button>
-    <button (click)="cancelDeleteAccount()">Cancel</button>
-  </div>
-</div>
-
-<header class="header">
-  <nav>
-    <div class="workspace-info-group">
-      <button (click)="onRedirect()">
-        <mat-icon svgIcon="arrow-left"></mat-icon>
-      </button>
-      <div style="display: flex; align-items: center; gap: 2px">
-        <img
-          class="image-style"
-          [src]="selectedImage || image || defaultImage"
-          alt="User Image"
-        />
-        <span>{{ name }}</span>
+<cognum-header [showBackButton]="true">
+  <ng-container left>
+    <div class="user-info-group">
+      <div style="display: flex; align-items: center; gap: 8px">
+        <img class="image-style" [src]="user.photo" alt="User Image" />
+        <span class="title cognum-heading-3">{{ user.name }}</span>
       </div>
     </div>
-  </nav>
-</header>
+  </ng-container>
+</cognum-header>
+
 <div class="body">
   <div class="description">
-    <h1>Your Account</h1>
-    <span class="adjust-name"
-      >Adjust account-wide settings and preferences here for {{ name }}</span
+    <h1 class="page-title">Settings</h1>
+    <span class="page-text"
+      >Adjust account-wide settings and preferences here for
+      {{ user.name }}</span
     >
-  </div>
-  <div class="settings">
-    <nav>
-      <span
-        class="item"
-        [class.selected]="selectedItem === 1"
-        (click)="selectItem(1)"
-        >General</span
-      >
-    </nav>
-    <div class="content">
-      <ng-container *ngIf="selectedItem === 1">
-        <form
-          [formGroup]="updateForm"
-          (ngSubmit)="onSubmit()"
-          class="container-group"
-          enctype="multipart/form-data"
-        >
-          <div class="input-container">
-            <div style="flex-direction: column" class="input">
-              <span>Your name</span>
-              <div style="display: flex; gap: 2px">
-                <div class="input-error">
-                  <input type="text" formControlName="name" [value]="name" />
-                  <mat-error
-                    *ngIf="hasInputError('name', 'required')"
-                    class="cognum-text-12 warning-message"
-                  >
-                    Name field is required
-                  </mat-error>
-                  <mat-error
-                    *ngIf="hasInputError('name', 'minlength')"
-                    class="cognum-text-12 warning-message"
-                  >
-                    Name must be at
-                    <strong>least 6 characters long.</strong>
-                  </mat-error>
-                </div>
-                <button
-                  class="button"
-                  type="submit"
-                  [disabled]="!updateForm.valid"
-                >
-                  Submit
-                </button>
-              </div>
-            </div>
-          </div>
-          <div class="img-container">
-            <span class="workspace-image">Your profile photo (optional)</span>
-            <div class="image-group">
-              <div class="image-label">
-                <label for="profilePhotoInput" class="image-label">
-                  <img
-                    class="image"
-                    src="{{ selectedImage || image || defaultImage }}"
-                    alt="User Image"
-                  />
-                  <div class="upload-file">
-                    <mat-icon svgIcon="upload-file">Change</mat-icon>
-                    <p>Change</p>
-                  </div>
-                </label>
+    <div class="cognum-white-content-w720 without-padding">
+      <div class="cognum-mb-0">
+        <cognum-tab-navigator [navs]="navs"></cognum-tab-navigator>
+      </div>
+      <!-- <router-outlet></router-outlet> -->
+
+      <form [formGroup]="updateForm" (ngSubmit)="onSubmit()">
+        <div class="row">
+          <div class="name-container">
+            <span>Your name</span>
+            <div class="name-row">
+              <div class="form-row">
                 <input
-                  style="display: none"
-                  type="file"
-                  id="profilePhotoInput"
-                  name="profilePhoto"
-                  (change)="onFileSelected($event, 'users', 'photo')"
+                  formControlName="name"
+                  class="input-name"
+                  type="name"
+                  placeholder="Your name"
+                  [value]="user.name"
+                  (change)="onSubmit()"
                 />
+                <mat-error
+                  *ngIf="hasInputError('name', 'required')"
+                  class="cognum-text-12 warning-message"
+                >
+                  Name field is required
+                </mat-error>
+                <div
+                  *ngIf="hasInputError('name', 'minlength')"
+                  class="cognum-text-12 warning-message"
+                >
+                  Name must be at least 6 characters long.
+                </div>
               </div>
-              <span>Help teammates know that you are the right person.</span>
             </div>
           </div>
-        </form>
-        <div class="footer">
-          <div>
-            <span class="footer-title">Delete your account</span>
-            <button class="button" (click)="openDeleteAccountModal()">
-              delete it
-            </button>
-          </div>
-          <span class="footer-description"
-            >Are you sure you want to permanently delete your account? This
-            action cannot be undone, and all your data will be lost.
-          </span>
         </div>
-      </ng-container>
+        <div class="row">
+          <span class="cognum-headline-4">Your profile photo (optional)</span>
+          <div class="update-content">
+            <div class="file-container">
+              <label class="gray-content" for="workspaceFileInput">
+                <img
+                  *ngIf="!!user.photo || selectedImage; else withoutFile"
+                  class="workspaceImage"
+                  [src]="user.photo || selectedImage"
+                />
+                <ng-template #withoutFile>
+                  <img src="../../../assets/icons/Plus.svg" alt="plus" />
+                  <p class="inform-style">Upload</p>
+                </ng-template>
+              </label>
+              <input
+                class="input-style"
+                type="file"
+                id="workspaceFileInput"
+                (change)="onFileSelected($event, 'workspaces', 'photo')"
+                name="workspaceFile"
+                accept="image/*"
+                style="display: none"
+              />
+              <mat-error
+                *ngIf="hasInputError('photo', 'invalidFormat')"
+                class="cognum-text-12 warning-message"
+              >
+                Valid formats: .png, .jpg, .jpeg and .svg
+              </mat-error>
+              <mat-error
+                *ngIf="hasInputError('photo', 'invalidSize')"
+                class="cognum-text-12 warning-message"
+              >
+                Maximum size: 10MB
+              </mat-error>
+            </div>
+            <p class="cognum-text-12">
+              Help teammates know that this is right place.
+            </p>
+            <p class="cognum-text-12" style="width: 50px">&ensp;&ensp;</p>
+          </div>
+        </div>
+      </form>
+      <div class="footer">
+        <div>
+          <span class="cognum-headline-4">Delete your account</span>
+          <button class="button">delete it</button>
+        </div>
+        <span
+          >Are you sure you want to permanently delete your account? This action
+          cannot be undone, and all your data will be lost.</span
+        >
+      </div>
     </div>
   </div>
 </div>

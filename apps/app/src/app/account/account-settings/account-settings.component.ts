@@ -11,12 +11,16 @@ import { AuthService } from '../../auth/auth.service';
 import { NotificationsService } from '../../services/notifications/notifications.service';
 import { UploadsService } from '../../services/uploads/uploads.service';
 import { UsersService } from '../../services/users/users.service';
+import { Step } from '../../shared/stepper/stepper.component';
 @Component({
   selector: 'cognum-account-settings',
   templateUrl: './account-settings.component.html',
   styleUrls: ['./account-settings.component.scss'],
 })
 export class AccountSettingsComponent implements OnInit {
+  navs: Step[] = [
+    { title: 'General', routerLink: './' }
+  ]
   name = '';
   photo: File | null = null;
   updateForm = this.formBuilder.group({
@@ -56,14 +60,16 @@ export class AccountSettingsComponent implements OnInit {
   }
 
   ngOnInit() {
-    const resolvedData = this.route.snapshot.data;
-    if (resolvedData && resolvedData[0]) {
-      this.updateForm.patchValue({
-        name: resolvedData[0].name,
-      });
-      this.name = resolvedData[0].name;
-      this.image = resolvedData[0].photo;
-    }
+    console.log("OnInit");
+
+    // const resolvedData = this.route.snapshot.data;
+    // if (resolvedData && resolvedData[0]) {
+    //   this.updateForm.patchValue({
+    //     name: resolvedData[0].name,
+    //   });
+    //   this.name = resolvedData[0].name;
+    //   this.image = resolvedData[0].photo;
+    // }
   }
 
   confirmDeleteAccount() {
