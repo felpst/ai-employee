@@ -1,33 +1,30 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import { HttpParams } from '@angular/common/http';
-import { Component,  EventEmitter, OnInit, Output  } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import {  IWorkspace } from '@cognum/interfaces';
-import { Location } from '@angular/common';
+import { Router } from '@angular/router';
+import { IWorkspace } from '@cognum/interfaces';
 import { AuthService } from '../../../auth/auth.service';
 import { NotificationsService } from '../../../services/notifications/notifications.service';
-import { DialogComponent } from '../../../shared/dialog/dialog.component';
-import { WorkspacesService } from '../../workspaces.service';
-import { validatorFile } from '../../../shared/validations';
-import { Router } from '@angular/router';
 import { UploadsService } from '../../../services/uploads/uploads.service';
+import { DialogComponent } from '../../../shared/dialog/dialog.component';
+import { validatorFile } from '../../../shared/validations';
+import { WorkspacesService } from '../../workspaces.service';
+import { UserType } from '../team-form/team-form.component';
 
 @Component({
   selector: 'cognum-settings-team-form',
   templateUrl: './general.component.html',
   styleUrls: ['./general.component.scss'],
 })
-export class SettingsGeneralComponent {
-  @Output() updateWorkspaceEvent = new EventEmitter();
-  @Output() changeStepEvent = new EventEmitter();
+export class SettingsGeneralComponent implements OnInit {
   photo: File | null = null;
   updateForm = this.formBuilder.group({
     name: ['', [Validators.required, Validators.minLength(6)]],
-    photo: [null, [] as any], 
+    photo: [null, [] as any],
   });
-  
-  
+
+
   submitting = false;
   errors = [];
   showDeleteConfirmation = false;
@@ -41,7 +38,6 @@ export class SettingsGeneralComponent {
     private notificationsService: NotificationsService,
     public dialog: MatDialog,
     private router: Router,
-    private location: Location 
   ) {
 
   }
@@ -49,10 +45,10 @@ export class SettingsGeneralComponent {
   ngOnInit() {
     this.updateForm.patchValue({
       name: this.workspace?.name || '',
-      photo: this.workspace?.photo || null, 
+      photo: this.workspace?.photo || null,
     });
   }
-  
+
 
   get user() {
     return this.authService.user
@@ -63,34 +59,13 @@ export class SettingsGeneralComponent {
   }
 
   onSubmit() {
-    const { name, photo } = this.updateForm.value;
     if (!this.updateForm.valid) return;
-  
-    if (photo instanceof File) {
-      this.updateWorkspaceWithPhoto(photo);
-    } else {
-      const newName = name || this.workspace.name || ''; // Certifique-se de ter uma string válida
-      this.updateWorkspaceName(newName);
-    }
-    
     this.submitting = true;
+    const { name } = this.updateForm.value;
+    const data = { ...this.workspace, name: name || this.workspace.name || '' }
+    this.updateData(data);
   }
-  
-  
-  private updateWorkspaceWithPhoto(newPhoto: File) {
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      const dataUrl = reader.result as string;
-      const updatedWorkspace: Partial<IWorkspace> = {
-        ...this.workspace,
-        photo: dataUrl,
-      };
-  
-      this.updateData(updatedWorkspace, 'Workspace photo updated successfully!');
-    };
-    reader.readAsDataURL(newPhoto);
-  }
-  
+
 
   hasInputError(inputName: string, errorName: string) {
     return (
@@ -98,53 +73,6 @@ export class SettingsGeneralComponent {
       this.updateForm.get(inputName)?.touched &&
       this.updateForm.get(inputName)?.hasError(errorName)
     );
-  }
-
-private updateWorkspaceName(newName: string) {
-  const updatedWorkspace: Partial<IWorkspace> = {
-    ...this.workspace,
-    name: newName,
-  };
-  this.updateData(updatedWorkspace, 'Workspace name updated successfully!');
-  this.reload
-}
-
-private updateData(data: Partial<IWorkspace>, message: string) {
-  return this.workspacesService.update(data).subscribe({
-    next: () => {
-      this.reload().subscribe({
-        next: (workspace) => {
-          this.workspacesService.selectedWorkspace = workspace;
-          this.notificationsService.show(message);
-          this.submitting = false;
-          this.updateForm.reset();
-          this.location.back();
-        },
-        error: (error) => {
-          console.log({ error });
-          this.notificationsService.show(
-            `An error occurred while fetching workspace details, please try again in a moment`
-          );
-          this.submitting = false;
-          this.updateForm.reset();
-        },
-      });
-    },
-    error: () => {
-      this.notificationsService.show(
-        "Oops, it looks like there was an error... Please try again in a few minutes"
-      );
-      this.submitting = false;
-      this.updateForm.reset();
-    },
-  });
-}
-
-  reload() {
-    let params = new HttpParams();
-  
-
-    return this.workspacesService.get(this.workspace._id, { params });
   }
 
   onFileSelected(event: any, folder: string, fieldName = 'avatar') {
@@ -160,7 +88,6 @@ private updateData(data: Partial<IWorkspace>, message: string) {
         control?.setValidators(validatorFile);
         control?.updateValueAndValidity();
         this.photo = file;
-        const timestamp = new Date().getTime();
         this.uploadsService
           .single({
             file,
@@ -169,42 +96,63 @@ private updateData(data: Partial<IWorkspace>, message: string) {
             parentId: this.workspace._id,
           })
           .subscribe((result) => {
-            this.workspace.photo = `${result.url}?${timestamp}`;
+            const { url } = result;
+            const data = { ...this.workspace, photo: url }
+            return this.updateData(data);
           });
-        }
+      }
     } catch (error) {
       console.log('An error ocurring: ', { error });
     }
   }
-  
-  
-  
-onRemoveWorkspace() {
-  const dialogData = new DialogComponent({ title: 'Delete Workspace', content: 'Are you sure you want to remove this workspace?', confirmText: 'Yes' });
 
-  const dialogRef = this.dialog.open(DialogComponent, {
-    maxWidth: "400px",
-    data: dialogData
-  });
-  dialogRef.afterClosed().subscribe(dialogResult => {
-    if (dialogResult) {
-      this.deleteWorkspace();
-    }
-  });
-}
 
-private deleteWorkspace() {
-  return this.workspacesService.delete(this.workspace._id).subscribe({
-    next: () => {
-      this.notificationsService.show('Workspace deleted successfully!');
-      this.router.navigate(['/']);
-    },
-    error: (error) => {
-      console.log({ error });
-      this.notificationsService.show('An error occurred while deleting the workspace, please try again.');
-    },
-  });
-}
+
+  onRemoveWorkspace() {
+    const dialogData = new DialogComponent({ title: 'Delete Workspace', content: 'Are you sure you want to remove this workspace?', confirmText: 'Yes' });
+
+    const dialogRef = this.dialog.open(DialogComponent, {
+      maxWidth: "400px",
+      data: dialogData
+    });
+    dialogRef.afterClosed().subscribe(dialogResult => {
+      if (dialogResult) {
+        this.deleteWorkspace();
+      }
+    });
+  }
+
+  private updateData(data: Partial<IWorkspace>) {
+    const _users = data.users as UserType[];
+    const users = _users?.map(({ permission, user }) => ({ permission, user: user.email }))
+    return this.workspacesService.update({ ...data, users }).subscribe({
+      next: (workspace) => {
+        this.workspacesService.selectedWorkspace = workspace;
+        this.notificationsService.show('Workspace updated successfully!');
+        this.submitting = false;
+      },
+      error: () => {
+        this.notificationsService.show(
+          "Oops, it looks like there was an error... Please try again in a few minutes"
+        );
+        this.submitting = false;
+        this.updateForm.reset();
+      },
+    });
+  }
+
+  private deleteWorkspace() {
+    return this.workspacesService.delete(this.workspace._id).subscribe({
+      next: () => {
+        this.notificationsService.show('Workspace deleted successfully!');
+        this.router.navigate(['/']);
+      },
+      error: (error) => {
+        console.log({ error });
+        this.notificationsService.show('An error occurred while deleting the workspace, please try again.');
+      },
+    });
+  }
 
 
 }
