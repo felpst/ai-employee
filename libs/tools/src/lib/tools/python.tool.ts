@@ -9,7 +9,7 @@ export class PythonTool extends DynamicTool {
       description:
         'Use to create python and automation code or create scripts. Input should be a task instruction to executor.',
       func: async (input: string) => {
-        const { data } = await axios.post("http://localhost:3005/python-tool", { input_text: input });
+        const { data } = await axios.post(process.env.PYTHON_TOOL_URL, { input_text: input });
         return data.result;
       },
     });
