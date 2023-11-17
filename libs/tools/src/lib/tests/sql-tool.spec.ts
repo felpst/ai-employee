@@ -10,7 +10,7 @@ describe('SQL Tool Test', () => {
 
     const model = new ChatModel();
     const tools = [
-        new SQLTool()
+        new SQLTool("postgresql", "renato", "password", "postgres", "5432", "Chinook")
     ]
 
 

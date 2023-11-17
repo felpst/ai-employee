@@ -12,9 +12,11 @@ load_dotenv(dotenv_path)
 
 
 class SqlTool:
-    def __init__(self):
+    def __init__(self, database, username, password, host, db_port, db_name):
         self.model = Model.initialize_model()
-        self.db = SQLDatabase.from_uri(os.getenv("DATABASE"))
+        self.db = SQLDatabase.from_uri(
+            f"{database}://{username}:{password}@{host}:{db_port}/{db_name}"
+        )
         self.toolkit = SQLDatabaseToolkit(db=self.db, llm=self.model)
         self._agent_executor = self.agent_executor()
 
