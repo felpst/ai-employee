@@ -6,12 +6,10 @@ export class SQLTool extends DynamicTool {
     super({
       name: 'SQL Tool',
       description:
-        'Use this tool to acess the database and get information.',
+        'Use this tool to acess the database and get information on the database. Input should be a task instruction to executor.',
       func: async (input: string) => {
-        const response = await axios.post("https://localhost:3005/sql-tool", { input });
-        console.log(`Got output ${response.data}`);
-        console.log('------------SQLTool------------');
-        return response.data;
+        const { data } = await axios.post(process.env.SQL_TOOL_URL, { input_text: input });
+        return data.result;
       },
     });
   }

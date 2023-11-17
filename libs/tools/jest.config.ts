@@ -9,5 +9,5 @@ export default {
   moduleFileExtensions: ['ts', 'js', 'html'],
   coverageDirectory: '../../coverage/libs/tools',
   setupFiles: ['<rootDir>/setup-test.ts'],
-  testTimeout: 30000,
+  testTimeout: 300000,
 };

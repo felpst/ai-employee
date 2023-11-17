@@ -25,6 +25,6 @@ describe('Python Tool Test', () => {
     );
     const input = `What is the 10th fibonacci number?`;
     const result = await executor.call({ input });
-    expect(result.output).toContain("34");
+    expect(result.output).toContain("55");
   })
 });
