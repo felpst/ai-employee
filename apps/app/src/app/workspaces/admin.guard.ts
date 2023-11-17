@@ -22,7 +22,6 @@ export class WorkspaceAdminGuard {
 
       const _users = users && users.length ? users.map(({ user, permission }) => ({ ...user, permission })) : [];
       const find = _users.find(({ _id }) => _id === loggedUser._id);
-      console.log({ loggedUser, users });
       if (!find || find.permission !== 'Admin') {
         this.router.navigate(['..'], { relativeTo: this.route });
         this.notificationsService.show('You do not have permission to access this page!');
