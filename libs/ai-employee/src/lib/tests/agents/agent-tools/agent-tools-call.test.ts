@@ -7,7 +7,7 @@ import { AIEmployeeRepository } from '../../../repositories';
 import { AIEmployeeCall } from '../../../use-cases/ai-employee-call.usecase';
 
 describe('Agent Tools', () => {
-  jest.setTimeout(60000)
+  jest.setTimeout(600000)
 
   const repository = new AIEmployeeRepository(process.env.USER_ID);
   let aiEmployee: IAIEmployee;

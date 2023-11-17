@@ -37,7 +37,7 @@ services:
     image: postgres:latest
     container_name: my-postgres-container
     ports:
-      - "5432:5432" 
+      - '5432:5432'
     environment:
       POSTGRES_DB: Chinook
       POSTGRES_PASSWORD: password
@@ -110,6 +110,6 @@ services:
 
 networks:
   default:
-    name: cognum_network
+    name: cognum_network1
   cognum_network:
     driver: bridge
