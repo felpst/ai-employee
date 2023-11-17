@@ -6,9 +6,9 @@ export class SQLTool extends DynamicTool {
     super({
       name: 'SQL Tool',
       description:
-        'Use this when you need search informations you dont know and you dont find in chat history, but possible to find in database. Input should be a question.',
+        'Use this tool to acess the database and get information.',
       func: async (input: string) => {
-        const response = await axios.post(process.env.SQL_TOOL_URL, { input });
+        const response = await axios.post("https://localhost:3005/sql-tool", { input });
         console.log(`Got output ${response.data}`);
         console.log('------------SQLTool------------');
         return response.data;

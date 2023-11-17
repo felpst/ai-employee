@@ -33,6 +33,18 @@ services:
     networks:
       - cognum_network
 
+  postgres:
+    image: postgres:latest
+    container_name: my-postgres-container
+    ports:
+      - "5432:5432" 
+    environment:
+      POSTGRES_DB: Chinook
+      POSTGRES_PASSWORD: password
+      POSTGRES_USER: renato
+    volumes:
+      - ./Chinook.sql:/docker-entrypoint-initdb.d/Chinook.sql
+
   etcd:
     container_name: milvus-etcd
     image: quay.io/coreos/etcd:v3.5.5

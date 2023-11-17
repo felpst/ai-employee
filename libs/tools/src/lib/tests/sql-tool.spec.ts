@@ -5,16 +5,16 @@ import {
 import { SQLTool } from '../tools/sql.tool';
 
 
-describe('Python Tool Test', () => {
+describe('SQL Tool Test', () => {
 
 
     const model = new ChatModel();
     const tools = [
         new SQLTool()
-    ];
+    ]
 
 
-    it('should return corrects information of the site', async () => {
+    it('should return corrects information of the database', async () => {
 
         const executor = await initializeAgentExecutorWithOptions(
             tools,
@@ -25,6 +25,6 @@ describe('Python Tool Test', () => {
         );
         const input = `Who are the top 3 best selling artists?`;
         const result = await executor.call({ input });
-        expect(result.output).toContain("34");
+        expect(result.output).toContain("The top 3 best selling artists are Iron Maiden, U2, and Metallica.");
     })
 });
