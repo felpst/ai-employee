@@ -5,12 +5,22 @@
       <div class="name-row">
         <div class="form-row">
           <input
-            formControlName="workspaceName"
+            formControlName="name"
             class="input-name"
             type="name"
             placeholder="potato"
-            [value]="workspace  .name"
+            [value]="workspace.name"
+            (change)="onSubmit()"
           />
+          <mat-error
+          class="cognum-text-12 warning-message"
+          *ngIf="hasInputError('name', 'required')"
+        >
+          Name field is required
+        </mat-error>
+        <div *ngIf="updateForm.get('name')?.hasError('minlength') && updateForm.get('name')?.touched" class="warning-message">
+          Workspace name must be at least 6 characters long.
+        </div>        
         </div>
       </div>
     </div>
@@ -27,14 +37,14 @@
             />
             <ng-template #withoutFile>
               <img src="../../../assets/icons/Plus.svg" alt="plus" />
-              <p class="inform-style">Change</p>
+              <p class="inform-style">Upload</p>
             </ng-template>
           </label>
           <input
             class="input-style"
             type="file"
             id="workspaceFileInput"
-            (change)="onFileSelected($event, 'workspaces', 'photo')"
+            (change)="onFileSelected($event, 'workspaces', 'photo'); onSubmit()"
             name="workspaceFile"
             accept="image/*"
             style="display: none"
@@ -58,9 +68,6 @@
         <p class="cognum-text-12" style="width: 50px">&ensp;&ensp;</p>
 
       </div>
-      <button class="button" (click)="onSubmit()">
-        Submit
-      </button>
   </div>
 </form>
 <div class="footer">

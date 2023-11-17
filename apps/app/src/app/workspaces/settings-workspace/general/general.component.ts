@@ -3,12 +3,11 @@ import { HttpParams } from '@angular/common/http';
 import { Component,  EventEmitter, OnInit, Output  } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { IUser, IWorkspace } from '@cognum/interfaces';
-import { debounceTime, distinctUntilChanged, filter, map } from 'rxjs';
+import {  IWorkspace } from '@cognum/interfaces';
+import { Location } from '@angular/common';
 import { AuthService } from '../../../auth/auth.service';
 import { NotificationsService } from '../../../services/notifications/notifications.service';
 import { DialogComponent } from '../../../shared/dialog/dialog.component';
-import { inListValidator } from '../../../shared/validations';
 import { WorkspacesService } from '../../workspaces.service';
 import { validatorFile } from '../../../shared/validations';
 import { Router } from '@angular/router';
@@ -24,7 +23,7 @@ export class SettingsGeneralComponent {
   @Output() changeStepEvent = new EventEmitter();
   photo: File | null = null;
   updateForm = this.formBuilder.group({
-    workspaceName: ['', [Validators.required]],
+    name: ['', [Validators.required, Validators.minLength(6)]],
     photo: [null, [] as any], 
   });
   
@@ -41,14 +40,15 @@ export class SettingsGeneralComponent {
     private uploadsService: UploadsService,
     private notificationsService: NotificationsService,
     public dialog: MatDialog,
-    private router: Router
+    private router: Router,
+    private location: Location 
   ) {
 
   }
 
   ngOnInit() {
     this.updateForm.patchValue({
-      workspaceName: this.workspace?.name || '',
+      name: this.workspace?.name || '',
       photo: this.workspace?.photo || null, 
     });
   }
@@ -63,16 +63,19 @@ export class SettingsGeneralComponent {
   }
 
   onSubmit() {
-    const { workspaceName, photo } = this.updateForm.value;
-    if (!this.updateForm.valid || !workspaceName) return;
+    const { name, photo } = this.updateForm.value;
+    if (!this.updateForm.valid) return;
   
     if (photo instanceof File) {
-      this.updateWorkspaceWithPhoto( photo);
+      this.updateWorkspaceWithPhoto(photo);
     } else {
-      this.updateWorkspaceName(workspaceName);
+      const newName = name || this.workspace.name || ''; // Certifique-se de ter uma string válida
+      this.updateWorkspaceName(newName);
     }
+    
     this.submitting = true;
   }
+  
   
   private updateWorkspaceWithPhoto(newPhoto: File) {
     const reader = new FileReader();
@@ -115,6 +118,7 @@ private updateData(data: Partial<IWorkspace>, message: string) {
           this.notificationsService.show(message);
           this.submitting = false;
           this.updateForm.reset();
+          this.location.back();
         },
         error: (error) => {
           console.log({ error });
@@ -138,8 +142,7 @@ private updateData(data: Partial<IWorkspace>, message: string) {
 
   reload() {
     let params = new HttpParams();
-    params = params.set('populate[0][path]', 'users .user');
-    params = params.set('populate[0][select]', 'name email photo');
+  
 
     return this.workspacesService.get(this.workspace._id, { params });
   }
@@ -151,6 +154,7 @@ private updateData(data: Partial<IWorkspace>, message: string) {
         const { name } = file;
         const extension = name.split('.')?.pop() || 'png';
         const filename = `${fieldName}.${extension}`;
+        this.selectedImage = URL.createObjectURL(file);
         const control = this.updateForm.get('photo');
         control?.patchValue(file);
         control?.setValidators(validatorFile);
@@ -166,7 +170,6 @@ private updateData(data: Partial<IWorkspace>, message: string) {
           })
           .subscribe((result) => {
             this.workspace.photo = `${result.url}?${timestamp}`;
-            this.selectedImage = `${this.workspace.photo}?${timestamp}`;
           });
         }
     } catch (error) {
