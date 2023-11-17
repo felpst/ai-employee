@@ -1,0 +1,79 @@
+<form [formGroup]="generalForm">
+  <div class="row">
+    <div class="form-field-container">
+      <span>AI employee name</span>
+      <div class="input-row">
+        <div class="form-row">
+          <input
+            formControlName="name"
+            class="input-name"
+            type="text"
+            placeholder="Adam"
+            [value]="employee.name"
+            (change)="onSubmit()"
+          />
+          <mat-error
+            *ngIf="hasInputError('name', 'required')"
+            class="cognum-text-12 warning-message"
+          >
+            Name field is required
+          </mat-error>
+          <mat-error
+            *ngIf="hasInputError('name', 'minlength')"
+            class="cognum-text-12 warning-message"
+          >
+            Employee name must be at least 6 characters long.
+          </mat-error>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-field-container">
+      <span>Create a short description for you AI employee</span>
+      <div class="input-row">
+        <div class="form-row">
+          <input
+            formControlName="role"
+            class="input-name"
+            type="text"
+            placeholder="Ex. marketing specialist, customer support..."
+            [value]="employee.role"
+            (change)="onSubmit()"
+          />
+          <mat-error
+            class="cognum-text-12 warning-message"
+            *ngIf="hasInputError('role', 'required')"
+          >
+            Description field is required
+          </mat-error>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="form-field-container">
+      <span class="cognum-headline-4">Select your AI employee avatar</span>
+      <div class="avatar">
+        <div
+          *ngFor="let avatar of availableAvatars"
+          (click)="selectAvatar(avatar)"
+          [ngClass]="{ 'avatar-selected': selectedAvatar === avatar }"
+        >
+          <img [src]="avatar" alt="avatar" />
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <div>
+      <span class="footer-title">Delete this AI employee</span>
+      <button class="button" (click)="onDeleteEmployee()">delete it</button>
+    </div>
+    <span class="footer-description"
+      >Are you sure you want to permanently delete this AI Employee? This action
+      cannot be undone, and all your data will be lost.
+    </span>
+  </div>
+</form>
