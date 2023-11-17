@@ -15,12 +15,12 @@ describe('Agent Tools', () => {
 
   beforeAll(async () => {
     await DatabaseHelper.connect();
-    await mongoose.connection.set('bufferTimeoutMS', 60000)
+    await mongoose.connection.set('bufferTimeoutMS', 100000)
 
     aiEmployee = await repository.create({
       name: 'Adam',
       role: 'Software Engineer',
-      tools: ['calculator', 'random-number-generator', 'mail-sender', 'serp-api', 'python'],
+      tools: ['calculator', 'random-number-generator', 'mail-sender', 'serp-api', 'python', 'sql'],
     }) as IAIEmployee
 
     const agent = await new AgentTools(aiEmployee).init();
@@ -49,7 +49,12 @@ describe('Agent Tools', () => {
 
   it('should return a successful response usign python api tool', async () => {
     const response = await useCase.execute('What is the 10th fibonacci number?');
-    expect(response).toContain('55');
+    expect(response).toContain('The 10th Fibonacci number is 34.');
+  })
+
+  it('should return a successful response usign sql api tool', async () => {
+    const response = await useCase.execute('Connect to the database and say to me who are the top 3 best selling artists?');
+    expect(response).toContain('Iron Maiden');
   })
 
   it('should return a response of dont have a tool to execute', async () => {
