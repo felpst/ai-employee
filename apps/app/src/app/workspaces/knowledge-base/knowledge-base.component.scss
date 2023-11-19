@@ -77,13 +77,12 @@ $btn-border-radius: 2px 0px 0px 2px;
 
     mat-card-header {
       display: flex;
+      justify-content: space-between;
       padding: 0 !important;
       margin-bottom: 1.1em;
       
-      .btn-more-icon {
-        align-self: flex-start;
-        margin-left: auto;
-        padding: 0 !important;
+      .header-title-subtitle {
+        flex-grow: 1;
       }
 
       mat-card-title {
@@ -103,18 +102,6 @@ $btn-border-radius: 2px 0px 0px 2px;
   }
 }
 
-::ng-deep .mat-mdc-menu-content {
-  padding: 0 !important;
-}
 
-button.mat-mdc-menu-item,
-button.mat-mdc-menu-item mat-icon {
-  font-size: $btn-font-size !important;
-  color: #a7a7a7 !important;
-
-  &:hover {
-    color: #000 !important;
-  }
-}
 
 

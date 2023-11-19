@@ -6,7 +6,6 @@ import { ActivatedRoute } from '@angular/router';
 import { IKnowledge, IWorkspace } from '@cognum/interfaces';
 import { AuthService } from '../../auth/auth.service';
 import { NotificationsService } from '../../services/notifications/notifications.service';
-import { DialogComponent } from '../../shared/dialog/dialog.component';
 import { WorkspacesService } from '../workspaces.service';
 import { KnowledgeBaseService } from './knowledge-base.service';
 import { KnowledgeFormComponent } from './knowledge-form/knowledge-form.component';
@@ -18,7 +17,7 @@ import { KnowledgeModalComponent } from './knowledge-modal/knowledge-modal.compo
   styleUrls: ['./knowledge-base.component.scss'],
 })
 export class KnowledgeBaseComponent implements OnInit {
-  workspace!: IWorkspace | null;
+  workspace!: IWorkspace;
   knowledgeBases: IKnowledge[] = [];
   searchText = '';
 
@@ -51,9 +50,10 @@ export class KnowledgeBaseComponent implements OnInit {
       data: { knowledge, workspace: this.workspace },
     });
     dialogRef.afterClosed().subscribe((res) => {
-      this.loadKnowledgeBase();
+      this.knowledgeBaseService.getAllFromWorkspace(this.workspace._id);
     });
   }
+
 
   onSearch(event: any) {
     const searchText = event.trim().toLowerCase();
@@ -91,31 +91,12 @@ export class KnowledgeBaseComponent implements OnInit {
     );
   }
 
-  editKnowledge(knowledge: IKnowledge) {
-    this.onForm(knowledge);
+  handleKnowledgeEdited() {
+    this.loadKnowledgeBase();
   }
 
-  deleteKnowledge(knowledge: IKnowledge) {
-    this.knowledgeBaseService.delete(knowledge).subscribe((res) => {
-      this.loadKnowledgeBase();
-      this.notificationsService.show('Knowledge deleted!');
-    });
-  }
-
-  openDeleteConfirmationDialog(knowledge: IKnowledge) {
-    const dialogRef = this.dialog.open(DialogComponent, {
-      data: {
-        title: 'Delete Confirmation',
-        content: 'Are you sure you want to delete this knowledge?',
-        confirmText: 'Delete',
-      },
-    });
-
-    dialogRef.afterClosed().subscribe((result) => {
-      if (result) {
-        this.deleteKnowledge(knowledge);
-      }
-    });
+  handleKnowledgeDeleted() {
+    this.loadKnowledgeBase();
   }
 
   openKnowledgeModal(knowledge: IKnowledge): void {
