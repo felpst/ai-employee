@@ -8,4 +8,6 @@ export interface IWorkspace extends DefaultModel {
   accessLink?: string;
   private?: boolean;
   users: string[] | IUser[];
+  openaiAssistantId: string;
+  openaiThreadId: string;
 }

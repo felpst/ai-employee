@@ -10,6 +10,8 @@ const schema = new Schema<IWorkspace>({
   photo: { type: String },
   private: { type: Boolean },
   users: [{ type: Schema.Types.ObjectId, ref: 'User' }],
+  openaiAssistantId: { type: String },
+  openaiThreadId: { type: String },
   ...defaultSchemaProps,
 });
 triggers(schema);
