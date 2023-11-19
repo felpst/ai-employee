@@ -17,6 +17,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MarkdownModule } from 'ngx-markdown';
 import { LMarkdownEditorModule } from 'ngx-markdown-editor';
+import { SharedModule } from '../../shared/shared.module';
 import { KnowledgeFormComponent } from './knowledge-form/knowledge-form.component';
 import { KnowledgeModalComponent } from './knowledge-modal/knowledge-modal.component';
 
@@ -43,6 +44,7 @@ import { KnowledgeModalComponent } from './knowledge-modal/knowledge-modal.compo
     MatProgressSpinnerModule,
     MatMenuModule,
     LMarkdownEditorModule,
+    SharedModule
   ],
 })
-export class KnowledgeBaseModule {}
+export class KnowledgeBaseModule { }

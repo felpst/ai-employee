@@ -10,6 +10,7 @@ import { AuthService } from '../../../auth/auth.service';
 import { NotificationsService } from '../../../services/notifications/notifications.service';
 import { UsersService } from '../../../services/users/users.service';
 import { DialogComponent } from '../../../shared/dialog/dialog.component';
+import { WorkspacesService } from '../../workspaces.service';
 import { KnowledgeBaseService } from '../knowledge-base.service';
 
 @Component({
@@ -31,6 +32,7 @@ export class KnowledgeFormComponent {
   constructor(
     private formBuilder: FormBuilder,
     private knowledgeBaseService: KnowledgeBaseService,
+    private workspaceService: WorkspacesService,
     private usersService: UsersService,
     private authService: AuthService,
     private dialog: MatDialog,
@@ -56,6 +58,10 @@ export class KnowledgeFormComponent {
     this.usersService.list().subscribe((members: IUser[]) => {
       this.members = members.filter((member) => member._id !== this.creatorId);
     });
+
+    this.workspace = this.workspaceService.selectedWorkspace;
+    console.log(this.workspace)
+
   }
 
   onSave() {
@@ -86,7 +92,7 @@ export class KnowledgeFormComponent {
           },
         });
     } else {
-      const { _id } = this.data.workspace;
+      const { _id } = this.workspace;
       const defaultPermissions = this.members.map((member) => ({
         userId: member._id,
         permission: 'Reader',

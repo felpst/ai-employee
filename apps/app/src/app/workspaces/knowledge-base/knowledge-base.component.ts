@@ -19,13 +19,12 @@ import { KnowledgeModalComponent } from './knowledge-modal/knowledge-modal.compo
 })
 export class KnowledgeBaseComponent implements OnInit {
   workspace!: IWorkspace | null;
-  knowledgeBase: IKnowledge[] = [];
-  knowledgeBaseFiltered: IKnowledge[] = [];
+  knowledgeBases: IKnowledge[] = [];
   searchText = '';
 
-  sortingType: 'newFirst' | 'oldFirst' | 'mix' = 'newFirst';
+  sortingType: 'new' | 'old' | 'acess' = 'new';
   sortingDirection: 'asc' | 'desc' = 'desc';
-  activeButton = 'newFirst';
+  activeButton = 'new';
   isLoading = true;
   workspaceData = '@cognum/selected-workspace';
 
@@ -36,34 +35,14 @@ export class KnowledgeBaseComponent implements OnInit {
     private workspacesService: WorkspacesService,
     private notificationsService: NotificationsService,
     private dialog: MatDialog
-  ) {}
+  ) { }
 
   ngOnInit(): void {
-    const workspaces = this.workspacesService.workspaces;
-    if (workspaces.size === 0) {
-      return this.onLoadList();
-    } else {
-      this.workspace =
-        this.workspacesService.workspaces.get(this.workspaceId) || null;
-      this.loadKnowledgeBase(this.workspaceId);
-      this.isLoading = false;
-    }
-  }
-
-  onLoadList() {
-    this.workspacesService.list().subscribe((data) => {
-      const workspace = data.get(this.workspaceId) || null;
-      console.log({ data, workspace });
-      this.workspace = workspace;
-      this.loadKnowledgeBase(this.workspaceId);
+    this.route.data.subscribe((data) => {
+      this.knowledgeBases = data['0'] as IKnowledge[];
+      this.workspace = this.workspacesService.selectedWorkspace;
       this.isLoading = false;
     });
-  }
-
-  getWorkspace(workspaceId: string) {
-    this.workspacesService
-      .get(workspaceId)
-      .subscribe((workspace) => (this.workspace = workspace));
   }
 
   onForm(knowledge?: IKnowledge) {
@@ -72,29 +51,35 @@ export class KnowledgeBaseComponent implements OnInit {
       data: { knowledge, workspace: this.workspace },
     });
     dialogRef.afterClosed().subscribe((res) => {
-      this.loadKnowledgeBase(this.workspaceId);
+      this.loadKnowledgeBase();
     });
   }
 
   onSearch(event: any) {
-    this.searchText = event.target.value;
-    this.knowledgeBaseFiltered = this.knowledgeBase.filter((knowledge) => {
-      return knowledge.data.includes(this.searchText);
-    });
+    const searchText = event.trim().toLowerCase();
+
+    if (!searchText) {
+      this.loadKnowledgeBase();
+      return;
+    }
+
+    this.searchText = searchText;
+    this.knowledgeBases = this.knowledgeBases.filter(knowledge =>
+      knowledge.data.toLowerCase().includes(searchText)
+    );
   }
 
   clearSearch() {
     this.searchText = '';
-    this.knowledgeBaseFiltered = this.knowledgeBase;
+    this.loadKnowledgeBase();
   }
 
-  loadKnowledgeBase(workspaceId: string) {
+  loadKnowledgeBase() {
+    const workspaceId = this.workspace?._id
     return this.knowledgeBaseService
       .getAllFromWorkspace(workspaceId)
       .subscribe((knowledges) => {
-        this.knowledgeBase = knowledges;
-        this.clearSearch();
-
+        this.knowledgeBases = knowledges;
         this.sortKnowledgeBase(this.activeButton);
       });
   }
@@ -112,7 +97,7 @@ export class KnowledgeBaseComponent implements OnInit {
 
   deleteKnowledge(knowledge: IKnowledge) {
     this.knowledgeBaseService.delete(knowledge).subscribe((res) => {
-      this.loadKnowledgeBase(this.workspaceId);
+      this.loadKnowledgeBase();
       this.notificationsService.show('Knowledge deleted!');
     });
   }
@@ -140,7 +125,7 @@ export class KnowledgeBaseComponent implements OnInit {
       data: knowledge,
     });
 
-    dialogRef.afterClosed().subscribe(() => {});
+    dialogRef.afterClosed().subscribe(() => { });
   }
 
   updatedTimeDifference(updatedAt: Date | undefined): string {
@@ -148,9 +133,7 @@ export class KnowledgeBaseComponent implements OnInit {
       return 'N/A';
     }
 
-    const updatedAtDate = new Date(updatedAt);
-    const now = new Date();
-    const diffMilliseconds = now.getTime() - updatedAtDate.getTime();
+    const diffMilliseconds = new Date().getTime() - new Date(updatedAt).getTime();
     const diffMinutes = Math.floor(diffMilliseconds / (1000 * 60));
     const diffHours = Math.floor(diffMinutes / 60);
     const diffDays = Math.floor(diffHours / 24);
@@ -165,34 +148,24 @@ export class KnowledgeBaseComponent implements OnInit {
   }
 
   sortKnowledgeBase(sortingCriterion: string) {
-    if (sortingCriterion === 'newFirst') {
-      this.sortingDirection = 'desc';
-    } else if (sortingCriterion === 'oldFirst') {
-      this.sortingDirection = 'asc';
-    } else if (sortingCriterion === 'mix') {
-      this.knowledgeBaseFiltered.sort(() => Math.random() - 0.5);
-    } else {
-      this.sortingDirection = 'desc';
+    if (sortingCriterion === 'acess') {
+      this.knowledgeBases.sort(() => Math.random() - 0.5);
+      return;
     }
 
-    if (sortingCriterion !== 'mix') {
-      this.knowledgeBaseFiltered.sort((a: IKnowledge, b: IKnowledge) => {
-        if (a.createdAt && b.createdAt) {
-          const dateA = new Date(a.createdAt);
-          const dateB = new Date(b.createdAt);
+    this.sortingDirection = sortingCriterion === 'old' ? 'asc' : 'desc';
 
-          const sortOrder = this.sortingDirection === 'asc' ? 1 : -1;
+    this.knowledgeBases.sort((a: IKnowledge, b: IKnowledge) => {
+      if (a.createdAt && b.createdAt) {
+        const dateA = new Date(a.createdAt);
+        const dateB = new Date(b.createdAt);
 
-          if (dateA < dateB) {
-            return -sortOrder;
-          }
-          if (dateA > dateB) {
-            return sortOrder;
-          }
-        }
-        return 0;
-      });
-    }
+        const sortOrder = this.sortingDirection === 'asc' ? 1 : -1;
+
+        return dateA < dateB ? -sortOrder : dateA > dateB ? sortOrder : 0;
+      }
+      return 0;
+    });
   }
 
   onButtonClick(button: string) {
@@ -200,7 +173,4 @@ export class KnowledgeBaseComponent implements OnInit {
     this.sortKnowledgeBase(button);
   }
 
-  get workspaceId() {
-    return this.workspacesService.selectedWorkspace?._id || '';
-  }
 }

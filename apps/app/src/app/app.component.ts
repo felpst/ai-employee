@@ -60,6 +60,12 @@ export class AppComponent {
         )
       ),
       iconRegistry.addSvgIcon(
+        'edit',
+        sanitizer.bypassSecurityTrustResourceUrl(
+          '/assets/icons/edit.svg'
+        )
+      ),
+      iconRegistry.addSvgIcon(
         'whiteUser',
         sanitizer.bypassSecurityTrustResourceUrl('/assets/icons/whiteUser.svg')
       );

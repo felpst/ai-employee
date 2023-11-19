@@ -5,6 +5,7 @@ import { WorkspaceAdminGuard } from './admin.guard';
 import { WorkspaceHistoryComponent } from './history/workspace-history.component';
 import { WorkspaceHistoryResolver } from './history/workspace-history.resolver';
 import { KnowledgeBaseComponent } from './knowledge-base/knowledge-base.component';
+import { KnowledgeBaseResolver } from './knowledge-base/knowledge-base.resolver';
 import { SettingsWorkspaceComponent } from './settings-workspace/settings-workspace.component';
 import { SettingsTeamFormComponent } from './settings-workspace/team-form/team-form.component';
 import { WorkspaceOnboardingAIEmployeeComponent } from './workspace-onboarding/workspace-onboarding-ai-employee/workspace-onboarding-ai-employee.component';
@@ -84,6 +85,7 @@ const routes: Routes = [
           },
           {
             path: 'knowledge-base',
+            resolve: [KnowledgeBaseResolver],
             component: KnowledgeBaseComponent,
           },
           { path: '**', redirectTo: 'overview', pathMatch: 'full' },
