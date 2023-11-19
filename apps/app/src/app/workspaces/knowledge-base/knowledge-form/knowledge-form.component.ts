@@ -22,7 +22,10 @@ export class KnowledgeFormComponent {
   knowledge: IKnowledge | undefined;
   workspace!: IWorkspace;
   members: IUser[] = [];
-  form: FormGroup;
+  form: FormGroup = this.formBuilder.group({
+    title: ['', [Validators.required]],
+    data: ['', [Validators.required]],
+  });
   markdownOptions = {
     showPreviewPanel: false,
   };
@@ -44,24 +47,23 @@ export class KnowledgeFormComponent {
       workspace: IWorkspace;
     }
   ) {
-    this.form = this.formBuilder.group({
-      title: ['', [Validators.required]],
-      data: ['', [Validators.required]],
-    });
+    this.initializeForm();
+    this.initializeMembers();
+    this.workspace = this.workspaceService.selectedWorkspace;
+  }
 
-    if (data.knowledge) {
-      this.knowledge = data.knowledge;
-      this.form.patchValue(data.knowledge);
+  initializeForm(): void {
+    if (this.data.knowledge) {
+      this.knowledge = this.data.knowledge;
+      this.form.patchValue(this.data.knowledge);
     }
+  }
 
+  initializeMembers(): void {
     this.creatorId = this.authService.user?._id;
     this.usersService.list().subscribe((members: IUser[]) => {
       this.members = members.filter((member) => member._id !== this.creatorId);
     });
-
-    this.workspace = this.workspaceService.selectedWorkspace;
-    console.log(this.workspace)
-
   }
 
   onSave() {
@@ -78,18 +80,8 @@ export class KnowledgeFormComponent {
       this.knowledgeBaseService
         .update({ ...modifiedKnowledge, ...data })
         .subscribe({
-          next: (res) => {
-            this.notificationsService.show('Successfully updated knowledge');
-            this.dialogRef.close(res);
-            this.isLoading = false;
-          },
-          error: (error) => {
-            console.error('Error updating knowledge:', error);
-            this.notificationsService.show(
-              'Error updating knowledge. Please try again.'
-            );
-            this.isLoading = false;
-          },
+          next: (res) => this.handleSuccess('Successfully updated knowledge', res),
+          error: (error) => this.handleError('Error updating knowledge. Please try again.', error),
         });
     } else {
       const { _id } = this.workspace;
@@ -105,20 +97,22 @@ export class KnowledgeFormComponent {
       this.knowledgeBaseService
         .create({ ...data, workspace: _id, permissions: defaultPermissions })
         .subscribe({
-          next: (res) => {
-            this.notificationsService.show('Successfully created knowledge');
-            this.dialogRef.close(res);
-            this.isLoading = false;
-          },
-          error: (error) => {
-            console.error('Error creating knowledge:', error);
-            this.notificationsService.show(
-              'Error creating knowledge. Please try again.'
-            );
-            this.isLoading = false;
-          },
+          next: (res) => this.handleSuccess('Successfully created knowledge', res),
+          error: (error) => this.handleError('Error creating knowledge. Please try again.', error),
         });
     }
+  }
+
+  handleSuccess(message: string, res: any) {
+    this.notificationsService.show(message);
+    this.dialogRef.close(res);
+    this.isLoading = false;
+  }
+
+  handleError(message: string, error: any) {
+    console.error(message, error);
+    this.notificationsService.show(message);
+    this.isLoading = false;
   }
 
   handlePermissions(
@@ -161,34 +155,39 @@ export class KnowledgeFormComponent {
   }
 
   onRemove() {
-    this.dialog
-      .open(DialogComponent, {
-        data: {
-          title: 'Delete Knowledge',
-          content: 'Are you sure you want to delete this knowledge?',
-          confirmText: 'Delete',
-        },
-      })
-      .afterClosed()
-      .subscribe((result) => {
-        if (result && this.knowledge) {
-          this.knowledgeBaseService.delete(this.knowledge).subscribe((res) => {
+    const dialogRef = this.dialog.open(DialogComponent, {
+      data: {
+        title: 'Delete Knowledge',
+        content: 'Are you sure you want to delete this knowledge?',
+        confirmText: 'Delete',
+      },
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result && this.knowledge) {
+        this.knowledgeBaseService.delete(this.knowledge).subscribe({
+          next: (res) => {
             this.notificationsService.show('Successfully deleted knowledge');
             this.dialogRef.close(res);
-          });
-        }
-      });
+          },
+          error: (error) => {
+            console.error('Error deleting knowledge. Please try again.', error);
+            this.notificationsService.show('Error deleting knowledge. Please try again.');
+          },
+        });
+      }
+    });
   }
 
   closeModal(): void {
-    const isFormFilled = Object.values(this.form.value).some(
-      (fieldValue) => fieldValue
-    );
-
-    if (isFormFilled) {
+    if (this.isFormFilled()) {
       this.onSave();
     } else {
       this.dialogRef.close();
     }
+  }
+
+  isFormFilled(): boolean {
+    return Object.values(this.form.value).some((fieldValue) => fieldValue);
   }
 }

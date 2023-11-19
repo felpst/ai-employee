@@ -50,7 +50,11 @@ export class KnowledgeBaseComponent implements OnInit {
       data: { knowledge, workspace: this.workspace },
     });
     dialogRef.afterClosed().subscribe((res) => {
-      this.knowledgeBaseService.getAllFromWorkspace(this.workspace._id);
+      if (res) {
+        this.knowledgeBaseService.getAllFromWorkspace(this.workspace._id).subscribe((knowledgeBase) => {
+          this.knowledgeBases = knowledgeBase;
+        });
+      }
     });
   }
 
