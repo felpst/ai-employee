@@ -1,7 +1,7 @@
 <cognum-header [showBackButton]="true">
   <ng-container left>
     <div class="user-info-group">
-      <div style="display: flex; align-items: center; gap: 8px">
+      <div class="header-style">
         <img class="image-style" [src]="user.photo" alt="User Image" />
         <span class="title cognum-heading-3">{{ user.name }}</span>
       </div>
@@ -22,17 +22,17 @@
       </div>
       <!-- <router-outlet></router-outlet> -->
 
-      <form [formGroup]="updateForm" (ngSubmit)="onSubmit()">
+      <form [formGroup]="updateForm">
         <div class="row">
           <div class="name-container">
-            <span>Your name</span>
+            <span class="cognum-headline-4">Your name</span>
             <div class="name-row">
               <div class="form-row">
                 <input
                   formControlName="name"
                   class="input-name"
                   type="name"
-                  placeholder="Your name"
+                  placeholder="Your full name"
                   [value]="user.name"
                   (change)="onSubmit()"
                 />
@@ -53,46 +53,15 @@
           </div>
         </div>
         <div class="row">
-          <span class="cognum-headline-4">Your profile photo (optional)</span>
-          <div class="update-content">
-            <div class="file-container">
-              <label class="gray-content" for="workspaceFileInput">
-                <img
-                  *ngIf="!!user.photo || selectedImage; else withoutFile"
-                  class="workspaceImage"
-                  [src]="user.photo || selectedImage"
-                />
-                <ng-template #withoutFile>
-                  <img src="../../../assets/icons/Plus.svg" alt="plus" />
-                  <p class="inform-style">Upload</p>
-                </ng-template>
-              </label>
-              <input
-                class="input-style"
-                type="file"
-                id="workspaceFileInput"
-                (change)="onFileSelected($event, 'workspaces', 'photo')"
-                name="workspaceFile"
-                accept="image/*"
-                style="display: none"
-              />
-              <mat-error
-                *ngIf="hasInputError('photo', 'invalidFormat')"
-                class="cognum-text-12 warning-message"
-              >
-                Valid formats: .png, .jpg, .jpeg and .svg
-              </mat-error>
-              <mat-error
-                *ngIf="hasInputError('photo', 'invalidSize')"
-                class="cognum-text-12 warning-message"
-              >
-                Maximum size: 10MB
-              </mat-error>
-            </div>
-            <p class="cognum-text-12">
-              Help teammates know that this is right place.
-            </p>
-            <p class="cognum-text-12" style="width: 50px">&ensp;&ensp;</p>
+          <div class="name-container">
+            <span class="cognum-headline-4">Your profile photo (optional)</span>
+            <cognum-upload-image
+              [image]="user.photo || ''"
+              [parentId]="user._id"
+              fieldName="photo"
+              folder="users"
+              (finishedUpload)="updatePhoto($event)"
+            ></cognum-upload-image>
           </div>
         </div>
       </form>

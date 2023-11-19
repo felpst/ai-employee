@@ -1,9 +1,7 @@
 import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import {
-  AbstractControl,
   FormBuilder,
-  ValidationErrors,
   Validators
 } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -27,7 +25,6 @@ export class AccountSettingsComponent implements OnInit {
     name: [this.name, [Validators.required, Validators.minLength(6)]],
     photo: [this.photo, []],
   });
-  submitting = false;
   showUpdateError = false;
   errors = [];
   showDeleteConfirmation = false;
@@ -60,16 +57,14 @@ export class AccountSettingsComponent implements OnInit {
   }
 
   ngOnInit() {
-    console.log("OnInit");
-
-    // const resolvedData = this.route.snapshot.data;
-    // if (resolvedData && resolvedData[0]) {
-    //   this.updateForm.patchValue({
-    //     name: resolvedData[0].name,
-    //   });
-    //   this.name = resolvedData[0].name;
-    //   this.image = resolvedData[0].photo;
-    // }
+    const resolvedData = this.route.snapshot.data;
+    if (resolvedData && resolvedData[0]) {
+      this.updateForm.patchValue({
+        name: resolvedData[0].name,
+      });
+      this.name = resolvedData[0].name;
+      this.image = resolvedData[0].photo;
+    }
   }
 
   confirmDeleteAccount() {
@@ -86,51 +81,9 @@ export class AccountSettingsComponent implements OnInit {
     this.showDeleteConfirmation = false;
   }
 
-  validatorFile(control: AbstractControl): ValidationErrors | null {
-    const file = control.value;
-    if (!file) return null;
-    const { name, type, size } = file;
-    // Tamanho máximo: 10MB
-    const maxFileSize = 10 * 1024 * 1024;
-    const validFileTypes = ['image/jpeg', 'image/png'];
-    const conditionType =
-      !validFileTypes.includes(type) ||
-      !/jpg$|jpeg$|png$/g.test(name.toLowerCase());
-    const conditionSize = !(size <= maxFileSize);
-
-    if (conditionType)
-      return { custom: 'Formatos válidos: .png, .jpg e .jpeg' };
-    if (conditionSize) return { custom: 'Tamanho máximo: 5MB' };
-    return null;
-  }
-
-  onFileSelected(event: any, folder: string, fieldName = 'avatar') {
-    try {
-      const [file] = event.target.files;
-      if (file) {
-        const { name } = file;
-        const extension = name.split('.')?.pop() || 'png';
-        const filename = `${fieldName}.${extension}`;
-        this.selectedImage = URL.createObjectURL(file);
-        const control = this.updateForm.get('photo');
-        control?.patchValue(file);
-        control?.setValidators(this.validatorFile);
-        control?.updateValueAndValidity();
-        this.photo = file;
-        this.uploadsService
-          .single({
-            file,
-            folder,
-            filename,
-            parentId: this.user._id,
-          })
-          .subscribe((result) => {
-            this.user.photo = result.url;
-          });
-      }
-    } catch (error) {
-      console.log('An error ocurring: ', { error });
-    }
+  updatePhoto(url: any) {
+    console.log({ url });
+    this.user.photo = url;
   }
 
   hasInputError(inputName: string, errorName: string) {
@@ -143,7 +96,6 @@ export class AccountSettingsComponent implements OnInit {
 
   async onSubmit() {
     if (!this.updateForm.valid) return;
-    this.submitting = true;
     const { name } = this.updateForm.value;
     const data = { ...this.user };
     if (!!name && name.length >= 6) {
