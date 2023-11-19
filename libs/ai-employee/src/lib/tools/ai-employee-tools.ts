@@ -1,4 +1,4 @@
-import { MailSenderTool } from "@cognum/tools";
+import { KnowledgeRetrieverTool, MailSenderTool } from "@cognum/tools";
 import { DynamicStructuredTool, SerpAPI, Tool } from "langchain/tools";
 import { Calculator } from "langchain/tools/calculator";
 import { z } from "zod";
@@ -9,10 +9,10 @@ export class AIEmployeeTools {
     const tools: Tool[] = [];
 
     for (const id of toolsIds) {
-      tools.push(AIEmployeeTools.tools[id])
+      tools.push(AIEmployeeTools.tools[id]);
     }
 
-    return tools
+    return tools;
   }
 
   private static get tools() {
@@ -34,8 +34,13 @@ export class AIEmployeeTools {
         service: "gmail",
         user: "ta.funcionando15@gmail.com",
         password: "ibzu qzah ihzz sdcg",
+      }),
+      'knowledge-retriever': new KnowledgeRetrieverTool({
+        identity: 'You are an AI Employee at cognum.',
+        openaiAssistantId: 'asst_1yT4dTVoRU02XwW6AJFU1Fzt',
+        workspaceId: '65255213e481838d92a3864e'
       })
-    }
+    };
   }
 
 }
