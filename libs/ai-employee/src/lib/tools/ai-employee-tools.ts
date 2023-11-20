@@ -37,7 +37,6 @@ export class AIEmployeeTools {
       }),
       'knowledge-retriever': new KnowledgeRetrieverTool({
         identity: 'You are an AI Employee at cognum.',
-        openaiAssistantId: 'asst_1yT4dTVoRU02XwW6AJFU1Fzt',
         workspaceId: '65255213e481838d92a3864e'
       })
     };

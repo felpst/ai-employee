@@ -5,7 +5,6 @@ import OpenAI from 'openai';
 interface KnowledgeRetrieverParams {
   identity: string,
   workspaceId: string,
-  openaiAssistantId: string;
 }
 
 export class KnowledgeRetrieverTool extends DynamicTool {
@@ -17,7 +16,7 @@ export class KnowledgeRetrieverTool extends DynamicTool {
       description: 'Get informations from the knowledge added to the assistant. Input must be a question.',
       func: async (input: string) => {
         try {
-          const { openaiThreadId } = (await Workspace.findById(params.workspaceId)).toObject();
+          const { openaiThreadId, openaiAssistantId } = (await Workspace.findById(params.workspaceId)).toObject();
           const knowledges = (await Knowledge.find({ workspace: params.workspaceId }).select('openaiFileId'));
 
           const fileIds = knowledges.map(knowledge => knowledge.openaiFileId);
@@ -29,7 +28,7 @@ export class KnowledgeRetrieverTool extends DynamicTool {
           });
 
           const run = await openai.beta.threads.runs.create(openaiThreadId, {
-            assistant_id: params.openaiAssistantId,
+            assistant_id: openaiAssistantId,
             instructions: `${params.identity}\nUse your knowledge base to best respond to queries.`,
             tools: [{ type: 'retrieval' }],
             model: "gpt-4-1106-preview"
