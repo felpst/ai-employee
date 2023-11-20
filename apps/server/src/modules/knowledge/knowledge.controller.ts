@@ -2,8 +2,10 @@ import { IKnowledge } from '@cognum/interfaces';
 import { ChatModel } from '@cognum/llm';
 import { Knowledge } from '@cognum/models';
 import { NextFunction, Request, Response } from 'express';
+import fs from 'fs';
 import { LLMChain } from 'langchain/chains';
 import { PromptTemplate } from 'langchain/prompts';
+import OpenAI from 'openai';
 import ModelController from '../../controllers/model.controller';
 
 export class KnowledgeController extends ModelController<typeof Knowledge> {
@@ -43,6 +45,11 @@ export class KnowledgeController extends ModelController<typeof Knowledge> {
       console.log(error);
       return '';
     }
+  }
+
+  private _textToFilename(text: string, ext?: string): string {
+    const invalidCharsRegex = /[/\\?%*:|"<>]/g;
+    return text.replace(invalidCharsRegex, '_') + `${ext ? `.${ext}` : ''}`;
   }
 
   public async create(
@@ -117,6 +124,43 @@ export class KnowledgeController extends ModelController<typeof Knowledge> {
       const id: string = req.params.workspaceId;
       const knowledges = await Knowledge.find({ workspace: id });
       res.json(knowledges);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  public async addOpenAIFile(
+    req: Request,
+    _: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const openai = new OpenAI();
+
+      const knowledges = Array.isArray(req.body) ? [...req.body] : [req.body];
+      const newBody = [];
+
+      for (const knowledge of knowledges) {
+        let fileName: string;
+        const { file } = req;
+
+        if (file) {
+          const ext = file.filename.split('.').at(-1);
+          fileName = req.body.title ? this._textToFilename(req.body.title, ext) : file.filename;
+          fs.writeFileSync(`temp/${fileName}`, file.buffer);
+        } else {
+          const ext = 'txt';
+          const title = await this._generateTitle(req.body.data);
+          fileName = this._textToFilename(title, ext);
+        }
+        const fileToUpload = fs.createReadStream(`temp/${fileName}`);
+
+        openai.files.create({ file: fileToUpload, purpose: 'assistants' });
+        newBody.push(knowledge);
+      }
+      req.body = newBody;
+
+      next();
     } catch (error) {
       next(error);
     }
