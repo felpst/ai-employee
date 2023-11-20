@@ -20,7 +20,6 @@
       <div class="cognum-mb-0">
         <cognum-tab-navigator [navs]="navs"></cognum-tab-navigator>
       </div>
-      <!-- <router-outlet></router-outlet> -->
 
       <form [formGroup]="updateForm">
         <div class="row">
@@ -68,7 +67,7 @@
       <div class="footer">
         <div>
           <span class="cognum-headline-4">Delete your account</span>
-          <button class="button">delete it</button>
+          <button class="button" (click)="onDeleteUser()">delete it</button>
         </div>
         <span
           >Are you sure you want to permanently delete your account? This action
