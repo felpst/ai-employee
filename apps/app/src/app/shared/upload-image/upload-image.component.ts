@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { UploadsService } from '../../services/uploads/uploads.service';
 import { validatorFile } from '../validations';
@@ -8,7 +8,7 @@ import { validatorFile } from '../validations';
   templateUrl: './upload-image.component.html',
   styleUrls: ['./upload-image.component.scss'],
 })
-export class UploadImageComponent {
+export class UploadImageComponent implements OnInit {
   @Input() helpMessage = 'Help teammates know that this is right place.';
   @Input() image = '';
   @Input() parentId = '';
@@ -21,6 +21,13 @@ export class UploadImageComponent {
   });
 
   constructor(private uploadsService: UploadsService, private formBuilder: FormBuilder) { }
+
+
+  ngOnInit(): void {
+    if (this.image) {
+      this.selectedImage = this.image
+    }
+  }
 
   onFileSelected(event: any) {
     try {
@@ -37,7 +44,6 @@ export class UploadImageComponent {
         control?.patchValue(file);
         control?.setValidators(validatorFile);
         control?.updateValueAndValidity();
-        this.image = file;
         this.uploadsService
           .single({
             file,

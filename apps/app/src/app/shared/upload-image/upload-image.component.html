@@ -2,9 +2,9 @@
   <div class="file-container">
     <label class="gray-content" for="workspaceFileInput">
       <img
-        *ngIf="!!image || selectedImage; else withoutFile"
+        *ngIf="!!selectedImage; else withoutFile"
         class="image"
-        [src]="image || selectedImage"
+        [src]="selectedImage"
       />
       <ng-template #withoutFile>
         <img src="../../../assets/icons/Plus.svg" alt="plus" />
