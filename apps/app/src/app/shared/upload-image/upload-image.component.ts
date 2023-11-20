@@ -17,7 +17,7 @@ export class UploadImageComponent implements OnInit {
   @Output() finishedUpload = new EventEmitter();
   selectedImage: string | null = null;
   uploadForm = this.formBuilder.group({
-    image: [this.image, []],
+    image: [null, []],
   });
 
   constructor(private uploadsService: UploadsService, private formBuilder: FormBuilder) { }
@@ -33,28 +33,30 @@ export class UploadImageComponent implements OnInit {
     try {
       const [file] = event.target.files;
       if (file) {
-        const { name } = file;
-        const extension = name.split('.')?.pop() || 'png';
-        const filename = `${this.fieldName}.${extension}`;
-        const selected = URL.createObjectURL(file);
-        console.log({ selected });
-
-        this.selectedImage = selected;
         const control = this.uploadForm.get('image');
+        const selected = URL.createObjectURL(file);
+        this.selectedImage = selected;
+
         control?.patchValue(file);
         control?.setValidators(validatorFile);
         control?.updateValueAndValidity();
-        this.uploadsService
-          .single({
-            file,
-            folder: this.folder,
-            filename,
-            parentId: this.parentId,
-          })
-          .subscribe((result) => {
-            const { url } = result
-            this.finishedUpload.emit(url);
-          });
+        if (!control?.errors) {
+          const { name } = file;
+          const extension = name.split('.')?.pop() || 'png';
+          const filename = `${this.fieldName}.${extension}`;
+          this.uploadsService
+            .single({
+              file,
+              folder: this.folder,
+              filename,
+              parentId: this.parentId,
+            })
+            .subscribe((result) => {
+              const { url } = result
+              this.finishedUpload.emit(url);
+            });
+
+        }
       }
     } catch (error) {
       console.log('An error ocurring: ', { error });
@@ -64,7 +66,6 @@ export class UploadImageComponent implements OnInit {
   hasInputError(inputName: string, errorName: string) {
     return (
       this.uploadForm.get(inputName)?.invalid &&
-      this.uploadForm.get(inputName)?.touched &&
       this.uploadForm.get(inputName)?.hasError(errorName)
     );
   }
