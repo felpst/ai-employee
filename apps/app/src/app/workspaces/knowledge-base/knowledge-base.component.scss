@@ -9,6 +9,7 @@ $btn-border-radius: 2px 0px 0px 2px;
   padding: 25px 30px;
   background-color: #f0f2f5;
   height: 100vh;
+  font-family: 'Outfit', sans-serif !important;
 
   h2 {
     margin-top: 0;
@@ -98,6 +99,13 @@ $btn-border-radius: 2px 0px 0px 2px;
 
     .mat-mdc-card-content {
       padding: 0 !important;
+
+      p {
+        font-size: 0.875em;
+        font-weight: 400;
+        color: #262626;
+        line-height: 22px;
+      }
     }
   }
 }
