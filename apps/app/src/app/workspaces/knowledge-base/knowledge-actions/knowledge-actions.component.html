@@ -1,0 +1,13 @@
+<button mat-icon-button class="btn-more-icon" [matMenuTriggerFor]="menu" *ngIf="userHasEditorPermission(knowledge)">
+    <mat-icon>more_horiz</mat-icon>
+</button>
+<mat-menu #menu="matMenu" class="mat-menu-content">
+    <button mat-menu-item (click)="editKnowledge(knowledge)" class="mat-menu-item ">
+        <mat-icon svgIcon="edit"></mat-icon>
+        <span>edit</span>
+    </button>
+    <button mat-menu-item (click)="openDeleteConfirmationDialog(knowledge)" class="icon-btn">
+        <mat-icon svgIcon="delete"></mat-icon>
+        <span>delete</span>
+    </button>
+</mat-menu>
