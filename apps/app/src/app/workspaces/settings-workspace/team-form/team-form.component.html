@@ -65,28 +65,16 @@
     </div>
   </div>
 
-  <div class="row" *ngFor="let item of users">
-    <div class="users-container">
-      <div class="name-row">
-        <span>{{ item.name }}</span>
-        <mat-icon
-          svgIcon="delete"
-          (click)="onRemoveUser(item._id)"
-          class="delete-icon"
-          title="Remover usuário"
-        ></mat-icon>
-      </div>
-
-      <div class="photo-row">
-        <div class="photo-container">
-          <img
-            *ngIf="!!item.photo"
-            [src]="item.photo"
-            class="image-style"
-            alt="User Image"
-          />
-          <span class="cognum-text-14 font-email">{{ item.email }}</span>
+  <div class="users" *ngFor="let item of users">
+    <div class="user">
+      <cognum-users-avatar [users]="[item]"></cognum-users-avatar>
+      <div class="user-info">
+        <div class="user-name">{{ item.name }}</div>
+        <div class="user-email cognum-font-color-grey">
+          {{ item.email }}
         </div>
+      </div>
+      <div class="user-permission" *ngIf="item._id !== user._id">
         <select
           class="form-select no-focus-outline"
           (change)="changePermission($event.target, item._id)"
@@ -99,6 +87,14 @@
             {{ permission }}
           </option>
         </select>
+      </div>
+      <div class="user-remove" *ngIf="item._id !== user._id">
+        <mat-icon
+          svgIcon="delete"
+          (click)="onRemoveUser(item._id)"
+          class="delete-icon"
+          title="Remover usuário"
+        ></mat-icon>
       </div>
     </div>
   </div>

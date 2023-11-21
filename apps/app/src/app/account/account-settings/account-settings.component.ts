@@ -47,7 +47,7 @@ export class AccountSettingsComponent implements OnInit {
 
   updatePhoto(url: string) {
     this.user.photo = url;
-    return this.upadteData({ photo: url });
+    return this.updateData({ photo: url });
   }
 
   hasInputError(inputName: string, errorName: string) {
@@ -61,7 +61,7 @@ export class AccountSettingsComponent implements OnInit {
   async onSubmit() {
     if (!this.updateForm.valid) return;
     const { name } = this.updateForm.value;
-    return this.upadteData({ name: name || '' });
+    return this.updateData({ name: name || '' });
   }
 
   onDeleteUser() {
@@ -82,9 +82,10 @@ export class AccountSettingsComponent implements OnInit {
     return this.authService.user;
   }
 
-  private upadteData(data: Partial<IUser>) {
+  private updateData(data: Partial<IUser>) {
     this.usersService.update(this.user._id, { ...this.user, ...data }).subscribe({
-      next: () => {
+      next: (user) => {
+        this.authService.user = user;
         this.notificationsService.show('Successfully changed data!');
       },
       error: (error) => {
@@ -97,6 +98,7 @@ export class AccountSettingsComponent implements OnInit {
   private deleteUser() {
     this.usersService.delete(this.user._id).subscribe({
       next: () => {
+        this.authService.logout();
         this.cookieService.delete('token')
         this.notificationsService.show('Operation carried out successfully!');
         this.router.navigate(['/']);

@@ -15,7 +15,7 @@ interface Avatar {
   styleUrls: ['./users-avatar.component.scss'],
 })
 export class UsersAvatarComponent implements OnInit {
-  @Input() users: (IUser | IAIEmployee)[] = [];
+  @Input() users: (IUser | IAIEmployee | any)[] = [];
   @Input() showAdd = false;
 
   avatars: Avatar[] = [];
