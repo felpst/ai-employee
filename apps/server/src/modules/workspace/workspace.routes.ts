@@ -26,6 +26,7 @@ router.delete(
   '/:id',
   authMiddleware,
   workspaceController.delete,
+  workspaceController.deleteOpenAIAssistant,
   workspaceController.deleteKnowledgeBaseMiddleware
 );
 

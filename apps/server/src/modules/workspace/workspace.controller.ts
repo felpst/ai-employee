@@ -1,3 +1,4 @@
+import { IWorkspace } from '@cognum/interfaces';
 import KnowledgeBase from '@cognum/knowledge-base';
 import { User, Workspace } from '@cognum/models';
 import { NextFunction, Request, Response } from 'express';
@@ -82,6 +83,22 @@ export class WorkspaceController extends ModelController<typeof Workspace> {
         openaiThreadId: thread.id,
         openaiAssistantId: assistant.id,
       };
+      next();
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async deleteOpenAIAssistant(req: Request, res: Response, next: NextFunction) {
+    try {
+      const openai = new OpenAI();
+      const { openaiThreadId, openaiAssistantId }: IWorkspace = res.locals.data;
+
+      await Promise.all([
+        openai.beta.threads.del(openaiThreadId),
+        openai.beta.assistants.del(openaiAssistantId)
+      ]);
+
       next();
     } catch (error) {
       next(error);
