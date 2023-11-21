@@ -1,5 +1,5 @@
 import { IAIEmployee } from '@cognum/interfaces';
-import { defaultSchemaProps, triggers } from '@cognum/models';
+import { defaultSchemaProps, toolSchemaProps, triggers } from '@cognum/models';
 import { Schema, model, models } from 'mongoose';
 
 const schema = new Schema<IAIEmployee>(
@@ -8,7 +8,7 @@ const schema = new Schema<IAIEmployee>(
     role: { type: String, default: 'Assistant' },
     avatar: { type: String, default: 'https://storage.googleapis.com/factory-assets/avatars/Avatar1.jpeg' },
     workspace: { type: Schema.Types.ObjectId, ref: 'Workspace' },
-    tools: [{ type: String, default: [] }],
+    tools: { type: [toolSchemaProps], default: [] },
     ...defaultSchemaProps,
   },
   {

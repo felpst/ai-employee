@@ -16,7 +16,7 @@ export class AgentTools implements Agent {
 
   async init() {
     const model = new ChatModel();
-    const tools = AIEmployeeTools.get(this.aiEmployee.tools);
+    const tools = AIEmployeeTools.get(this.aiEmployee.tools.map(({ type }) => type));
 
     this._executor = await initializeAgentExecutorWithOptions(tools, model, {
       agentType: "structured-chat-zero-shot-react-description",

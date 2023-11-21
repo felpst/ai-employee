@@ -44,7 +44,36 @@ Content-Type: application/json
 Authorization: Bearer {{$authToken}}
 
 {
-  "role": "Role"
+  "tools": [
+    {
+      "type": "database-connect",
+      "credentials": {
+        "type": "mysql",
+        "host": "localhost",
+        "username": "root",
+        "password": "root",
+        "database": "database",
+        "tables": ["users"]
+      },
+      "createdBy": "6508b5f675f3ccdaa673fd76",
+      "updatedBy": "6508b5f675f3ccdaa673fd76"
+    },
+    {
+      "type": "calculator",
+      "createdBy": "6508b5f675f3ccdaa673fd76",
+      "updatedBy": "6508b5f675f3ccdaa673fd76"
+    },
+    {
+      "type": "send-mail",
+      "createdBy": "6508b5f675f3ccdaa673fd76",
+      "updatedBy": "6508b5f675f3ccdaa673fd76",
+      "credentials": {
+        "service": "Gmail",
+        "user": "gmail@teste.teste",
+        "password": "teste.teste"
+      }
+    }
+  ]
 }
 
 ### Delete ###

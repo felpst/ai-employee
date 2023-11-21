@@ -20,7 +20,7 @@ export class AIEmployeeAgent {
     const agentPrompt = new AgentPrompt(this.aiEmployee);
     const prompt = await agentPrompt.format();
 
-    const tools = AIEmployeeTools.get(this.aiEmployee.tools);
+    const tools = AIEmployeeTools.get(this.aiEmployee.tools.map(({ type }) => type));
     const toolNames = tools.map((tool) => tool.name);
 
     const outputParser = StructuredChatOutputParserWithRetries.fromLLM(
