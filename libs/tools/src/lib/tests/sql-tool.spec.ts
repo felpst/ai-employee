@@ -7,7 +7,7 @@ import { SQLTool } from '../tools/sql.tool';
 
 describe('SQL Tool Test', () => {
 
-
+    jest.setTimeout(1200000)
     const model = new ChatModel();
     const tools = [
         new SQLTool("postgresql", "renato", "password", "postgres", "5432", "Chinook")
