@@ -6,17 +6,21 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { RouterModule } from '@angular/router';
 import { SharedModule } from '../../../shared/shared.module';
+import { AIEmployeeSettingsRoutingModule } from './ai-employee-settings-routing.module';
 import { AIEmployeeSettingsComponent } from './ai-employee-settings.component';
 import { AIEmployeeGeneralComponent } from './general/general.component';
+import { AIEmployeeToolsComponent } from './tools/tools.component';
 
 @NgModule({
   declarations: [
     AIEmployeeSettingsComponent,
-    AIEmployeeGeneralComponent
+    AIEmployeeGeneralComponent,
+    AIEmployeeToolsComponent
   ],
   imports: [
     RouterModule,
     CommonModule,
+    AIEmployeeSettingsRoutingModule,
     FormsModule,
     ReactiveFormsModule,
     MatIconModule,
