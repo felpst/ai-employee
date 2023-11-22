@@ -3,7 +3,6 @@ import { ActivatedRoute, ActivatedRouteSnapshot, Router, RouterStateSnapshot, Ur
 import { Observable } from 'rxjs';
 import { AuthService } from '../auth/auth.service';
 import { NotificationsService } from '../services/notifications/notifications.service';
-import { UserType } from './settings-workspace/team-form/team-form.component';
 import { WorkspacesService } from './workspaces.service';
 
 @Injectable({
@@ -18,16 +17,15 @@ export class WorkspaceAdminGuard {
   ): Observable<boolean> | Promise<boolean> | UrlTree | boolean {
     return new Observable((observer) => {
       const loggedUser = this.authService.user;
-      const users = this.workspaceService.selectedWorkspace?.users as UserType[];
-
-      const _users = users && users.length ? users.map(({ user, permission }) => ({ ...user, permission })) : [];
-      const find = _users.find(({ _id }) => _id === loggedUser._id);
-      console.log({ loggedUser, users });
-      if (!find || find.permission !== 'Admin') {
-        this.router.navigate(['..'], { relativeTo: this.route });
-        this.notificationsService.show('You do not have permission to access this page!');
-        return observer.next(false);
-      }
+      // TODO FIX: This is don't work because this.workspaceService.selectedWorkspace is undefined on direct route access
+      // const users = this.workspaceService.selectedWorkspace?.users as UserType[];
+      // const _users = users && users.length ? users.map(({ user, permission }) => ({ ...user, permission })) : [];
+      // const find = _users.find(({ _id }) => _id === loggedUser._id);
+      // if (!find || find.permission !== 'Admin') {
+      //   this.router.navigate(['..'], { relativeTo: this.route });
+      //   this.notificationsService.show('You do not have permission to access this page!');
+      //   return observer.next(false);
+      // }
       return observer.next(true);
     });
   }

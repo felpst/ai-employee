@@ -1,15 +1,24 @@
 {
   "name": "@cognum/source",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "license": "MIT",
   "scripts": {
-    "app:deploy": "nx build app --prod && firebase deploy --only hosting",
-    "server:build": "nx build server --prod --generatePackageJson && xcopy .\\apps\\server\\app.yaml .\\dist\\apps\\server\\app.yaml /F /Y",
-    "server:deploy": "npm run server:build && gcloud app deploy dist/apps/server/app.yaml",
-    "chat-server:build": "nx build chat-server --prod --generatePackageJson && xcopy .\\apps\\chat-server\\chat-server.yaml .\\dist\\apps\\chat-server\\chat-server.yaml /F /Y",
-    "chat-server:deploy": "npm run chat-server:build && gcloud app deploy dist/apps/chat-server/chat-server.yaml",
+    "app:deploy": "nx build app --prod && firebase deploy --only hosting:cognum",
+    "server:build": "nx build server && cd dist/apps/server && npm i --package-lock-only",
+    "server:yaml": "xcopy .\\apps\\server\\app.yaml .\\dist\\apps\\server\\app.yaml /F /Y",
+    "server:deploy": "npm run server:build && npm run server:yaml && gcloud app deploy dist/apps/server/app.yaml",
+    "chat-server:build": "nx build chat-server && cd dist/apps/chat-server && npm i --package-lock-only",
+    "chat-server:yaml": "xcopy .\\apps\\chat-server\\chat-server.yaml .\\dist\\apps\\chat-server\\chat-server.yaml /F /Y",
+    "chat-server:deploy": "npm run chat-server:build && npm run chat-server:yaml && gcloud app deploy dist/apps/chat-server/chat-server.yaml",
     "serve:server": "nx serve server --host=0.0.0.0 --verbose",
-    "serve:app": "nx serve app --host=0.0.0.0"
+    "serve:app": "nx serve app --host=0.0.0.0",
+    "stage:app:deploy": "nx build app --configuration=stage && firebase deploy --only hosting:staging-cognum",
+    "stage:server:build": "nx build server && cd dist/apps/server && npm i --package-lock-only",
+    "stage:server:yaml": "xcopy .\\apps\\server\\app-stage.yaml .\\dist\\apps\\server\\app-stage.yaml /F /Y",
+    "stage:server:deploy": "npm run stage:server:build && npm run stage:server:yaml && gcloud app deploy dist/apps/server/app-stage.yaml",
+    "stage:chat-server:build": "nx build chat-server && cd dist/apps/chat-server && npm i --package-lock-only",
+    "stage:chat-server:yaml": "xcopy .\\apps\\chat-server\\chat-server-stage.yaml .\\dist\\apps\\chat-server\\chat-server-stage.yaml /F /Y",
+    "stage:chat-server:deploy": "npm run stage:chat-server:build && npm run stage:chat-server:yaml && gcloud app deploy dist/apps/chat-server/chat-server-stage.yaml"
   },
   "private": true,
   "dependencies": {

@@ -1,5 +1,5 @@
 export const env = {
-  production: false,
+  production: true,
   apis: {
     core: {
       url: 'https://cognum.uc.r.appspot.com',

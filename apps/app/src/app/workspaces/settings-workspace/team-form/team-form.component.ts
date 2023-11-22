@@ -22,7 +22,7 @@ export class SettingsTeamFormComponent {
   permissions = ['Admin', 'Employee'];
   teamForm = this.formBuilder.group({
     email: ['', [Validators.required, Validators.email]],
-    permission: ['', [Validators.required, inListValidator(this.permissions)]]
+    permission: ['Employee', [Validators.required, inListValidator(this.permissions)]]
   });
   submitting = false;
   errors = [];

@@ -29,4 +29,4 @@ import { OnboardingComponent } from './onboarding/onboarding.component';
     SharedModule,
   ],
 })
-export class AccountModule {}
+export class AccountModule { }

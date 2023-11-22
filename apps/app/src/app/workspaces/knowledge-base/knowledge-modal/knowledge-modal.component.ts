@@ -1,16 +1,13 @@
 import { Component, Inject } from '@angular/core';
 import {
   MAT_DIALOG_DATA,
-  MatDialog,
-  MatDialogRef,
+  MatDialogRef
 } from '@angular/material/dialog';
 import { IKnowledge, IUser, IWorkspace } from '@cognum/interfaces';
 import { AuthService } from '../../../auth/auth.service';
 import { NotificationsService } from '../../../services/notifications/notifications.service';
 import { UsersService } from '../../../services/users/users.service';
-import { DialogComponent } from '../../../shared/dialog/dialog.component';
 import { KnowledgeBaseService } from '../knowledge-base.service';
-import { KnowledgeFormComponent } from '../knowledge-form/knowledge-form.component';
 
 @Component({
   selector: 'cognum-knowledge-modal',
@@ -31,7 +28,6 @@ export class KnowledgeModalComponent {
   userId = '';
 
   constructor(
-    private dialog: MatDialog,
     private dialogRef: MatDialogRef<KnowledgeModalComponent>,
     private authService: AuthService,
     @Inject(MAT_DIALOG_DATA)
@@ -85,26 +81,18 @@ export class KnowledgeModalComponent {
       });
   }
 
-  async loadMembersFromPermissions() {
+  loadMembersFromPermissions() {
     const memberIds = this.currentKnowledgePermissions.map((p) => p.userId);
-    try {
-      const members = await this.usersService.list().toPromise();
-      if (members) {
-        this.members = [];
-        for (const member of members) {
-          if (member._id !== this.knowledge.createdBy) {
-            if (memberIds.includes(member._id)) {
-              this.members.push(member);
-            } else {
-              this.members.push(member);
-              this.memberPermissions[member._id] = 'Reader';
-            }
-          }
+    this.usersService.list().subscribe(members => {
+      this.members = members?.filter(member => member._id !== this.knowledge.createdBy) || [];
+      this.members.forEach(member => {
+        if (!memberIds.includes(member._id)) {
+          this.memberPermissions[member._id] = 'Reader';
         }
-      }
-    } catch (error) {
+      });
+    }, error => {
       console.error('Error getting members', error);
-    }
+    });
   }
 
   closeModal(): void {
@@ -120,91 +108,66 @@ export class KnowledgeModalComponent {
   }
 
   permissionsChanged(): boolean {
-    let changed = false;
-
     if (this.members.length !== this.currentKnowledgePermissions.length) {
-      changed = true;
+      return true;
     }
-    for (const member of this.members) {
-      const currentPermission = this.memberPermissions[member._id];
 
+    return this.members.some(member => {
+      const currentPermission = this.memberPermissions[member._id];
       const originalPermission = this.currentKnowledgePermissions.find(
         (p) => p.userId === member._id
       )?.permission;
-      if (currentPermission !== originalPermission) {
-        changed = true;
-      }
-    }
-    return changed;
+
+      return currentPermission !== originalPermission;
+    });
   }
 
-  setPermission(member: IUser, permission: string) {
-    const currentPermission = this.currentKnowledgePermissions.find(
-      (p) => p.userId === member._id
-    )?.permission;
+  setPermission(member: IUser, permission: 'Reader' | 'Editor') {
+    const currentPermission = this.currentKnowledgePermissions.find(p => p.userId === member._id)?.permission;
+
     if (!currentPermission || currentPermission !== permission) {
       if (member._id !== this.knowledge.createdBy) {
         this.memberPermissions[member._id] = permission;
-
         this.updatePermissionsInDatabase(member, permission);
       }
     }
   }
 
   applyPermissionsChanges() {
-    this.members.forEach((member) => {
-      const existingPermissionIndex =
-        this.currentKnowledgePermissions.findIndex(
-          (p) => p.userId === member._id
-        );
-      if (existingPermissionIndex !== -1) {
-        this.currentKnowledgePermissions[existingPermissionIndex].permission =
-          this.memberPermissions[member._id];
+    this.members.forEach(member => {
+      const existingPermission = this.currentKnowledgePermissions.find(p => p.userId === member._id);
+      if (existingPermission) {
+        existingPermission.permission = this.memberPermissions[member._id];
       }
     });
   }
 
-  updatePermissionsInDatabase(member: IUser, permission: string) {
+  updatePermissionsInDatabase(member: IUser, permission: 'Reader' | 'Editor') {
     if (member._id === this.knowledge.createdBy) {
       return;
     }
-
-    const existingPermission = this.knowledge?.permissions.find(
-      (p) => p.userId === member._id
-    );
+    const existingPermission = this.knowledge?.permissions.find(p => p.userId === member._id);
 
     if (existingPermission) {
-      existingPermission.permission = permission as 'Reader' | 'Editor';
+      existingPermission.permission = permission;
     } else {
-      const newPermission = {
-        userId: member._id,
-        permission: permission as 'Reader' | 'Editor',
-      };
-      this.knowledge.permissions.push(newPermission);
+      this.knowledge.permissions.push({ userId: member._id, permission });
     }
 
     this.knowledgeBaseService.update(this.knowledge).subscribe({
-      next: (res) => {
-        this.notificationsService.show('Successfully updated knowledge');
-      },
-      error: (error) => {
-        if (
-          error.status === 403 &&
-          error.error &&
-          error.error.message === 'Cannot change creator permission'
-        ) {
-          console.log('You do not have permission to perform this task');
-          this.notificationsService.show(
-            'You do not have permission to perform this task'
-          );
-        } else {
-          console.error('Error updating knowledge:', error);
-          this.notificationsService.show(
-            'Error updating knowledge. Please try again.'
-          );
-        }
-      },
+      next: () => this.notificationsService.show('Successfully updated knowledge'),
+      error: (error) => this.handleError(error)
     });
+  }
+
+  handleError(error: any) {
+    if (error.status === 403 && error.error?.message === 'Cannot change creator permission') {
+      console.log('You do not have permission to perform this task');
+      this.notificationsService.show('You do not have permission to perform this task');
+    } else {
+      console.error('Error updating knowledge:', error);
+      this.notificationsService.show('Error updating knowledge. Please try again.');
+    }
   }
 
   updatedTimeDifference(updatedAt: Date | undefined): string {
@@ -212,9 +175,7 @@ export class KnowledgeModalComponent {
       return 'N/A';
     }
 
-    const updatedAtDate = new Date(updatedAt);
-    const now = new Date();
-    const diffMilliseconds = now.getTime() - updatedAtDate.getTime();
+    const diffMilliseconds = new Date().getTime() - new Date(updatedAt).getTime();
     const diffMinutes = Math.floor(diffMilliseconds / (1000 * 60));
     const diffHours = Math.floor(diffMinutes / 60);
     const diffDays = Math.floor(diffHours / 24);
@@ -228,40 +189,12 @@ export class KnowledgeModalComponent {
     }
   }
 
-  onForm(knowledge?: IKnowledge) {
-    const dialogRef = this.dialog.open(KnowledgeFormComponent, {
-      width: '640px',
-      data: { knowledge, workspace: this.workspace },
-    });
-    dialogRef.afterClosed().subscribe((res) => {
-      this.loadKnowledgeBase(this.workspace._id);
-    });
+  handleKnowledgeEdited() {
+    this.loadKnowledgeBase(this.workspace._id);
   }
 
-  editKnowledge(knowledge: IKnowledge) {
-    this.onForm(knowledge);
-  }
-
-  deleteKnowledge(knowledge: IKnowledge) {
-    this.knowledgeBaseService
-      .delete(knowledge)
-      .subscribe(() => this.loadKnowledgeBase(this.workspace._id));
-  }
-
-  openDeleteConfirmationDialog(knowledge: IKnowledge) {
-    const dialogRef = this.dialog.open(DialogComponent, {
-      data: {
-        title: 'Delete Confirmation',
-        content: 'Are you sure you want to delete this knowledge?',
-        confirmText: 'Delete',
-      },
-    });
-
-    dialogRef.afterClosed().subscribe((result) => {
-      if (result) {
-        this.deleteKnowledge(knowledge);
-      }
-    });
+  handleKnowledgeDeleted() {
+    this.loadKnowledgeBase(this.workspace._id);
   }
 
   capitalizeName(name: string): string {

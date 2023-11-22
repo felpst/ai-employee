@@ -1,153 +1,112 @@
-import { Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import {
-  AbstractControl,
   FormBuilder,
-  ValidationErrors,
-  Validators,
+  Validators
 } from '@angular/forms';
-import { Router } from '@angular/router';
+import { MatDialog } from '@angular/material/dialog';
+import { ActivatedRoute, Router } from '@angular/router';
+import { IUser } from '@cognum/interfaces';
+import { CookieService } from 'ngx-cookie-service';
 import { AuthService } from '../../auth/auth.service';
 import { NotificationsService } from '../../services/notifications/notifications.service';
-import { UploadsService } from '../../services/uploads/uploads.service';
 import { UsersService } from '../../services/users/users.service';
-
+import { DialogComponent } from '../../shared/dialog/dialog.component';
+import { Step } from '../../shared/stepper/stepper.component';
 @Component({
   selector: 'cognum-account-settings',
   templateUrl: './account-settings.component.html',
   styleUrls: ['./account-settings.component.scss'],
 })
 export class AccountSettingsComponent implements OnInit {
-  name = '';
-  photo: File | null = null;
+  navs: Step[] = [
+    { title: 'General', routerLink: './' }
+  ]
   updateForm = this.formBuilder.group({
-    name: [this.name, [Validators.minLength(6)]],
-    photo: [this.photo, []],
+    name: ['', [Validators.required, Validators.minLength(6)]],
   });
-  submitting = false;
-  showUpdateError = false;
-  errors = [];
-  showDeleteConfirmation = false;
-  image = '';
-  selectedImage: string | null = null;
-  workspaceId: string | null = null;
 
   constructor(
-    private location: Location,
     private authService: AuthService,
     private formBuilder: FormBuilder,
-    private router: Router,
     private notificationsService: NotificationsService,
     private usersService: UsersService,
-    private uploadsService: UploadsService
-  ) {
-    this.updateForm.valueChanges.subscribe(() => {
-      this.showUpdateError = false;
-    });
-  }
-
-  openDeleteAccountModal() {
-    this.showDeleteConfirmation = true;
-  }
-
-  onRedirect() {
-    this.location.back();
-  }
+    private route: ActivatedRoute,
+    private dialog: MatDialog,
+    private router: Router,
+    private cookieService: CookieService
+  ) { }
 
   ngOnInit() {
-    this.usersService.getById(this.user._id).subscribe({
-      next: (response: any) => {
-        this.image = response.photo;
-        this.name = response.name;
-      },
-    });
-  }
-
-  confirmDeleteAccount() {
-    this.usersService.delete(this.user._id).subscribe({
-      next: () => {
-        this.router.navigate(['/auth/register']);
-      },
-    });
-
-    this.showDeleteConfirmation = false;
-  }
-
-  cancelDeleteAccount() {
-    this.showDeleteConfirmation = false;
-  }
-
-  validatorFile(control: AbstractControl): ValidationErrors | null {
-    const file = control.value;
-    if (!file) return null;
-    const { name, type, size } = file;
-    // Tamanho máximo: 10MB
-    const maxFileSize = 10 * 1024 * 1024;
-    const validFileTypes = ['image/jpeg', 'image/png'];
-    const conditionType =
-      !validFileTypes.includes(type) ||
-      !/jpg$|jpeg$|png$/g.test(name.toLowerCase());
-    const conditionSize = !(size <= maxFileSize);
-
-    if (conditionType)
-      return { custom: 'Formatos válidos: .png, .jpg e .jpeg' };
-    if (conditionSize) return { custom: 'Tamanho máximo: 5MB' };
-    return null;
-  }
-
-  onFileSelected(event: any, folder: string, fieldName = 'avatar') {
-    try {
-      const [file] = event.target.files;
-      if (file) {
-        const { name } = file;
-        const extension = name.split('.')?.pop() || 'png';
-        const filename = `${fieldName}.${extension}`;
-        this.selectedImage = URL.createObjectURL(file);
-        const control = this.updateForm.get('photo');
-        control?.patchValue(file);
-        control?.setValidators(this.validatorFile);
-        control?.updateValueAndValidity();
-        this.photo = file;
-        this.uploadsService
-          .single({
-            file,
-            folder,
-            filename,
-            parentId: this.user._id,
-          })
-          .subscribe((result) => {
-            console.log({ result });
-            this.user.photo = result.url;
-          });
-      }
-    } catch (error) {
-      console.log('An error ocurring: ', { error });
+    const resolvedData = this.route.snapshot.data;
+    if (resolvedData && resolvedData[0]) {
+      this.updateForm.patchValue({
+        name: resolvedData[0].name,
+      });
     }
+  }
+
+  updatePhoto(url: string) {
+    this.user.photo = url;
+    return this.updateData({ photo: url });
+  }
+
+  hasInputError(inputName: string, errorName: string) {
+    return (
+      this.updateForm.get(inputName)?.invalid &&
+      this.updateForm.get(inputName)?.touched &&
+      this.updateForm.get(inputName)?.hasError(errorName)
+    );
   }
 
   async onSubmit() {
     if (!this.updateForm.valid) return;
-    this.submitting = true;
     const { name } = this.updateForm.value;
-    const data = { ...this.user };
-    if (!!name && name.length >= 6) {
-      data.name = name;
-    }
-
-    this.usersService.update(this.user._id, { ...data }).subscribe({
-      next: () => {
-        this.notificationsService.show('Successfully changed data!');
-      },
-    });
+    return this.updateData({ name: name || '' });
   }
 
-  selectedItem: number | null = 1;
+  onDeleteUser() {
+    const dialogData = new DialogComponent({ title: 'Delete', content: 'Are you sure you want to delete your account?', confirmText: 'Yes' });
 
-  selectItem(itemNumber: number): void {
-    this.selectedItem = itemNumber;
+    const dialogRef = this.dialog.open(DialogComponent, {
+      maxWidth: "400px",
+      data: dialogData
+    });
+    dialogRef.afterClosed().subscribe(dialogResult => {
+      if (dialogResult) {
+        this.deleteUser();
+      }
+    });
   }
 
   get user() {
     return this.authService.user;
+  }
+
+  private updateData(data: Partial<IUser>) {
+    this.usersService.update(this.user._id, { ...this.user, ...data }).subscribe({
+      next: (user) => {
+        this.authService.user = user;
+        this.notificationsService.show('Successfully changed data!');
+      },
+      error: (error) => {
+        console.log('An error occurred while updating the information', { error });
+        this.notificationsService.show('An error occurred while updating the data, please try again in a moment');
+      }
+    });
+  }
+
+  private deleteUser() {
+    this.usersService.delete(this.user._id).subscribe({
+      next: () => {
+        this.authService.logout();
+        this.cookieService.delete('token')
+        this.notificationsService.show('Operation carried out successfully!');
+        this.router.navigate(['/']);
+      },
+      error: (error) => {
+        console.log('An error occurred while deleting information', { error });
+        this.notificationsService.show('There was an error deleting your account, please try again in a moment');
+      }
+    });
   }
 }

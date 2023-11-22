@@ -5,11 +5,12 @@
     [(ngModel)]="searchText"
     placeholder="input search text"
     class="search-input"
+    (input)="emitSearchUpdate()"
   />
   <button *ngIf="!searchText" mat-button aria-label="Clear">
     <mat-icon>search</mat-icon>
   </button>
-  <button *ngIf="searchText" mat-button aria-label="Clear">
+  <button *ngIf="searchText" mat-button aria-label="Clear" (click)="emitSearchClear()">
     <mat-icon>close</mat-icon>
   </button>
 </div>

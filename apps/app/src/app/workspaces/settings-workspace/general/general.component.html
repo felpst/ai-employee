@@ -1,0 +1,81 @@
+<form [formGroup]="updateForm" (ngSubmit)="onSubmit()">
+  <div class="row">
+    <div class="name-container">
+      <span>Company or team name</span>
+      <div class="name-row">
+        <div class="form-row">
+          <input
+            formControlName="name"
+            class="input-name"
+            type="name"
+            placeholder="Your name"
+            [value]="workspace.name"
+            (change)="onSubmit()"
+          />
+          <mat-error
+            *ngIf="hasInputError('name', 'required')"
+            class="cognum-text-12 warning-message"
+          >
+            Name field is required
+          </mat-error>
+          <div
+            *ngIf="hasInputError('name', 'minlength')"
+            class="cognum-text-12 warning-message"
+          >
+            Workspace name must be at least 6 characters long.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <span class="cognum-headline-4">Workspace photo (optional)</span>
+    <div class="update-content">
+      <div class="file-container">
+        <label class="gray-content" for="workspaceFileInput">
+          <img
+            *ngIf="!!workspace.photo || selectedImage; else withoutFile"
+            class="workspaceImage"
+            [src]="workspace.photo || selectedImage"
+          />
+          <ng-template #withoutFile>
+            <img src="../../../assets/icons/Plus.svg" alt="plus" />
+            <p class="inform-style">Upload</p>
+          </ng-template>
+        </label>
+        <input
+          class="input-style"
+          type="file"
+          id="workspaceFileInput"
+          (change)="onFileSelected($event, 'workspaces', 'photo')"
+          name="workspaceFile"
+          accept="image/*"
+          style="display: none"
+        />
+        <mat-error
+          *ngIf="hasInputError('photo', 'invalidFormat')"
+          class="cognum-text-12 warning-message"
+        >
+          Valid formats: .png, .jpg, .jpeg and .svg
+        </mat-error>
+        <mat-error
+          *ngIf="hasInputError('photo', 'invalidSize')"
+          class="cognum-text-12 warning-message"
+        >
+          Maximum size: 10MB
+        </mat-error>
+      </div>
+      <p class="cognum-text-12">
+        Help teammates know that this is right place.
+      </p>
+      <p class="cognum-text-12" style="width: 50px">&ensp;&ensp;</p>
+    </div>
+  </div>
+</form>
+<div class="footer">
+  <div>
+    <span class="cognum-headline-4">Delete workspace</span>
+    <button class="button" (click)="onRemoveWorkspace()">delete it</button>
+  </div>
+  <span>Are you sure you want to permanently delete your workspace? </span>
+</div>

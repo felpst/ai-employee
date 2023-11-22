@@ -6,7 +6,7 @@
       aria-label="Return"
       svgIcon="arrow-left"
       class="back"
-      [routerLink]="['..']"
+      (click)="onBack()"
     ></mat-icon>
     <div class="logo" *ngIf="logo">
       <img [src]="logo" />

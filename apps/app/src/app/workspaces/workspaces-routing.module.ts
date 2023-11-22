@@ -5,8 +5,10 @@ import { WorkspaceAdminGuard } from './admin.guard';
 import { WorkspaceHistoryComponent } from './history/workspace-history.component';
 import { WorkspaceHistoryResolver } from './history/workspace-history.resolver';
 import { KnowledgeBaseComponent } from './knowledge-base/knowledge-base.component';
+import { KnowledgeBaseResolver } from './knowledge-base/knowledge-base.resolver';
 import { SettingsWorkspaceComponent } from './settings-workspace/settings-workspace.component';
 import { SettingsTeamFormComponent } from './settings-workspace/team-form/team-form.component';
+import { SettingsGeneralComponent } from './settings-workspace/general/general.component';
 import { WorkspaceOnboardingAIEmployeeComponent } from './workspace-onboarding/workspace-onboarding-ai-employee/workspace-onboarding-ai-employee.component';
 import { WorkspaceOnboardingWorkspaceComponent } from './workspace-onboarding/workspace-onboarding-workspace/workspace-onboarding-workspace.component';
 import { WorkspaceOnboardingYourTeamComponent } from './workspace-onboarding/workspace-onboarding-your-team/workspace-onboarding-your-team.component';
@@ -14,6 +16,7 @@ import { WorkspaceOnboardingComponent } from './workspace-onboarding/workspace-o
 import { WorkspaceResolver } from './workspace.resolver';
 import { WorkspaceComponent } from './workspace/workspace.component';
 import { WorkspacesComponent } from './workspaces.components';
+
 
 const routes: Routes = [
   {
@@ -49,16 +52,20 @@ const routes: Routes = [
       {
         path: 'settings',
         component: SettingsWorkspaceComponent,
-        canActivate: [WorkspaceAdminGuard],
+        canActivate:[WorkspaceAdminGuard],
         children: [
-          // TODO general component
+          {
+            path: 'general',
+            data: { nav: { select: 0 } },
+            component: SettingsGeneralComponent,
+          },
 
           {
             path: 'team',
             data: { nav: { select: 1 } },
             component: SettingsTeamFormComponent,
           },
-          { path: '**', redirectTo: 'team', pathMatch: 'full' },
+          { path: '**', redirectTo: 'general', pathMatch: 'full' },
         ],
       },
       // Admin
@@ -84,6 +91,7 @@ const routes: Routes = [
           },
           {
             path: 'knowledge-base',
+            resolve: [KnowledgeBaseResolver],
             component: KnowledgeBaseComponent,
           },
           { path: '**', redirectTo: 'overview', pathMatch: 'full' },

@@ -8,11 +8,13 @@ import { RouterModule } from '@angular/router';
 import { SharedModule } from '../../shared/shared.module';
 import { SettingsWorkspaceComponent } from './settings-workspace.component';
 import { SettingsTeamFormComponent } from './team-form/team-form.component';
+import { SettingsGeneralComponent } from './general/general.component';
 
 @NgModule({
   declarations: [
     SettingsWorkspaceComponent,
-    SettingsTeamFormComponent
+    SettingsTeamFormComponent,
+    SettingsGeneralComponent
   ],
   imports: [
     RouterModule,

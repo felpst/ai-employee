@@ -7,10 +7,16 @@ export class UploadUtils {
   private _bucket: Bucket;
 
   constructor(bucket = 'cognum-data-sources') {
-    this._storage = new Storage({
-      keyFilename: 'cognum.secrets.json',
-      projectId: 'cognum',
-    });
+    if (process.env.PROD === 'true') {
+      this._storage = new Storage({
+        projectId: 'cognum',
+      });
+    } else {
+      this._storage = new Storage({
+        keyFilename: 'cognum.secrets.json',
+        projectId: 'cognum',
+      });
+    }
     this._bucket = this._storage.bucket(bucket);
   }
 

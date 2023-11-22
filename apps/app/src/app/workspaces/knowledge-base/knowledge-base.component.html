@@ -1,116 +1,56 @@
-<div class="main">
+<div class="page">
   <div class="header">
     <div class="">
-      <h2>{{ !!workspace ? workspace.name : '' }}'s Knowledge Base</h2>
+      <h2>General Knowledge base</h2>
     </div>
-
-    <div class="sorting-buttons">
-      <button
-        mat-stroked-button
-        [ngClass]="{
-          'active-button': activeButton === 'newFirst',
-          'inactive-button': activeButton !== 'newFirst'
-        }"
-        (click)="onButtonClick('newFirst')"
-      >
-        New first
-      </button>
-      <button
-        mat-stroked-button
-        [ngClass]="{
-          'active-button': activeButton === 'oldFirst',
-          'inactive-button': activeButton !== 'oldFirst'
-        }"
-        (click)="onButtonClick('oldFirst')"
-      >
-        Old first
-      </button>
-      <button
-        mat-stroked-button
-        [ngClass]="{
-          'active-button': activeButton === 'mix',
-          'inactive-button': activeButton !== 'mix'
-        }"
-        (click)="onButtonClick('mix')"
-      >
-        Mix
+    
+    <div class="controls">
+      <div class="sorting-buttons">
+        <button *ngFor="let button of ['new', 'old', 'acess']"
+          mat-stroked-button
+          [ngClass]="{
+            'active-button': activeButton === button,
+            'inactive-button': activeButton !== button
+          }"
+          (click)="onButtonClick(button)"
+        >
+          {{ button.charAt(0).toUpperCase() + button.slice(1) }}
+        </button>
+      </div>
+  
+      <cognum-search-bar
+        (searchUpdated)="onSearch($event)"
+        (searchCleared)="clearSearch()"
+      ></cognum-search-bar>
+  
+      <button mat-raised-button color="primary" (click)="onForm()" class="new-info-btn">
+        <mat-icon>add</mat-icon>
+        New Information
       </button>
     </div>
-
-    <div class="search-container">
-      <input
-        type="text"
-        [(ngModel)]="searchText"
-        (keyup)="onSearch($event)"
-        placeholder="Search..."
-        class="search-input"
-      />
-      <button
-        *ngIf="!searchText"
-        mat-icon-button
-        aria-label="Clear"
-        (click)="clearSearch()"
-      >
-        <mat-icon>search</mat-icon>
-      </button>
-      <button
-        *ngIf="searchText"
-        matSuffix
-        mat-icon-button
-        aria-label="Clear"
-        (click)="clearSearch()"
-      >
-        <mat-icon>close</mat-icon>
-      </button>
-    </div>
-
-    <button mat-raised-button color="primary" (click)="onForm()">
-      <mat-icon>add</mat-icon>
-      New Information
-    </button>
   </div>
 
   <div class="knowledges">
-    <mat-card
-      *ngFor="let knowledge of knowledgeBaseFiltered"
-      class="knowledge-card"
-    >
+    <mat-card *ngFor="let knowledge of knowledgeBases" class="knowledge-card">
       <mat-card-header>
-        <mat-card-title (click)="openKnowledgeModal(knowledge)">{{
-          knowledge.title
-        }}</mat-card-title>
-        <mat-card-subtitle (click)="openKnowledgeModal(knowledge)"
-          >last updated
-          {{
-            knowledge.updatedAt
-              ? updatedTimeDifference(knowledge.updatedAt)
-              : 'N/A'
-          }}</mat-card-subtitle
-        >
-        <button mat-icon-button class="icon-button" [matMenuTriggerFor]="menu"  *ngIf="userHasEditorPermission(knowledge)">
-          <mat-icon>more_horiz</mat-icon>
-        </button>
-        <mat-menu #menu="matMenu">
-          <button mat-menu-item (click)="editKnowledge(knowledge)">
-            <mat-icon>edit</mat-icon>
-            edit
-          </button>
-          <button
-            mat-menu-item
-            (click)="openDeleteConfirmationDialog(knowledge)"
-          >
-            <mat-icon>delete</mat-icon>
-            delete
-          </button>
-        </mat-menu>
+        <div class="header-title-subtitle" (click)="openKnowledgeModal(knowledge)">
+          <mat-card-title>{{ knowledge.title }}</mat-card-title>
+          <mat-card-subtitle>
+            last updated {{ knowledge.updatedAt ? updatedTimeDifference(knowledge.updatedAt) : 'N/A' }}
+          </mat-card-subtitle>
+        </div>
+        <knowledge-actions 
+          [knowledge]="knowledge" 
+          (knowledgeEdited)="handleKnowledgeEdited()" 
+          (knowledgeDeleted)="handleKnowledgeDeleted()">
+        </knowledge-actions>
       </mat-card-header>
       <mat-card-content (click)="openKnowledgeModal(knowledge)">
         <p>{{ knowledge.description }}</p>
       </mat-card-content>
     </mat-card>
   </div>
-
-  <div *ngIf="knowledgeBaseFiltered.length === 0">
+  <div *ngIf="knowledgeBases.length === 0">
     <p style="text-align: center">No knowledge found</p>
   </div>
 </div>

@@ -1,5 +1,6 @@
+import { HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { IKnowledge } from '@cognum/interfaces';
+import { IKnowledge, IWorkspace } from '@cognum/interfaces';
 import { Observable } from 'rxjs';
 import { CoreApiService } from '../../services/apis/core-api.service';
 
@@ -8,22 +9,30 @@ import { CoreApiService } from '../../services/apis/core-api.service';
 })
 export class KnowledgeBaseService {
   private route = 'knowledges';
+  knowledgeBase!: IKnowledge;
+  knowledgeBases: Map<string, IKnowledge> = new Map<string, IKnowledge>();
 
-  constructor(private coreApiService: CoreApiService) {}
+  constructor(private coreApiService: CoreApiService) { }
+
+  load(workspace: IWorkspace): Observable<IKnowledge[]> {
+    let params = new HttpParams();
+    params = params.set('filter[workspace]', workspace._id);
+    params = params.set('sort', '-updatedAt');
+
+    return this.list({ params });
+  }
 
   create(data: Partial<IKnowledge>): Observable<IKnowledge> {
     return this.coreApiService.post(this.route, data) as Observable<IKnowledge>;
   }
 
-  list(): Observable<IKnowledge[]> {
+  list(options?: any): Observable<IKnowledge[]> {
     return new Observable((observer) => {
       (
-        this.coreApiService.get(this.route, {
-          params: { sort: '-createdAt' },
-        }) as Observable<IKnowledge[]>
+        this.coreApiService.get(this.route, options) as Observable<IKnowledge[]>
       ).subscribe({
-        next: (knowledgeBase: IKnowledge[]) => {
-          observer.next(knowledgeBase);
+        next: (knowledgeBases: IKnowledge[]) => {
+          observer.next(knowledgeBases);
         },
       });
     });
