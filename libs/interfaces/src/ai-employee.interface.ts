@@ -8,5 +8,5 @@ export interface IAIEmployee extends DefaultModel {
   role: string;
   avatar?: string;
   workspace: Schema.Types.ObjectId | IWorkspace;
-  tools: { type: string, credentials: any }[];
+  tools: { type: string, options: any }[];
 }

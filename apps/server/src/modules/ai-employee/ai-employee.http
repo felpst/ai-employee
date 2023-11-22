@@ -47,7 +47,7 @@ Authorization: Bearer {{$authToken}}
   "tools": [
     {
       "type": "database-connect",
-      "credentials": {
+      "options": {
         "type": "mysql",
         "host": "localhost",
         "username": "root",
@@ -67,7 +67,7 @@ Authorization: Bearer {{$authToken}}
       "type": "send-mail",
       "createdBy": "6508b5f675f3ccdaa673fd76",
       "updatedBy": "6508b5f675f3ccdaa673fd76",
-      "credentials": {
+      "options": {
         "service": "Gmail",
         "user": "gmail@teste.teste",
         "password": "teste.teste"

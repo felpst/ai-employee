@@ -14,7 +14,7 @@ export const defaultSchemaProps = {
 
 export const toolSchemaProps = {
   type: { type: String, required: true },
-  credentials: {
+  options: {
     type: Map,
     of: Schema.Types.Mixed,
     required: false,
