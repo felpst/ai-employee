@@ -2,13 +2,8 @@ import { Knowledge, Workspace } from '@cognum/models';
 import { DynamicTool } from 'langchain/tools';
 import OpenAI from 'openai';
 
-interface KnowledgeRetrieverParams {
-  identity: string,
-  workspaceId: string,
-}
-
 export class KnowledgeRetrieverTool extends DynamicTool {
-  constructor(params: KnowledgeRetrieverParams) {
+  constructor(workspaceId: string) {
     const openai = new OpenAI();
 
     super({
@@ -16,39 +11,44 @@ export class KnowledgeRetrieverTool extends DynamicTool {
       description: 'Get informations from the knowledge added to the assistant. Input must be a question.',
       func: async (input: string) => {
         try {
-          const { openaiThreadId, openaiAssistantId } = (await Workspace.findById(params.workspaceId)).toObject();
-          const knowledges = (await Knowledge.find({ workspace: params.workspaceId }).select('openaiFileId'));
+          const thread = await openai.beta.threads.create();
+
+          const { openaiAssistantId } = await Workspace.findById(workspaceId).lean();
+          const knowledges = (await Knowledge.find({ workspace: workspaceId }).select('openaiFileId').lean());
 
           const fileIds = knowledges.map(knowledge => knowledge.openaiFileId);
 
-          await openai.beta.threads.messages.create(openaiThreadId, {
+          console.warn({ openaiAssistantId, fileIds });
+          await openai.beta.threads.messages.create(thread.id, {
             role: "user",
             content: input,
             file_ids: fileIds
           });
 
-          const run = await openai.beta.threads.runs.create(openaiThreadId, {
+          const run = await openai.beta.threads.runs.create(thread.id, {
             assistant_id: openaiAssistantId,
-            instructions: `${params.identity}\nUse your knowledge base to best respond to queries.`,
+            instructions: `You are a smart assistant that retrieves information using your knowledge. Your answer to the questions must be as objective as possible.`,
             tools: [{ type: 'retrieval' }],
             model: "gpt-4-1106-preview"
           });
 
           // await thread run to complete
           let currentRun: OpenAI.Beta.Threads.Runs.Run =
-            await openai.beta.threads.runs.retrieve(openaiThreadId, run.id);
+            await openai.beta.threads.runs.retrieve(thread.id, run.id);
 
           while (currentRun.status !== 'completed') {
-            currentRun = await openai.beta.threads.runs.retrieve(openaiThreadId, run.id);
-
-            if (['cancelled', 'cancelling', 'failed', 'expired', 'requires_action'].includes(currentRun.status)) // TODO: handle requires_action status
+            currentRun = await openai.beta.threads.runs.retrieve(thread.id, run.id);
+            if (['cancelled', 'cancelling', 'failed', 'expired', 'requires_action'].includes(currentRun.status))
               throw new Error(`OpenAI assistant run failed with status "${currentRun.status}"`);
+            await new Promise(r => setTimeout(r, 100));
           }
 
-          const messages = await openai.beta.threads.messages.list(openaiThreadId);
+          const messages = await openai.beta.threads.messages.list(thread.id);
           const response = messages.data[0].content[0] as OpenAI.Beta.Threads.Messages.MessageContentText;
 
-          return `${response.text}`;
+          await openai.beta.threads.del(thread.id);
+          console.error(response.text.value);
+          return response.text.value;
         } catch (error) {
           console.error(error);
         }

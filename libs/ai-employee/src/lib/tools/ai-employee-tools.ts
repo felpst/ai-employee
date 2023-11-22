@@ -35,10 +35,7 @@ export class AIEmployeeTools {
         user: "ta.funcionando15@gmail.com",
         password: "ibzu qzah ihzz sdcg",
       }),
-      'knowledge-retriever': new KnowledgeRetrieverTool({
-        identity: 'You are an AI Employee at cognum.',
-        workspaceId: '65255213e481838d92a3864e'
-      })
+      'knowledge-retriever': new KnowledgeRetrieverTool('655a940938fb988b9a14c1f9')
     };
   }
 
