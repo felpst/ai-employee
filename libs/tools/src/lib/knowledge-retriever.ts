@@ -39,7 +39,7 @@ export class KnowledgeRetrieverTool extends DynamicTool {
             currentRun = await openai.beta.threads.runs.retrieve(thread.id, run.id);
             if (['cancelled', 'cancelling', 'failed', 'expired', 'requires_action'].includes(currentRun.status))
               throw new Error(`OpenAI assistant run failed with status "${currentRun.status}"`);
-            await new Promise(r => setTimeout(r, 100));
+            await new Promise(r => setTimeout(r, 100)); // avoids half of the requests
           }
 
           const messages = await openai.beta.threads.messages.list(thread.id);
