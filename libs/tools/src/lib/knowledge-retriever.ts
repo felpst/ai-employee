@@ -18,7 +18,6 @@ export class KnowledgeRetrieverTool extends DynamicTool {
 
           const fileIds = knowledges.map(knowledge => knowledge.openaiFileId);
 
-          console.warn({ openaiAssistantId, fileIds });
           await openai.beta.threads.messages.create(thread.id, {
             role: "user",
             content: input,
@@ -47,7 +46,6 @@ export class KnowledgeRetrieverTool extends DynamicTool {
           const response = messages.data[0].content[0] as OpenAI.Beta.Threads.Messages.MessageContentText;
 
           await openai.beta.threads.del(thread.id);
-          console.error(response.text.value);
           return response.text.value;
         } catch (error) {
           console.error(error);
