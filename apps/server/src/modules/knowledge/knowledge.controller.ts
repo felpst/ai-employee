@@ -11,6 +11,7 @@ import ModelController from '../../controllers/model.controller';
 export class KnowledgeController extends ModelController<typeof Knowledge> {
   constructor() {
     super(Knowledge);
+    this.addOpenAIFile = this.addOpenAIFile.bind(this);
   }
 
   private async _generateTitle(data: string) {
@@ -142,20 +143,28 @@ export class KnowledgeController extends ModelController<typeof Knowledge> {
 
       for (const knowledge of knowledges) {
         let fileName: string;
+        let fileContent: string | Buffer;
         const { file } = req;
 
         if (file) {
           const ext = file.filename.split('.').at(-1);
           fileName = req.body.title ? this._textToFilename(req.body.title, ext) : file.filename;
-          fs.writeFileSync(`temp/${fileName}`, file.buffer);
+
+          fileContent = file.buffer;
         } else {
           const ext = 'txt';
-          const title = await this._generateTitle(req.body.data);
+          const title = req.body.title || (await this._generateTitle(req.body.data));
           fileName = this._textToFilename(title, ext);
-        }
-        const fileToUpload = fs.createReadStream(`temp/${fileName}`);
 
-        openai.files.create({ file: fileToUpload, purpose: 'assistants' });
+          fileContent = req.body.data;
+        }
+
+        fs.writeFileSync(`tmp/${fileName}`, fileContent);
+        const fileToUpload = fs.createReadStream(`tmp/${fileName}`);
+
+        const createdFile = await openai.files.create({ file: fileToUpload, purpose: 'assistants' });
+        knowledge['openaiFileId'] = createdFile.id;
+
         newBody.push(knowledge);
       }
       req.body = newBody;
