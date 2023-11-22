@@ -7,7 +7,7 @@ import { AIEmployeeRepository } from '../../../repositories';
 import { AIEmployeeCall } from '../../../use-cases/ai-employee-call.usecase';
 
 describe('aiEmployeeCall', () => {
-  jest.setTimeout(60000)
+  jest.setTimeout(600000)
 
   const repository = new AIEmployeeRepository(process.env.USER_ID);
   let aiEmployee: IAIEmployee;
@@ -21,7 +21,7 @@ describe('aiEmployeeCall', () => {
     aiEmployee = await repository.create({
       name: 'Adam',
       role: 'Software Engineer',
-      tools: ['calculator', 'random-number-generator', 'mail-sender', 'serp-api'],
+      tools: ['calculator', 'random-number-generator', 'mail-sender', 'serp-api', 'python', 'sql'],
     }) as IAIEmployee
 
     agent = await new AgentAIEmployee(aiEmployee).init();
@@ -88,6 +88,16 @@ describe('aiEmployeeCall', () => {
     const response = await useCase.execute('Create a ultimate article of how to be a good software engineer and send email to lineckeramorim@gmail.com.');
     expect(response).toContain('email has been sent');
   });
+
+  it('should return a successful response usign python api tool', async () => {
+    const response = await useCase.execute('What is the 10th fibonacci number?');
+    expect(response).toContain('55');
+  })
+
+  it('should return a successful response usign sql api tool', async () => {
+    const response = await useCase.execute('Connect to the database and say to me who are the top 3 best selling artists?');
+    expect(response).toContain('Iron Maiden');
+  })
 
   it('should return a response of dont have a tool to execute', async () => {
     const response = await useCase.execute('How is Linecker Amorim?');
