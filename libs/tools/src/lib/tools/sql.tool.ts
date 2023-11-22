@@ -4,7 +4,7 @@ import { DynamicTool } from 'langchain/tools';
 export class SQLTool extends DynamicTool {
   constructor(
     database: string,
-    user: string,
+    username: string,
     password: string,
     host: string,
     dbPort: string,
@@ -18,7 +18,7 @@ export class SQLTool extends DynamicTool {
         const { data } = await axios.post(process.env.SQL_TOOL_URL, {
           input_text: input,
           database,
-          user,
+          username,
           password,
           host,
           db_port: dbPort,
