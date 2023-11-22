@@ -9,5 +9,4 @@ export interface IWorkspace extends DefaultModel {
   private?: boolean;
   users: string[] | IUser[];
   openaiAssistantId: string;
-  openaiThreadId: string;
 }

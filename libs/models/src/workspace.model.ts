@@ -11,7 +11,6 @@ const schema = new Schema<IWorkspace>({
   private: { type: Boolean },
   users: [{ type: Schema.Types.ObjectId, ref: 'User' }],
   openaiAssistantId: { type: String },
-  openaiThreadId: { type: String },
   ...defaultSchemaProps,
 });
 triggers(schema);

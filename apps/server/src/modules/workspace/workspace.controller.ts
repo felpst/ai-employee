@@ -73,14 +73,10 @@ export class WorkspaceController extends ModelController<typeof Workspace> {
   async createOpenAIAssistant(req: Request, _: Response, next: NextFunction) {
     try {
       const openai = new OpenAI();
-      const [thread, assistant] = await Promise.all([
-        openai.beta.threads.create(),
-        openai.beta.assistants.create({ model: "gpt-4-1106-preview" })
-      ]);
+      const assistant = await openai.beta.assistants.create({ model: "gpt-4-1106-preview" });
 
       req.body = {
         ...req.body,
-        openaiThreadId: thread.id,
         openaiAssistantId: assistant.id,
       };
       next();
@@ -92,12 +88,9 @@ export class WorkspaceController extends ModelController<typeof Workspace> {
   async deleteOpenAIAssistant(req: Request, res: Response, next: NextFunction) {
     try {
       const openai = new OpenAI();
-      const { openaiThreadId, openaiAssistantId }: IWorkspace = res.locals.data;
+      const { openaiAssistantId }: IWorkspace = res.locals.data;
 
-      await Promise.all([
-        openai.beta.threads.del(openaiThreadId),
-        openai.beta.assistants.del(openaiAssistantId)
-      ]);
+      await openai.beta.assistants.del(openaiAssistantId);
 
       next();
     } catch (error) {
