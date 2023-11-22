@@ -36,7 +36,14 @@ export class AIEmployeeTools {
         password: "ibzu qzah ihzz sdcg",
       }),
       'python': new PythonTool(),
-      'sql': new SQLTool(),
+      'sql': new SQLTool(
+        "postgresql",
+        "renato",
+        "password",
+        "postgres",
+        "5432",
+        "Chinook"
+      ),
     }
   }
 
