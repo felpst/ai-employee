@@ -1,4 +1,4 @@
-import { KnowledgeRetrieverTool, MailSenderTool } from "@cognum/tools";
+import { KnowledgeRetrieverTool, MailSenderTool, PythonTool, SQLTool } from "@cognum/tools";
 import { DynamicStructuredTool, SerpAPI, Tool } from "langchain/tools";
 import { Calculator } from "langchain/tools/calculator";
 import { z } from "zod";
@@ -40,7 +40,16 @@ export class AIEmployeeTools {
         user: "ta.funcionando15@gmail.com",
         password: "ibzu qzah ihzz sdcg",
       }),
-      'knowledge-retriever': new KnowledgeRetrieverTool(this.workspaceId)
+      'knowledge-retriever': new KnowledgeRetrieverTool(this.workspaceId),
+      'python': new PythonTool(),
+      'sql': new SQLTool(
+        "postgresql",
+        "renato",
+        "password",
+        "postgres",
+        "5432",
+        "Chinook"
+      ),
     };
   }
 }

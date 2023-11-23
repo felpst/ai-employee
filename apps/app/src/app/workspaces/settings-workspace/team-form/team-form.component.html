@@ -1,0 +1,101 @@
+<form [formGroup]="teamForm" (ngSubmit)="onSubmit()">
+  <div class="row">
+    <div class="email-container">
+      <span>Add a new workspace member</span>
+      <div class="email-row">
+        <div class="form-row">
+          <input
+            formControlName="email"
+            class="input-email"
+            type="email"
+            placeholder="email@cognum.ai"
+          />
+          <mat-error
+            *ngIf="hasInputError('email', 'required')"
+            class="cognum-text-12 warning-message"
+          >
+            Email field is required
+          </mat-error>
+          <mat-error
+            *ngIf="hasInputError('email', 'email')"
+            class="cognum-text-12 warning-message"
+          >
+            Email is <strong>invalid</strong>
+          </mat-error>
+          <mat-error
+            *ngIf="hasInputError('email', 'emailNotExists')"
+            class="cognum-text-12 warning-message"
+          >
+            Email <strong>not registered</strong>
+          </mat-error>
+        </div>
+
+        <div class="form-row">
+          <select
+            class="form-select no-focus-outline"
+            aria-label="Default select example"
+            formControlName="permission"
+          >
+            <option *ngFor="let permission of permissions" [value]="permission">
+              {{ permission }}
+            </option>
+          </select>
+          <mat-error
+            *ngIf="hasInputError('permission', 'inList')"
+            class="cognum-text-12 warning-message"
+          >
+            Invalid permission
+          </mat-error>
+        </div>
+        <button
+          type="submit"
+          class="submit-button"
+          [disabled]="!teamForm.valid"
+          *ngIf="!submitting"
+        >
+          <mat-icon svgIcon="button-submit"></mat-icon>
+        </button>
+        <mat-progress-spinner
+          class="spinner"
+          mode="indeterminate"
+          *ngIf="submitting"
+        >
+        </mat-progress-spinner>
+      </div>
+    </div>
+  </div>
+
+  <div class="users" *ngFor="let item of users">
+    <div class="user">
+      <cognum-users-avatar [users]="[item]"></cognum-users-avatar>
+      <div class="user-info">
+        <div class="user-name">{{ item.name }}</div>
+        <div class="user-email cognum-font-color-grey">
+          {{ item.email }}
+        </div>
+      </div>
+      <div class="user-permission" *ngIf="item._id !== user._id">
+        <select
+          class="form-select no-focus-outline"
+          (change)="changePermission($event.target, item._id)"
+        >
+          <option
+            *ngFor="let permission of permissions"
+            [value]="permission"
+            [selected]="permission === item.permission"
+          >
+            {{ permission }}
+          </option>
+        </select>
+      </div>
+      <div class="user-remove" *ngIf="item._id !== user._id">
+        <mat-icon
+          svgIcon="delete"
+          (click)="onRemoveUser(item._id)"
+          class="delete-icon"
+          title="Remover usuário"
+        ></mat-icon>
+      </div>
+    </div>
+  </div>
+</form>

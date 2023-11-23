@@ -1,5 +1,19 @@
 {
   "projects": {
-    "default": "cognum"
-  }
+    "default": "cognum",
+    "staging": "cognum"
+  },
+  "targets": {
+    "cognum": {
+      "hosting": {
+        "stage": [
+          "stage"
+        ],
+        "staging": [
+          "app"
+        ]
+      }
+    }
+  },
+  "etags": {}
 }

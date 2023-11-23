@@ -8,7 +8,15 @@ export const addWorkspace = yup.object({
       photo: yup.string().notRequired(),
       accessLink: yup.string().notRequired(),
       private: yup.bool().notRequired(),
-      users: yup.array().of(yup.string()).notRequired(),
+      users: yup
+        .array()
+        .of(
+          yup.object({
+            user: yup.string().required(),
+            permission: yup.string().oneOf(['Admin', 'Employee']).required(),
+          })
+        )
+        .notRequired(),
     })
     .noUnknown()
     .required(),

@@ -45,7 +45,7 @@ export class WorkspacesComponent implements OnInit {
 
   onCreateWorkspace() {
     this.workspacesService
-      .create({ users: [this.user._id] } as IWorkspace)
+      .create({ users: [{ user: this.authService.user._id, permission: 'Admin' }] } as IWorkspace)
       .subscribe((data) => {
         this.router.navigate(['workspaces', data._id, 'onboarding']);
       });

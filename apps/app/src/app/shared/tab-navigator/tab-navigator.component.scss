@@ -1,0 +1,21 @@
+.nav {
+  display: flex;
+  flex: 1;
+  width: 100%;
+  padding: 16px 16px 0;
+  gap: 16px;
+}
+
+.nav-item {
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 22px;
+  padding-bottom: 16px;
+  cursor: pointer;
+  transition: all 0.35s ease-in-out;
+
+  &.selected {
+    color: #14b8a6;
+    border-bottom: 2px solid #14b8a6;
+  }
+}

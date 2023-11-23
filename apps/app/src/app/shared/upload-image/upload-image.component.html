@@ -1,0 +1,37 @@
+<div class="update-content">
+  <div class="file-container">
+    <label class="gray-content" for="workspaceFileInput">
+      <img
+        *ngIf="!!selectedImage; else withoutFile"
+        class="image"
+        [src]="selectedImage"
+      />
+      <ng-template #withoutFile>
+        <img src="../../../assets/icons/Plus.svg" alt="plus" />
+        <p class="inform-style">Upload</p>
+      </ng-template>
+    </label>
+    <input
+      class="input-style"
+      type="file"
+      id="workspaceFileInput"
+      (change)="onFileSelected($event)"
+      name="workspaceFile"
+      accept="image/*"
+    />
+    <mat-error
+      *ngIf="hasInputError('image', 'invalidFormat')"
+      class="cognum-text-12 warning-message"
+    >
+      Valid formats: .png, .jpg, .jpeg and .svg
+    </mat-error>
+    <mat-error
+      *ngIf="hasInputError('image', 'invalidSize')"
+      class="cognum-text-12 warning-message"
+    >
+      Maximum size: 10MB
+    </mat-error>
+  </div>
+  <p class="cognum-text-12">{{ helpMessage }}</p>
+  <p class="cognum-text-12" class="space">&ensp;&ensp;</p>
+</div>

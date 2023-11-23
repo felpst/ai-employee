@@ -57,7 +57,13 @@
         </div>
 
         <div slot="error" class="errorContainer" *ngIf="showLoginError">
-          <small>Email or password is incorrect.</small>
+          <small>Email or password is incorrect.</small><br />
+          <small
+            >Forgot your password?
+            <span class="cursor-pointer" routerLink="/auth/recovery"
+              >Click here.</span
+            ></small
+          >
         </div>
 
         <button

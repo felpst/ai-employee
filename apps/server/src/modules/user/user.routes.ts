@@ -13,7 +13,8 @@ const router: Router = express.Router();
 router.post(
   '/register',
   YupValidatorMiddleware(addUserSchema),
-  userController.register
+  userController.sendEmail,
+  userController.create
 );
 router.post('/', authMiddleware, userController.create);
 router.get('/', authMiddleware, userController.find);

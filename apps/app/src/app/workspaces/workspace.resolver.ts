@@ -16,13 +16,14 @@ export class WorkspaceResolver implements Resolve<IWorkspace> {
     private aiEmployeeService: AIEmployeesService,
     private notificationsService: NotificationsService,
     private _router: Router
-  ) {}
+  ) { }
 
   resolve(route: ActivatedRouteSnapshot): Observable<IWorkspace> {
     const id = route.paramMap.get('id') as string;
     return new Observable((observer) => {
       let params = new HttpParams();
-      params = params.set('populate[0][path]', 'users');
+      params = params.set('select', 'name photo users.permission');
+      params = params.set('populate[0][path]', 'users.user');
       params = params.set('populate[0][select]', 'name email photo');
 
       this.workspacesService

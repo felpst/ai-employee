@@ -20,6 +20,8 @@ import { DialogComponent } from './dialog/dialog.component';
 import { HeaderComponent } from './header/header.component';
 import { SearchBarComponent } from './search-bar/search-bar.component';
 import { StepperComponent } from './stepper/stepper.component';
+import { TabNavigatorComponent } from './tab-navigator/tab-navigator.component';
+import { UploadImageComponent } from './upload-image/upload-image.component';
 import { UsersAvatarComponent } from './users-avatar/users-avatar.component';
 
 const declarations: any[] = [
@@ -30,6 +32,8 @@ const declarations: any[] = [
   StepperComponent,
   AIEmployeeFormComponent,
   DefaultPageComponent,
+  TabNavigatorComponent,
+  UploadImageComponent
 ];
 
 const Modules: any[] = [
@@ -54,4 +58,4 @@ const Modules: any[] = [
   exports: [declarations, ...Modules],
   imports: [CommonModule, RouterModule, ...Modules],
 })
-export class SharedModule {}
+export class SharedModule { }

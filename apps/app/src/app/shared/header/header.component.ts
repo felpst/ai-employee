@@ -1,4 +1,6 @@
+import { Location } from '@angular/common';
 import { Component, Input } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'cognum-header',
@@ -8,4 +10,15 @@ import { Component, Input } from '@angular/core';
 export class HeaderComponent {
   @Input() logo = '';
   @Input() title = '';
+  @Input() showBackButton = false;
+  @Input() backURL = '';
+
+  constructor(private _location: Location, private _router: Router) { }
+
+  onBack() {
+    if (this.backURL) {
+      return this._router.navigate([this.backURL]);
+    }
+    return this._location.back();
+  }
 }

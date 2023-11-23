@@ -11,7 +11,7 @@ export class AIEmployeeResolver {
   constructor(
     private aiEmployeesService: AIEmployeesService,
     private _router: Router
-  ) {}
+  ) { }
 
   resolve(route: ActivatedRouteSnapshot): Observable<IAIEmployee> {
     const id = route.paramMap.get('id') as string;
@@ -23,7 +23,7 @@ export class AIEmployeeResolver {
             this.aiEmployeesService.aiEmployee = aiEmployee;
             observer.next(aiEmployee);
           },
-          error: (error) => {
+          error: () => {
             // TODO show error message to user
             this._router.navigate(['/']);
           },

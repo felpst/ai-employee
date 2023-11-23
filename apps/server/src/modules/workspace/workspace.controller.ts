@@ -16,7 +16,7 @@ export class WorkspaceController extends ModelController<typeof Workspace> {
     next: NextFunction
   ): Promise<void> {
     if (!req.query.filter) req.query.filter = {};
-    req.query.filter['users'] = { $in: req['userId'] };
+    req.query.filter['users.user'] = { $in: req['userId'] };
     next();
   }
 
@@ -27,10 +27,20 @@ export class WorkspaceController extends ModelController<typeof Workspace> {
   ): Promise<void> {
     if (req.body.users) {
       const userId = req['userId'];
-      const users = req.body.users;
-      req.body.users = await User.find({
-        $or: [{ _id: { $in: [userId] } }, { email: { $in: users } }],
+      const usersInData = req.body.users;
+      const emails = usersInData.map(({ user }) => user);
+
+      const usersInfo = await User.find({
+        $or: [{ _id: { $in: [userId] } }, { email: { $in: emails } }],
       });
+      const _users = usersInfo.map((userData) => {
+        const { email, _id } = userData.toObject();
+        if (_id.toString() === userId) return ({ user: _id, permission: 'Admin' })
+        const userPermission = usersInData.find(({ user }: any) => user === email);
+        const permission = userPermission ? userPermission.permission : 'Employee'
+        return ({ user: _id, permission });
+      });
+      req.body.users = _users
     }
     next();
   }

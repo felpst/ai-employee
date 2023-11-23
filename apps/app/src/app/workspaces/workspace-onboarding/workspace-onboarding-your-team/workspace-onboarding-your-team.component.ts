@@ -32,8 +32,7 @@ export class WorkspaceOnboardingYourTeamComponent implements OnInit {
 
   ngOnInit(): void {
     const user = this.authService.user;
-    const users = this.workspace.users as IUser[];
-    const filtered = users
+    const filtered = this.users
       .map(({ email }) => email)
       .filter((email) => email !== user.email);
     const _emails = filtered?.length ? filtered.join(', ') : '';
@@ -66,7 +65,8 @@ export class WorkspaceOnboardingYourTeamComponent implements OnInit {
     const _emails = emails
       .split(',')
       .map((email: string) => email.trim())
-      .filter((value: string) => !!value);
+      .filter((value: string) => !!value)
+      .map((email: string) => ({ user: email, permission: 'Employee' }));
 
     if (_emails.length) {
       return this.workspacesService
@@ -86,5 +86,9 @@ export class WorkspaceOnboardingYourTeamComponent implements OnInit {
 
   get workspace() {
     return this.workspacesService.selectedWorkspace;
+  }
+
+  get users(): IUser[] {
+    return this.workspace.users.map(({ user }) => user) as IUser[]
   }
 }

@@ -1,5 +1,13 @@
 <header>
   <div class="left">
+    <mat-icon
+      *ngIf="showBackButton"
+      aria-hidden="false"
+      aria-label="Return"
+      svgIcon="arrow-left"
+      class="back"
+      (click)="onBack()"
+    ></mat-icon>
     <div class="logo" *ngIf="logo">
       <img [src]="logo" />
     </div>

@@ -69,7 +69,7 @@ export const registerEmailTemplate = `
     <div class="container">
       <div class="header">
         <img
-          src="https://cognum.ai/wp-content/uploads/2023/07/cognum-logo-300x66.png"
+          src="https://cognum.web.app/assets/icons/icon.png"
           alt="Logo"
           class="logo"
         />

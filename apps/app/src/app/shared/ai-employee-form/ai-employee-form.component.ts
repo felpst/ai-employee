@@ -65,12 +65,12 @@ export class AIEmployeeFormComponent {
     return this.employeeService
       .create({ name, role, avatar, workspace, tools })
       .subscribe(
-        (_: any) => {
+        () => {
           this.notificationsService.show('AI Employee created successfully');
           this.isLoading = false;
           this.emitter.emit('Finish');
         },
-        (error: any) => {
+        (error) => {
           console.error('Error creating AI Employee:', error);
           this.notificationsService.show(
             'Error creating AI Employee. Please try again.'

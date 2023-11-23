@@ -55,18 +55,18 @@ export class ChatService {
   }
 
   private onOpen(event: any) {
-    console.log('Connected to WebSocket server.');
+    if (!env.production) console.log('Connected to WebSocket server.');
     this.loadingMessages = true;
     this.messages = [];
   }
 
   private onClose(event: any) {
-    console.log('Disconnected from WebSocket server.');
+    if (!env.production) console.log('Disconnected from WebSocket server.');
     this.loadingMessages = false;
   }
 
   private onMessage(event: any) {
-    console.log('Message received from server.');
+    if (!env.production) console.log('Message received from server.');
     const data: WebSocketMessage = JSON.parse(event.data);
     this.onMessageType[data.type](data.content);
   }
@@ -75,8 +75,8 @@ export class ChatService {
     return {
       connection: (data: any) => {
         if (data.isConnected) {
-          console.log('Connection confirmed');
-          console.log('Chat messages', data.chatMessages);
+          if (!env.production) console.log('Connection confirmed');
+          if (!env.production) console.log('Chat messages', data.chatMessages);
           this.messages = data.chatMessages;
 
           // senders
@@ -85,12 +85,12 @@ export class ChatService {
           }
 
         } else {
-          console.error('Connection refused', data.message);
+          if (!env.production) console.error('Connection refused', data.message);
         }
       },
       auth: (data: any) => {
         if (data.isAuthenticated) {
-          console.log('Authenticated');
+          if (!env.production) console.log('Authenticated');
           // TODO load messages? -> resolver
           // this.selectedChatsService.chats.set(data.chat._id, data.chat);
           // this.messages = data.messages;
@@ -99,7 +99,7 @@ export class ChatService {
         }
       },
       message: (data: any) => {
-        console.log('New message received', data);
+        if (!env.production) console.log('New message received', data);
 
         // if (data.role === 'AI') {
         //   this.messages.push({
@@ -155,16 +155,10 @@ export class ChatService {
         }
 
         if (data.type === 'chatName') {
-          console.log(data);
-
           if (!this.selectedChat) return;
-          console.log('X');
-
           if (this.selectedChat.name === 'New chat' || !this.selectedChat.name) {
             this.selectedChat.name = '';
           }
-          console.log(this.selectedChat.name);
-
           this.selectedChat.name = this.selectedChat.name + data.token;
           this.chatsService.chats.set(this.selectedChat._id as string, this.selectedChat);
         }

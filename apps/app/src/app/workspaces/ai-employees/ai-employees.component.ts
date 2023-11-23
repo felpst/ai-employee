@@ -75,7 +75,7 @@ export class AIEmployeesComponent implements OnInit {
   editEmployee(employee: IAIEmployee) {
     const employeeId = employee._id;
     this.router.navigate([
-      `workspaces/${this.workspace._id}/employee/${employeeId}`,
+      `workspaces/${this.workspace._id}/ai-employees/${employeeId}/settings`,
     ]);
   }
 

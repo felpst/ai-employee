@@ -22,7 +22,7 @@ export class AgentTools implements Agent {
 
     this._executor = await initializeAgentExecutorWithOptions(tools, model, {
       agentType: "structured-chat-zero-shot-react-description",
-      verbose: true,
+      // verbose: true,
       memory: new BufferMemory({
         memoryKey: "chat_history",
         returnMessages: true,

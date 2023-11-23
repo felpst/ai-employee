@@ -1,101 +1,79 @@
-<div class="delete-account-modal" *ngIf="showDeleteConfirmation">
-  <div class="modal-content">
-    <p>Are you sure you want to delete your account?</p>
-    <button (click)="confirmDeleteAccount()">Delete</button>
-    <button (click)="cancelDeleteAccount()">Cancel</button>
-  </div>
-</div>
-
-<header class="header">
-  <nav>
-    <div class="workspace-info-group">
-      <button (click)="onRedirect()">
-        <mat-icon svgIcon="arrow-left"></mat-icon>
-      </button>
-      <div style="display: flex; align-items: center; gap: 2px">
-        <img
-          class="image-style"
-          [src]="selectedImage || image"
-          alt="User Image"
-        />
-        <span>{{ name }}</span>
+<cognum-header [showBackButton]="true">
+  <ng-container left>
+    <div class="user-info-group">
+      <div class="header-style">
+        <img class="image-style" [src]="user.photo" alt="User Image" />
+        <span class="title cognum-heading-3">{{ user.name }}</span>
       </div>
     </div>
-  </nav>
-</header>
+  </ng-container>
+</cognum-header>
+
 <div class="body">
   <div class="description">
-    <h1>Your Account</h1>
-    <span class="adjust-name"
-      >Adjust account-wide settings and preferences here for {{ name }}</span
+    <h1 class="page-title">Settings</h1>
+    <span class="page-text"
+      >Adjust account-wide settings and preferences here for
+      {{ user.name }}</span
     >
-  </div>
-  <div class="settings">
-    <nav>
-      <span
-        class="item"
-        [class.selected]="selectedItem === 1"
-        (click)="selectItem(1)"
-        >General</span
-      >
-    </nav>
-    <div class="content">
-      <ng-container *ngIf="selectedItem === 1">
-        <form
-          [formGroup]="updateForm"
-          (ngSubmit)="onSubmit()"
-          class="container-group"
-          enctype="multipart/form-data"
-        >
-          <span class="workspace-image">Your profile photo (optional)</span>
-          <div class="image-group">
-            <div>
-              <label for="profilePhotoInput" class="image-label">
-                <img
-                  class="image"
-                  src="{{ selectedImage || image }}"
-                  alt="User Image"
-                />
-              </label>
-              <input
-                style="display: none"
-                type="file"
-                id="profilePhotoInput"
-                name="profilePhoto"
-                (change)="onFileSelected($event, 'users', 'photo')"
-              />
-            </div>
-            <span>Help teammates know that you are the right person.</span>
-          </div>
+    <div class="cognum-white-content-w720 without-padding">
+      <div class="cognum-mb-0">
+        <cognum-tab-navigator [navs]="navs"></cognum-tab-navigator>
+      </div>
 
-          <div>
-            <div style="flex-direction: column" class="input">
-              <span>Your name</span>
-              <div style="display: flex; gap: 2px">
+      <form [formGroup]="updateForm">
+        <div class="row">
+          <div class="name-container">
+            <span class="cognum-headline-4">Your name</span>
+            <div class="name-row">
+              <div class="form-row">
                 <input
-                  type="text"
-                  placeholder="Felipe Telles"
                   formControlName="name"
-                  [value]="name"
+                  class="input-name"
+                  type="name"
+                  placeholder="Your full name"
+                  [value]="user.name"
+                  (change)="onSubmit()"
                 />
-                <button class="button" type="submit">Submit</button>
+                <mat-error
+                  *ngIf="hasInputError('name', 'required')"
+                  class="cognum-text-12 warning-message"
+                >
+                  Name field is required
+                </mat-error>
+                <div
+                  *ngIf="hasInputError('name', 'minlength')"
+                  class="cognum-text-12 warning-message"
+                >
+                  Name must be at least 6 characters long.
+                </div>
               </div>
             </div>
           </div>
-        </form>
-        <div class="footer">
-          <div>
-            <span>Delete your account</span>
-            <button class="button" (click)="openDeleteAccountModal()">
-              delete it
-            </button>
-          </div>
-          <span class="footer-description"
-            >Are you sure you want to permanently delete your account? This
-            action cannot be undone, and all your data will be lost.
-          </span>
         </div>
-      </ng-container>
+        <div class="row">
+          <div class="name-container">
+            <span class="cognum-headline-4">Your profile photo (optional)</span>
+            <cognum-upload-image
+              [image]="user.photo || ''"
+              [parentId]="user._id"
+              fieldName="photo"
+              folder="users"
+              (finishedUpload)="updatePhoto($event)"
+            ></cognum-upload-image>
+          </div>
+        </div>
+      </form>
+      <div class="footer">
+        <div>
+          <span class="cognum-headline-4">Delete your account</span>
+          <button class="button" (click)="onDeleteUser()">delete it</button>
+        </div>
+        <span
+          >Are you sure you want to permanently delete your account? This action
+          cannot be undone, and all your data will be lost.</span
+        >
+      </div>
     </div>
   </div>
 </div>
