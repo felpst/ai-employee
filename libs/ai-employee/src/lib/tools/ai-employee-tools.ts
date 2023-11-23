@@ -4,18 +4,23 @@ import { Calculator } from "langchain/tools/calculator";
 import { z } from "zod";
 
 export class AIEmployeeTools {
+  private readonly workspaceId: string;
 
-  static get(toolsIds: string[] = []) {
+  constructor(workspaceId: string) {
+    this.workspaceId = workspaceId;
+  }
+
+  get(toolsIds: string[] = []) {
     const tools: Tool[] = [];
 
     for (const id of toolsIds) {
-      tools.push(AIEmployeeTools.tools[id]);
+      tools.push(this.tools[id]);
     }
 
     return tools;
   }
 
-  private static get tools() {
+  private get tools() {
     return {
       'serp-api': new SerpAPI(),
       calculator: new Calculator(),
@@ -35,8 +40,7 @@ export class AIEmployeeTools {
         user: "ta.funcionando15@gmail.com",
         password: "ibzu qzah ihzz sdcg",
       }),
-      'knowledge-retriever': new KnowledgeRetrieverTool('655a940938fb988b9a14c1f9')
+      'knowledge-retriever': new KnowledgeRetrieverTool(this.workspaceId)
     };
   }
-
 }

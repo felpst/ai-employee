@@ -17,10 +17,12 @@ export class AIEmployeeAgent {
   ) { }
 
   async init() {
+    const workspaceId = this.aiEmployee.workspace.toString();
+
     const agentPrompt = new AgentPrompt(this.aiEmployee);
     const prompt = await agentPrompt.format();
 
-    const tools = AIEmployeeTools.get(this.aiEmployee.tools);
+    const tools = new AIEmployeeTools(workspaceId).get(this.aiEmployee.tools);
     const toolNames = tools.map((tool) => tool.name);
 
     const outputParser = StructuredChatOutputParserWithRetries.fromLLM(
@@ -36,8 +38,8 @@ export class AIEmployeeAgent {
 
     const runnableAgent = RunnableSequence.from([
       {
-        input: (i: { input: string; steps: AgentStep[] }) => i.input,
-        agent_scratchpad: (i: { input: string; steps: AgentStep[] }) =>
+        input: (i: { input: string; steps: AgentStep[]; }) => i.input,
+        agent_scratchpad: (i: { input: string; steps: AgentStep[]; }) =>
           formatLogToString(i.steps),
       },
       prompt,

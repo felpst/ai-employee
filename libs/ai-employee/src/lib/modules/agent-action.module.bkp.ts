@@ -9,7 +9,8 @@ export class AgentModuleAction {
   constructor(
     private aiEmployee: IAIEmployee
   ) {
-    this.tools = AIEmployeeTools.get(this.aiEmployee.tools);
+    const workspaceId = this.aiEmployee.workspace.toString();
+    this.tools = new AIEmployeeTools(workspaceId).get(this.aiEmployee.tools);
   }
 
   async prompt() {
@@ -30,7 +31,7 @@ export class AgentModuleAction {
     The following is a friendly conversation between a human and an AI. The AI is talkative and provides lots of specific details from its context.
     You can get informations in summary or history conversation without tools or use tools to get new informations.
     Answer the following questions as best you can. You have access to the following tools:
-    ${toolStrings}`
+    ${toolStrings}`;
   }
 
   private async _instructions(tools: Tool[] = []) {
@@ -45,12 +46,12 @@ export class AgentModuleAction {
     Observation: the result of the action
     ... (this Thought/Action/Action Input/Observation can repeat N times)
     Thought: I now know the final answer
-    Final Answer: the final answer to the original input question`
+    Final Answer: the final answer to the original input question`;
   }
 
   private async _start() {
     return `Begin!
     Question: {input}
-    Thought: {agent_scratchpad}`
+    Thought: {agent_scratchpad}`;
   }
 }
