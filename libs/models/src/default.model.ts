@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Document, Schema } from 'mongoose';
 
 interface IDefaultSchema extends Document {
@@ -9,6 +10,18 @@ export const defaultSchemaProps = {
   updatedAt: { type: Date, default: Date.now },
   createdBy: { type: Schema.Types.ObjectId, ref: 'User', required: true },
   updatedBy: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+};
+
+export const toolSchemaProps = {
+  type: { type: String, required: true },
+  icon: { type: String, required: true },
+  options: {
+    type: Map,
+    of: Schema.Types.Mixed,
+    required: false,
+    default: {},
+  },
+  ...defaultSchemaProps
 };
 
 export const feedbackSchemaProps = {

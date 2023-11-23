@@ -1,7 +1,5 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { AIEmployeeSettingsComponent } from './ai-employee-settings/ai-employee-settings.component';
-import { AIEmployeeGeneralComponent } from './ai-employee-settings/general/general.component';
 import { AIEmployeeResolver } from './ai-employee.resolver';
 import { AIEmployeesComponent } from './ai-employees.component';
 import { AIEmployeesResolver } from './ai-employees.resolver';
@@ -25,15 +23,10 @@ const routes: Routes = [
       },
       {
         path: 'settings',
-        component: AIEmployeeSettingsComponent,
-        children: [
-          {
-            path: '',
-            data: { nav: { select: 0 } },
-            component: AIEmployeeGeneralComponent,
-          },
-          { path: '**', redirectTo: '', pathMatch: 'full' },
-        ],
+        loadChildren: () =>
+          import('./ai-employee-settings/ai-employee-settings.module').then(
+            (m) => m.AIEmployeeSettingsModule
+          ),
       },
       { path: '**', redirectTo: 'settings', pathMatch: 'full' },
     ],
