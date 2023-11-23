@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { IAIEmployee, IChatMessage, IChatRoom, IUser } from '@cognum/interfaces';
+import { CallResponse, IAIEmployee, IChatMessage, IChatRoom, IUser } from '@cognum/interfaces';
 import { Observable } from 'rxjs';
 import { env } from '../../../../../environments/environment';
 import { AuthService } from '../../../../auth/auth.service';
@@ -19,6 +19,7 @@ export class ChatService {
   messages: any[] = [];
   senders = new Map<string, IUser | IAIEmployee>();
   tempMessage!: undefined | Partial<IChatMessage>;
+  call!: CallResponse;
 
   user: any = null;
   aiEmployee: any = null;
@@ -116,6 +117,10 @@ export class ChatService {
         // }
 
         this.messages.push(data);
+      },
+      'call-progress': (data: any) => {
+        this.call = data;
+        console.log(this.call);
       },
       handleLLMNewToken: (content: any) => {
         this.tempMessage = {

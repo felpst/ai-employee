@@ -2,7 +2,7 @@ import { BaseCallbackHandler, NewTokenIndices } from "langchain/callbacks";
 import { HandleLLMNewTokenCallbackFields } from "langchain/dist/callbacks/base";
 import { Serialized } from "langchain/load/serializable";
 import { AgentAction, ChainValues, LLMResult } from "langchain/schema";
-import { CallProcess } from "../interfaces/agent.interface";
+import { CallProcess } from "../../../../../interfaces/src/agent.interface";
 
 export class AgentAIEmployeeHandlers extends BaseCallbackHandler {
   name = "AgentAIEmployeeHandler";
@@ -19,6 +19,14 @@ export class AgentAIEmployeeHandlers extends BaseCallbackHandler {
       totalTokenUsage: 0,
     }
     this.processes.push(this.process);
+  }
+
+  handleToolStart(tool: Serialized, input: string, runId: string, parentRunId?: string, tags?: string[], metadata?: Record<string, unknown>, name?: string) {
+
+  }
+
+  handleToolEnd(output: string, runId: string, parentRunId?: string, tags?: string[]) {
+
   }
 
   handleChainEnd(outputs: ChainValues, runId: string, parentRunId?: string, tags?: string[], kwargs?: { inputs?: Record<string, unknown>; }) {

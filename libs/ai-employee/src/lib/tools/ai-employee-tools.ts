@@ -20,6 +20,9 @@ export class AIEmployeeTools {
       'serp-api': new SerpAPI(),
       calculator: new Calculator(),
       'random-number-generator': new DynamicStructuredTool({
+        metadata: {
+          id: "random-number-generator"
+        },
         name: "random-number-generator",
         description: "generates a random number between two input numbers",
         schema: z.object({

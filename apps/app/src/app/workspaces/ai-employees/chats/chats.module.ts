@@ -8,6 +8,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
 import { MatMenuModule } from '@angular/material/menu';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MarkdownModule } from 'ngx-markdown';
@@ -43,7 +44,8 @@ import { ChatsComponent } from './chats.component';
     NgxSkeletonLoaderModule,
     LayoutsModule,
     SharedModule,
-    MarkdownModule.forChild()
+    MarkdownModule.forChild(),
+    MatProgressSpinnerModule
   ],
 })
 export class ChatsModule { }

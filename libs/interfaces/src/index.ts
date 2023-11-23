@@ -5,6 +5,7 @@ export * from './default.model';
 export * from './feedback.interface';
 export * from './knowledge.interface';
 // export * from './message.interface';
+export * from './agent.interface';
 export * from './chats';
 export * from './openAILogs.interface';
 export * from './token.interface';

@@ -43,13 +43,18 @@ export class ChatMessageReceive {
       }
     ];
 
+    agent.$calls.subscribe((calls) => {
+      // Send calls to client
+      conn.messageSend.execute(conn, { type: 'call-progress', content: calls[calls.length - 1] });
+    });
+
     // Send to AI Employee
-    const answer = await agent.call(message.content, callbacks);
+    const response = await agent.call(message.content, callbacks);
     // console.log(answer);
 
     // Save answer
     const answerMessage = await this.chatMessageCreate.execute({
-      content: answer,
+      content: response.output,
       sender: conn.session.aiEmployee._id,
       role: 'bot',
       chatRoom: data.chatRoom

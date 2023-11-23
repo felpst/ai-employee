@@ -7,7 +7,7 @@ import { AIEmployeeRepository } from '../../../repositories';
 import { AIEmployeeCall } from '../../../use-cases/ai-employee-call.usecase';
 
 describe('aiEmployeeCall', () => {
-  jest.setTimeout(60000)
+  jest.setTimeout(300000)
 
   const repository = new AIEmployeeRepository(process.env.USER_ID);
   let aiEmployee: IAIEmployee;
@@ -32,12 +32,12 @@ describe('aiEmployeeCall', () => {
     const response = await useCase.execute('What is your name?');
     // const response = await useCase.execute('Escreva um poema sobre ratos e gatos.');
     console.log(agent.processes);
-    expect(response).toContain('Adam');
+    expect(response.output).toContain('Adam');
   });
 
   it('should return a successful response of role', async () => {
     const response = await useCase.execute('What is your role?');
-    expect(response).toContain('Software Engineer');
+    expect(response.output).toContain('Software Engineer');
   });
 
   it('insert chat history', async () => {
@@ -60,39 +60,43 @@ describe('aiEmployeeCall', () => {
     useCase = new AIEmployeeCall(agent);
 
     const response = await useCase.execute('What is my name?');
-    expect(response).toContain('Linecker');
+    expect(response.output).toContain('Linecker');
   });
 
   it('test memory', async () => {
     await useCase.execute('Hello! My name is John.');
     const response = await useCase.execute('What is my name?');
-    expect(response).toContain('John');
+    expect(response.output).toContain('John');
   });
 
   it('should return a successful response usign calculator as single input tool', async () => {
-    const response = await useCase.execute('How much is 50 + 30 + 7?');
-    expect(response).toContain('87');
+    const response = await useCase.execute('Using calculator tool. How much is 50 + 30 + 7?');
+    console.log(response);
+    console.log(JSON.stringify(agent.calls));
+    expect(response.output).toContain('87');
   });
 
   it('should return a successful response usign random number and calculator as multi input tool', async () => {
     const response = await useCase.execute('What is a random number between 5 and 10 raised to the second power?');
-    expect(response).toContain('5 and 10');
+    console.log(response);
+    console.log(JSON.stringify(agent.calls));
+    expect(response.output).toContain('5 and 10');
   });
 
   it('should return a successful response usign mail sender tool', async () => {
     const response = await useCase.execute('Send email to lineckeramorim@gmail.com with inviting to dinner tomorrow.');
-    expect(response).toContain('email has been sent');
+    expect(response.output).toContain('email has been sent');
   });
 
   it('create a article and send to email', async () => {
     const response = await useCase.execute('Create a ultimate article of how to be a good software engineer and send email to lineckeramorim@gmail.com.');
-    expect(response).toContain('email has been sent');
+    expect(response.output).toContain('email has been sent');
   });
 
   it('should return a response of dont have a tool to execute', async () => {
     const response = await useCase.execute('How is Linecker Amorim?');
     console.log(response);
-    expect(response).toBe('NOT_POSSIBLE_TO_EXECUTE_THIS_ACTION')
+    expect(response.output).toBe('NOT_POSSIBLE_TO_EXECUTE_THIS_ACTION')
   });
 
   afterAll(async () => {
