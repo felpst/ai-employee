@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { ActivatedRoute } from '@angular/router';
+import { IAIEmployee } from '@cognum/interfaces';
 import { AIToolFormComponent } from './tool-form/tool-form.component';
-
 
 @Component({
   selector: 'cognum-ai-employee-tools',
@@ -9,12 +10,23 @@ import { AIToolFormComponent } from './tool-form/tool-form.component';
   styleUrls: ['./tools.component.scss'],
 })
 export class AIEmployeeToolsComponent {
+
+  aiEmployee!: IAIEmployee;
+  tools!: IAIEmployee['tools'];
+
   constructor(
     private dialog: MatDialog,
+    private route: ActivatedRoute,
   ) { }
 
+  ngOnInit(): void {
+    this.route.data.subscribe(data => {
+      this.aiEmployee = data[0];
+      this.tools = this.aiEmployee.tools;
+    });
+  }
+
   addTool() {
-    // Add form component when ready
     const dialogRef = this.dialog.open(AIToolFormComponent, {
       height: '75%',
       width: '75%',
@@ -24,7 +36,6 @@ export class AIEmployeeToolsComponent {
     dialogRef.afterClosed().subscribe((res) => {
       if (res) {
         console.log({ res });
-
       }
     });
   }
