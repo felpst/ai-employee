@@ -87,6 +87,103 @@
             </mat-error>
           </div>
         </div>
+
+        <div *ngIf="type === 'database-connect'">
+          <div class="cognum-form-row-4">
+            <span class="cognum-heading-4">Dialect</span>
+            <select
+              class="form-select no-focus-outline"
+              aria-label="Your SGBD"
+              formControlName="dialect"
+            >
+              <option *ngFor="let dialect of dialects" [value]="dialect.value">
+                {{ dialect.name }}
+              </option>
+            </select>
+            <mat-error
+              *ngIf="hasInputError('type', 'inList')"
+              class="cognum-text-12 warning-message"
+            >
+              Invalid dialect
+            </mat-error>
+          </div>
+
+          <div class="cognum-form-row-4">
+            <span class="cognum-heading-4">Database</span>
+            <input
+              formControlName="database"
+              type="text"
+              placeholder="Name of your database"
+            />
+            <mat-error
+              *ngIf="hasInputError('database', 'required')"
+              class="cognum-text-12 warning-message"
+            >
+              Database field is required
+            </mat-error>
+          </div>
+
+          <div class="cognum-form-row-4">
+            <span class="cognum-heading-4">Host</span>
+            <input
+              formControlName="host"
+              type="text"
+              placeholder="Your email"
+            />
+            <mat-error
+              *ngIf="hasInputError('host', 'required')"
+              class="cognum-text-12 warning-message"
+            >
+              Host field is required
+            </mat-error>
+          </div>
+
+          <div class="cognum-form-row-4">
+            <span class="cognum-heading-4">Username</span>
+            <input
+              formControlName="username"
+              type="text"
+              placeholder="Your username"
+            />
+            <mat-error
+              *ngIf="hasInputError('username', 'required')"
+              class="cognum-text-12 warning-message"
+            >
+              Username field is required
+            </mat-error>
+          </div>
+
+          <div class="cognum-form-row-4">
+            <span class="cognum-heading-4">Password</span>
+            <input
+              formControlName="password"
+              type="password"
+              placeholder="Your database password"
+            />
+            <mat-error
+              *ngIf="hasInputError('password', 'required')"
+              class="cognum-text-12 warning-message"
+            >
+              Password field is required
+            </mat-error>
+          </div>
+
+          <div class="cognum-form-row-4">
+            <span class="cognum-heading-4">Tables</span>
+            <input
+              formControlName="tables"
+              type="text"
+              placeholder="List with the names of the tables you want to grant access separated by commas"
+              title="List with the names of the tables you want to grant access separated by commas"
+            />
+            <mat-error
+              *ngIf="hasInputError('tables', 'required')"
+              class="cognum-text-12 warning-message"
+            >
+              Tables field is required
+            </mat-error>
+          </div>
+        </div>
       </div>
     </div>
   </form>

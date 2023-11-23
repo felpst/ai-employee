@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { AuthService } from '../../../../../auth/auth.service';
@@ -15,7 +15,7 @@ import { AIEmployeeToolsComponent } from '../tools.component';
   templateUrl: './tool-form.component.html',
   styleUrls: ['./tool-form.component.scss'],
 })
-export class AIToolFormComponent {
+export class AIToolFormComponent implements OnInit {
   toolForm!: FormGroup;
   types = [
     { 'name': 'Calculator', 'value': 'calculator' },
@@ -23,7 +23,15 @@ export class AIToolFormComponent {
     { 'name': 'Mail sender', 'value': 'mail-sender' },
     { 'name': 'Web search', 'value': 'serp-api' },
   ];
-  // Email sending services supported by nodemailer: https://community.nodemailer.com/2-0-0-beta/setup-smtp/well-known-services/
+  // Dialects supported: https://typeorm.io/data-source-options
+  dialects = [
+    { 'name': 'MySQL', 'value': 'mysql' },
+    { 'name': 'PostgreSQL', 'value': 'postgres' },
+    { 'name': 'Cockroachdb', 'value': 'cockroachdb' },
+    { 'name': 'Spanner', 'value': 'spanner' },
+    { 'name': 'MariaDB', 'value': 'mariadb' },
+  ];
+  // Nodemailer supported services: https://community.nodemailer.com/2-0-0-beta/setup-smtp/well-known-services/
   services = ["1und1", "AOL", "DebugMail.io", "DynectEmail", "FastMail", "GandiMail", "Gmail", "Godaddy", "GodaddyAsia", "GodaddyEurope", "hot.ee", "Hotmail", "iCloud", "mail.ee", "Mail.ru", "Mailgun", "Mailjet", "Mandrill", "Naver", "Postmark", "QQ", "QQex", "SendCloud", "SendGrid", "SES", "Sparkpost", "Yahoo", "Yandex", "Zoho"]
   mapIcon = {
     'calculator': 'https://storage.googleapis.com/factory-assets/tools/calculator-tool.png',
@@ -59,9 +67,13 @@ export class AIToolFormComponent {
       const typeDb = type === 'database-connect';
       commonFields.forEach(field => {
         const control = this.toolForm.get(field);
-        if (typeCommon) control?.addValidators(Validators.required);
+        if (typeCommon) {
+          control?.addValidators(Validators.required);
+          if (typeMail && field === 'username') {
+            control?.addValidators(Validators.email);
+          }
+        }
         else control?.clearValidators();
-        if (typeMail && field === 'username') control?.addValidators(Validators.email);
         control?.updateValueAndValidity();
       })
       mailFields.forEach(field => {
@@ -72,11 +84,30 @@ export class AIToolFormComponent {
       })
       databaseFields.forEach(field => {
         const control = this.toolForm.get(field);
-        if (typeDb) control?.addValidators(Validators.required);
+        if (typeDb) {
+          control?.addValidators(Validators.required);
+          if (field === 'dialect') {
+            control?.addValidators(inListValidator(this.dialects.map(({ value }) => value)));
+          }
+        }
         else control?.clearValidators();
         control?.updateValueAndValidity();
       })
     })
+  }
+
+
+
+  ngOnInit(): void {
+    const toolNames = this.employee.tools.map(({ type }) => type);
+    let _types = this.types;
+    if (toolNames.includes('calculator')) {
+      _types = _types.filter(({ value }) => value !== 'calculator')
+    }
+    if (toolNames.includes('serp-api')) {
+      _types = _types.filter(({ value }) => value !== 'serp-api')
+    }
+    this.types = _types;
   }
 
   onSubmit() {
@@ -124,7 +155,8 @@ export class AIToolFormComponent {
       options = { service, user: username, password }
     } else if (type === 'database-connect') {
       const { username, password, dialect, host, database, tables } = rest;
-      options = { type: dialect, host, username, password, database, tables }
+      const _tables = tables.split(',').filter((value: string) => !!value).map((cleaned: string) => cleaned.trim());
+      options = { type: dialect, host, username, password, database, tables: _tables }
     }
     return options
   }
