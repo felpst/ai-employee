@@ -9,13 +9,15 @@ import { SharedModule } from '../../../shared/shared.module';
 import { AIEmployeeSettingsRoutingModule } from './ai-employee-settings-routing.module';
 import { AIEmployeeSettingsComponent } from './ai-employee-settings.component';
 import { AIEmployeeGeneralComponent } from './general/general.component';
+import { AIToolFormComponent } from './tools/tool-form/tool-form.component';
 import { AIEmployeeToolsComponent } from './tools/tools.component';
 
 @NgModule({
   declarations: [
     AIEmployeeSettingsComponent,
     AIEmployeeGeneralComponent,
-    AIEmployeeToolsComponent
+    AIEmployeeToolsComponent,
+    AIToolFormComponent
   ],
   imports: [
     RouterModule,

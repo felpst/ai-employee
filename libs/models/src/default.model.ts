@@ -14,6 +14,7 @@ export const defaultSchemaProps = {
 
 export const toolSchemaProps = {
   type: { type: String, required: true },
+  icon: { type: String, required: true },
   options: {
     type: Map,
     of: Schema.Types.Mixed,
