@@ -31,13 +31,16 @@ router.put(
   '/:id',
   authMiddleware,
   checkPermissions,
-  knowledgeController.update
+  knowledgeController.deleteOpenAIFile,
+  knowledgeController.addOpenAIFile,
+  knowledgeController.update,
 );
 router.delete(
   '/:id',
   authMiddleware,
   checkPermissions,
-  knowledgeController.delete
+  knowledgeController.deleteOpenAIFile,
+  knowledgeController.delete,
 );
 
 export default router;

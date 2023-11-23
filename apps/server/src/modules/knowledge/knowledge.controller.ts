@@ -96,7 +96,7 @@ export class KnowledgeController extends ModelController<typeof Knowledge> {
   ): Promise<void> {
     try {
       const knowledgeId: string = req.params.id;
-      const body: Partial<IKnowledge> = req.body;
+      const body: Partial<IKnowledge> = Array.isArray(req.body) ? req.body[0] : req.body;
       const { title, description, ...rest } = body;
       const _title = title || (await this._generateTitle(rest.data));
       const _description =
@@ -168,6 +168,26 @@ export class KnowledgeController extends ModelController<typeof Knowledge> {
         newBody.push(knowledge);
       }
       req.body = newBody;
+
+      next();
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  public async deleteOpenAIFile(
+    req: Request,
+    _: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const openai = new OpenAI();
+      const { id } = req.params;
+      const { openaiFileId } = await Knowledge
+        .findById(id)
+        .select('openaiFileId');
+
+      await openai.files.del(openaiFileId);
 
       next();
     } catch (error) {
