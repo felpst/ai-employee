@@ -15,7 +15,7 @@ describe('aiEmployeeCall', () => {
   let useCase: AIEmployeeCall;
 
   beforeAll(async () => {
-    await DatabaseHelper.connect();
+    await DatabaseHelper.connect(process.env.MONGO_URL);
     await mongoose.connection.set('bufferTimeoutMS', 60000)
 
     aiEmployee = await repository.create({

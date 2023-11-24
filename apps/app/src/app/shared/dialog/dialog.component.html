@@ -2,8 +2,8 @@
 <mat-dialog-content class="mat-typography" [innerHTML]="content">
 </mat-dialog-content>
 <mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Cancel</button>
   <button color="primary" mat-button [mat-dialog-close]="true" cdkFocusInitial>
     {{ confirmText }}
   </button>
-  <button mat-button mat-dialog-close>Cancel</button>
 </mat-dialog-actions>

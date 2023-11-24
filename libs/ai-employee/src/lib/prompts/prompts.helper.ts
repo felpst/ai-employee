@@ -1,5 +1,5 @@
+import { ToolsHelper } from '@cognum/helpers';
 import { IChatMessage, IUser } from '@cognum/interfaces';
-import { ToolsHelper } from '@cognum/tools';
 import { AgentActionOutputParser } from 'langchain/agents';
 import {
   BaseChatPromptTemplate,

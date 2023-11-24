@@ -14,7 +14,7 @@ export class AgentTools implements Agent {
   $calls: Subject<IAgentCall[]> = new Subject();
 
   constructor(
-    private toolsSettings: IToolSettings[]
+    private toolsSettings: IToolSettings[] = []
   ) { }
 
   async init() {

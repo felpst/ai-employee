@@ -14,16 +14,16 @@ describe('Agent Tools', () => {
   let useCase: AIEmployeeCall;
 
   beforeAll(async () => {
-    await DatabaseHelper.connect();
+    await DatabaseHelper.connect(process.env.MONGO_URL);
     await mongoose.connection.set('bufferTimeoutMS', 60000)
 
     aiEmployee = await repository.create({
       name: 'Adam',
       role: 'Software Engineer',
-      tools: ['calculator', 'random-number-generator', 'mail-sender', 'serp-api'],
+      // tools: ['calculator', 'random-number-generator', 'mail-sender', 'serp-api'],
     }) as IAIEmployee
 
-    const agent = await new AgentTools(aiEmployee).init();
+    const agent = await new AgentTools().init();
     useCase = new AIEmployeeCall(agent);
   })
 

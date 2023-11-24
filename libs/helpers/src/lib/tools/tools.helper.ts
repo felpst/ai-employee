@@ -8,8 +8,8 @@ export class ToolsHelper {
     return tools;
   }
 
-  static get(name: string) {
-    return tools.filter(tool => tool.name === name)[0];
+  static get(id: string) {
+    return tools.filter(tool => tool.id === id)[0];
   }
 
 }

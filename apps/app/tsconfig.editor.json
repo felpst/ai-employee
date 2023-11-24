@@ -2,7 +2,8 @@
   "extends": "./tsconfig.json",
   "include": [
     "src/**/*.ts",
-    "src/app/workspaces/knowledge-base/knowledge-modal"
+    "src/app/workspaces/knowledge-base/knowledge-modal",
+    "src/app/workspaces/ai-employees/ai-employee-settings/tools/tool-settings/tool-settings.component.hmtl"
   ],
   "compilerOptions": {
     "types": ["jest", "node"]

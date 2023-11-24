@@ -1,4 +1,5 @@
 export interface ITool {
+  id: string;
   name: string;
   description: string;
   icon: string;
@@ -6,6 +7,6 @@ export interface ITool {
 }
 
 export interface IToolSettings {
-  name: string;
+  id: string;
   options?: any;
 }

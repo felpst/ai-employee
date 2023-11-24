@@ -11,7 +11,7 @@ import { WebBrowserTool } from '../web-browser.tool';
 describe('WebBrowser Tool Test', () => {
 
   beforeEach(async () => {
-    await DatabaseHelper.connect();
+    await DatabaseHelper.connect(process.env.MONGO_URL);
   });
 
   afterEach(async () => {

@@ -1,8 +1,7 @@
-import { RepositoryHelper } from "@cognum/helpers";
+import { RepositoryHelper, ToolsHelper } from "@cognum/helpers";
 import { Agent, IAIEmployee, IAgentCall, IChatMessage, TaskProcess } from "@cognum/interfaces";
 import { ChatModel } from "@cognum/llm";
 import { AgentCall } from "@cognum/models";
-import { ToolsHelper } from "@cognum/tools";
 import { AgentExecutor, initializeAgentExecutorWithOptions } from "langchain/agents";
 import { BufferMemory, ChatMessageHistory } from "langchain/memory";
 import { BaseChatMessageHistory, LLMResult } from "langchain/schema";
@@ -25,29 +24,29 @@ export class AgentAIEmployee implements Agent {
 
   async init() {
     // TODO tools ai employee
-    this.aiEmployee.tools = [
-      {
-        name: 'calculator'
-      },
-      {
-        name: 'random-number'
-      },
-      {
-        name: 'web-search'
-      },
-      {
-        name: 'mail-sender',
-        options: {
-          host: 'smtp.gmail.com',
-          port: 465,
-          secure: true,
-          auth: {
-            user: process.env.EMAIL_USER,
-            pass: process.env.EMAIL_PASSWORD
-          }
-        }
-      }
-    ]
+    // this.aiEmployee.tools = [
+    //   {
+    //     id: 'calculator'
+    //   },
+    //   {
+    //     id: 'random-number'
+    //   },
+    //   {
+    //     id: 'web-search'
+    //   },
+    //   {
+    //     id: 'mail-sender',
+    //     options: {
+    //       host: 'smtp.gmail.com',
+    //       port: 465,
+    //       secure: true,
+    //       auth: {
+    //         user: process.env.EMAIL_USER,
+    //         pass: process.env.EMAIL_PASSWORD
+    //       }
+    //     }
+    //   }
+    // ]
 
     // Agent Tools
     this.agentTools = await new AgentTools(this.aiEmployee.tools).init();
@@ -77,16 +76,17 @@ export class AgentAIEmployee implements Agent {
   }
 
   getTools() {
-    // TODO list tools
-    const toolsDescriptions = this.aiEmployee.tools.map(tool => `${tool.name}: ${ToolsHelper.get(tool.name)?.description || ''}`).join(', ').toLowerCase();
+    const toolsDescriptions = this.aiEmployee.tools.map(t => {
+      const tool = ToolsHelper.get(t.id);
+      if (!tool) return '';
+      return `${tool.name}: ${tool.description || ''}`
+    }).join(', ').toLowerCase();
     const description = `This tool has the ability to perform tasks such as: ${toolsDescriptions}. The input needs to be a question or instruction with information to perform the task.`
 
     return [
       new DynamicTool({
         name: 'execute-tasks',
         description,
-        // description: 'This tool is useful to execute complex tasks. The input should be a question or informations to execute the job.',
-        // description: 'Use this tool when you dont have informations do answer user or you need to execute a complex task. The input should be a question or informations to execute the job.',
         func: async (input: string) => {
           try {
             const call = this.calls[this.calls.length - 1];
@@ -122,7 +122,7 @@ export class AgentAIEmployee implements Agent {
             }]
 
             const response = await this.agentTools.call(input, callbacks);
-            task.output = response;
+            if (task) task.output = response;
 
             if (response === 'NOT_POSSIBLE_TO_EXECUTE_THIS_ACTION') {
               // TODO log to database to create a tool

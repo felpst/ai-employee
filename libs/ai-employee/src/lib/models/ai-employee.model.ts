@@ -3,7 +3,7 @@ import { defaultSchemaProps, triggers } from '@cognum/models';
 import { Schema, model, models } from 'mongoose';
 
 const toolSchemaProps = {
-  name: { type: String, required: true },
+  id: { type: String, required: true },
   options: {
     type: Schema.Types.Mixed,
     required: false,

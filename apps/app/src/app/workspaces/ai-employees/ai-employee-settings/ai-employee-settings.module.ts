@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { RouterModule } from '@angular/router';
@@ -9,7 +10,9 @@ import { SharedModule } from '../../../shared/shared.module';
 import { AIEmployeeSettingsRoutingModule } from './ai-employee-settings-routing.module';
 import { AIEmployeeSettingsComponent } from './ai-employee-settings.component';
 import { AIEmployeeGeneralComponent } from './general/general.component';
+import { AIToolAddComponent } from './tools/tool-add/tool-add.component';
 import { AIToolFormComponent } from './tools/tool-form/tool-form.component';
+import { AIToolSettingsMailSenderComponent } from './tools/tool-settings/mail-sender/tool-settings-mail-sender.component';
 import { AIEmployeeToolsComponent } from './tools/tools.component';
 
 @NgModule({
@@ -17,7 +20,9 @@ import { AIEmployeeToolsComponent } from './tools/tools.component';
     AIEmployeeSettingsComponent,
     AIEmployeeGeneralComponent,
     AIEmployeeToolsComponent,
-    AIToolFormComponent
+    AIToolFormComponent,
+    AIToolAddComponent,
+    AIToolSettingsMailSenderComponent
   ],
   imports: [
     RouterModule,
@@ -27,6 +32,7 @@ import { AIEmployeeToolsComponent } from './tools/tools.component';
     ReactiveFormsModule,
     MatIconModule,
     MatProgressSpinnerModule,
+    MatCheckboxModule,
     SharedModule
   ],
 })

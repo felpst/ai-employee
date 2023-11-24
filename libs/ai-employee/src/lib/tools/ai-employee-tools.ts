@@ -15,7 +15,7 @@ export class AIEmployeeTools {
   }
 
   static initTool(toolSettings: IToolSettings): Tool | DynamicStructuredTool {
-    switch (toolSettings.name) {
+    switch (toolSettings.id) {
       case 'calculator':
         return new Calculator();
       case 'web-search':

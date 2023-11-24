@@ -1,9 +1,9 @@
 import mongoose from "mongoose";
 
 class DatabaseHelper {
-  public static async connect(): Promise<void> {
+  public static async connect(mongoURL: string): Promise<void> {
     try {
-      await mongoose.connect(process.env.MONGO_URL, {});
+      await mongoose.connect(mongoURL, {});
       console.log("Connected to MongoDB");
     } catch (error) {
       console.error("Error connecting to MongoDB:", error);
