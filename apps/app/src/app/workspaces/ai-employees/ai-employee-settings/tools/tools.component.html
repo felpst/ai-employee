@@ -2,11 +2,26 @@
     <div class="row">
         <div class="container">
             <span>General Tools</span>
-          
-            <button (click)="addTool()" mat-raised-button color="primary">
-                <mat-icon>add</mat-icon>
+            
+            <button id="btn-add" (click)="addTool()" mat-raised-button color="primary">
+                <mat-icon svgIcon="add"></mat-icon>
                 New Tool
             </button>
         </div>
+        <ng-container *ngIf="tools.length > 0">
+            <div class="tools" *ngFor="let tool of tools; let i = index">
+                <div class="tool" (click)="addTool(tool, i)">
+                    <div class="description">
+                        <img [src]="tool.icon" [alt]="tool.type" />
+                        <span>{{ tool.type }}</span>
+                    </div>
+                    <div class="options">
+                        <span>{{ tool.options | json }}</span>
+                        <mat-icon svgIcon="delete" (click)="$event.stopPropagation(); deleteConfirmationDialog(tool, i)"></mat-icon>
+                    </div>
+                </div>
+            </div>
+        </ng-container>
     </div>
+    
 </div>
