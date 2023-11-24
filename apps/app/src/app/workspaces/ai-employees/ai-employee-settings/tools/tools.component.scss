@@ -22,4 +22,42 @@
         margin-bottom: 10px;
 
     }
+
+    #btn-add mat-icon {
+        height: 2rem !important;
+    }
+
+    .tools {
+        .tool {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5em;
+            font-size: 14px;
+            cursor: pointer;
+            
+            .description {
+                display: flex;
+                align-items: center;
+
+                img {
+                    border-radius: 100px;
+                    width: 55px;
+                    height: 55px;
+                }
+
+                span {
+                    margin-left: 6px;
+                   
+                    font-weight: 400;
+                }
+            }
+
+            .options {
+                mat-icon {
+                    margin-left: 0.5em;
+                }
+            }
+        }
+    }
 }

@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { AIEmployeeSettingsComponent } from './ai-employee-settings.component';
 import { AIEmployeeGeneralComponent } from './general/general.component';
 import { AIEmployeeToolsComponent } from './tools/tools.component';
+import { AIEmployeeToolsResolver } from './tools/tools.resolver';
 
 const routes: Routes = [
     {
@@ -16,6 +17,7 @@ const routes: Routes = [
             },
             {
                 path: 'tools',
+                resolve: [AIEmployeeToolsResolver],
                 data: { nav: { select: 1 } },
                 component: AIEmployeeToolsComponent
             },
