@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { CallResponse, IAIEmployee, IChatMessage, IChatRoom, IUser } from '@cognum/interfaces';
+import { IAIEmployee, IChatMessage, IChatRoom, IUser } from '@cognum/interfaces';
 import { Observable } from 'rxjs';
 import { env } from '../../../../../environments/environment';
 import { AuthService } from '../../../../auth/auth.service';
@@ -19,7 +19,6 @@ export class ChatService {
   messages: any[] = [];
   senders = new Map<string, IUser | IAIEmployee>();
   tempMessage!: undefined | Partial<IChatMessage>;
-  call!: CallResponse;
 
   user: any = null;
   aiEmployee: any = null;
@@ -101,28 +100,16 @@ export class ChatService {
       },
       message: (data: any) => {
         if (!env.production) console.log('New message received', data);
-
-        // if (data.role === 'AI') {
-        //   this.messages.push({
-        //     role: 'SYSTEM',
-        //     content: {
-        //       answer: this.thinking.answer,
-        //       thought: this.thinking.thought,
-        //       action: this.thinking.action,
-        //     },
-        //     createdAt: new Date(),
-        //   });
-        //   this.tokens = '';
-        //   this.thinking = { action: '', thought: '', answer: '' };
-        // }
-
         this.messages.push(data);
+        this.tempMessage = undefined;
       },
-      'call-progress': (data: any) => {
-        this.call = data;
-        console.log(this.call);
+      handleMessage: (data: any) => {
+        this.tempMessage = data;
+        if (!env.production) console.log('[Handle] New message received', data);
       },
       handleLLMNewToken: (content: any) => {
+
+
         this.tempMessage = {
           content,
           sender: this.selectedChat.aiEmployee,

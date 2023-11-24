@@ -9,7 +9,7 @@ export class AgentModuleAction {
   constructor(
     private aiEmployee: IAIEmployee
   ) {
-    this.tools = AIEmployeeTools.get(this.aiEmployee.tools.map(({ type }) => type));
+    this.tools = AIEmployeeTools.get();
   }
 
   async prompt() {

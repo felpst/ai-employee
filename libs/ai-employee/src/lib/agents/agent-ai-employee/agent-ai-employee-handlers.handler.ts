@@ -1,15 +1,14 @@
-import { BaseCallbackHandler, NewTokenIndices } from "langchain/callbacks";
-import { HandleLLMNewTokenCallbackFields } from "langchain/dist/callbacks/base";
+import { CallProcess } from "@cognum/interfaces";
+import { BaseCallbackHandler } from "langchain/callbacks";
 import { Serialized } from "langchain/load/serializable";
 import { AgentAction, ChainValues, LLMResult } from "langchain/schema";
-import { CallProcess } from "../../../../../interfaces/src/agent.interface";
 
 export class AgentAIEmployeeHandlers extends BaseCallbackHandler {
   name = "AgentAIEmployeeHandler";
   processes: CallProcess[] = [];
   process: CallProcess
 
-  handleChainStart(chain: Serialized, inputs: ChainValues, runId: string, parentRunId?: string, tags?: string[], metadata?: Record<string, unknown>, runType?: string, name?: string) {
+  handleChainStart(chain: Serialized, inputs: ChainValues) {
     this.process = {
       input: inputs.input,
       output: '',
@@ -21,15 +20,7 @@ export class AgentAIEmployeeHandlers extends BaseCallbackHandler {
     this.processes.push(this.process);
   }
 
-  handleToolStart(tool: Serialized, input: string, runId: string, parentRunId?: string, tags?: string[], metadata?: Record<string, unknown>, name?: string) {
-
-  }
-
-  handleToolEnd(output: string, runId: string, parentRunId?: string, tags?: string[]) {
-
-  }
-
-  handleChainEnd(outputs: ChainValues, runId: string, parentRunId?: string, tags?: string[], kwargs?: { inputs?: Record<string, unknown>; }) {
+  handleChainEnd(outputs: ChainValues, runId: string) {
     this.process.output = outputs.output;
     this.process.logs.push(['handleChainEnd', runId, outputs]);
   }
@@ -38,24 +29,24 @@ export class AgentAIEmployeeHandlers extends BaseCallbackHandler {
     this.process.logs.push(['handleAgentAction', action.log]);
   }
 
-  handleLLMStart(llm: Serialized, prompts: string[], runId: string, parentRunId?: string, extraParams?: Record<string, unknown>, tags?: string[], metadata?: Record<string, unknown>, name?: string) {
+  handleLLMStart(llm: Serialized, prompts: string[]) {
     this.process.logs.push(['handleLLMStart', prompts]);
   }
 
-  handleLLMEnd(output: LLMResult, runId: string, parentRunId?: string, tags?: string[]) {
+  handleLLMEnd(output: LLMResult) {
     this.process.totalTokenUsage = this.process.totalTokenUsage + output.llmOutput?.estimatedTokenUsage?.totalTokens || 0;
   }
 
-  handleLLMNewToken(token: string, idx: NewTokenIndices, runId: string, parentRunId?: string, tags?: string[], fields?: HandleLLMNewTokenCallbackFields) {
+  handleLLMNewToken(token: string) {
     this.process.llmOutput = this.process.llmOutput + token;
-    this.process.llmOutputFormatted = this.formatLLLOutput(this.process.llmOutput)
+    this.process.llmOutputFormatted = this.formatLLMOutput(this.process.llmOutput)
   }
 
   async handleText(text: string) {
     this.process.logs.push(['handleText', text]);
   }
 
-  formatLLLOutput(llmOutput: string) {
+  formatLLMOutput(llmOutput: string) {
     if (llmOutput) {
       // Remove os caracteres extras no início da string
       const cleanedInput = llmOutput.replace(/```json\n'\s*\+/, '');

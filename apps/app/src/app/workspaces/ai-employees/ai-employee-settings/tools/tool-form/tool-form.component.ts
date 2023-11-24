@@ -99,7 +99,7 @@ export class AIToolFormComponent implements OnInit {
 
 
   ngOnInit(): void {
-    const toolNames = this.employee.tools.map(({ type }) => type);
+    const toolNames = this.employee.tools.map(({ name }) => name);
     let _types = this.types;
     if (toolNames.includes('calculator')) {
       _types = _types.filter(({ value }) => value !== 'calculator')

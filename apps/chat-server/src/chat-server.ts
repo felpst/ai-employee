@@ -44,6 +44,7 @@ export class ChatServer {
         // Load Messages
         const chatMessages = await this.chatMessageRepository.find({
           filter: { chatRoom: chatRoomId },
+          populate: [{ path: 'call' }],
           sort: 'createdAt',
         });
         conn.setChatMessages(chatMessages);

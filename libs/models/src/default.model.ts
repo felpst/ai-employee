@@ -12,18 +12,6 @@ export const defaultSchemaProps = {
   updatedBy: { type: Schema.Types.ObjectId, ref: 'User', required: true },
 };
 
-export const toolSchemaProps = {
-  type: { type: String, required: true },
-  icon: { type: String, required: true },
-  options: {
-    type: Map,
-    of: Schema.Types.Mixed,
-    required: false,
-    default: {},
-  },
-  ...defaultSchemaProps
-};
-
 export const feedbackSchemaProps = {
   isPositive: { type: Boolean, required: false },
   comment: { type: String, required: false },

@@ -1,3 +1,4 @@
+export { default as AgentCall } from './agent-call.model';
 export { default as DataSource } from './data-source.model';
 export * from './default.model';
 export { default as Knowledge } from './knowledge.model';

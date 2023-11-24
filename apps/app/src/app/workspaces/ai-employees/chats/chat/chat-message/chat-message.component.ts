@@ -1,5 +1,5 @@
 import { Component, Input } from "@angular/core";
-import { CallResponse, IAIEmployee, IChatMessage, IUser } from "@cognum/interfaces";
+import { IAIEmployee, IAgentCall, IChatMessage, IUser } from "@cognum/interfaces";
 import { UtilsService } from "../../../../../services/utils/utils.service";
 import { AIEmployeesService } from "../../../ai-employees.service";
 import { ChatService } from "../chat.service";
@@ -11,7 +11,6 @@ import { ChatService } from "../chat.service";
 })
 export class ChatMessageComponent {
   @Input() message!: Partial<IChatMessage>;
-  @Input() call!: Partial<CallResponse>;
 
   constructor(
     public utilsService: UtilsService,
@@ -20,13 +19,10 @@ export class ChatMessageComponent {
   ) { }
 
   get sender() {
-    if (!this.message) {
-      this.message = {
-        sender: this.aiEmployeesService.aiEmployee._id,
-        createdAt: new Date(),
-      }
-    };
-
     return this.chatServices.senders.get(this.message.sender as string) as (IUser | IAIEmployee);
+  }
+
+  get call() {
+    return this.message.call as IAgentCall;
   }
 }

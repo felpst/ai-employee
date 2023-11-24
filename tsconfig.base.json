@@ -5,6 +5,7 @@
     "sourceMap": true,
     "declaration": false,
     "moduleResolution": "node",
+    "resolveJsonModule": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "importHelpers": true,
@@ -27,7 +28,7 @@
       "@cognum/models": ["libs/models/src/index.ts"],
       "@cognum/tools": ["libs/tools/src/index.ts"],
       "@cognum/users": ["libs/users/src/index.ts"],
-      "@cognum/llm/openai": ["libs/llm/src/openai/index.ts"],
+      "@cognum/llm/openai": ["libs/llm/src/openai/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

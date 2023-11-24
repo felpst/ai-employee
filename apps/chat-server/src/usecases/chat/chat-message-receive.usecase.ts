@@ -43,26 +43,42 @@ export class ChatMessageReceive {
       }
     ];
 
+    // Message answer
+    const answerMessage = await this.chatMessageCreate.execute({
+      content: '',
+      sender: conn.session.aiEmployee._id,
+      role: 'bot',
+      chatRoom: data.chatRoom,
+      call: null
+    });
+
     agent.$calls.subscribe((calls) => {
       // Send calls to client
-      conn.messageSend.execute(conn, { type: 'call-progress', content: calls[calls.length - 1] });
+      conn.messageSend.execute(conn, {
+        type: 'handleMessage', content: {
+          ...answerMessage.toObject(),
+          call: calls[calls.length - 1]
+        }
+      });
     });
 
     // Send to AI Employee
-    const response = await agent.call(message.content, callbacks);
+    const agentCall = await agent.call(message.content, callbacks);
     // console.log(answer);
 
     // Save answer
-    const answerMessage = await this.chatMessageCreate.execute({
-      content: response.output,
-      sender: conn.session.aiEmployee._id,
-      role: 'bot',
-      chatRoom: data.chatRoom
-    });
+    answerMessage.content = agentCall.output;
+    answerMessage.call = agentCall._id;
+    await answerMessage.save()
     conn.session.chatMessages.push(answerMessage);
 
     // Send answer to client
-    conn.messageSend.execute(conn, { type: 'message', content: answerMessage });
+    conn.messageSend.execute(conn, {
+      type: 'message', content: {
+        ...answerMessage.toObject(),
+        call: agentCall
+      }
+    });
 
     // Chat name
     if (conn.session.chatRoom.name === 'New chat') {

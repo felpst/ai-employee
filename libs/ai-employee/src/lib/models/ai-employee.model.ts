@@ -1,6 +1,15 @@
 import { IAIEmployee } from '@cognum/interfaces';
-import { defaultSchemaProps, toolSchemaProps, triggers } from '@cognum/models';
+import { defaultSchemaProps, triggers } from '@cognum/models';
 import { Schema, model, models } from 'mongoose';
+
+const toolSchemaProps = {
+  name: { type: String, required: true },
+  options: {
+    type: Schema.Types.Mixed,
+    required: false,
+    default: {},
+  }
+};
 
 const schema = new Schema<IAIEmployee>(
   {

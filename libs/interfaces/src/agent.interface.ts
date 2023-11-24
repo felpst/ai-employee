@@ -1,5 +1,6 @@
 import { AgentExecutor } from "langchain/agents";
 import { Subject } from "rxjs";
+import { DefaultModel } from "./default.model";
 
 export interface TaskProcess {
   tool: string;
@@ -9,7 +10,7 @@ export interface TaskProcess {
   taskTokenUsage: number;
 }
 
-export interface CallResponse {
+export interface IAgentCall extends DefaultModel {
   input: string;
   output: string;
   tasks: TaskProcess[];
@@ -29,8 +30,8 @@ export interface CallProcess {
 export interface Agent {
   _executor: AgentExecutor;
   processes: CallProcess[]
-  calls: CallResponse[]
-  $calls: Subject<CallResponse[]>;
+  calls: IAgentCall[]
+  $calls: Subject<IAgentCall[]>;
   init(): Promise<Agent>;
-  call(input: string, callbacks?: unknown[]): Promise<CallResponse>;
+  call(input: string, callbacks?: unknown[]): Promise<IAgentCall>;
 }
