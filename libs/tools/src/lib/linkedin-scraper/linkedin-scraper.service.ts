@@ -8,10 +8,10 @@ async function getDriver(profession: string): Promise<void> {
         await driver.get('https://www.linkedin.com/login');
 
         const userInput = await driver.wait(until.elementLocated(By.id('username')), 5000);
-        await userInput.sendKeys('seu-email@gmail.com');
+        await userInput.sendKeys('renato@cognum.ai');
 
         const passwordInput = await driver.findElement(By.id('password'));
-        await passwordInput.sendKeys('password', Key.ENTER);
+        await passwordInput.sendKeys('pass2023', Key.ENTER);
 
         await driver.wait(until.urlIs('https://www.linkedin.com/feed/'), 100000);
 
@@ -21,29 +21,38 @@ async function getDriver(profession: string): Promise<void> {
 
         await driver.wait(until.urlContains('linkedin.com/search/results'), 50000);
 
-        const element = await driver.findElement(By.xpath('//*[@id="search-reusables__filters-bar"]/ul/li[2]/button'));
+        const findButtons = await driver.findElements(By.className('search-reusables__filter-pill-button'));
 
-        element.click();
+        findButtons.forEach(async (button) => {
+            const buttonName = await button.getText();
+            if (buttonName === 'People') {
+                button.click();
+            }
+        })
 
-        await driver.wait(until.urlContains('linkedin.com/search/results/people'), 50000);
+        // await driver.wait(until.elementLocated(By.className('artdeco-card')), 150000);
+
+        // const buttoNext = await driver.findElements(By.className('artdeco-button'));
+        // console.log('next', buttoNext);
+        // buttoNext.forEach(async (button) => {
+        //     const buttonName = await button.getText();
+        //     if (buttonName === 'Next') {
+        //         button.click();
+        //     }
+        // })
 
         const profilesList = await driver.findElements(By.className('entity-result__content'));
 
-        const peopleArray = [];
-        profilesList.forEach(async (profile) => {
+        const personArray = profilesList.map(async (profile) => {
             const nameLinkElement = await profile.findElement(By.className('app-aware-link'))
             const name = (await nameLinkElement.getText()).split('\n')[0];
             const title = await profile.findElement(By.className('entity-result__primary-subtitle')).getText();
             const location = await profile.findElement(By.className('entity-result__secondary-subtitle')).getText();
             const profileLink = await nameLinkElement.getAttribute('href');
             await Promise.all([name, title, location, profileLink])
-            const person = new Person(name, title, location, profileLink);
-            console.log(person);
-            peopleArray.push(person);
+            new Person(name, title, location, profileLink);
         });
-
-        // const elementoSpan = await profilesList.findElement(By.css('span[aria-hidden="true"]'));
-        // const text = await elementoSpan.getText()
+        console.log(personArray);
 
     } catch (error) {
         console.error(error);
