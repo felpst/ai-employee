@@ -11,7 +11,7 @@ async function getDriver(profession: string): Promise<void> {
         await userInput.sendKeys('renato@cognum.ai');
 
         const passwordInput = await driver.findElement(By.id('password'));
-        await passwordInput.sendKeys('pass2023', Key.ENTER);
+        await passwordInput.sendKeys('soeusei2023', Key.ENTER);
 
         await driver.wait(until.urlIs('https://www.linkedin.com/feed/'), 100000);
 
@@ -30,27 +30,37 @@ async function getDriver(profession: string): Promise<void> {
             }
         })
 
-        // await driver.wait(until.elementLocated(By.className('artdeco-card')), 150000);
+        const div = await driver.wait(until.elementLocated(By.xpath('//h2/div')), 1500000);
+        await driver.wait(until.elementTextContains(div, 'About'), 1500000);
+        await driver.executeScript("window.scrollTo(0, document.body.scrollHeight)");
+        await driver.wait(until.elementLocated(By.className('artdeco-pagination')), 1500000);
+        const buttonNext = await driver.findElements(By.className('artdeco-button'));
 
-        // const buttoNext = await driver.findElements(By.className('artdeco-button'));
-        // console.log('next', buttoNext);
-        // buttoNext.forEach(async (button) => {
-        //     const buttonName = await button.getText();
-        //     if (buttonName === 'Next') {
-        //         button.click();
-        //     }
-        // })
+
+        //TODO: LOOP TO GET ALL PAGES
+        buttonNext.forEach(async (button) => {
+            const buttonName = await button.getText();
+            console.log(buttonName);
+            if (buttonName === 'Next') {
+                button.click();
+            }
+        })
+        await driver.wait(until.elementTextContains(div, 'About'), 1500000);
 
         const profilesList = await driver.findElements(By.className('entity-result__content'));
+        console.log('list', profilesList);
 
-        const personArray = profilesList.map(async (profile) => {
+        const personArray: Person[] = [];
+        profilesList.forEach(async (profile) => {
             const nameLinkElement = await profile.findElement(By.className('app-aware-link'))
             const name = (await nameLinkElement.getText()).split('\n')[0];
             const title = await profile.findElement(By.className('entity-result__primary-subtitle')).getText();
             const location = await profile.findElement(By.className('entity-result__secondary-subtitle')).getText();
             const profileLink = await nameLinkElement.getAttribute('href');
             await Promise.all([name, title, location, profileLink])
-            new Person(name, title, location, profileLink);
+            const person = new Person(name, title, location, profileLink);
+            console.log(person);
+            personArray.push(person);
         });
         console.log(personArray);
 
