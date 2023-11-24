@@ -9,14 +9,15 @@
             </button>
         </div>
         <ng-container *ngIf="tools.length > 0">
-            <div class="tools" *ngFor="let tool of tools">
-                <div class="tool">
+            <div class="tools" *ngFor="let tool of tools; let i = index">
+                <div class="tool" (click)="addTool(tool, i)">
                     <div class="description">
                         <img [src]="tool.icon" [alt]="tool.type" />
-                        <span>{{ tool.type}}</span>
+                        <span>{{ tool.type }}</span>
                     </div>
                     <div class="options">
                         <span>{{ tool.options | json }}</span>
+                        <mat-icon svgIcon="delete" (click)="$event.stopPropagation(); deleteConfirmationDialog(tool, i)"></mat-icon>
                     </div>
                 </div>
             </div>
