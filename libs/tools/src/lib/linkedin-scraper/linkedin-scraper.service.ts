@@ -45,9 +45,13 @@ async function getDriver(profession: string): Promise<void> {
                 button.click();
             }
         })
-        await driver.wait(until.elementTextContains(div, 'About'), 1500000);
+        await driver.wait(
+            until.elementsLocated(By.className('entity-result__content')),
+            20000,
+            'Elementos não foram encontrados dentro do tempo limite.'
+        );
 
-        const profilesList = await driver.findElements(By.className('entity-result__content'));
+        const profilesList = await driver.findElements(By.className('app-aware-link'));
         console.log('list', profilesList);
 
         const personArray: Person[] = [];
