@@ -11,7 +11,7 @@ import { AIEmployeeSettingsRoutingModule } from './ai-employee-settings-routing.
 import { AIEmployeeSettingsComponent } from './ai-employee-settings.component';
 import { AIEmployeeGeneralComponent } from './general/general.component';
 import { AIToolAddComponent } from './tools/tool-add/tool-add.component';
-import { AIToolFormComponent } from './tools/tool-form/tool-form.component';
+import { AIToolSettingsDatabaseComponent } from './tools/tool-settings/database/tool-settings-database.component';
 import { AIToolSettingsMailSenderComponent } from './tools/tool-settings/mail-sender/tool-settings-mail-sender.component';
 import { AIEmployeeToolsComponent } from './tools/tools.component';
 
@@ -20,9 +20,9 @@ import { AIEmployeeToolsComponent } from './tools/tools.component';
     AIEmployeeSettingsComponent,
     AIEmployeeGeneralComponent,
     AIEmployeeToolsComponent,
-    AIToolFormComponent,
     AIToolAddComponent,
-    AIToolSettingsMailSenderComponent
+    AIToolSettingsMailSenderComponent,
+    AIToolSettingsDatabaseComponent
   ],
   imports: [
     RouterModule,
