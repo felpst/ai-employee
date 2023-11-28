@@ -39,6 +39,138 @@
           [message]="chatService.tempMessage"
         ></cognum-chat-message>
       </div>
+<<<<<<< HEAD
+=======
+
+      <!-- <div
+        class="message-wrapper"
+        [ngClass]="{ system: message.role === 'SYSTEM' }"
+        *ngFor="let message of chatService.messages"
+      >
+        <div class="message" [ngClass]="{ system: message.role === 'SYSTEM' }">
+          <div class="avatar"></div>
+
+          <div class="content">
+            <div class="header">
+              <div class="from">
+                <span *ngIf="message.role === 'HUMAN'">{{
+                  chatService.user.name
+                }}</span>
+                <span *ngIf="message.role === 'AI'">{{
+                  chatService.aiEmployee.name
+                }}</span>
+                <span *ngIf="message.role === 'SYSTEM'">SYSTEM</span>
+              </div>
+
+              <div class="date">
+                <div
+                  class="material-symbols-outlined icon"
+                  matTooltip="{{
+                    message.createdAt | date : 'dd/MM/yyyy HH:mm:ss'
+                  }}"
+                >
+                  schedule
+                </div>
+              </div>
+            </div>
+
+            <cdk-accordion class="thought" *ngIf="!!message.thought">
+              <cdk-accordion-item
+                class="accordion"
+                #accordionItem="cdkAccordionItem"
+                role="button"
+                tabindex="0"
+                [attr.id]="'accordion-header-' + message._id"
+                [attr.aria-expanded]="accordionItem.expanded"
+                [attr.aria-controls]="'accordion-body-' + message._id"
+              >
+                <div (click)="accordionItem.toggle()" class="accordion-header">
+                  <strong class="header-text">Internal monologue</strong>
+                </div>
+
+                <markdown
+                  role="region"
+                  [style.display]="accordionItem.expanded ? '' : 'none'"
+                  [attr.id]="'accordion-body-' + message._id"
+                  [attr.aria-labelledby]="'accordion-header-' + message._id"
+                  class="accordion-body"
+                >
+                  <span class="header-text">{{ message.thought }}</span>
+                </markdown>
+              </cdk-accordion-item>
+            </cdk-accordion>
+
+            <strong *ngIf="message.role === 'AI'">Answer</strong>
+
+            <markdown *ngIf="message.role === 'HUMAN' || message.role === 'AI'">
+              {{ message.content }}
+            </markdown>
+
+            <div *ngIf="message.role === 'SYSTEM'">
+              <div *ngIf="message.content.action">
+                <strong>Action: </strong>{{ message.content.action }}
+              </div>
+              <div *ngIf="message.content.thought">
+                <strong>Thought: </strong>{{ message.content.thought }}
+              </div>
+            </div>
+
+
+            <div
+              class="rating-wrapper"
+              *ngIf="
+                message.role === 'AI' && isUnratedMessage(message._id);
+                else ratedMessage
+              "
+            >
+              <i
+                class="rating-icon like fa fa-thumbs-o-up"
+                aria-hidden="true"
+                (click)="$event.stopPropagation(); onApprove(message._id)"
+              ></i>
+              <i
+                class="rating-icon unlike fa fa-thumbs-o-down"
+                aria-hidden="true"
+                (click)="$event.stopPropagation(); onReprove(message._id)"
+              ></i>
+            </div>
+          </div>
+        </div>
+
+        <ng-template #ratedMessage>
+          <div class="rating-wrapper">
+            <i
+              class="rated-icon liked fa fa-thumbs-o-up"
+              aria-hidden="true"
+              *ngIf="message.role === 'AI' && getMessageFeedback(message._id)"
+            ></i>
+            <i
+              class="rated-icon unliked fa fa-thumbs-o-down"
+              aria-hidden="true"
+              *ngIf="message.role === 'AI' && !getMessageFeedback(message._id)"
+            ></i>
+          </div>
+        </ng-template>
+      </div> -->
+
+      <!-- Tokens -->
+      <div class="message" *ngIf="chatService.tokens">
+        <div class="from">
+          <strong>{{ chatService.aiEmployee.name }}</strong>
+        </div>
+        <div class="content">
+          <div *ngIf="chatService.thinking.action">
+            <strong>Action: </strong>{{ chatService.thinking.action }}
+          </div>
+          <div *ngIf="chatService.thinking.thought">
+            <strong>Thought: </strong>{{ chatService.thinking.thought }}
+          </div>
+          <div *ngIf="chatService.thinking.answer">
+            <strong>Answer: </strong>{{ chatService.thinking.answer }}
+          </div>
+        </div>
+      </div>
+>>>>>>> 1947452df40a20cd9147c59280a3418e3a469cbe
     </div>
   </div>
 

@@ -1,5 +1,10 @@
+<<<<<<< HEAD:libs/ai-employee/src/lib/prompts/prompts.helper.ts
 import { ToolsHelper } from '@cognum/helpers';
 import { IChatMessage, IUser } from '@cognum/interfaces';
+=======
+import { IChatMessage, IUser } from '@cognum/interfaces';
+import { ToolsHelper } from '@cognum/tools';
+>>>>>>> 1947452df40a20cd9147c59280a3418e3a469cbe:apps/chat/src/helpers/prompts.helper.ts
 import { AgentActionOutputParser } from 'langchain/agents';
 import {
   BaseChatPromptTemplate,

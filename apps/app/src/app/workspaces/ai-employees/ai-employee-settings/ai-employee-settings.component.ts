@@ -19,8 +19,12 @@ import { AIEmployeesService } from '../ai-employees.service';
 })
 export class AIEmployeeSettingsComponent implements OnInit {
   navs: Step[] = [
+<<<<<<< HEAD
     { title: 'General', routerLink: './' },
     { title: 'Tools', routerLink: './tools' }
+=======
+    { title: 'General', routerLink: './' }
+>>>>>>> 1947452df40a20cd9147c59280a3418e3a469cbe
   ]
   name = '';
   role = '';

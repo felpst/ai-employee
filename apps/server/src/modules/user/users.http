@@ -1,5 +1,9 @@
 @baseUrl=http://localhost:3000
+<<<<<<< HEAD
+@apiRoute=employees
+=======
 @apiRoute=users
+>>>>>>> 1947452df40a20cd9147c59280a3418e3a469cbe
 
 ### login
 
@@ -21,9 +25,15 @@ Content-Type: application/json
 Authorization: Bearer {{$authToken}}
 
 {
+<<<<<<< HEAD
+  "name": "Employee test",
+  "role": "Role test",
+  "workspaces": ["650c92d98c46002a10728d77"]
+=======
   "name": "Teste",
   "email": "linecker3@quaq.me",
   "password": "teste"
+>>>>>>> 1947452df40a20cd9147c59280a3418e3a469cbe
 }
 
 ### Get all ###
@@ -32,20 +42,32 @@ Authorization: Bearer {{$authToken}}
 GET {{baseUrl}}/{{apiRoute}}
 Authorization: Bearer {{$authToken}}
 
+<<<<<<< HEAD
+### Get a Employee by ID ###
+=======
 ### Get a Task by ID ###
+>>>>>>> 1947452df40a20cd9147c59280a3418e3a469cbe
 @id = {{ListAPI.response.body.0._id}}
 
 GET {{baseUrl}}/{{apiRoute}}/{{id}}
 Authorization: Bearer {{$authToken}}
 
+<<<<<<< HEAD
+### Update a Employee ###
+=======
 ### Update a Task ###
+>>>>>>> 1947452df40a20cd9147c59280a3418e3a469cbe
 
 PUT {{baseUrl}}/{{apiRoute}}/{{id}}
 Content-Type: application/json
 Authorization: Bearer {{$authToken}}
 
 {
+<<<<<<< HEAD
+  "role": "Role"
+=======
   "name": "Linecker"
+>>>>>>> 1947452df40a20cd9147c59280a3418e3a469cbe
 }
 
 ### Delete ###

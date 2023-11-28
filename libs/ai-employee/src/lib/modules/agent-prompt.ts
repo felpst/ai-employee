@@ -23,7 +23,11 @@ export class AgentPrompt {
     this._memory = new AgentModuleMemory(this.aiEmployee);
     this._planning = new AgentModulePlanning(this.aiEmployee);
     this._action = new AgentModuleAction(this.aiEmployee);
+<<<<<<< HEAD
     this._tools = AIEmployeeTools.get();
+=======
+    this._tools = AIEmployeeTools.get(this.aiEmployee.tools);
+>>>>>>> 1947452df40a20cd9147c59280a3418e3a469cbe
   }
 
   async format(): Promise<ChatPromptTemplate<any, any>> {

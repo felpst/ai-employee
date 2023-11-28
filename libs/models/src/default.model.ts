@@ -1,4 +1,7 @@
+<<<<<<< HEAD
 /* eslint-disable @typescript-eslint/no-explicit-any */
+=======
+>>>>>>> 1947452df40a20cd9147c59280a3418e3a469cbe
 import { Document, Schema } from 'mongoose';
 
 interface IDefaultSchema extends Document {

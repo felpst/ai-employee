@@ -16,7 +16,11 @@ interface MongoosePopulateQuery {
   match?: any;
 }
 
+<<<<<<< HEAD
 export class RepositoryHelper<T extends any | any[]> {
+=======
+export class RepositoryHelper<T> {
+>>>>>>> 1947452df40a20cd9147c59280a3418e3a469cbe
   private _populate: MongoosePopulateQuery[] = [];
 
   constructor(private model: Model<T>, private userId?: string) {
@@ -89,13 +93,21 @@ export class RepositoryHelper<T extends any | any[]> {
   }
 
   // Update document
+<<<<<<< HEAD
   public async update(_id: string, data: Partial<T>): Promise<T> {
+=======
+  public async update(_id: string, data: T): Promise<T> {
+>>>>>>> 1947452df40a20cd9147c59280a3418e3a469cbe
     this._setUser(data);
     const updated = await this.model.findByIdAndUpdate(_id, data, {
       returnDocument: 'after',
       runValidators: true,
     });
+<<<<<<< HEAD
     return updated as T;
+=======
+    return updated;
+>>>>>>> 1947452df40a20cd9147c59280a3418e3a469cbe
   }
 
   // Delete document
