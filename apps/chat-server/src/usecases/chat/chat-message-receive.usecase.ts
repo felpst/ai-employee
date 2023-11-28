@@ -20,29 +20,6 @@ export class ChatMessageReceive {
     // Send message to client
     conn.messageSend.execute(conn, { type: 'message', content: message });
 
-    // Listener to new token
-    let lastTokensSent = ''
-    const callbacks = [
-      {
-        handleLLMNewToken: () => {
-          const processLength = agent.processes.length;
-          if (processLength) {
-            const llmOutputFormatted = agent.processes[processLength - 1].llmOutputFormatted;
-            if (llmOutputFormatted && llmOutputFormatted !== lastTokensSent) {
-              lastTokensSent = llmOutputFormatted;
-              conn.messageSend.execute(conn, { type: 'handleLLMNewToken', content: llmOutputFormatted });
-            }
-          }
-        },
-        handleChainEnd: () => {
-          // TODO save last process on message
-          const lastProcess = agent.processes[agent.processes.length - 1];
-          conn.messageSend.execute(conn, { type: 'handleChainEnd', content: lastProcess });
-          lastTokensSent = '';
-        }
-      }
-    ];
-
     // Message answer
     const answerMessage = await this.chatMessageCreate.execute({
       content: '',
@@ -63,7 +40,7 @@ export class ChatMessageReceive {
     });
 
     // Send to AI Employee
-    const agentCall = await agent.call(message.content, callbacks);
+    const agentCall = await agent.call(message.content);
     // console.log(answer);
 
     // Save answer

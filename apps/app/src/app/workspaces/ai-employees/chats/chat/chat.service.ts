@@ -104,22 +104,8 @@ export class ChatService {
         this.tempMessage = undefined;
       },
       handleMessage: (data: any) => {
+        if (!env.production) console.log('[Handle] New message received', JSON.stringify(data));
         this.tempMessage = data;
-        if (!env.production) console.log('[Handle] New message received', data);
-      },
-      handleLLMNewToken: (content: any) => {
-
-
-        this.tempMessage = {
-          content,
-          sender: this.selectedChat.aiEmployee,
-          role: 'bot',
-          chatRoom: this.selectedChat._id,
-          createdAt: new Date(),
-        } as Partial<IChatMessage>;
-      },
-      handleChainEnd: (data: any) => {
-        this.tempMessage = undefined;
       },
       handleLLMNewTokenChatName: (chatName: string) => {
         if (this.selectedChat.name === 'New chat') {

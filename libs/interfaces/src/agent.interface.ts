@@ -8,6 +8,8 @@ export interface TaskProcess {
   output: string;
   status: 'running' | 'done';
   taskTokenUsage: number;
+  startAt: Date;
+  endAt: Date;
 }
 
 export interface IAgentCall extends DefaultModel {
@@ -17,6 +19,8 @@ export interface IAgentCall extends DefaultModel {
   callTokenUsage: number;
   totalTokenUsage: number;
   status: 'running' | 'done';
+  startAt: Date;
+  endAt: Date;
 }
 
 export interface CallProcess {

@@ -6,6 +6,7 @@ import { AgentExecutor, initializeAgentExecutorWithOptions } from "langchain/age
 import { BufferMemory, ChatMessageHistory } from "langchain/memory";
 import { BaseChatMessageHistory, LLMResult } from "langchain/schema";
 import { DynamicTool } from "langchain/tools";
+import * as _ from 'lodash';
 import { Subject } from "rxjs";
 import { AgentTools } from "../agent-tools/agent-tools.agent";
 import { AgentAIEmployeeHandlers } from "./agent-ai-employee-handlers.handler";
@@ -13,9 +14,11 @@ import { AgentAIEmployeeHandlers } from "./agent-ai-employee-handlers.handler";
 export class AgentAIEmployee implements Agent {
   _executor: AgentExecutor;
   handlers = new AgentAIEmployeeHandlers();
+  agentTools: AgentTools;
+
   calls: IAgentCall[] = [];
   $calls: Subject<IAgentCall[]> = new Subject();
-  agentTools: AgentTools;
+  private _calls: IAgentCall[] = [];
 
   constructor(
     private aiEmployee: IAIEmployee,
@@ -23,31 +26,6 @@ export class AgentAIEmployee implements Agent {
   ) { }
 
   async init() {
-    // TODO tools ai employee
-    // this.aiEmployee.tools = [
-    //   {
-    //     id: 'calculator'
-    //   },
-    //   {
-    //     id: 'random-number'
-    //   },
-    //   {
-    //     id: 'web-search'
-    //   },
-    //   {
-    //     id: 'mail-sender',
-    //     options: {
-    //       host: 'smtp.gmail.com',
-    //       port: 465,
-    //       secure: true,
-    //       auth: {
-    //         user: process.env.EMAIL_USER,
-    //         pass: process.env.EMAIL_PASSWORD
-    //       }
-    //     }
-    //   }
-    // ]
-
     // Agent Tools
     this.agentTools = await new AgentTools(this.aiEmployee.tools).init();
 
@@ -76,6 +54,8 @@ export class AgentAIEmployee implements Agent {
   }
 
   getTools() {
+    const _updateCalls = this._updateCalls.bind(this);
+
     const toolsDescriptions = this.aiEmployee.tools.map(t => {
       const tool = ToolsHelper.get(t.id);
       if (!tool) return '';
@@ -91,7 +71,6 @@ export class AgentAIEmployee implements Agent {
           try {
             const call = this.calls[this.calls.length - 1];
             let task: TaskProcess;
-            const _updateCalls = this._updateCalls.bind(this);
 
             console.log('input', input);
 
@@ -102,13 +81,16 @@ export class AgentAIEmployee implements Agent {
                   input,
                   output: null,
                   status: 'running',
-                  taskTokenUsage: 0
+                  taskTokenUsage: 0,
+                  startAt: new Date(),
+                  endAt: null
                 }
                 call.tasks.push(task);
                 task.tool = metadata.id || tool['id'][2];
                 _updateCalls();
               },
               handleToolEnd(output: string) {
+                task.endAt = new Date();
                 task.output = output;
                 task.status = 'done';
                 _updateCalls();
@@ -161,6 +143,8 @@ export class AgentAIEmployee implements Agent {
       callTokenUsage: 0,
       totalTokenUsage: 0,
       status: 'running',
+      startAt: new Date(),
+      endAt: null,
       createdBy: this.aiEmployee._id,
       updatedBy: this.aiEmployee._id,
     }) as IAgentCall
@@ -172,6 +156,7 @@ export class AgentAIEmployee implements Agent {
     const agentCallCallbacks = {
       handleLLMEnd() {
         agentCall.status = 'done';
+        agentCall.endAt = new Date();
         _updateCalls();
       },
       handleLLMNewToken() {
@@ -196,6 +181,8 @@ export class AgentAIEmployee implements Agent {
   }
 
   private _updateCalls() {
+    if (JSON.stringify(this._calls) === JSON.stringify(this.calls)) return;
+    this._calls = _.cloneDeep(this.calls);
     this.$calls.next(this.calls);
   }
 

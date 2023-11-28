@@ -35,7 +35,7 @@ const tools = [
     "fields": ["type", "host", "username", "password", "database", "tables"]
   },
   {
-    "id": "random-number",
+    "id": "random-number-generator",
     "name": "Random Number",
     "description": "Randomize numbers",
     "icon": "https://storage.googleapis.com/factory-assets/tools/calculator-tool.png",

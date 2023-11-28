@@ -1,7 +1,7 @@
 import { Component, Input } from "@angular/core";
+import { ToolsHelper } from "@cognum/helpers";
 import { IAIEmployee, IAgentCall, IChatMessage, IUser } from "@cognum/interfaces";
 import { UtilsService } from "../../../../../services/utils/utils.service";
-import { AIEmployeesService } from "../../../ai-employees.service";
 import { ChatService } from "../chat.service";
 
 @Component({
@@ -11,12 +11,16 @@ import { ChatService } from "../chat.service";
 })
 export class ChatMessageComponent {
   @Input() message!: Partial<IChatMessage>;
+  showActions = false;
 
   constructor(
     public utilsService: UtilsService,
-    private chatServices: ChatService,
-    private aiEmployeesService: AIEmployeesService
+    private chatServices: ChatService
   ) { }
+
+  get loading() {
+    return !this.message.content || (this.message.call as IAgentCall)?.tasks.find((task: any) => task.status === 'running');
+  }
 
   get sender() {
     return this.chatServices.senders.get(this.message.sender as string) as (IUser | IAIEmployee);
@@ -24,5 +28,9 @@ export class ChatMessageComponent {
 
   get call() {
     return this.message.call as IAgentCall;
+  }
+
+  getTool(id: string) {
+    return ToolsHelper.get(id);
   }
 }

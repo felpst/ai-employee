@@ -39,24 +39,6 @@
           [message]="chatService.tempMessage"
         ></cognum-chat-message>
       </div>
-
-      <!-- Tokens -->
-      <div class="message" *ngIf="chatService.tokens">
-        <div class="from">
-          <strong>{{ chatService.aiEmployee.name }}</strong>
-        </div>
-        <div class="content">
-          <div *ngIf="chatService.thinking.action">
-            <strong>Action: </strong>{{ chatService.thinking.action }}
-          </div>
-          <div *ngIf="chatService.thinking.thought">
-            <strong>Thought: </strong>{{ chatService.thinking.thought }}
-          </div>
-          <div *ngIf="chatService.thinking.answer">
-            <strong>Answer: </strong>{{ chatService.thinking.answer }}
-          </div>
-        </div>
-      </div>
     </div>
   </div>
 

@@ -19,7 +19,12 @@ export class AIEmployeeTools {
       case 'calculator':
         return new Calculator();
       case 'web-search':
-        return new SerpAPI();
+        // eslint-disable-next-line no-case-declarations
+        const tool = new SerpAPI();
+        tool.metadata = {
+          id: 'web-search',
+        }
+        return tool;
       case 'random-number':
         return new RandomNumberTool();
       case 'mail-sender':

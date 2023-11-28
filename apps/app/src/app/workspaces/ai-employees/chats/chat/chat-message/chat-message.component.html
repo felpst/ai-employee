@@ -1,6 +1,9 @@
 <div class="chat-message">
   <div class="avatar">
-    <cognum-users-avatar [users]="[sender]"></cognum-users-avatar>
+    <cognum-users-avatar
+      [users]="[sender]"
+      [loading]="!message.content"
+    ></cognum-users-avatar>
   </div>
   <div class="content">
     <div class="header">
@@ -14,19 +17,37 @@
       </div>
     </div>
 
-    <div *ngIf="!message.content">
-      <mat-spinner></mat-spinner>
-    </div>
     <div class="message" *ngIf="message.content || call?.output">
       <markdown [data]="message.content || call.output"></markdown>
     </div>
-    <div class="tasks" *ngIf="call">
+    <div class="tasks" *ngIf="call && (showActions || loading)">
       <div class="task" *ngFor="let task of call.tasks">
-        Tool: {{ task.tool }}<br />
-        Status: {{ task.status }}<br />
-        Input: {{ task.input }}<br />
-        Output: {{ task.output }}<br />---<br />
+        <div class="icon" *ngIf="task.status === 'done'">
+          <img [src]="getTool(task.tool).icon" alt="" />
+        </div>
+        <div class="loading-icon" *ngIf="task.status === 'running'">
+          <img [src]="getTool(task.tool).icon" alt="" />
+          <mat-spinner diameter="32"></mat-spinner>
+        </div>
+        <div class="info">
+          <div class="name cognum-font-strong">
+            {{ getTool(task.tool).name }}
+          </div>
+          <div class="input">{{ task.input }}</div>
+          <div class="output">{{ task.output }}</div>
+        </div>
       </div>
     </div>
   </div>
+</div>
+
+<div
+  class="showActions"
+  *ngIf="(call?.tasks?.length || 0) > 0 && !loading"
+  (click)="showActions = !showActions"
+  [matTooltip]="!showActions ? 'Show actions' : 'Hide actions'"
+  mat-ripple
+>
+  <mat-icon *ngIf="!showActions">expand_more</mat-icon>
+  <mat-icon *ngIf="showActions">expand_less</mat-icon>
 </div>
