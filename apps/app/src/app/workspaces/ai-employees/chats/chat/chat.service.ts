@@ -91,52 +91,29 @@ export class ChatService {
       auth: (data: any) => {
         if (data.isAuthenticated) {
           if (!env.production) console.log('Authenticated');
-          // TODO load messages? -> resolver
-          // this.selectedChatsService.chats.set(data.chat._id, data.chat);
-          // this.messages = data.messages;
-          // this.user = data.user;
-          // this.aiEmployee = data.aiEmployee;
         }
       },
       message: (data: any) => {
         if (!env.production) console.log('New message received', data);
-<<<<<<< HEAD
         this.messages.push(data);
         this.tempMessage = undefined;
       },
       handleMessage: (data: any) => {
         if (!env.production) console.log('[Handle] New message received', JSON.stringify(data));
         this.tempMessage = data;
-=======
-
-        // if (data.role === 'AI') {
-        //   this.messages.push({
-        //     role: 'SYSTEM',
-        //     content: {
-        //       answer: this.thinking.answer,
-        //       thought: this.thinking.thought,
-        //       action: this.thinking.action,
-        //     },
-        //     createdAt: new Date(),
-        //   });
-        //   this.tokens = '';
-        //   this.thinking = { action: '', thought: '', answer: '' };
-        // }
-
         this.messages.push(data);
       },
-      handleLLMNewToken: (content: any) => {
-        this.tempMessage = {
-          content,
-          sender: this.selectedChat.aiEmployee,
-          role: 'bot',
-          chatRoom: this.selectedChat._id,
-          createdAt: new Date(),
-        } as Partial<IChatMessage>;
-      },
+      // handleLLMNewToken: (content: any) => {
+      //   this.tempMessage = {
+      //     content,
+      //     sender: this.selectedChat.aiEmployee,
+      //     role: 'bot',
+      //     chatRoom: this.selectedChat._id,
+      //     createdAt: new Date(),
+      //   } as Partial<IChatMessage>;
+      // },
       handleChainEnd: (data: any) => {
         this.tempMessage = undefined;
->>>>>>> 1947452df40a20cd9147c59280a3418e3a469cbe
       },
       handleLLMNewTokenChatName: (chatName: string) => {
         if (this.selectedChat.name === 'New chat') {

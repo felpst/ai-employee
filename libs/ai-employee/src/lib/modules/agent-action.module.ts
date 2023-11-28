@@ -9,11 +9,7 @@ export class AgentModuleAction {
   constructor(
     private aiEmployee: IAIEmployee
   ) {
-<<<<<<< HEAD
     this.tools = AIEmployeeTools.get();
-=======
-    this.tools = AIEmployeeTools.get(this.aiEmployee.tools);
->>>>>>> 1947452df40a20cd9147c59280a3418e3a469cbe
   }
 
   async prompt() {

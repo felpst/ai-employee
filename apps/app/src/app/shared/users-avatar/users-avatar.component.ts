@@ -17,10 +17,7 @@ interface Avatar {
 export class UsersAvatarComponent implements OnInit {
   @Input() users: (IUser | IAIEmployee | any)[] = [];
   @Input() showAdd = false;
-<<<<<<< HEAD
   @Input() loading = false;
-=======
->>>>>>> 1947452df40a20cd9147c59280a3418e3a469cbe
 
   avatars: Avatar[] = [];
   private _nextColor = 0;

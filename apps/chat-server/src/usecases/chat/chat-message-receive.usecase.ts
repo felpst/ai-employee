@@ -20,7 +20,6 @@ export class ChatMessageReceive {
     // Send message to client
     conn.messageSend.execute(conn, { type: 'message', content: message });
 
-<<<<<<< HEAD
     // Message answer
     const answerMessage = await this.chatMessageCreate.execute({
       content: '',
@@ -57,46 +56,6 @@ export class ChatMessageReceive {
         call: agentCall
       }
     });
-=======
-    // Listener to new token
-    let lastTokensSent = ''
-    const callbacks = [
-      {
-        handleLLMNewToken: () => {
-          const processLength = agent.processes.length;
-          if (processLength) {
-            const llmOutputFormatted = agent.processes[processLength - 1].llmOutputFormatted;
-            if (llmOutputFormatted && llmOutputFormatted !== lastTokensSent) {
-              lastTokensSent = llmOutputFormatted;
-              conn.messageSend.execute(conn, { type: 'handleLLMNewToken', content: llmOutputFormatted });
-            }
-          }
-        },
-        handleChainEnd: () => {
-          // TODO save last process on message
-          const lastProcess = agent.processes[agent.processes.length - 1];
-          conn.messageSend.execute(conn, { type: 'handleChainEnd', content: lastProcess });
-          lastTokensSent = '';
-        }
-      }
-    ];
-
-    // Send to AI Employee
-    const answer = await agent.call(message.content, callbacks);
-    // console.log(answer);
-
-    // Save answer
-    const answerMessage = await this.chatMessageCreate.execute({
-      content: answer,
-      sender: conn.session.aiEmployee._id,
-      role: 'bot',
-      chatRoom: data.chatRoom
-    });
-    conn.session.chatMessages.push(answerMessage);
-
-    // Send answer to client
-    conn.messageSend.execute(conn, { type: 'message', content: answerMessage });
->>>>>>> 1947452df40a20cd9147c59280a3418e3a469cbe
 
     // Chat name
     if (conn.session.chatRoom.name === 'New chat') {

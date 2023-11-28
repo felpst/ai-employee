@@ -7,9 +7,5 @@
     "types": ["node"]
   },
   "exclude": ["jest.config.ts", "src/**/*.spec.ts", "src/**/*.test.ts"],
-<<<<<<< HEAD
   "include": ["src/**/*.ts", "../interfaces/src/agent.interface.ts"]
-=======
-  "include": ["src/**/*.ts"]
->>>>>>> 1947452df40a20cd9147c59280a3418e3a469cbe
 }

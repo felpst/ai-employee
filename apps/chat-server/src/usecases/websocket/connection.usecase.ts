@@ -1,9 +1,4 @@
-<<<<<<< HEAD
 import { Agent, IAIEmployee, IChatMessage, IChatRoom, IUser } from '@cognum/interfaces';
-=======
-import { Agent } from '@cognum/ai-employee';
-import { IAIEmployee, IChatMessage, IChatRoom, IUser } from '@cognum/interfaces';
->>>>>>> 1947452df40a20cd9147c59280a3418e3a469cbe
 import { WebSocket } from 'ws';
 import { IMessage } from '../../interfaces/message.interface';
 import { sessionsService } from '../../services/sessions.service';

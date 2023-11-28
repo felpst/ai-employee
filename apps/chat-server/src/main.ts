@@ -2,11 +2,7 @@ import { DatabaseHelper } from "@cognum/helpers";
 import { ChatServer } from "./chat-server";
 
 // Initialize database connection
-<<<<<<< HEAD
 DatabaseHelper.connect(process.env.MONGO_URL)
-=======
-DatabaseHelper.connect()
->>>>>>> 1947452df40a20cd9147c59280a3418e3a469cbe
   .then(() => {
     // Database connection successful, start the server
     const chatServer = new ChatServer();

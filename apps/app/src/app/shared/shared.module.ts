@@ -9,10 +9,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatListModule } from '@angular/material/list';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
-<<<<<<< HEAD
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-=======
->>>>>>> 1947452df40a20cd9147c59280a3418e3a469cbe
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
@@ -55,10 +52,7 @@ const Modules: any[] = [
   NgScrollbarModule,
   MatRippleModule,
   MatInputModule,
-<<<<<<< HEAD
   MatProgressSpinnerModule
-=======
->>>>>>> 1947452df40a20cd9147c59280a3418e3a469cbe
 ];
 
 @NgModule({

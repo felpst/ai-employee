@@ -7,12 +7,7 @@
 POST {{baseUrl}}/auth/login
 Content-Type: application/json
 
-<<<<<<< HEAD
 { "email": "{{email}}", "password": "{{password}}" }
-=======
-{ "email": "fragosooliveira773@gmail.com", "password": "@Gabriel127" }
-
->>>>>>> 1947452df40a20cd9147c59280a3418e3a469cbe
 
 ### authToken
 
@@ -49,7 +44,6 @@ Content-Type: application/json
 Authorization: Bearer {{$authToken}}
 
 {
-<<<<<<< HEAD
   "tools": [
     {
       "type": "database-connect",
@@ -80,37 +74,9 @@ Authorization: Bearer {{$authToken}}
       }
     }
   ]
-=======
-  "role": "Role"
->>>>>>> 1947452df40a20cd9147c59280a3418e3a469cbe
 }
 
 ### Delete ###
 
 DELETE {{baseUrl}}/{{apiRoute}}/{{id}}
 Authorization: Bearer {{$authToken}}
-<<<<<<< HEAD
-=======
-
-### Create Recovery ###
-
-POST {{baseUrl}}/{{apiRoute}}/recovery
-Content-Type: application/json
-
-{
-  "email": "wermesonrocha2@gmail.com"
-}
-
-### Check token ###
-
-GET {{baseUrl}}/{{apiRoute}}/recovery/651ec6c77e09ea8018dc3400
-
-### Recovery password ###
-
-PATCH {{baseUrl}}/{{apiRoute}}/recovery/651ec6c77e09ea8018dc3400
-Content-Type: application/json
-
-{
-  "password": "dMEg64427*>8"
-}
->>>>>>> 1947452df40a20cd9147c59280a3418e3a469cbe

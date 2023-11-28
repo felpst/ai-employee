@@ -4,7 +4,6 @@
     *ngFor="let avatar of showAvatars; let i = index"
     [style.background-color]="avatar.backgroundColor"
   >
-<<<<<<< HEAD
     <div class="avatar-container">
       <img
         class="avatar"
@@ -18,17 +17,6 @@
       </span>
       <mat-spinner *ngIf="loading" diameter="32"></mat-spinner>
     </div>
-=======
-    <img
-      class="avatar"
-      *ngIf="avatar.photo"
-      [src]="avatar.photo"
-      [title]="avatar.name"
-    />
-    <span *ngIf="!avatar.photo" class="initials">
-      {{ avatar.initials }}
-    </span>
->>>>>>> 1947452df40a20cd9147c59280a3418e3a469cbe
   </div>
   <div class="item" *ngIf="remainingUsersCount > 0">
     <div class="more-users">{{ remainingUsersCount }}+</div>

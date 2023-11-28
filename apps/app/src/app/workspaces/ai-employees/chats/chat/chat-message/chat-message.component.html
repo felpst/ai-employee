@@ -1,31 +1,24 @@
 <div class="chat-message">
   <div class="avatar">
-<<<<<<< HEAD
     <cognum-users-avatar
       [users]="[sender]"
       [loading]="!message.content"
     ></cognum-users-avatar>
-=======
     <cognum-users-avatar [users]="[sender]"></cognum-users-avatar>
->>>>>>> 1947452df40a20cd9147c59280a3418e3a469cbe
   </div>
   <div class="content">
     <div class="header">
       <div class="name cognum-heading-3">{{ sender.name }}</div>
       <div
         class="time cognum-font-color-grey-light"
-<<<<<<< HEAD
         matTooltip="{{ message.createdAt | date: 'MM-dd-yyyy HH:mm:ss' }}"
-=======
-        matTooltip="{{ message.createdAt | date : 'MM-dd-yyyy HH:mm:ss' }}"
->>>>>>> 1947452df40a20cd9147c59280a3418e3a469cbe
+        matTooltip="{{ message.createdAt | date: 'MM-dd-yyyy HH:mm:ss' }}"
         matTooltipPosition="above"
       >
         {{ utilsService.timeDifference(message.createdAt) }}
       </div>
     </div>
 
-<<<<<<< HEAD
     <div class="message" *ngIf="message.content || call?.output">
       <markdown [data]="message.content || call.output"></markdown>
     </div>
@@ -59,11 +52,7 @@
 >
   <mat-icon *ngIf="!showActions">expand_more</mat-icon>
   <mat-icon *ngIf="showActions">expand_less</mat-icon>
-</div>
-=======
-    <div class="message" *ngIf="message.content">
-      <markdown [data]="message.content"></markdown>
-    </div>
+  <div class="message" *ngIf="message.content">
+    <markdown [data]="message.content"></markdown>
   </div>
 </div>
->>>>>>> 1947452df40a20cd9147c59280a3418e3a469cbe
