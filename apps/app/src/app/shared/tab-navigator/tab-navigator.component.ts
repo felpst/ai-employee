@@ -18,7 +18,6 @@ export class TabNavigatorComponent implements OnInit, OnChanges {
   @Input() selected: Step = this.navs[0];
   @Input() selectedIndex = 0;
 
-
   constructor(
     private router: Router,
     private activatedRoute: ActivatedRoute
@@ -39,6 +38,7 @@ export class TabNavigatorComponent implements OnInit, OnChanges {
     if (tabIndex !== -1) {
       this.select(tabIndex);
     }
+    this.subscribeToSelectByRoute()
   }
 
   subscribeToSelectByRoute() {
@@ -55,6 +55,9 @@ export class TabNavigatorComponent implements OnInit, OnChanges {
       const selectedTab = this.navs.findIndex(nav => nav.routerLink === data['nav'].select);
       if (selectedTab !== -1) {
         this.select(selectedTab);
+        if (data['nav']?.select) {
+          this.select(data['nav'].select)
+        }
       }
     });
   }

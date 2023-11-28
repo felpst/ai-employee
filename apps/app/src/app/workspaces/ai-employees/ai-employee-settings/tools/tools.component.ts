@@ -36,14 +36,12 @@ export class AIEmployeeToolsComponent {
     let component: any;
 
     switch (tool.id) {
-      // TODO add other tools
       case 'database':
         component = AIToolSettingsDatabaseComponent;
         break;
       case 'mail-sender':
         component = AIToolSettingsMailSenderComponent;
         break;
-
     }
     if (component) {
       const dialogRef = this.dialog.open(component, { width: '400px', data: { tool } });
