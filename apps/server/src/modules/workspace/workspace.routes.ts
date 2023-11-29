@@ -6,6 +6,8 @@ const router: Router = express.Router();
 
 router.post('/', authMiddleware,
   workspaceController.setupKnowledgeBaseCollection,
+  authMiddleware,
+  workspaceController.createOpenAIAssistant,
   workspaceController.create
 );
 router.get(
@@ -25,6 +27,7 @@ router.delete(
   '/:id',
   authMiddleware,
   workspaceController.delete,
+  workspaceController.deleteOpenAIAssistant,
   workspaceController.deleteKnowledgeBaseMiddleware
 );
 

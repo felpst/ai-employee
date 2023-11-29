@@ -18,7 +18,8 @@
     "stage:server:deploy": "npm run stage:server:build && npm run stage:server:yaml && gcloud app deploy dist/apps/server/app-stage.yaml",
     "stage:chat-server:build": "nx build chat-server && cd dist/apps/chat-server && npm i --package-lock-only",
     "stage:chat-server:yaml": "xcopy .\\apps\\chat-server\\chat-server-stage.yaml .\\dist\\apps\\chat-server\\chat-server-stage.yaml /F /Y",
-    "stage:chat-server:deploy": "npm run stage:chat-server:build && npm run stage:chat-server:yaml && gcloud app deploy dist/apps/chat-server/chat-server-stage.yaml"
+    "stage:chat-server:deploy": "npm run stage:chat-server:build && npm run stage:chat-server:yaml && gcloud app deploy dist/apps/chat-server/chat-server-stage.yaml",
+    "python:deploy": "gcloud app deploy apps/python_api/python.yaml"
   },
   "private": true,
   "dependencies": {
@@ -51,7 +52,7 @@
     "googleapis": "^126.0.1",
     "hnswlib-node": "^1.4.2",
     "jsonwebtoken": "^9.0.1",
-    "langchain": "^0.0.186",
+    "langchain": "^0.0.198",
     "moment": "^2.29.4",
     "mongodb": "^5.2.0",
     "mongoose": "^7.4.1",
@@ -63,6 +64,7 @@
     "ngx-scrollbar": "^13.0.3",
     "ngx-skeleton-loader": "^8.1.0",
     "nodemailer": "^6.9.7",
+    "openai": "^4.19.0",
     "pdf-parse": "^1.1.1",
     "peggy": "^3.0.2",
     "rxjs": "~7.8.0",

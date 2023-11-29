@@ -1,10 +1,9 @@
-import { IToolSettings } from "@cognum/interfaces";
+import { Agent, CallProcess, IAgentCall, IToolSettings } from "@cognum/interfaces";
 import { ChatModel } from "@cognum/llm";
 import { AgentExecutor, initializeAgentExecutorWithOptions } from "langchain/agents";
 import { BufferMemory } from "langchain/memory";
 import { MessagesPlaceholder } from "langchain/prompts";
 import { Subject } from "rxjs";
-import { Agent, CallProcess, IAgentCall } from '../../../../../interfaces/src/agent.interface';
 import { AIEmployeeTools } from "../../tools/ai-employee-tools";
 
 export class AgentTools implements Agent {
@@ -23,7 +22,7 @@ export class AgentTools implements Agent {
 
     this._executor = await initializeAgentExecutorWithOptions(tools, model, {
       agentType: "structured-chat-zero-shot-react-description",
-      // verbose: true,
+      verbose: true,
       memory: new BufferMemory({
         memoryKey: "chat_history",
         returnMessages: true,

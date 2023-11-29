@@ -48,6 +48,11 @@ export class KnowledgeController extends ModelController<typeof Knowledge> {
     }
   }
 
+  private _textToFilename(text: string, ext?: string): string {
+    const invalidCharsRegex = /[/\\?%*:|"<>]/g;
+    return text.replace(invalidCharsRegex, '_') + `${ext ? `.${ext}` : ''}`;
+  }
+
   public async create(
     req: Request,
     res: Response,
@@ -91,7 +96,7 @@ export class KnowledgeController extends ModelController<typeof Knowledge> {
   ): Promise<void> {
     try {
       const knowledgeId: string = req.params.id;
-      const body: Partial<IKnowledge> = req.body;
+      const body: Partial<IKnowledge> = Array.isArray(req.body) ? req.body[0] : req.body;
       const { title, description, ...rest } = body;
       const _title = title || (await this._generateTitle(rest.data));
       const _description =

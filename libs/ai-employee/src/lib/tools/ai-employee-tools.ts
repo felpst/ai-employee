@@ -1,5 +1,5 @@
 import { IToolSettings } from "@cognum/interfaces";
-import { MailSenderTool, RandomNumberTool } from "@cognum/tools";
+import { KnowledgeRetrieverTool, MailSenderTool, RandomNumberTool, SQLConnectorTool, WebBrowserTool } from "@cognum/tools";
 import { DynamicStructuredTool, SerpAPI, Tool } from "langchain/tools";
 import { Calculator } from "langchain/tools/calculator";
 
@@ -29,7 +29,12 @@ export class AIEmployeeTools {
         return new RandomNumberTool();
       case 'mail-sender':
         return new MailSenderTool(toolSettings.options);
+      case 'sql-connector':
+        return new SQLConnectorTool(toolSettings.options);
+      case 'web-browser':
+        return new WebBrowserTool();
+      case 'knowledge-retriever':
+        return new KnowledgeRetrieverTool(toolSettings.options)
     }
   }
-
 }
