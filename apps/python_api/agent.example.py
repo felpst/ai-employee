@@ -2,7 +2,6 @@ from model import Model
 from langchain_experimental.agents.agent_toolkits import create_python_agent
 from langchain.agents.agent_types import AgentType
 
-
 class Agent:
     def __init__(self, tool) -> None:
         self.model = Model.initialize_model()
