@@ -147,16 +147,20 @@ export class KnowledgeController extends ModelController<typeof Knowledge> {
         const { file } = req;
 
         if (file) {
-          const ext = file.filename.split('.').at(-1);
-          fileName = req.body.title ? this._textToFilename(req.body.title, ext) : file.filename;
+          const originalName = file.filename || file.originalname;
+          const ext = originalName.split('.').at(-1);
+          fileName = knowledge.title ? this._textToFilename(knowledge.title, ext) : originalName;
 
           fileContent = file.buffer;
+          knowledge.isFile = true;
         } else {
           const ext = 'txt';
-          const title = req.body.title || (await this._generateTitle(req.body.data));
+          const title = knowledge.title || (await this._generateTitle(req.body.data));
           fileName = this._textToFilename(title, ext);
 
           fileContent = req.body.data;
+          knowledge.title = title;
+          knowledge.isFile = false;
         }
 
         fs.writeFileSync(`tmp/${fileName}`, fileContent);

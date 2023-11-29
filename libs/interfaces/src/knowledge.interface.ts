@@ -4,6 +4,7 @@ import { DefaultModel } from './default.model';
 import { IWorkspace } from './workspace.interface';
 
 export interface IKnowledge extends DefaultModel {
+  _id?: string;
   title: string;
   description: string;
   data: string;
@@ -14,4 +15,5 @@ export interface IKnowledge extends DefaultModel {
     permission: 'Reader' | 'Editor';
   }>;
   openaiFileId: string;
+  isFile: boolean;
 }

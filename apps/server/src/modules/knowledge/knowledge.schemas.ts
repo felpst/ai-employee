@@ -5,7 +5,10 @@ export const addKnowledgeSchema = yup.object({
     .object({
       title: yup.string().notRequired(),
       description: yup.string().notRequired(),
-      data: yup.string().required(),
+      data: yup.string().when('isFile', {
+        is: (isFile) => isFile !== true,
+        then: (schema) => schema.required()
+      }),
       workspace: yup.string().required(),
       employees: yup.array().of(yup.string()).notRequired(),
       permissions: yup
@@ -17,6 +20,7 @@ export const addKnowledgeSchema = yup.object({
           })
         )
         .notRequired(),
+      isFile: yup.boolean().required()
     })
     .noUnknown()
     .required(),
