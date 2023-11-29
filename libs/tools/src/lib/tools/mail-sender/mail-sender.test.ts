@@ -16,7 +16,8 @@ describe('SendEmail tool test', () => {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASSWORD,
       }
-    }
+    };
+
     const tools = [
       new MailSenderTool(settings),
     ];
@@ -24,7 +25,17 @@ describe('SendEmail tool test', () => {
   });
 
   it('should send email successfully', async () => {
-    const result = await executor.call({ input: 'send email to linecker@cognum.ai with a joke' });
+    const result = await executor.call({ input: 'send email to venilton@cognum.ai and linecker@cognum.ai, subject with a joke' });
+    expect(result.output).toContain('successfully');
+  })
+
+  it('should send email with cc successfully', async () => {
+    const result = await executor.call({ input: 'send email to venilton@cognum.ai and copy linecker@cognum.ai, subject with a joke' });
+    expect(result.output).toContain('successfully');
+  })
+
+  it('should send email with bcc successfully', async () => {
+    const result = await executor.call({ input: 'send email to linecker@cognum.ai and blind copy venilton@cognum.ai, subject with a joke' });
     expect(result.output).toContain('successfully');
   })
 
