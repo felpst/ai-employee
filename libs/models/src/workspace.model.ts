@@ -25,4 +25,4 @@ triggers(schema);
 const user = User; // Force import model
 
 const Workspace: Model<IWorkspace> = model<IWorkspace>('Workspace', schema);
-export default Workspace as Model<IWorkspace>;
+export default Workspace;

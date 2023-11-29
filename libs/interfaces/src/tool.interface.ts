@@ -3,7 +3,7 @@ export interface ITool {
   name: string;
   description: string;
   icon: string;
-  fields: string[];
+  show: boolean;
 }
 
 export interface IToolSettings {

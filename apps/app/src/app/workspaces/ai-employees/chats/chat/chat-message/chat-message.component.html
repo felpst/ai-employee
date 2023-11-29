@@ -4,14 +4,12 @@
       [users]="[sender]"
       [loading]="!message.content"
     ></cognum-users-avatar>
-    <cognum-users-avatar [users]="[sender]"></cognum-users-avatar>
   </div>
   <div class="content">
     <div class="header">
       <div class="name cognum-heading-3">{{ sender.name }}</div>
       <div
         class="time cognum-font-color-grey-light"
-        matTooltip="{{ message.createdAt | date: 'MM-dd-yyyy HH:mm:ss' }}"
         matTooltip="{{ message.createdAt | date: 'MM-dd-yyyy HH:mm:ss' }}"
         matTooltipPosition="above"
       >
@@ -52,7 +50,4 @@
 >
   <mat-icon *ngIf="!showActions">expand_more</mat-icon>
   <mat-icon *ngIf="showActions">expand_less</mat-icon>
-  <div class="message" *ngIf="message.content">
-    <markdown [data]="message.content"></markdown>
-  </div>
 </div>
