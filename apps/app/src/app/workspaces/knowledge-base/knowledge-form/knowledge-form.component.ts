@@ -21,11 +21,10 @@ import { KnowledgeBaseService } from '../knowledge-base.service';
 export class KnowledgeFormComponent {
   knowledge: IKnowledge | undefined;
   workspace!: IWorkspace;
+  inputType!: 'document' | 'file';
   members: IUser[] = [];
-  form: FormGroup = this.formBuilder.group({
-    title: ['', [Validators.required]],
-    data: ['', [Validators.required]],
-  });
+  fileName: string | undefined;
+  form!: FormGroup;
   markdownOptions = {
     showPreviewPanel: false,
   };
@@ -45,17 +44,33 @@ export class KnowledgeFormComponent {
     private data: {
       knowledge: IKnowledge;
       workspace: IWorkspace;
+      inputType: 'document' | 'file';
     }
   ) {
     this.initializeForm();
     this.initializeMembers();
     this.workspace = this.workspaceService.selectedWorkspace;
+
+    this.form = this.formBuilder.group({
+      title: ['', [Validators.required]],
+      data: ['', this.inputType === 'document' ? [Validators.required] : []],
+      file: ['', this.inputType === 'file' ? [Validators.required] : []],
+    });
+    // if (this.inputType === 'document') {
+    //   this.form.controls['file'].clearValidators();
+    // } else {
+    //   this.form.controls['data'].clearValidators();
+    // }
   }
 
   initializeForm(): void {
     if (this.data.knowledge) {
       this.knowledge = this.data.knowledge;
       this.form.patchValue(this.data.knowledge);
+
+      this.inputType = this.knowledge.data ? 'document' : 'file';
+    } else {
+      this.inputType = this.data.inputType;
     }
   }
 
@@ -154,6 +169,29 @@ export class KnowledgeFormComponent {
     return modifiedKnowledge;
   }
 
+  onFileSelected(event: any) {
+    try {
+      const validExtensions = ['pdf'];
+      const fileSizeMbLimit = 500;
+      const file: File = event.target.files[0];
+
+      if (file) {
+        const ext = file.name.split('.').pop();
+        const fileMbSize = (file.size / 1024) / 1024;
+
+        if (!validExtensions.includes(ext + ''))
+          throw new Error(`File type "${ext}" is not supported.`);
+        if (fileMbSize > fileSizeMbLimit)
+          throw new Error(`File size exceeds ${fileSizeMbLimit}MB`);
+
+        this.fileName = file.name;
+        this.form.patchValue({ file });
+      }
+    } catch (error) {
+      this.handleError((error as Error).message, error);
+    }
+  }
+
   onRemove() {
     const dialogRef = this.dialog.open(DialogComponent, {
       data: {
@@ -180,14 +218,6 @@ export class KnowledgeFormComponent {
   }
 
   closeModal(): void {
-    if (this.isFormFilled()) {
-      this.onSave();
-    } else {
-      this.dialogRef.close();
-    }
-  }
-
-  isFormFilled(): boolean {
-    return Object.values(this.form.value).some((fieldValue) => fieldValue);
+    this.dialogRef.close();
   }
 }
