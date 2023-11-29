@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Document, Schema } from 'mongoose';
 
 interface IDefaultSchema extends Document {

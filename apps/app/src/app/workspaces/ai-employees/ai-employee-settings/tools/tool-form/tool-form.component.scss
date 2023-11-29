@@ -1,0 +1,63 @@
+.mat-mdc-dialog-content {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  gap: 8px;
+  color: inherit;
+}
+
+.close-container {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: end;
+}
+
+.actions-container {
+  top: 0;
+  right: 0;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 4rem;
+}
+
+.workspace {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+
+  .form-container {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .avatar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+
+  .avatar > div {
+    cursor: pointer;
+  }
+
+  .avatar-selected {
+    border: 2px solid #14b8a6;
+    width: 68px;
+  }
+
+  .inform-style {
+    color: #00000073;
+  }
+
+  .warning-message {
+    color: red;
+  }
+}

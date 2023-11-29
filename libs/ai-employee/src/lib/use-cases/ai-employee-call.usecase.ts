@@ -1,7 +1,6 @@
-import { Agent } from "../agents/interfaces/agent.interface";
+import { Agent } from "../../../../interfaces/src/agent.interface";
 
 export class AIEmployeeCall {
-  private tokens = 0;
 
   constructor(
     private aiEmployeeAgent: Agent

@@ -1,8 +1,7 @@
 from langchain_experimental.tools import PythonREPLTool
 from langchain_experimental.agents.agent_toolkits import create_python_agent
 from langchain.agents.agent_types import AgentType
-from ..model.azure_model import Model
-
+from model.azure_model import Model
 
 class PythonTool:
     def __init__(self):

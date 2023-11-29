@@ -1,20 +1,22 @@
 import { Knowledge, Workspace } from '@cognum/models';
 import { DynamicTool } from 'langchain/tools';
 import OpenAI from 'openai';
+import { KnowledgeRetrieverToolSettings } from './knowledge-retriever.interfaces';
 
 export class KnowledgeRetrieverTool extends DynamicTool {
-  constructor(workspaceId: string) {
+  constructor(settings: KnowledgeRetrieverToolSettings) {
     const openai = new OpenAI();
 
     super({
       name: 'Knowledge Retriever',
+      metadata: { id: "knowledge-retriever" },
       description: 'Get informations from the knowledge added to the assistant. Input must be a question.',
       func: async (input: string) => {
         try {
           const thread = await openai.beta.threads.create();
 
-          const { openaiAssistantId } = await Workspace.findById(workspaceId).lean();
-          const knowledges = (await Knowledge.find({ workspace: workspaceId }).select('openaiFileId').lean());
+          const { openaiAssistantId } = await Workspace.findById(settings.workspaceId).lean();
+          const knowledges = (await Knowledge.find({ workspace: settings.workspaceId }).select('openaiFileId').lean());
 
           const fileIds = knowledges.map(knowledge => knowledge.openaiFileId);
 

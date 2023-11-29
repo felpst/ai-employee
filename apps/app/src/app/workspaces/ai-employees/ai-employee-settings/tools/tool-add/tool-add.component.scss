@@ -1,0 +1,20 @@
+.tools {
+  display: flex;
+  flex-direction: column;
+
+  .tool {
+    display: flex;
+    flex-direction: row;
+    padding: 16px;
+    border: 1px solid #e0e0e0;
+    margin-bottom: 16px;
+    border-radius: 4px;
+    gap: 16px;
+
+    .icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+    }
+  }
+}

@@ -1,0 +1,200 @@
+<mat-dialog-content>
+  <div class="actions-container">
+    <mat-dialog-actions align="end" class="close-container">
+      <button (click)="closeModal()" mat-button>
+        <mat-icon>close</mat-icon>
+      </button>
+    </mat-dialog-actions>
+  </div>
+
+  <form [formGroup]="toolForm">
+    <div class="workspace">
+      <div class="cognum-lead">Configure a new tool</div>
+
+      <div class="cognum-white-content form-container">
+        <div class="cognum-form-row-4">
+          <span class="cognum-heading-4">Tool type</span>
+          <select
+            class="form-select no-focus-outline"
+            aria-label="Tool type"
+            formControlName="type"
+          >
+            <option *ngFor="let type of types" [value]="type.value">
+              {{ type.name }}
+            </option>
+          </select>
+          <mat-error
+            *ngIf="hasInputError('type', 'inList')"
+            class="cognum-text-12 warning-message"
+          >
+            Invalid type
+          </mat-error>
+        </div>
+
+        <div *ngIf="type === 'mail-sender'">
+          <div class="cognum-form-row-4">
+            <span class="cognum-heading-4">Service</span>
+            <select
+              class="form-select no-focus-outline"
+              aria-label="Your email server"
+              formControlName="service"
+            >
+              <option *ngFor="let service of services" [value]="service">
+                {{ service }}
+              </option>
+            </select>
+            <mat-error
+              *ngIf="hasInputError('service', 'inList')"
+              class="cognum-text-12 warning-message"
+            >
+              Invalid service
+            </mat-error>
+          </div>
+
+          <div class="cognum-form-row-4">
+            <span class="cognum-heading-4">Email</span>
+            <input
+              formControlName="username"
+              type="email"
+              placeholder="Your email"
+            />
+            <mat-error
+              *ngIf="hasInputError('username', 'required')"
+              class="cognum-text-12 warning-message"
+            >
+              Email field is required
+            </mat-error>
+            <mat-error
+              *ngIf="hasInputError('username', 'email')"
+              class="cognum-text-12 warning-message"
+            >
+              Invalid email
+            </mat-error>
+          </div>
+
+          <div class="cognum-form-row-4">
+            <span class="cognum-heading-4">Password</span>
+            <input
+              formControlName="password"
+              type="password"
+              placeholder="Password for the chosen email"
+            />
+            <mat-error
+              *ngIf="hasInputError('password', 'required')"
+              class="cognum-text-12 warning-message"
+            >
+              Password field is required
+            </mat-error>
+          </div>
+        </div>
+
+        <div *ngIf="type === 'database-connect'">
+          <div class="cognum-form-row-4">
+            <span class="cognum-heading-4">Dialect</span>
+            <select
+              class="form-select no-focus-outline"
+              aria-label="Your SGBD"
+              formControlName="dialect"
+            >
+              <option *ngFor="let dialect of dialects" [value]="dialect.value">
+                {{ dialect.name }}
+              </option>
+            </select>
+            <mat-error
+              *ngIf="hasInputError('dialect', 'inList')"
+              class="cognum-text-12 warning-message"
+            >
+              Invalid dialect
+            </mat-error>
+          </div>
+
+          <div class="cognum-form-row-4">
+            <span class="cognum-heading-4">Database</span>
+            <input
+              formControlName="database"
+              type="text"
+              placeholder="Name of your database"
+            />
+            <mat-error
+              *ngIf="hasInputError('database', 'required')"
+              class="cognum-text-12 warning-message"
+            >
+              Database field is required
+            </mat-error>
+          </div>
+
+          <div class="cognum-form-row-4">
+            <span class="cognum-heading-4">Host</span>
+            <input
+              formControlName="host"
+              type="text"
+              placeholder="Your email"
+            />
+            <mat-error
+              *ngIf="hasInputError('host', 'required')"
+              class="cognum-text-12 warning-message"
+            >
+              Host field is required
+            </mat-error>
+          </div>
+
+          <div class="cognum-form-row-4">
+            <span class="cognum-heading-4">Username</span>
+            <input
+              formControlName="username"
+              type="text"
+              placeholder="Your username"
+            />
+            <mat-error
+              *ngIf="hasInputError('username', 'required')"
+              class="cognum-text-12 warning-message"
+            >
+              Username field is required
+            </mat-error>
+          </div>
+
+          <div class="cognum-form-row-4">
+            <span class="cognum-heading-4">Password</span>
+            <input
+              formControlName="password"
+              type="password"
+              placeholder="Your database password"
+            />
+            <mat-error
+              *ngIf="hasInputError('password', 'required')"
+              class="cognum-text-12 warning-message"
+            >
+              Password field is required
+            </mat-error>
+          </div>
+
+          <div class="cognum-form-row-4">
+            <span class="cognum-heading-4">Tables</span>
+            <input
+              formControlName="tables"
+              type="text"
+              placeholder="List with the names of the tables you want to grant access separated by commas"
+              title="List with the names of the tables you want to grant access separated by commas"
+            />
+            <mat-error
+              *ngIf="hasInputError('tables', 'required')"
+              class="cognum-text-12 warning-message"
+            >
+              Tables field is required
+            </mat-error>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+
+  <button
+    type="button"
+    (click)="onSubmit()"
+    mat-button
+    class="cognum-form-buttons-submit"
+    [disabled]="!toolForm.valid || submitting"
+  >
+    Add tool
+  </button>
+</mat-dialog-content>

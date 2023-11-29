@@ -11,7 +11,6 @@ import { AIEmployeeCall } from '../../../use-cases/ai-employee-call.usecase';
 
 describe('aiEmployeeCall', () => {
   jest.setTimeout(600000);
-
   const aiEmployeeRepo = new AIEmployeeRepository(process.env.USER_ID);
   const workspaceRepo = new RepositoryHelper(Workspace, process.env.USER_ID);
   const knowledgeRepo = new RepositoryHelper(Knowledge, process.env.USER_ID);
@@ -42,7 +41,7 @@ describe('aiEmployeeCall', () => {
   }
 
   beforeAll(async () => {
-    await DatabaseHelper.connect();
+    await DatabaseHelper.connect(process.env.MONGO_URL);
     await mongoose.connection.set('bufferTimeoutMS', 100000);
 
     openaiAssistant = await openai.beta.assistants.create({
@@ -58,13 +57,6 @@ describe('aiEmployeeCall', () => {
       openaiAssistantId: openaiAssistant.id
     }) as IWorkspace;
 
-    aiEmployee = await aiEmployeeRepo.create({
-      name: 'Adam',
-      role: 'Software Engineer',
-      tools: ['calculator', 'random-number-generator', 'mail-sender', 'serp-api', 'python', 'sql', 'knowledge-retriever'],
-      workspace: workspace._id
-    }) as IAIEmployee;
-
     knowledge = await knowledgeRepo.create({
       title: 'generic',
       description: 'generic knowledge document for storing the id of the file in openai. knowledge retriever will consider the file content only',
@@ -72,6 +64,16 @@ describe('aiEmployeeCall', () => {
       data: 'not the real content',
       openaiFileId: 'file-7M2RpnKlosjlidEZqGZdnMOx'
     }) as IKnowledge;
+
+    aiEmployee = await aiEmployeeRepo.create({
+      name: 'Adam',
+      role: 'Software Engineer',
+      tools: [
+        {
+          id: 'calculator',
+        }
+      ],
+    }) as IAIEmployee
 
     agent = await new AgentAIEmployee(aiEmployee).init();
     useCase = new AIEmployeeCall(agent);
@@ -81,12 +83,12 @@ describe('aiEmployeeCall', () => {
     const response = await useCase.execute('What is your name?');
     // const response = await useCase.execute('Escreva um poema sobre ratos e gatos.');
     console.log(agent.processes);
-    expect(response).toContain('Adam');
+    expect(response.output).toContain('Adam');
   });
 
   it('should return a successful response of role', async () => {
     const response = await useCase.execute('What is your role?');
-    expect(response).toContain('Software Engineer');
+    expect(response.output).toContain('Software Engineer');
   });
 
   it('insert chat history', async () => {
@@ -109,33 +111,37 @@ describe('aiEmployeeCall', () => {
     useCase = new AIEmployeeCall(agent);
 
     const response = await useCase.execute('What is my name?');
-    expect(response).toContain('Linecker');
+    expect(response.output).toContain('Linecker');
   });
 
   it('test memory', async () => {
     await useCase.execute('Hello! My name is John.');
     const response = await useCase.execute('What is my name?');
-    expect(response).toContain('John');
+    expect(response.output).toContain('John');
   });
 
   it('should return a successful response usign calculator as single input tool', async () => {
-    const response = await useCase.execute('How much is 50 + 30 + 7?');
-    expect(response).toContain('87');
+    const response = await useCase.execute('Using calculator tool. How much is 50 + 30 + 7?');
+    console.log(response);
+    console.log(JSON.stringify(agent.calls));
+    expect(response.output).toContain('87');
   });
 
   it('should return a successful response usign random number and calculator as multi input tool', async () => {
     const response = await useCase.execute('What is a random number between 5 and 10 raised to the second power?');
-    expect(response).toContain('5 and 10');
+    console.log(response);
+    console.log(JSON.stringify(agent.calls));
+    expect(response.output).toContain('5 and 10');
   });
 
   it('should return a successful response usign mail sender tool', async () => {
     const response = await useCase.execute('Send email to lineckeramorim@gmail.com with inviting to dinner tomorrow.');
-    expect(response).toContain('email has been sent');
+    expect(response.output).toContain('email has been sent');
   });
 
   it('create a article and send to email', async () => {
     const response = await useCase.execute('Create a ultimate article of how to be a good software engineer and send email to lineckeramorim@gmail.com.');
-    expect(response).toContain('email has been sent');
+    expect(response.output).toContain('email has been sent');
   });
 
   it('should return a successful response usign python api tool', async () => {
@@ -161,14 +167,19 @@ describe('aiEmployeeCall', () => {
     const response = await useCase.execute('How is Linecker Amorim?');
     console.log(response);
     expect(response).toBe('NOT_POSSIBLE_TO_EXECUTE_THIS_ACTION');
-  });
+    it('should return a response of dont have a tool to execute', async () => {
+      const response = await useCase.execute('How is Linecker Amorim?');
+      console.log(response);
+      expect(response.output).toBe('NOT_POSSIBLE_TO_EXECUTE_THIS_ACTION')
+    });
 
-  afterAll(async () => {
-    await workspaceRepo.delete(workspace._id);
-    await aiEmployeeRepo.delete(aiEmployee._id);
-    await knowledgeRepo.delete(knowledge._id);
-    await openai.beta.assistants.del(openaiAssistant.id);
+    afterAll(async () => {
+      await workspaceRepo.delete(workspace._id);
+      await aiEmployeeRepo.delete(aiEmployee._id);
+      await knowledgeRepo.delete(knowledge._id);
+      await openai.beta.assistants.del(openaiAssistant.id);
 
-    await mongoose.connection.close();
+      await mongoose.connection.close();
+    });
   });
 });
