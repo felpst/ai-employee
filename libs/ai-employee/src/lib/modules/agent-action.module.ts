@@ -9,8 +9,7 @@ export class AgentModuleAction {
   constructor(
     private aiEmployee: IAIEmployee
   ) {
-    const workspaceId = this.aiEmployee.workspace.toString();
-    this.tools = new AIEmployeeTools(workspaceId).get(this.aiEmployee.tools);
+    this.tools = AIEmployeeTools.get();
   }
 
   async prompt() {

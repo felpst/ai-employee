@@ -1,5 +1,5 @@
 @baseUrl=http://localhost:3000
-@apiRoute=users
+@apiRoute=employees
 
 ### login
 
@@ -21,9 +21,9 @@ Content-Type: application/json
 Authorization: Bearer {{$authToken}}
 
 {
-  "name": "Teste",
-  "email": "linecker3@quaq.me",
-  "password": "teste"
+  "name": "Employee test",
+  "role": "Role test",
+  "workspaces": ["650c92d98c46002a10728d77"]
 }
 
 ### Get all ###
@@ -32,20 +32,20 @@ Authorization: Bearer {{$authToken}}
 GET {{baseUrl}}/{{apiRoute}}
 Authorization: Bearer {{$authToken}}
 
-### Get a Task by ID ###
+### Get a Employee by ID ###
 @id = {{ListAPI.response.body.0._id}}
 
 GET {{baseUrl}}/{{apiRoute}}/{{id}}
 Authorization: Bearer {{$authToken}}
 
-### Update a Task ###
+### Update a Employee ###
 
 PUT {{baseUrl}}/{{apiRoute}}/{{id}}
 Content-Type: application/json
 Authorization: Bearer {{$authToken}}
 
 {
-  "name": "Linecker"
+  "role": "Role"
 }
 
 ### Delete ###

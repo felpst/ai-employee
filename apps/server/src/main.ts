@@ -46,7 +46,7 @@ class App {
 
   public start(): void {
     // Initialize database connection
-    DatabaseHelper.connect()
+    DatabaseHelper.connect(process.env.MONGO_URL)
       .then(() => {
         // Database connection successful, start the server
         this.app.listen(this.port, () => {

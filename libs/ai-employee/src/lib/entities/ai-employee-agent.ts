@@ -17,12 +17,10 @@ export class AIEmployeeAgent {
   ) { }
 
   async init() {
-    const workspaceId = this.aiEmployee.workspace.toString();
-
     const agentPrompt = new AgentPrompt(this.aiEmployee);
     const prompt = await agentPrompt.format();
 
-    const tools = new AIEmployeeTools(workspaceId).get(this.aiEmployee.tools);
+    const tools = AIEmployeeTools.get();
     const toolNames = tools.map((tool) => tool.name);
 
     const outputParser = StructuredChatOutputParserWithRetries.fromLLM(

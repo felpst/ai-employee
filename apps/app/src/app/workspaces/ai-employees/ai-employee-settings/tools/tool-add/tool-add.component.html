@@ -1,0 +1,22 @@
+<h2 mat-dialog-title>Add a new tool to AI Employee</h2>
+<mat-dialog-content>
+  <div class="tools">
+    <div
+      class="tool cursor-pointer"
+      (click)="onSelect(tool)"
+      *ngFor="let tool of tools"
+      matRipple
+    >
+      <img class="icon" [src]="tool.icon" />
+      <div class="info">
+        <div class="name cognum-font-strong">{{ tool.name }}</div>
+        <div class="description cognum-font-color-grey">
+          {{ tool.description }}
+        </div>
+      </div>
+    </div>
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Cancel</button>
+</mat-dialog-actions>

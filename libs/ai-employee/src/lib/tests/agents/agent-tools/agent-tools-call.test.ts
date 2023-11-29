@@ -41,12 +41,13 @@ describe('Agent Tools', () => {
   }
 
   beforeAll(async () => {
-    await DatabaseHelper.connect();
+    await DatabaseHelper.connect(process.env.MONGO_URL);
     await mongoose.connection.set('bufferTimeoutMS', 100000);
 
     openaiAssistant = await openai.beta.assistants.create({
       model: "gpt-4-1106-preview"
     });
+    await mongoose.connection.set('bufferTimeoutMS', 60000)
 
     workspace = await workspaceRepo.create({
       name: 'cognum testing team',
@@ -60,7 +61,7 @@ describe('Agent Tools', () => {
     aiEmployee = await aiEmployeeRepo.create({
       name: 'Adam',
       role: 'Software Engineer',
-      tools: ['calculator', 'random-number-generator', 'mail-sender', 'serp-api', 'python', 'sql', 'knowledge-retriever'],
+      tools: [],
       workspace: workspace._id
     }) as IAIEmployee;
 
@@ -72,7 +73,7 @@ describe('Agent Tools', () => {
       openaiFileId: 'file-7M2RpnKlosjlidEZqGZdnMOx'
     }) as IKnowledge;
 
-    const agent = await new AgentTools(aiEmployee).init();
+    const agent = await new AgentTools().init();
     useCase = new AIEmployeeCall(agent);
   });
 

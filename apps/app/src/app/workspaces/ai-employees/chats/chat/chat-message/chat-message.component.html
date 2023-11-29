@@ -1,5 +1,9 @@
 <div class="chat-message">
   <div class="avatar">
+    <cognum-users-avatar
+      [users]="[sender]"
+      [loading]="!message.content"
+    ></cognum-users-avatar>
     <cognum-users-avatar [users]="[sender]"></cognum-users-avatar>
   </div>
   <div class="content">
@@ -7,15 +11,48 @@
       <div class="name cognum-heading-3">{{ sender.name }}</div>
       <div
         class="time cognum-font-color-grey-light"
-        matTooltip="{{ message.createdAt | date : 'MM-dd-yyyy HH:mm:ss' }}"
+        matTooltip="{{ message.createdAt | date: 'MM-dd-yyyy HH:mm:ss' }}"
+        matTooltip="{{ message.createdAt | date: 'MM-dd-yyyy HH:mm:ss' }}"
         matTooltipPosition="above"
       >
         {{ utilsService.timeDifference(message.createdAt) }}
       </div>
     </div>
 
-    <div class="message" *ngIf="message.content">
-      <markdown [data]="message.content"></markdown>
+    <div class="message" *ngIf="message.content || call?.output">
+      <markdown [data]="message.content || call.output"></markdown>
     </div>
+    <div class="tasks" *ngIf="call && (showActions || loading)">
+      <div class="task" *ngFor="let task of call.tasks">
+        <div class="icon" *ngIf="task.status === 'done'">
+          <img [src]="getTool(task.tool).icon" alt="" />
+        </div>
+        <div class="loading-icon" *ngIf="task.status === 'running'">
+          <img [src]="getTool(task.tool).icon" alt="" />
+          <mat-spinner diameter="32"></mat-spinner>
+        </div>
+        <div class="info">
+          <div class="name cognum-font-strong">
+            {{ getTool(task.tool).name }}
+          </div>
+          <div class="input">{{ task.input }}</div>
+          <div class="output">{{ task.output }}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div
+  class="showActions"
+  *ngIf="(call?.tasks?.length || 0) > 0 && !loading"
+  (click)="showActions = !showActions"
+  [matTooltip]="!showActions ? 'Show actions' : 'Hide actions'"
+  mat-ripple
+>
+  <mat-icon *ngIf="!showActions">expand_more</mat-icon>
+  <mat-icon *ngIf="showActions">expand_less</mat-icon>
+  <div class="message" *ngIf="message.content">
+    <markdown [data]="message.content"></markdown>
   </div>
 </div>

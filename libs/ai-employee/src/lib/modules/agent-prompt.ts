@@ -19,13 +19,11 @@ export class AgentPrompt {
   constructor(
     private aiEmployee: IAIEmployee
   ) {
-    const workspaceId = this.aiEmployee.workspace.toString();
-
     this._profile = new AgentModuleProfile(this.aiEmployee);
     this._memory = new AgentModuleMemory(this.aiEmployee);
     this._planning = new AgentModulePlanning(this.aiEmployee);
     this._action = new AgentModuleAction(this.aiEmployee);
-    this._tools = new AIEmployeeTools(workspaceId).get(this.aiEmployee.tools);
+    this._tools = AIEmployeeTools.get();
   }
 
   async format(): Promise<ChatPromptTemplate<any, any>> {

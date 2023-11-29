@@ -2,7 +2,7 @@ import { ChatModel } from '@cognum/llm';
 import {
   initializeAgentExecutorWithOptions
 } from 'langchain/agents';
-import { PythonTool } from '../tools/python.tool';
+import { PythonTool } from '../tools/python/python.tool';
 
 
 describe('Python Tool Test', () => {
