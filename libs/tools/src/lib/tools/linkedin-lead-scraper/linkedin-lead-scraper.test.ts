@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import {
   AgentExecutor
 } from 'langchain/agents';
@@ -11,7 +12,7 @@ describe('LinkedInLeadScraperTool test', () => {
 
   beforeAll(async () => {
     const settings: LinkedInLeadScraperToolSettings = {
-      username: process.env.LINKEDIN_USERNAME,
+      user: process.env.LINKEDIN_USERNAME,
       password: process.env.LINKEDIN_PASSWORD
     }
     const tools = [
@@ -21,7 +22,7 @@ describe('LinkedInLeadScraperTool test', () => {
   });
 
   it('should return data successfully', async () => {
-    const result = await executor.call({ input: 'get 5 person data from linkedin with profession Web Developer' });
+    const result = await executor.call({ input: 'Get Web Developers Leads from Brazil' });
     console.log(result.output);
     expect(result.output.length).toEqual(5);
   })
