@@ -1,0 +1,41 @@
+<div class="cognum-tools">
+  <div class="row">
+    <div class="container">
+      <div class="cognum-heading-2">AI Employee Tools</div>
+
+      <button
+        id="btn-add"
+        (click)="addTool()"
+        mat-raised-button
+        color="primary"
+      >
+        <mat-icon>add</mat-icon>
+        New Tool
+      </button>
+    </div>
+    <ng-container *ngIf="tools.length > 0">
+      <div class="tools">
+        <div
+          class="tool cursor-pointer"
+          *ngFor="let tool of tools; let i = index"
+          (click)="onSelect(i)"
+          matRipple
+        >
+          <img class="icon" [src]="tool.icon" />
+          <div class="info">
+            <div class="name cognum-font-strong">{{ tool.name }}</div>
+            <div class="description cognum-font-color-grey">
+              {{ tool.description }}
+            </div>
+          </div>
+          <div class="options">
+            <mat-icon
+              svgIcon="delete"
+              (click)="$event.stopPropagation(); onDelete(i)"
+            ></mat-icon>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+</div>

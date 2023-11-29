@@ -61,9 +61,8 @@ export class AIEmployeeFormComponent {
     this.isLoading = true;
     const workspace = this.workspacesService.selectedWorkspace._id;
     const { name, description: role, avatar } = this.aiEmployeeForm.value;
-    const tools = ['calculator', 'random-number-generator', 'mail-sender', 'serp-api']
     return this.employeeService
-      .create({ name, role, avatar, workspace, tools })
+      .create({ name, role, avatar, workspace })
       .subscribe(
         () => {
           this.notificationsService.show('AI Employee created successfully');

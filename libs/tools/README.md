@@ -1,3 +1,12 @@
+<<<<<<< HEAD
+# tools
+
+This library was generated with [Nx](https://nx.dev).
+
+## Running unit tests
+
+Run `nx test tools` to execute the unit tests via [Jest](https://jestjs.io).
+=======
 ## setup
 
 1 - Create the .env files in the respective places:
@@ -79,3 +88,4 @@ Or
 Run the command below to test each component individually
 
 `npx nx test <component_name>`
+>>>>>>> 1947452df40a20cd9147c59280a3418e3a469cbe

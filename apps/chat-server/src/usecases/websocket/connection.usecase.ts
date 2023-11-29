@@ -1,5 +1,4 @@
-import { Agent } from '@cognum/ai-employee';
-import { IAIEmployee, IChatMessage, IChatRoom, IUser } from '@cognum/interfaces';
+import { Agent, IAIEmployee, IChatMessage, IChatRoom, IUser } from '@cognum/interfaces';
 import { WebSocket } from 'ws';
 import { IMessage } from '../../interfaces/message.interface';
 import { sessionsService } from '../../services/sessions.service';
