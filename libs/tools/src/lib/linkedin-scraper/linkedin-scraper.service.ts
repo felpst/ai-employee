@@ -1,6 +1,6 @@
 import { Builder, By, Key, WebDriver, until } from 'selenium-webdriver';
+import { Options } from 'selenium-webdriver/chrome';
 import { structInfos } from './structInfos.util';
-
 export class LinkedinScraperService {
     private _username: string;
     private _password: string;
@@ -14,9 +14,15 @@ export class LinkedinScraperService {
     }
 
     async forProfession(profession: string, quantity: number = 10): Promise<string> {
-        const driver: WebDriver = await new Builder().forBrowser('chrome').build();
+        const screen = {
+            width: 1366,
+            height: 768
+        };
+        const options = new Options().addArguments('--headless=new').windowSize(screen);
 
-        await driver.manage().window().maximize();
+        const driver: WebDriver = await new Builder().forBrowser('chrome')
+            .setChromeOptions(options).build();
+
 
         try {
             await driver.get('https://www.linkedin.com/login');

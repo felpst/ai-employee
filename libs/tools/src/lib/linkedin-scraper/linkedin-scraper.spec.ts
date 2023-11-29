@@ -26,6 +26,8 @@ describe('LinkedinScraper tool test', () => {
       }
     );
     const result = await executor.call({ input: 'get 5 person data from linkedin with profession Web Developer' });
+    console.log(result.output);
+
     expect(result.output.length).toEqual(5);
   })
 });
