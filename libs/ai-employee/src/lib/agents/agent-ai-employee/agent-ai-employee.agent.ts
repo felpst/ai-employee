@@ -26,6 +26,14 @@ export class AgentAIEmployee implements Agent {
   ) { }
 
   async init() {
+    // AI Employee Tools
+    this.aiEmployee.tools.push({
+      id: 'knowledge-retriever',
+      options: {
+        workspaceId: this.aiEmployee.workspace
+      }
+    })
+
     // Agent Tools
     this.agentTools = await new AgentTools(this.aiEmployee.tools).init();
 

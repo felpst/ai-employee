@@ -13,4 +13,5 @@ export interface IKnowledge extends DefaultModel {
     userId: string;
     permission: 'Reader' | 'Editor';
   }>;
+  openaiFileId: string;
 }
