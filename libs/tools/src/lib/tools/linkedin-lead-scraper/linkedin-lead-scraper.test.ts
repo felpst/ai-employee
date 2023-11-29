@@ -21,10 +21,10 @@ describe('LinkedInLeadScraperTool test', () => {
     executor = await agentTest(tools);
   });
 
-  it('should return data successfully', async () => {
+  it('should return list of leads', async () => {
     const result = await executor.call({ input: 'Get Web Developers Leads from Brazil' });
     console.log(result.output);
-    expect(result.output.length).toEqual(5);
+    expect(result.output).toContain('Here are some leads')
   })
 
 });

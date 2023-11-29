@@ -8,12 +8,11 @@ export class LinkedInWebDriver {
   driver: WebDriver
 
   async startDriver() {
-    console.log(chromedriver.path);
-    chromedriver.path;
+    chromedriver.path; // Force chromedriver to be downloaded
 
     const chromeOptions = new Options();
-    chromeOptions.windowSize({ width: 1366, height: 768 });
-    // chromeOptions.addArguments('--headless=new').windowSize({ width: 1366, height: 768 });
+    // chromeOptions.windowSize({ width: 1366, height: 768 });
+    chromeOptions.addArguments('--headless=new').windowSize({ width: 1366, height: 768 });
     chromeOptions.addArguments('--disable-features=WebRtcHideLocalIpsWithMdns');
     chromeOptions.addArguments('--use-fake-ui-for-media-stream');
     chromeOptions.addArguments('--use-fake-device-for-media-stream');

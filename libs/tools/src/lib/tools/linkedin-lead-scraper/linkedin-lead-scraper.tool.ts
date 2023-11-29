@@ -22,6 +22,7 @@ export class LinkedInLeadScraperTool extends DynamicStructuredTool {
           await linkedinDriver.login(settings);
           const leads = await linkedinDriver.extractLeads(query, quantity);
           const json = JSON.stringify(leads);
+          await linkedinDriver.driver.quit();
           return "Leads list: \n```json\n" + json + "\n```";
         } catch (error) {
           return error.message;
