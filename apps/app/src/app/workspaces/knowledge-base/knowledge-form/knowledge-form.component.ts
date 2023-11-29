@@ -85,6 +85,18 @@ export class KnowledgeFormComponent {
     this.isLoading = true;
     const data = this.form.value;
 
+    const isFile = this.inputType === 'file';
+    let newKnowledge: Partial<IKnowledge> = {
+      ...data,
+      file: undefined,
+      isFile
+    };
+    const formData = new FormData();
+
+    if (isFile) {
+      formData.append('file', data.file);
+    }
+
     if (this.knowledge) {
       const modifiedKnowledge = this.handlePermissions(
         this.knowledge,
@@ -92,25 +104,36 @@ export class KnowledgeFormComponent {
         this.creatorId as string
       );
 
+      newKnowledge = { ...modifiedKnowledge, ...newKnowledge };
+      formData.append('json', JSON.stringify(newKnowledge));
+
       this.knowledgeBaseService
-        .update({ ...modifiedKnowledge, ...data })
+        .update(formData)
         .subscribe({
           next: (res) => this.handleSuccess('Successfully updated knowledge', res),
           error: (error) => this.handleError('Error updating knowledge. Please try again.', error),
         });
     } else {
       const { _id } = this.workspace;
-      const defaultPermissions = this.members.map((member) => ({
+      const defaultPermissions: { userId: string, permission: 'Editor' | 'Reader'; }[] = this.members.map((member) => ({
         userId: member._id,
         permission: 'Reader',
       }));
       defaultPermissions.push({
-        userId: this.creatorId,
+        userId: this.creatorId + '',
         permission: 'Editor',
       });
 
+      newKnowledge = {
+        ...newKnowledge,
+        workspace: _id,
+        permissions: defaultPermissions,
+      };
+
+      formData.append('json', JSON.stringify(newKnowledge));
+
       this.knowledgeBaseService
-        .create({ ...data, workspace: _id, permissions: defaultPermissions })
+        .create(formData)
         .subscribe({
           next: (res) => this.handleSuccess('Successfully created knowledge', res),
           error: (error) => this.handleError('Error creating knowledge. Please try again.', error),
