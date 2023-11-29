@@ -42,9 +42,12 @@ def sql_tool_route():
         )
 
         input_text = input_data.get("input_text", "")
+        logger.info(f"Input text: {input_text}")
         result = sql_tool_instance.run(input_text)
+        logger.info(f"Result: {result}")
 
         return jsonify({"result": result}), 200
 
     except Exception as e:
+        logger.error(f"Error: {str(e)}")
         return jsonify({"error": str(e)}), 500
