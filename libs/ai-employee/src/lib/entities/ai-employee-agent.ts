@@ -20,7 +20,7 @@ export class AIEmployeeAgent {
     const agentPrompt = new AgentPrompt(this.aiEmployee);
     const prompt = await agentPrompt.format();
 
-    const tools = AIEmployeeTools.get(this.aiEmployee.tools);
+    const tools = AIEmployeeTools.get();
     const toolNames = tools.map((tool) => tool.name);
 
     const outputParser = StructuredChatOutputParserWithRetries.fromLLM(
@@ -36,8 +36,8 @@ export class AIEmployeeAgent {
 
     const runnableAgent = RunnableSequence.from([
       {
-        input: (i: { input: string; steps: AgentStep[] }) => i.input,
-        agent_scratchpad: (i: { input: string; steps: AgentStep[] }) =>
+        input: (i: { input: string; steps: AgentStep[]; }) => i.input,
+        agent_scratchpad: (i: { input: string; steps: AgentStep[]; }) =>
           formatLogToString(i.steps),
       },
       prompt,

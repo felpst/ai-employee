@@ -16,7 +16,7 @@ interface MongoosePopulateQuery {
   match?: any;
 }
 
-export class RepositoryHelper<T> {
+export class RepositoryHelper<T extends any | any[]> {
   private _populate: MongoosePopulateQuery[] = [];
 
   constructor(private model: Model<T>, private userId?: string) {
@@ -89,13 +89,13 @@ export class RepositoryHelper<T> {
   }
 
   // Update document
-  public async update(_id: string, data: T): Promise<T> {
+  public async update(_id: string, data: Partial<T>): Promise<T> {
     this._setUser(data);
     const updated = await this.model.findByIdAndUpdate(_id, data, {
       returnDocument: 'after',
       runValidators: true,
     });
-    return updated;
+    return updated as T;
   }
 
   // Delete document

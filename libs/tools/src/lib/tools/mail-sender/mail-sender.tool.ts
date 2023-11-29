@@ -8,18 +8,19 @@ export class MailSenderTool extends DynamicStructuredTool {
   constructor(settings: MailSenderSettings) {
     super({
       name: 'Send Email',
-      description:
-        'Use to send email.',
+      description: 'Use to send email.',
       schema: z.object({
         to: z.string().describe('a recipent valid email address to be sent.'),
         subject: z.string().describe('subject of the email to be sent.'),
         message: z.string().describe('message of the email to be sent.'),
       }),
-      func: async ({to, subject, message}) => {
+      metadata: { id: "mailer-send" },
+      func: async ({ to, subject, message }) => {
         try {
-          const mailSenderService = new MailSenderService(settings); 
-          return await mailSenderService.send(to,subject,message);
+          const mailSenderService = new MailSenderService(settings);
+          return await mailSenderService.send(to, subject, message);
         } catch (error) {
+          console.error(error);
           return error.message;
         }
       },

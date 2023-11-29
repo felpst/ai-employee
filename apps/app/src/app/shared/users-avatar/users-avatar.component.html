@@ -4,15 +4,19 @@
     *ngFor="let avatar of showAvatars; let i = index"
     [style.background-color]="avatar.backgroundColor"
   >
-    <img
-      class="avatar"
-      *ngIf="avatar.photo"
-      [src]="avatar.photo"
-      [title]="avatar.name"
-    />
-    <span *ngIf="!avatar.photo" class="initials">
-      {{ avatar.initials }}
-    </span>
+    <div class="avatar-container">
+      <img
+        class="avatar"
+        [ngClass]="{ border: avatars.length > 1 || showAdd }"
+        *ngIf="avatar.photo"
+        [src]="avatar.photo"
+        [title]="avatar.name"
+      />
+      <span *ngIf="!avatar.photo" class="initials">
+        {{ avatar.initials }}
+      </span>
+      <mat-spinner *ngIf="loading" diameter="32"></mat-spinner>
+    </div>
   </div>
   <div class="item" *ngIf="remainingUsersCount > 0">
     <div class="more-users">{{ remainingUsersCount }}+</div>

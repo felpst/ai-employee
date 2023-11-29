@@ -1,5 +1,4 @@
 import express, { Router } from 'express';
-import knowledgeEventEmitterHandler from '../../middlewares/knowledge-event-emitter.handler';
 import { checkPermissions } from '../../middlewares/permissions.validator';
 import YupValidatorMiddleware from '../../middlewares/yup.validator';
 import { authMiddleware } from '../auth/auth.middleware';
@@ -15,25 +14,25 @@ router.get(
   knowledgeController.getAllFromWorkspace
 );
 router.get('/:id', authMiddleware, knowledgeController.getById);
-
-router.use('*', knowledgeEventEmitterHandler) // all routes from here will use this handler
-
 router.post(
   '/',
   authMiddleware,
   YupValidatorMiddleware(addKnowledgeSchema),
+  knowledgeController.createKnowledgeBaseDocument,
   knowledgeController.create
 );
 router.put(
   '/:id',
   authMiddleware,
   checkPermissions,
+  knowledgeController.updateKnowledgeBaseDocument,
   knowledgeController.update
 );
 router.delete(
   '/:id',
   authMiddleware,
   checkPermissions,
+  knowledgeController.deleteKnowledgeBaseDocument,
   knowledgeController.delete
 );
 

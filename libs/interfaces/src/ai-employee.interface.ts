@@ -1,5 +1,7 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Schema } from 'mongoose';
 import { DefaultModel } from './default.model';
+import { IToolSettings } from './tool.interface';
 import { IWorkspace } from './workspace.interface';
 
 export interface IAIEmployee extends DefaultModel {
@@ -7,5 +9,5 @@ export interface IAIEmployee extends DefaultModel {
   role: string;
   avatar?: string;
   workspace: Schema.Types.ObjectId | IWorkspace;
-  tools: string[];
+  tools: IToolSettings[];
 }

@@ -5,13 +5,17 @@ import {
 } from 'langchain/agents';
 import { SerpAPI } from 'langchain/tools';
 import mongoose from 'mongoose';
-import { WebBrowserTool } from '../web-browser.tool';
+import { WebBrowserTool } from '../tools/web-browser/web-browser.tool';
 
 
 describe('WebBrowser Tool Test', () => {
 
   beforeEach(async () => {
+<<<<<<< HEAD
+    await DatabaseHelper.connect(process.env.MONGO_URL);
+=======
     await DatabaseHelper.connect();
+>>>>>>> 1947452df40a20cd9147c59280a3418e3a469cbe
   });
 
   afterEach(async () => {
@@ -38,4 +42,8 @@ describe('WebBrowser Tool Test', () => {
     const result = await executor.call({ input });
     expect(result.output).toContain("I was unable to find any information about Churchill's reputation during the Second World War in 1942.");
   })
+<<<<<<< HEAD
 });
+=======
+});
+>>>>>>> 1947452df40a20cd9147c59280a3418e3a469cbe
