@@ -51,6 +51,7 @@ export class KnowledgeRetrieverTool extends DynamicTool {
           return response.text.value;
         } catch (error) {
           console.error(error);
+          return error.message;
         }
       }
     });
