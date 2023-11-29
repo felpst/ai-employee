@@ -7,11 +7,13 @@ export class MailSenderService {
     this._settings = settings;
   }
 
-  send(to: string, subject: string, message: string,): Promise<string> {
+  send(to: string[], cc: string[], bcc: string[], subject: string, message: string,): Promise<string> {
     return new Promise((resolve, reject) => {
       const mailOptions = {
         from: this._settings.auth.user,
         to,
+        cc,
+        bcc,
         subject,
         html: message
       };
