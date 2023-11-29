@@ -9,6 +9,7 @@ const schema = new Schema<IWorkspace>({
   accessLink: { type: String },
   photo: { type: String },
   private: { type: Boolean },
+  openaiAssistantId: { type: String },
   users: [
     {
       user: { type: Schema.Types.ObjectId, ref: 'User', required: true },

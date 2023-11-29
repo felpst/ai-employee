@@ -16,6 +16,7 @@ const schema = new Schema<IKnowledge>({
       permission: { type: String, required: true, enum: ['Reader', 'Editor'] },
     },
   ],
+  openaiFileId: { type: String, required: true },
   ...defaultSchemaProps,
 });
 triggers(schema);

@@ -1,10 +1,10 @@
 import axios from 'axios';
 import { DynamicTool } from 'langchain/tools';
-import { SQLToolSettings } from './sql-connector.interfaces';
+import { SQLConnectorToolSettings } from './sql-connector.interfaces';
 
-export class SQLTool extends DynamicTool {
+export class SQLConnectorTool extends DynamicTool {
   constructor(
-    settings: SQLToolSettings
+    settings: SQLConnectorToolSettings
   ) {
     super({
       name: 'SQL Tool',
@@ -17,8 +17,8 @@ export class SQLTool extends DynamicTool {
         const { data } = await axios.post(`${process.env.PYTHON_SERVICE_URL}/sql-connector`, {
           input_text: input,
           database: settings.database,
-          username: settings.auth.username,
-          password: settings.auth.password,
+          username: settings.auth.user,
+          password: settings.auth.pass,
           host: settings.host,
           db_port: settings.port,
           db_name: settings.name,

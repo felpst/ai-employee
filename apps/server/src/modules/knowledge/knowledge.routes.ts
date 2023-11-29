@@ -1,4 +1,5 @@
 import express, { Router } from 'express';
+import multer from 'multer';
 import knowledgeEventEmitterHandler from '../../middlewares/knowledge-event-emitter.handler';
 import { checkPermissions } from '../../middlewares/permissions.validator';
 import YupValidatorMiddleware from '../../middlewares/yup.validator';
@@ -16,25 +17,30 @@ router.get(
 );
 router.get('/:id', authMiddleware, knowledgeController.getById);
 
-router.use('*', knowledgeEventEmitterHandler) // all routes from here will use this handler
+router.use('*', knowledgeEventEmitterHandler); // all routes from here will use this handler
 
 router.post(
   '/',
   authMiddleware,
   YupValidatorMiddleware(addKnowledgeSchema),
+  multer().single('file'),
+  knowledgeController.addOpenAIFile,
   knowledgeController.create
 );
 router.put(
   '/:id',
   authMiddleware,
   checkPermissions,
-  knowledgeController.update
+  knowledgeController.deleteOpenAIFile,
+  knowledgeController.addOpenAIFile,
+  knowledgeController.update,
 );
 router.delete(
   '/:id',
   authMiddleware,
   checkPermissions,
-  knowledgeController.delete
+  knowledgeController.deleteOpenAIFile,
+  knowledgeController.delete,
 );
 
 export default router;
