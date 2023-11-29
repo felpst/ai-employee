@@ -7,5 +7,6 @@ export interface IWorkspace extends DefaultModel {
   photo?: string;
   accessLink?: string;
   private?: boolean;
-  users: { user: string | IUser, permission: 'Admin' | 'Employee' }[];
+  openaiAssistantId: string;
+  users: { user: string | IUser, permission: 'Admin' | 'Employee'; }[];
 }

@@ -23,7 +23,7 @@ export class AgentModuleAction {
   }
 
   private async _prefix() {
-    return `You are talking to human. The following is a friendly conversation between a human and an AI. The AI is talkative and provides lots of specific details from its context. You can get informations in summary or history conversation without tools or use tools to get new informations. Answer the following questions truthfully and as best you can.`
+    return `You are talking to human. The following is a friendly conversation between a human and an AI. The AI is talkative and provides lots of specific details from its context. You can get informations in summary or history conversation without tools or use tools to get new informations. Answer the following questions truthfully and as best you can.`;
   }
 
   private async _agentActionFormatInstructions() {
@@ -42,7 +42,7 @@ The $JSON_BLOB must be valid, parseable JSON and only contain a SINGLE action. H
 \`\`\`
 
 Remember to include the surrounding markdown code snippet delimiters (begin with "\`\`\`" json and close with "\`\`\`")!
-`
+`;
   }
 
   private async _formatInstructions() {
@@ -86,15 +86,15 @@ Action:
   "action": "Final Answer",
   "action_input": "Final response to human"
 }}
-\`\`\``
+\`\`\``;
   }
 
   private async _begin() {
-    return `Begin! Reminder to ALWAYS use the above format, and to use tools if appropriate.`
+    return `Begin! Reminder to ALWAYS use the above format, and to use tools if appropriate.`;
   }
 
   private async agentScratchpad() {
     return `Question: {input}
-Thought: {agent_scratchpad}`
+Thought: {agent_scratchpad}`;
   }
 }

@@ -36,8 +36,8 @@ export class AIEmployeeAgent {
 
     const runnableAgent = RunnableSequence.from([
       {
-        input: (i: { input: string; steps: AgentStep[] }) => i.input,
-        agent_scratchpad: (i: { input: string; steps: AgentStep[] }) =>
+        input: (i: { input: string; steps: AgentStep[]; }) => i.input,
+        agent_scratchpad: (i: { input: string; steps: AgentStep[]; }) =>
           formatLogToString(i.steps),
       },
       prompt,
