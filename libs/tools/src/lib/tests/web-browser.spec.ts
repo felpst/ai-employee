@@ -5,7 +5,7 @@ import {
 } from 'langchain/agents';
 import { SerpAPI } from 'langchain/tools';
 import mongoose from 'mongoose';
-import { WebBrowserTool } from '../web-browser.tool';
+import { WebBrowserTool } from '../tools/web-browser/web-browser.tool';
 
 
 describe('WebBrowser Tool Test', () => {

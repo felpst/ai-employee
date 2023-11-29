@@ -1,15 +1,8 @@
-from ..model.azure_model import Model
+from model.azure_model import Model
 from langchain.agents.agent_types import AgentType
 from langchain.agents import create_sql_agent
 from langchain.agents.agent_toolkits import SQLDatabaseToolkit
 from langchain.sql_database import SQLDatabase
-import os
-from dotenv import load_dotenv
-
-dotenv_path = "./.env"
-
-load_dotenv(dotenv_path)
-
 
 class SqlTool:
     def __init__(self, database, username, password, host, db_port, db_name):
