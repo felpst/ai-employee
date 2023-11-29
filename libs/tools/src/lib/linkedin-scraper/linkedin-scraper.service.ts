@@ -1,8 +1,7 @@
 import { Builder, By, Key, WebDriver, until } from 'selenium-webdriver';
-import { Person } from './person.entitie';
-import { structInfos } from './structInfos.utils';
+import { structInfos } from './structInfos.util';
 
-export class LinkedinScraper {
+export class LinkedinScraperService {
     private _username: string;
     private _password: string;
 
@@ -14,7 +13,7 @@ export class LinkedinScraper {
         this._password = password;
     }
 
-    async forProfession(profession: string, quantity: number = 10): Promise<Person[]> {
+    async forProfession(profession: string, quantity: number = 10): Promise<string> {
         const driver: WebDriver = await new Builder().forBrowser('chrome').build();
 
         await driver.manage().window().maximize();
@@ -71,7 +70,6 @@ export class LinkedinScraper {
                     const personsInfos = structInfos(profilesList);
                     const personArray = await Promise.all(personsInfos);
                     persons.push(...personArray);
-                    console.log(persons);
 
                     driver.sleep(5000);
 
@@ -88,7 +86,8 @@ export class LinkedinScraper {
                     );
 
                 }
-                return persons;
+                const json = JSON.stringify(persons, null, 2);
+                return json
             } catch (error) {
                 error.message = 'Not enough profiles found.';
             }
