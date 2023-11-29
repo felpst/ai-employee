@@ -2,6 +2,7 @@ import { IWorkspace } from '@cognum/interfaces';
 import KnowledgeBase from '@cognum/knowledge-base';
 import { User, Workspace } from '@cognum/models';
 import { NextFunction, Request, Response } from 'express';
+import mongoose from 'mongoose';
 import OpenAI from 'openai';
 import ModelController from '../../controllers/model.controller';
 
@@ -35,12 +36,12 @@ export class WorkspaceController extends ModelController<typeof Workspace> {
       });
       const _users = usersInfo.map((userData) => {
         const { email, _id } = userData.toObject();
-        if (_id.toString() === userId) return ({ user: _id, permission: 'Admin' })
+        if (_id.toString() === userId) return ({ user: _id, permission: 'Admin' });
         const userPermission = usersInData.find(({ user }: any) => user === email);
-        const permission = userPermission ? userPermission.permission : 'Employee'
+        const permission = userPermission ? userPermission.permission : 'Employee';
         return ({ user: _id, permission });
       });
-      req.body.users = _users
+      req.body.users = _users;
     }
     next();
   }
@@ -65,6 +66,22 @@ export class WorkspaceController extends ModelController<typeof Workspace> {
   //     next(error);
   //   }
   // }
+
+  public async setupKnowledgeBaseCollection(
+    req: Request,
+    _: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const workspaceId = new mongoose.mongo.ObjectId();
+      await new KnowledgeBase(workspaceId.toString()).setupCollection();
+
+      req.body['_id'] = workspaceId;
+      next();
+    } catch (error) {
+      next(error);
+    }
+  }
 
   public async deleteKnowledgeBaseMiddleware(
     req: Request,

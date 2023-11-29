@@ -1,17 +1,17 @@
 import { IKnowledge } from '@cognum/interfaces';
+import KnowledgeBase, { KnowledgeMetadata } from '@cognum/knowledge-base';
 import { ChatModel } from '@cognum/llm';
 import { Knowledge } from '@cognum/models';
 import { NextFunction, Request, Response } from 'express';
-import fs from 'fs';
 import { LLMChain } from 'langchain/chains';
+import { Document } from 'langchain/document';
 import { PromptTemplate } from 'langchain/prompts';
-import OpenAI from 'openai';
+import mongoose from 'mongoose';
 import ModelController from '../../controllers/model.controller';
 
 export class KnowledgeController extends ModelController<typeof Knowledge> {
   constructor() {
     super(Knowledge);
-    this.addOpenAIFile = this.addOpenAIFile.bind(this);
   }
 
   private async _generateTitle(data: string) {
@@ -130,44 +130,42 @@ export class KnowledgeController extends ModelController<typeof Knowledge> {
     }
   }
 
-  public async addOpenAIFile(
-    req: Request,
-    _: Response,
-    next: NextFunction
-  ): Promise<void> {
+  public async createKnowledgeBaseDocument(req: Request, _: Response, next: NextFunction) {
     try {
-      const openai = new OpenAI();
+      const bodyArray = Array.isArray(req.body) ? req.body : [req.body];
 
-      const knowledges = Array.isArray(req.body) ? [...req.body] : [req.body];
       const newBody = [];
+      for (const knowledge of bodyArray) {
+        const knowledgeId = new mongoose.mongo.ObjectId();
+        const vectorDb = new KnowledgeBase(knowledge.workspace.toString());
 
-      for (const knowledge of knowledges) {
-        let fileName: string;
-        let fileContent: string | Buffer;
-        const { file } = req;
+        const doc = new Document<KnowledgeMetadata>({
+          pageContent: knowledge.data,
+          metadata: {
+            ownerDocumentId: knowledgeId.toString(),
+            updatedAt: new Date().toISOString()
+          }
+        });
+        await vectorDb.addDocuments([doc]);
 
-        if (file) {
-          const ext = file.filename.split('.').at(-1);
-          fileName = req.body.title ? this._textToFilename(req.body.title, ext) : file.filename;
-
-          fileContent = file.buffer;
-        } else {
-          const ext = 'txt';
-          const title = req.body.title || (await this._generateTitle(req.body.data));
-          fileName = this._textToFilename(title, ext);
-
-          fileContent = req.body.data;
-        }
-
-        fs.writeFileSync(`tmp/${fileName}`, fileContent);
-        const fileToUpload = fs.createReadStream(`tmp/${fileName}`);
-
-        const createdFile = await openai.files.create({ file: fileToUpload, purpose: 'assistants' });
-        knowledge['openaiFileId'] = createdFile.id;
-
+        knowledge['_id'] = knowledgeId;
         newBody.push(knowledge);
       }
+
       req.body = newBody;
+      next();
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  public async deleteKnowledgeBaseDocument(req: Request, _: Response, next: NextFunction) {
+    try {
+      const { id } = req.params;
+      const { workspace } = await Knowledge.findById(id).select('workspace');
+
+      await new KnowledgeBase(workspace.toString())
+        .deleteDocumentsByOwnerDocumentId(id);
 
       next();
     } catch (error) {
@@ -175,19 +173,21 @@ export class KnowledgeController extends ModelController<typeof Knowledge> {
     }
   }
 
-  public async deleteOpenAIFile(
-    req: Request,
-    _: Response,
-    next: NextFunction
-  ): Promise<void> {
+  public async updateKnowledgeBaseDocument(req: Request, _: Response, next: NextFunction) {
     try {
-      const openai = new OpenAI();
       const { id } = req.params;
-      const { openaiFileId } = await Knowledge
-        .findById(id)
-        .select('openaiFileId');
+      const knowledge = req.body;
+      const vectorDb = new KnowledgeBase(knowledge.workspace.toString());
 
-      await openai.files.del(openaiFileId);
+      await vectorDb.deleteDocumentsByOwnerDocumentId(id);
+      const doc = new Document<KnowledgeMetadata>({
+        pageContent: knowledge.data,
+        metadata: {
+          ownerDocumentId: id,
+          updatedAt: new Date().toISOString()
+        }
+      });
+      await vectorDb.addDocuments([doc]);
 
       next();
     } catch (error) {
