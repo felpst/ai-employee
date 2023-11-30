@@ -153,6 +153,7 @@ export class KnowledgeController extends ModelController<typeof Knowledge> {
           fileName = knowledge.title ? this._textToFilename(knowledge.title, ext) : originalName;
 
           fileContent = file.buffer;
+          knowledge.description = fileName;
         } else {
           const ext = 'txt';
           const title = knowledge.title || (await this._generateTitle(req.body.data));
@@ -161,7 +162,6 @@ export class KnowledgeController extends ModelController<typeof Knowledge> {
           fileContent = req.body.data;
           knowledge.title = title;
         }
-        knowledge.description = fileName;
 
         fs.writeFileSync(`tmp/${fileName}`, fileContent);
         const fileToUpload = fs.createReadStream(`tmp/${fileName}`);
