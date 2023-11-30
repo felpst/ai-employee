@@ -116,7 +116,7 @@ export class KnowledgeFormComponent {
   private prepareKnowledgeObject(fileUrl?: string): Partial<IKnowledge> {
     const newKnowledge: Partial<IKnowledge> = {
       ...this.form.value,
-      isFile: true,
+      isFile: this.inputType === 'file',
       fileUrl,
       file: undefined,
     };
