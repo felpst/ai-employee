@@ -224,10 +224,10 @@ export class KnowledgeController extends ModelController<typeof Knowledge> {
           knowledge.description = fileName;
         } else {
           const ext = 'txt';
-          const title = knowledge.title || (await this._generateTitle(req.body.data));
+          const title = knowledge.title || (await this._generateTitle(knowledge.data));
           fileName = this._textToFilename(title, ext);
 
-          fileContent = req.body.data;
+          fileContent = knowledge.data;
           knowledge.title = title;
         }
 
