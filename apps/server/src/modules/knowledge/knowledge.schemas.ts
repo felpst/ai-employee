@@ -6,7 +6,7 @@ export const addKnowledgeSchema = yup.object({
       title: yup.string().notRequired(),
       description: yup.string().notRequired(),
       data: yup.string().when('isFile', {
-        is: (isFile) => isFile !== true,
+        is: (isFile: boolean) => !isFile,
         then: (schema) => schema.required()
       }),
       workspace: yup.string().required(),
@@ -20,7 +20,11 @@ export const addKnowledgeSchema = yup.object({
           })
         )
         .notRequired(),
-      isFile: yup.boolean().required()
+      fileUrl: yup.string().when('isFile', {
+        is: (isFile: boolean) => isFile,
+        then: (schema) => schema.required()
+      }),
+      isFile: yup.boolean().required(),
     })
     .noUnknown()
     .required(),

@@ -16,4 +16,5 @@ export interface IKnowledge extends DefaultModel {
   }>;
   openaiFileId: string;
   isFile: boolean;
+  fileUrl: string;
 }

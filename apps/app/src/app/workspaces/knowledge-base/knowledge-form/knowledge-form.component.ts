@@ -8,6 +8,7 @@ import {
 import { IKnowledge, IUser, IWorkspace } from '@cognum/interfaces';
 import { AuthService } from '../../../auth/auth.service';
 import { NotificationsService } from '../../../services/notifications/notifications.service';
+import { UploadsService } from '../../../services/uploads/uploads.service';
 import { UsersService } from '../../../services/users/users.service';
 import { DialogComponent } from '../../../shared/dialog/dialog.component';
 import { WorkspacesService } from '../../workspaces.service';
@@ -40,6 +41,7 @@ export class KnowledgeFormComponent {
     private dialog: MatDialog,
     private dialogRef: MatDialogRef<KnowledgeFormComponent>,
     private notificationsService: NotificationsService,
+    private uploadsService: UploadsService,
     @Inject(MAT_DIALOG_DATA)
     private data: {
       knowledge: IKnowledge;
@@ -77,65 +79,88 @@ export class KnowledgeFormComponent {
     });
   }
 
-  onSave() {
+  async onSave() {
     this.isLoading = true;
     const data = this.form.value;
-
     const isFile = this.inputType === 'file';
-    let newKnowledge: Partial<IKnowledge> = {
-      ...data,
-      file: undefined,
-      isFile
-    };
-    const formData = new FormData();
 
-    if (isFile) {
-      formData.append('file', data.file);
+    let fileUrl: string | undefined;
+    if (isFile && data.file) {
+      fileUrl = await this.uploadFile(data.file);
     }
 
-    if (this.knowledge) {
-      const modifiedKnowledge = this.handlePermissions(
-        this.knowledge,
-        this.members,
-        this.creatorId as string
-      );
+    const baseKnowledge = this.prepareKnowledgeObject(fileUrl);
+    this.saveOrUpdateKnowledge({ ...data, ...baseKnowledge });
+  }
 
-      newKnowledge = { ...modifiedKnowledge, ...newKnowledge };
-      formData.append('_id', this.knowledge._id + '');
-      formData.append('json', JSON.stringify(newKnowledge));
-
-      this.knowledgeBaseService
-        .update(formData)
-        .subscribe({
-          next: (res) => this.handleSuccess('Successfully updated knowledge', res),
-          error: (error) => this.handleError('Error updating knowledge. Please try again.', error),
-        });
-    } else {
-      const { _id } = this.workspace;
-      const defaultPermissions: { userId: string, permission: 'Editor' | 'Reader'; }[] = this.members.map((member) => ({
-        userId: member._id,
-        permission: 'Reader',
-      }));
-      defaultPermissions.push({
-        userId: this.creatorId + '',
-        permission: 'Editor',
+  private async uploadFile(file: File): Promise<string> {
+    try {
+      const { url } = await new Promise<{ url: string; }>((resolve) => {
+        this.uploadsService
+          .single({
+            file,
+            folder: 'knowledges',
+            filename: file.name,
+            parentId: this.workspace._id,
+          })
+          .subscribe(resolve);
       });
 
-      newKnowledge = {
-        ...newKnowledge,
-        workspace: _id,
-        permissions: defaultPermissions,
-      };
-
-      formData.append('json', JSON.stringify(newKnowledge));
-
-      this.knowledgeBaseService
-        .create(formData)
-        .subscribe({
-          next: (res) => this.handleSuccess('Successfully created knowledge', res),
-          error: (error) => this.handleError('Error creating knowledge. Please try again.', error),
-        });
+      return url;
+    } catch (error) {
+      this.handleError('Error uploading file. Please try again.', error);
+      throw error;
     }
+  }
+
+  private prepareKnowledgeObject(fileUrl?: string): Partial<IKnowledge> {
+    const newKnowledge: Partial<IKnowledge> = {
+      ...this.form.value,
+      isFile: true,
+      fileUrl,
+      file: undefined,
+    };
+
+    if (this.knowledge) {
+      return {
+        ...this.handlePermissions(this.knowledge, this.members, this.creatorId as string),
+        ...newKnowledge
+      };
+    }
+
+    return { ...newKnowledge, workspace: this.workspace._id, permissions: this.getDefaultPermissions() };
+  }
+
+  private saveOrUpdateKnowledge(newKnowledge: Partial<IKnowledge>) {
+    const formData = new FormData();
+    this.knowledge ? formData.append('_id', this.knowledge._id + '') : null;
+    formData.append('json', JSON.stringify(newKnowledge));
+    formData.append('file', this.form.value.file);
+
+    const request = this.knowledge
+      ? this.knowledgeBaseService.update(formData)
+      : this.knowledgeBaseService.create(formData);
+
+    request.subscribe({
+      next: (res) => this.handleSuccess(
+        this.knowledge ? 'Successfully updated knowledge' : 'Successfully created knowledge',
+        res
+      ),
+      error: (error) => this.handleError(
+        this.knowledge ? 'Error updating knowledge. Please try again.' : 'Error creating knowledge. Please try again.',
+        error
+      ),
+    });
+  }
+
+  private getDefaultPermissions(): { userId: string; permission: 'Editor' | 'Reader'; }[] {
+    return [
+      ...this.members.map((member) => (
+        <{ userId: string, permission: 'Reader' | 'Editor'; }>{
+          userId: member._id, permission: 'Reader'
+        })),
+      { userId: this.creatorId + '', permission: 'Editor' },
+    ];
   }
 
   handleSuccess(message: string, res: any) {

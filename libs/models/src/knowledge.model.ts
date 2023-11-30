@@ -10,6 +10,12 @@ const schema = new Schema<IKnowledge>({
       return this.isFile === false;
     }
   },
+  fileUrl: {
+    type: String,
+    required: function () {
+      return this.isFile !== false;
+    }
+  },
   workspace: { type: Schema.Types.ObjectId, ref: 'Workspace', required: true },
   employees: [
     { type: Schema.Types.ObjectId, ref: 'AIEmployee', required: false },
