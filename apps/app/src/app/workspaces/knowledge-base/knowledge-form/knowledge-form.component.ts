@@ -206,6 +206,12 @@ export class KnowledgeFormComponent {
 
         this.fileName = file.name;
         this.form.patchValue({ file });
+
+        if (!this.form.value.title) {
+          const splittedName = file.name.split('.');
+          splittedName.pop();
+          this.form.patchValue({ title: splittedName.join('.') });
+        }
       }
     } catch (error) {
       this.handleError((error as Error).message, error);
