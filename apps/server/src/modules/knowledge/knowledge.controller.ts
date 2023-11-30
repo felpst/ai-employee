@@ -152,7 +152,6 @@ export class KnowledgeController extends ModelController<typeof Knowledge> {
           fileName = knowledge.title ? this._textToFilename(knowledge.title, ext) : originalName;
 
           fileContent = file.buffer;
-          knowledge.isFile = true;
         } else {
           const ext = 'txt';
           const title = knowledge.title || (await this._generateTitle(req.body.data));
@@ -160,7 +159,6 @@ export class KnowledgeController extends ModelController<typeof Knowledge> {
 
           fileContent = req.body.data;
           knowledge.title = title;
-          knowledge.isFile = false;
         }
         knowledge.description = fileName;
 
@@ -195,6 +193,18 @@ export class KnowledgeController extends ModelController<typeof Knowledge> {
       await openai.files.del(openaiFileId);
 
       next();
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  public async replaceOpenAIFile(req: Request, _: Response, next: NextFunction): Promise<void> {
+    try {
+      if (req.body.data || req.file)
+        await this.deleteOpenAIFile(req, _, async () => {
+          await this.addOpenAIFile(req, _, next);
+        });
+      else next();
     } catch (error) {
       next(error);
     }
