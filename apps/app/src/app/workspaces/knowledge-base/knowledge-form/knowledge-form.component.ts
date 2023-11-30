@@ -47,20 +47,15 @@ export class KnowledgeFormComponent {
       inputType: 'document' | 'file';
     }
   ) {
-    this.initializeForm();
-    this.initializeMembers();
-    this.workspace = this.workspaceService.selectedWorkspace;
-
     this.form = this.formBuilder.group({
       title: ['', [Validators.required]],
       data: ['', this.inputType === 'document' ? [Validators.required] : []],
       file: ['', this.inputType === 'file' ? [Validators.required] : []],
     });
-    // if (this.inputType === 'document') {
-    //   this.form.controls['file'].clearValidators();
-    // } else {
-    //   this.form.controls['data'].clearValidators();
-    // }
+
+    this.initializeForm();
+    this.initializeMembers();
+    this.workspace = this.workspaceService.selectedWorkspace;
   }
 
   initializeForm(): void {
@@ -69,6 +64,7 @@ export class KnowledgeFormComponent {
       this.form.patchValue(this.data.knowledge);
 
       this.inputType = this.knowledge.data ? 'document' : 'file';
+      if (this.inputType === 'file') this.fileName = this.knowledge.description;
     } else {
       this.inputType = this.data.inputType;
     }
@@ -105,6 +101,7 @@ export class KnowledgeFormComponent {
       );
 
       newKnowledge = { ...modifiedKnowledge, ...newKnowledge };
+      formData.append('_id', this.knowledge._id + '');
       formData.append('json', JSON.stringify(newKnowledge));
 
       this.knowledgeBaseService
