@@ -16,7 +16,7 @@
     <div *ngIf="inputType === 'file'" class="update-content">
       <div class="file-container">
         <label class="gray-content" for="knowledgeFileInput">
-          <mat-icon>{{ fileName ? 'insert_drive_file' : 'attachment'}}</mat-icon>
+          <mat-icon>{{ fileName ? 'insert_drive_file': 'upload_file'}}</mat-icon>
           <p class="inform-style">{{ fileName || 'Attach File' }}</p>
         </label>
         <input class="input-style" type="file" id="knowledgeFileInput" name="knowledgeFile" accept=".pdf"
