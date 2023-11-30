@@ -162,6 +162,7 @@ export class KnowledgeController extends ModelController<typeof Knowledge> {
           knowledge.title = title;
           knowledge.isFile = false;
         }
+        knowledge.description = fileName;
 
         fs.writeFileSync(`tmp/${fileName}`, fileContent);
         const fileToUpload = fs.createReadStream(`tmp/${fileName}`);
