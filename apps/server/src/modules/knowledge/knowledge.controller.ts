@@ -12,6 +12,7 @@ export class KnowledgeController extends ModelController<typeof Knowledge> {
   constructor() {
     super(Knowledge);
     this.addOpenAIFile = this.addOpenAIFile.bind(this);
+    this.replaceOpenAIFile = this.replaceOpenAIFile.bind(this);
   }
 
   private async _generateTitle(data: string) {
