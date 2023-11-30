@@ -19,7 +19,9 @@
     "stage:chat-server:build": "nx build chat-server && cd dist/apps/chat-server && npm i --package-lock-only",
     "stage:chat-server:yaml": "xcopy .\\apps\\chat-server\\chat-server-stage.yaml .\\dist\\apps\\chat-server\\chat-server-stage.yaml /F /Y",
     "stage:chat-server:deploy": "npm run stage:chat-server:build && npm run stage:chat-server:yaml && gcloud app deploy dist/apps/chat-server/chat-server-stage.yaml",
-    "python:deploy": "gcloud app deploy apps/python_api/python.yaml"
+    "python:deploy": "gcloud app deploy apps/python_api/python.yaml",
+    "prod:deploy": "npm run app:deploy && npm run server:deploy && npm run chat-server:deploy && npm run python:deploy",
+    "stage:deploy": "npm run stage:app:deploy && npm run stage:server:deploy && npm run stage:chat-server:deploy && npm run python:deploy"
   },
   "private": true,
   "dependencies": {
@@ -41,6 +43,7 @@
     "bcrypt": "^5.1.1",
     "bootstrap": "^5.3.1",
     "cheerio": "^1.0.0-rc.12",
+    "chromedriver": "^119.0.1",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
     "event-emitter": "^0.3.5",
@@ -68,6 +71,7 @@
     "pdf-parse": "^1.1.1",
     "peggy": "^3.0.2",
     "rxjs": "~7.8.0",
+    "selenium-webdriver": "^4.15.0",
     "stack-trace": "^1.0.0-pre2",
     "tslib": "^2.3.0",
     "typeorm": "^0.3.17",
@@ -102,6 +106,7 @@
     "@schematics/angular": "~17.0.0",
     "@types/bcrypt": "^5.0.0",
     "@types/bootstrap": "^5.2.6",
+    "@types/chromedriver": "^81.0.5",
     "@types/cookie-parser": "^1.4.3",
     "@types/cors": "^2.8.13",
     "@types/express": "~4.17.13",
@@ -110,6 +115,7 @@
     "@types/multer": "^1.4.7",
     "@types/node": "~20.9.0",
     "@types/nodemailer": "^6.4.13",
+    "@types/selenium-webdriver": "^4.1.20",
     "@types/stack-trace": "^0.0.33",
     "@typescript-eslint/eslint-plugin": "^6.1.1",
     "@typescript-eslint/parser": "^6.11.0",

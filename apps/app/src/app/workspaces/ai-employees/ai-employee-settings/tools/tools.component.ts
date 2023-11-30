@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ToolsHelper } from '@cognum/helpers';
-import { DialogComponent } from 'apps/app/src/app/shared/dialog/dialog.component';
+import { DialogComponent } from '../../../../shared/dialog/dialog.component';
 import { AIEmployeesService } from '../../ai-employees.service';
 import { AIToolAddComponent } from './tool-add/tool-add.component';
 import { AIToolSettingsDatabaseComponent } from './tool-settings/database/tool-settings-database.component';
@@ -36,7 +36,7 @@ export class AIEmployeeToolsComponent {
     let component: any;
 
     switch (tool.id) {
-      case 'database':
+      case 'sql-connector':
         component = AIToolSettingsDatabaseComponent;
         break;
       case 'mail-sender':

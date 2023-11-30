@@ -4,7 +4,8 @@ import workspaceController from './workspace.controller';
 
 const router: Router = express.Router();
 
-router.post('/',
+router.post('/', authMiddleware,
+  // workspaceController.setupKnowledgeBaseCollection,
   authMiddleware,
   workspaceController.createOpenAIAssistant,
   workspaceController.create

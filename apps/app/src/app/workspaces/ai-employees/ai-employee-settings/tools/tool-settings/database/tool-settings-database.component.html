@@ -1,39 +1,39 @@
 <h2 mat-dialog-title>Settings: {{ tool.name }}</h2>
 <mat-dialog-content>
-    <form [formGroup]="formGroup" (ngSubmit)="onSubmit()">
-        <mat-form-field>
-            <mat-label>Database</mat-label>
-            <input formControlName="database" matInput />
-        </mat-form-field>
-        <mat-form-field>
-            <mat-label>Database Name</mat-label>
-            <input formControlName="db_name" matInput />
-        </mat-form-field>
-        <mat-form-field>
-            <mat-label>Host</mat-label>
-            <input formControlName="host" matInput />
-        </mat-form-field>
-        <mat-form-field>
-            <mat-label>Port</mat-label>
-            <input formControlName="db_port" matInput />
-        </mat-form-field>
+  <form [formGroup]="formGroup" (ngSubmit)="onSubmit()">
+    <mat-form-field>
+      <mat-label>Database</mat-label>
+      <input formControlName="database" matInput />
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Host</mat-label>
+      <input formControlName="host" matInput />
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Port</mat-label>
+      <input formControlName="port" matInput />
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Database Name</mat-label>
+      <input formControlName="name" matInput />
+    </mat-form-field>
 
-        <span class="cognum-heading-2">Auth</span>
-        <div formGroupName="auth">
-            <mat-form-field>
-                <mat-label>Username</mat-label>
-                <input formControlName="username" matInput />
-            </mat-form-field>
-            <mat-form-field>
-                <mat-label>Password</mat-label>
-                <input formControlName="password" matInput />
-            </mat-form-field>
-        </div>
-    </form>
+    <span class="cognum-heading-2">Auth</span>
+    <div formGroupName="auth">
+      <mat-form-field>
+        <mat-label>Username</mat-label>
+        <input formControlName="user" matInput />
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Password</mat-label>
+        <input formControlName="pass" matInput />
+      </mat-form-field>
+    </div>
+  </form>
 </mat-dialog-content>
 <mat-dialog-actions align="end">
-    <button mat-button mat-dialog-close>Cancel</button>
-    <button mat-button (click)="onSubmit()" [disabled]="!formGroup.valid">
-      Save
-    </button>
+  <button mat-button mat-dialog-close>Cancel</button>
+  <button mat-button (click)="onSubmit()" [disabled]="!formGroup.valid">
+    Save
+  </button>
 </mat-dialog-actions>

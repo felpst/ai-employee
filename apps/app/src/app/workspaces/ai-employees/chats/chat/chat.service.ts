@@ -101,7 +101,6 @@ export class ChatService {
       handleMessage: (data: any) => {
         if (!env.production) console.log('[Handle] New message received', JSON.stringify(data));
         this.tempMessage = data;
-        this.messages.push(data);
       },
       // handleLLMNewToken: (content: any) => {
       //   this.tempMessage = {
