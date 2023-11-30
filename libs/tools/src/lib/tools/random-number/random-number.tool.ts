@@ -7,7 +7,7 @@ export class RandomNumberTool extends DynamicStructuredTool {
     super({
       name: "Random Number Tool",
       metadata: {
-        id: "random-number-generator"
+        id: "random-number"
       },
       description: "generates a random number between two input numbers",
       schema: z.object({

@@ -15,8 +15,8 @@ describe('Random tool test', () => {
 
   it('should generate a number between 5 and 10', async () => {
     const result = await executor.call({ input: 'Generate a random number between 5 and 10.' });
-    expect(parseInt(result.output)).toBeGreaterThanOrEqual(5);
-    expect(parseInt(result.output)).toBeLessThanOrEqual(10);
+    expect(parseFloat(result.output)).toBeGreaterThanOrEqual(5);
+    expect(parseFloat(result.output)).toBeLessThanOrEqual(10);
   })
 
 });

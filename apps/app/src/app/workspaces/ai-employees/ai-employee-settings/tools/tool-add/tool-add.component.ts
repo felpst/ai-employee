@@ -17,7 +17,7 @@ export class AIToolAddComponent {
   ) { }
 
   get tools() {
-    return ToolsHelper.tools
+    return ToolsHelper.tools.filter(tool => tool.show);
   }
 
   onSelect(tool: ITool) {

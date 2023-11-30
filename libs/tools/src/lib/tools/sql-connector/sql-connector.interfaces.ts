@@ -1,10 +1,10 @@
-export interface SQLToolSettings {
+export interface SQLConnectorToolSettings {
   database: string
   name: string
   port: string
   host: string
   auth: {
-    username: string
-    password: string
+    user: string
+    pass: string
   }
 }

@@ -1,9 +1,12 @@
 import { IKnowledge } from '@cognum/interfaces';
+import KnowledgeBase, { KnowledgeMetadata } from '@cognum/knowledge-base';
 import { ChatModel } from '@cognum/llm';
 import { Knowledge } from '@cognum/models';
 import { NextFunction, Request, Response } from 'express';
 import { LLMChain } from 'langchain/chains';
+import { Document } from 'langchain/document';
 import { PromptTemplate } from 'langchain/prompts';
+import mongoose from 'mongoose';
 import ModelController from '../../controllers/model.controller';
 
 export class KnowledgeController extends ModelController<typeof Knowledge> {
@@ -43,6 +46,11 @@ export class KnowledgeController extends ModelController<typeof Knowledge> {
       console.log(error);
       return '';
     }
+  }
+
+  private _textToFilename(text: string, ext?: string): string {
+    const invalidCharsRegex = /[/\\?%*:|"<>]/g;
+    return text.replace(invalidCharsRegex, '_') + `${ext ? `.${ext}` : ''}`;
   }
 
   public async create(
@@ -88,7 +96,7 @@ export class KnowledgeController extends ModelController<typeof Knowledge> {
   ): Promise<void> {
     try {
       const knowledgeId: string = req.params.id;
-      const body: Partial<IKnowledge> = req.body;
+      const body: Partial<IKnowledge> = Array.isArray(req.body) ? req.body[0] : req.body;
       const { title, description, ...rest } = body;
       const _title = title || (await this._generateTitle(rest.data));
       const _description =
@@ -117,6 +125,71 @@ export class KnowledgeController extends ModelController<typeof Knowledge> {
       const id: string = req.params.workspaceId;
       const knowledges = await Knowledge.find({ workspace: id });
       res.json(knowledges);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  public async createKnowledgeBaseDocument(req: Request, _: Response, next: NextFunction) {
+    try {
+      const bodyArray = Array.isArray(req.body) ? req.body : [req.body];
+
+      const newBody = [];
+      for (const knowledge of bodyArray) {
+        const knowledgeId = new mongoose.mongo.ObjectId();
+        const vectorDb = new KnowledgeBase(knowledge.workspace.toString());
+
+        const doc = new Document<KnowledgeMetadata>({
+          pageContent: knowledge.data,
+          metadata: {
+            ownerDocumentId: knowledgeId.toString(),
+            updatedAt: new Date().toISOString()
+          }
+        });
+        await vectorDb.addDocuments([doc]);
+
+        knowledge['_id'] = knowledgeId;
+        newBody.push(knowledge);
+      }
+
+      req.body = newBody;
+      next();
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  public async deleteKnowledgeBaseDocument(req: Request, _: Response, next: NextFunction) {
+    try {
+      const { id } = req.params;
+      const { workspace } = await Knowledge.findById(id).select('workspace');
+
+      await new KnowledgeBase(workspace.toString())
+        .deleteDocumentsByOwnerDocumentId(id);
+
+      next();
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  public async updateKnowledgeBaseDocument(req: Request, _: Response, next: NextFunction) {
+    try {
+      const { id } = req.params;
+      const knowledge = req.body;
+      const vectorDb = new KnowledgeBase(knowledge.workspace.toString());
+
+      await vectorDb.deleteDocumentsByOwnerDocumentId(id);
+      const doc = new Document<KnowledgeMetadata>({
+        pageContent: knowledge.data,
+        metadata: {
+          ownerDocumentId: id,
+          updatedAt: new Date().toISOString()
+        }
+      });
+      await vectorDb.addDocuments([doc]);
+
+      next();
     } catch (error) {
       next(error);
     }

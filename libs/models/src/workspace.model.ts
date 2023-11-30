@@ -9,6 +9,7 @@ const schema = new Schema<IWorkspace>({
   accessLink: { type: String },
   photo: { type: String },
   private: { type: Boolean },
+  openaiAssistantId: { type: String },
   users: [
     {
       user: { type: Schema.Types.ObjectId, ref: 'User', required: true },
@@ -24,4 +25,4 @@ triggers(schema);
 const user = User; // Force import model
 
 const Workspace: Model<IWorkspace> = model<IWorkspace>('Workspace', schema);
-export default Workspace as Model<IWorkspace>;
+export default Workspace;
