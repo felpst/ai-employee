@@ -89,8 +89,8 @@ export class KnowledgeFormComponent {
       fileUrl = await this.uploadFile(data.file);
     }
 
-    const baseKnowledge = this.prepareKnowledgeObject(fileUrl);
-    this.saveOrUpdateKnowledge({ ...data, ...baseKnowledge });
+    const newKnowledge = this.prepareKnowledgeObject(fileUrl);
+    this.saveOrUpdateKnowledge(newKnowledge);
   }
 
   private async uploadFile(file: File): Promise<string> {
