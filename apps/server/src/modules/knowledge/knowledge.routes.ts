@@ -35,8 +35,7 @@ router.put(
   checkPermissions,
   multer().single('file'),
   jsonParserMiddleware,
-  knowledgeController.deleteOpenAIFile,
-  knowledgeController.addOpenAIFile,
+  knowledgeController.replaceOpenAIFile,
   knowledgeController.update,
 );
 router.delete(
