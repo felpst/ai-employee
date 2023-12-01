@@ -1,4 +1,4 @@
-import { IKnowledge } from '@cognum/interfaces';
+import { IKnowledge, KnowledgeTypeEnum } from '@cognum/interfaces';
 import { Schema, model } from 'mongoose';
 import { defaultSchemaProps, triggers } from './default.model';
 
@@ -7,13 +7,13 @@ const schema = new Schema<IKnowledge>({
   description: { type: String, required: true },
   data: {
     type: String, required: function () {
-      return this.isFile === false;
+      return this.type === KnowledgeTypeEnum.Document;
     }
   },
-  fileUrl: {
+  contentUrl: {
     type: String,
     required: function () {
-      return this.isFile !== false;
+      return this.type !== KnowledgeTypeEnum.Document;
     }
   },
   workspace: { type: Schema.Types.ObjectId, ref: 'Workspace', required: true },
@@ -27,7 +27,7 @@ const schema = new Schema<IKnowledge>({
     },
   ],
   openaiFileId: { type: String, required: true },
-  isFile: { type: Boolean, required: true },
+  type: { type: String, enum: KnowledgeTypeEnum, required: true },
   ...defaultSchemaProps,
 });
 triggers(schema);
