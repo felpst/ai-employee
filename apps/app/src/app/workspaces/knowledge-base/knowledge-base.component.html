@@ -40,7 +40,10 @@
         <p>{{ knowledge.description }}</p>
       </mat-card-content>
       <mat-card-content *ngIf="knowledge.type !== types.Document" class="file-card">
-        <img src="../../../assets/icons/document.svg" alt="file document icon" title="File" />
+        <img *ngIf="knowledge.type === types.File" src="../../../assets/icons/document.svg" alt="File icon"
+          title="File" />
+        <img *ngIf="knowledge.type === types.Html" src="../../../assets/icons/web.svg" alt="Website icon"
+          title="Website" />
         <span>{{ knowledge.description }}</span>
       </mat-card-content>
     </mat-card>
