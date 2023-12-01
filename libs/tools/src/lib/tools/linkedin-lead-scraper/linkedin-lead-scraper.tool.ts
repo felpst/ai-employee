@@ -11,10 +11,10 @@ export class LinkedInLeadScraperTool extends DynamicStructuredTool {
         id: 'linkedin-lead-scraper',
       },
       description:
-        'Use this to extract leads form Linkedin. Input should be query search for linkedin.',
+        'Use this to extract leads form LinkedIn. Input should be a structured query search for LinkedIn.',
       schema: z.object({
-        query: z.string().describe('query to be searched.'),
-        quantity: z.number().default(5).describe('quantity of data to be scraped.'),
+        query: z.string().describe('a structured query search for LinkedIn.'),
+        quantity: z.number().default(5).describe('quantity of leads to be scraped/extracted.'),
       }),
       func: async ({ query, quantity }) => {
         try {

@@ -1,5 +1,5 @@
 import { IToolSettings } from "@cognum/interfaces";
-import { KnowledgeRetrieverTool, MailSenderTool, PythonTool, RandomNumberTool, SQLConnectorTool, WebBrowserTool } from "@cognum/tools";
+import { KnowledgeRetrieverTool, LinkedInLeadScraperTool, MailSenderTool, PythonTool, RandomNumberTool, SQLConnectorTool, WebBrowserTool } from "@cognum/tools";
 import { DynamicStructuredTool, SerpAPI, Tool } from "langchain/tools";
 import { Calculator } from "langchain/tools/calculator";
 
@@ -37,6 +37,8 @@ export class AIEmployeeTools {
         return new SQLConnectorTool(toolSettings.options);
       case 'knowledge-retriever':
         return new KnowledgeRetrieverTool(toolSettings.options)
+      case 'linkedin-lead-scraper':
+        return new LinkedInLeadScraperTool(toolSettings.options)
     }
   }
 }

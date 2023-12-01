@@ -49,6 +49,13 @@ const tools = [
     show: true
   },
   {
+    "id": "linkedin-lead-scraper",
+    "name": "LinkedIn Lead Extractor",
+    "description": "Find leads on LinkedIn",
+    "icon": "https://storage.googleapis.com/factory-assets/tools/linkedin-lead-scraper-tool.png",
+    show: true
+  },
+  {
     "id": "knowledge-retriever",
     "name": "Knowledge Retrieve",
     "description": "Storing information in the knowledge base, carrying out research on it and building knowledge from it",

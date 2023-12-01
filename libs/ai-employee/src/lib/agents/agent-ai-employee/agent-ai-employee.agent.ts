@@ -1,5 +1,5 @@
 import { RepositoryHelper, ToolsHelper } from "@cognum/helpers";
-import { Agent, IAIEmployee, IAgentCall, IChatMessage, TaskProcess } from "@cognum/interfaces";
+import { IAIEmployee, IAgent, IAgentCall, IChatMessage, TaskProcess } from "@cognum/interfaces";
 import { ChatModel } from "@cognum/llm";
 import { AgentCall } from "@cognum/models";
 import { AgentExecutor, initializeAgentExecutorWithOptions } from "langchain/agents";
@@ -11,7 +11,7 @@ import { Subject } from "rxjs";
 import { AgentTools } from "../agent-tools/agent-tools.agent";
 import { AgentAIEmployeeHandlers } from "./agent-ai-employee-handlers.handler";
 
-export class AgentAIEmployee implements Agent {
+export class AgentAIEmployee implements IAgent {
   _executor: AgentExecutor;
   handlers = new AgentAIEmployeeHandlers();
   agentTools: AgentTools;
@@ -21,11 +21,11 @@ export class AgentAIEmployee implements Agent {
   private _calls: IAgentCall[] = [];
 
   constructor(
-    private aiEmployee: IAIEmployee,
+    public aiEmployee: IAIEmployee,
     private chatHistory?: Partial<IChatMessage>[]
   ) { }
 
-  async init() {
+  async init(): Promise<IAgent> {
     // AI Employee Tools
     this.aiEmployee.tools.push({
       id: 'knowledge-retriever',
@@ -35,7 +35,7 @@ export class AgentAIEmployee implements Agent {
     })
 
     // Agent Tools
-    this.agentTools = await new AgentTools(this.aiEmployee.tools).init();
+    this.agentTools = await new AgentTools(this.aiEmployee).init();
 
     process.env.LANGCHAIN_HANDLER = "langchain";
     const model = new ChatModel();

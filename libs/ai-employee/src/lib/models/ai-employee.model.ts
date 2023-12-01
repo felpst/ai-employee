@@ -11,6 +11,15 @@ const toolSchemaProps = {
   }
 };
 
+const memorySchemaProps = {
+  pageContent: { type: String, required: true },
+  metadata: {
+    type: Schema.Types.Mixed,
+    required: false,
+    default: {},
+  }
+};
+
 const schema = new Schema<IAIEmployee>(
   {
     name: { type: String, default: 'Atlas' },
@@ -18,6 +27,7 @@ const schema = new Schema<IAIEmployee>(
     avatar: { type: String, default: 'https://storage.googleapis.com/factory-assets/avatars/Avatar1.jpeg' },
     workspace: { type: Schema.Types.ObjectId, ref: 'Workspace' },
     tools: { type: [toolSchemaProps], default: [] },
+    memory: { type: [memorySchemaProps], default: [] },
     ...defaultSchemaProps,
   },
   {

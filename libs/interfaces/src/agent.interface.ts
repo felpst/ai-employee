@@ -1,5 +1,7 @@
 import { AgentExecutor } from "langchain/agents";
+import { ObjectId } from "mongodb";
 import { Subject } from "rxjs";
+import { IAIEmployee } from "./ai-employee.interfaces";
 import { DefaultModel } from "./default.model";
 
 export interface TaskProcess {
@@ -21,6 +23,8 @@ export interface IAgentCall extends DefaultModel {
   status: 'running' | 'done';
   startAt: Date;
   endAt: Date;
+  agent: string;
+  aiEmployee: string | ObjectId | IAIEmployee;
 }
 
 export interface CallProcess {
@@ -31,11 +35,12 @@ export interface CallProcess {
   logs: any[];
   totalTokenUsage: number;
 }
-export interface Agent {
-  _executor: AgentExecutor;
-  processes: CallProcess[]
-  calls: IAgentCall[]
-  $calls: Subject<IAgentCall[]>;
-  init(): Promise<Agent>;
+export interface IAgent {
+  aiEmployee: IAIEmployee;
+  _executor?: AgentExecutor;
+  processes?: CallProcess[]
+  calls?: IAgentCall[]
+  $calls?: Subject<IAgentCall[]>;
+  init(): Promise<any>;
   call(input: string, callbacks?: unknown[]): Promise<IAgentCall>;
 }
