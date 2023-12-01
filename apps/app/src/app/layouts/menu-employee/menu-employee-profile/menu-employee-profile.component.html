@@ -1,0 +1,34 @@
+<button
+  class="profile"
+  mat-button
+  [matMenuTriggerFor]="menu"
+  [ngClass]="{ active: isActivedMenu }"
+  (click)="isActivedMenu = true"
+  #btn
+>
+  <div class="content">
+    <img class="photo" [src]="workspacePhoto" />
+    <span class="cognum-heading-4 congum-font-strong truncate">{{
+      workspace.name
+    }}</span>
+  </div>
+</button>
+
+<mat-menu
+  class="cognum-menu-profile"
+  #menu="matMenu"
+  (closed)="isActivedMenu = false"
+>
+  <button
+    *ngIf="isAdmin"
+    [routerLink]="['/', 'workspaces', workspace._id, 'settings']"
+    mat-menu-item
+  >
+    <mat-icon svgIcon="cognum-settings" aria-label="Settings"></mat-icon>
+    settings
+  </button>
+  <button routerLink="/" mat-menu-item>
+    <mat-icon svgIcon="cognum-switch" aria-label="Switch workspace"></mat-icon>
+    switch workspace
+  </button>
+</mat-menu>
