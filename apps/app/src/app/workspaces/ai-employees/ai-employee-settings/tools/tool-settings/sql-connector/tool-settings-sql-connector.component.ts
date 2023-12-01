@@ -5,16 +5,16 @@ import { ToolsHelper } from "@cognum/helpers";
 import { IToolSettings } from "@cognum/interfaces";
 
 @Component({
-  selector: 'cognum-ai-tool-settings-database',
-  templateUrl: './tool-settings-database.component.html',
-  styleUrls: ['./tool-settings-database.component.scss'],
+  selector: 'cognum-ai-tool-settings-sql-connector',
+  templateUrl: './tool-settings-sql-connector.component.html',
+  styleUrls: ['./tool-settings-sql-connector.component.scss'],
 })
-export class AIToolSettingsDatabaseComponent {
+export class AIToolSettingsSQLConnectorComponent {
   formGroup: FormGroup
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: { tool: IToolSettings; },
-    private dialogRef: MatDialogRef<AIToolSettingsDatabaseComponent>,
+    private dialogRef: MatDialogRef<AIToolSettingsSQLConnectorComponent>,
   ) {
     this.formGroup = new FormGroup({
       database: new FormControl(this.data.tool.options?.database, [Validators.required]),
