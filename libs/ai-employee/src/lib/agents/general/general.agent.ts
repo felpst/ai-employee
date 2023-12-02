@@ -10,8 +10,8 @@ export class GeneralAgent extends Agent {
     this.agent = 'general'
   }
 
-  async call(input: string): Promise<IAgentCall> {
-    const agentCall = await this._initCall(input);
+  async call(input: string, intent: string): Promise<IAgentCall> {
+    const agentCall = await this._initCall(input, intent);
 
     const model = new ChatModel();
     this._executor = await initializeAgentExecutorWithOptions([], model, {

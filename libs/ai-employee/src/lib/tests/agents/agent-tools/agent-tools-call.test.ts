@@ -73,7 +73,7 @@ describe('Agent Tools', () => {
       openaiFileId: 'file-7M2RpnKlosjlidEZqGZdnMOx'
     }) as IKnowledge;
 
-    const agent = await new AgentTools().init();
+    const agent = await new AgentTools(aiEmployee).init();
     useCase = new AIEmployeeCall(agent);
   });
 

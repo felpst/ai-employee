@@ -23,6 +23,7 @@ export interface IAgentCall extends DefaultModel {
   status: 'running' | 'done';
   startAt: Date;
   endAt: Date;
+  intent: string;
   agent: string;
   aiEmployee: string | ObjectId | IAIEmployee;
 }
@@ -42,5 +43,5 @@ export interface IAgent {
   calls?: IAgentCall[]
   $calls?: Subject<IAgentCall[]>;
   init(): Promise<any>;
-  call(input: string, callbacks?: unknown[]): Promise<IAgentCall>;
+  call(input: string, intent: string, callbacks?: unknown[]): Promise<IAgentCall>;
 }

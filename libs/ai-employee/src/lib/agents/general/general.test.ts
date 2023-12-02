@@ -30,22 +30,22 @@ describe('InformationRetrievalAgent', () => {
   });
 
   it('should grettings', async () => {
-    const response = await agent.call(`Hello! My name is Linecker!`)
+    const response = await agent.call(`Hello! My name is Linecker!`, 'general')
     console.log(response);
     expect(response.output).toContain('Hello')
   });
 
   it('should answer ai employee name', async () => {
-    const response = await agent.call(`What is your name?`)
+    const response = await agent.call(`What is your name?`, 'general')
     console.log(response);
     expect(response.output).toContain('Adam')
   });
 
   it('should use memory to answer', async () => {
-    const res = await agent.call(`Hello! My name is Linecker!`)
+    const res = await agent.call(`Hello! My name is Linecker!`, 'general')
     console.log(res);
 
-    const res2 = await agent.call(`What is my name?`)
+    const res2 = await agent.call(`What is my name?`, 'general')
     console.log(res2);
     expect(res2.output).toContain('Linecker')
   });

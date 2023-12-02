@@ -13,6 +13,7 @@ const schema: Schema = new Schema(
     callTokenUsage: { type: Number },
     totalTokenUsage: { type: Number },
     status: { type: String, required: true, enum: ['running', 'done'] },
+    intent: { type: String },
     agent: { type: String },
     aiEmployee: { type: Schema.Types.ObjectId, ref: 'AIEmployee', required: true },
     ...defaultSchemaProps,

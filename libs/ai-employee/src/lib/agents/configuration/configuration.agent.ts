@@ -11,8 +11,8 @@ export class ConfigurationAgent extends Agent {
     this.agent = INTENTIONS.CONFIGURATION_OR_CUSTOMIZATION
   }
 
-  async call(input: string): Promise<IAgentCall> {
-    const agentCall = await this._initCall(input);
+  async call(input: string, intent: string): Promise<IAgentCall> {
+    const agentCall = await this._initCall(input, intent);
 
     // Update AIEmployee Memory
     const memoryUpdateResponse = await this.memory.instruction(input, this.context)

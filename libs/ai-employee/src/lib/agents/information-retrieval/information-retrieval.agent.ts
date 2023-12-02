@@ -1,6 +1,7 @@
 import { IAIEmployee, IAgentCall } from "@cognum/interfaces";
 import { INTENTIONS } from "../../utils/intent-classifier/intent-classifier.util";
 import { Agent } from "../agent";
+import { AgentTools } from "../agent-tools/agent-tools.agent";
 
 export class InformationRetrievalAgent extends Agent {
 
@@ -9,16 +10,21 @@ export class InformationRetrievalAgent extends Agent {
     this.agent = INTENTIONS.INFORMATION_RETRIEVAL
   }
 
-  async call(question: string): Promise<IAgentCall> {
-    const agentCall = await this._initCall(question);
+  async call(question: string, intent: string): Promise<IAgentCall> {
+    const agentCall = await this._initCall(question, intent);
 
     // Search on memory
     console.log('RETRIEVEL MEMORY', JSON.stringify(this.memory.get()));
     const response = await this.memory.search(question, this.context);
+    let output = response.answer;
 
     // Check answer accuracy
     if (!response.accuracy) {
       console.log('Buscar resposta em outras fontes de dados');
+
+      // Search using tools
+      const agentTools = await new AgentTools(this.aiEmployee, [INTENTIONS.INFORMATION_RETRIEVAL]).init();
+      output = await agentTools.call(question);
 
       // TODO Listar todas as fontes de dados disponíveis
       // - Histórico do chat atual
@@ -32,11 +38,27 @@ export class InformationRetrievalAgent extends Agent {
 
       // TODO Buscar resposta em todas as fontes de dados escolhidas
 
-      // TODO Retornar a resposta
+      // Verificar resposta, tentar em outra ferramenta se necessário
+
+      // Salvar Resposta
+      await this.updateMemory(question, output)
+
     }
 
-    await this._afterCall(agentCall, response.answer);
+    await this._afterCall(agentCall, output);
 
+    // Retornar a resposta
     return agentCall;
+  }
+
+  async updateMemory(input: string, output: string) {
+    // Update AIEmployee Memory
+    const instruction = `Check if there is any relevant information in this information to add to the database:` + JSON.stringify({ input, output })
+    const memoryUpdateResponse = await this.memory.instruction(instruction, this.context)
+    console.log('memoryUpdateResponse', JSON.stringify(memoryUpdateResponse));
+    if (memoryUpdateResponse.updated) {
+      this.aiEmployee.memory = this.memory.get();
+      await this.aiEmployee.updateOne({ memory: this.aiEmployee.memory });
+    }
   }
 }

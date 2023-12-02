@@ -32,7 +32,7 @@ export class Agent {
     return this.handlers.processes;
   }
 
-  protected async _initCall(input: string): Promise<IAgentCall> {
+  protected async _initCall(input: string, intent: string): Promise<IAgentCall> {
     const repository = new RepositoryHelper<IAgentCall>(AgentCall);
     const agentCall: IAgentCall = await repository.create({
       input,
@@ -43,6 +43,7 @@ export class Agent {
       status: 'running',
       startAt: new Date(),
       endAt: null,
+      intent,
       aiEmployee: this.aiEmployee._id,
       createdBy: this.aiEmployee._id,
       updatedBy: this.aiEmployee._id,
