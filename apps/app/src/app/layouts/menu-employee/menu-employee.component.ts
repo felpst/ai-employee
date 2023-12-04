@@ -5,8 +5,8 @@ import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { IUser } from '@cognum/interfaces';
-import { CookieService } from 'ngx-cookie-service';
 import { AuthService } from '../../auth/auth.service';
+import { AIEmployeesService } from '../../workspaces/ai-employees/ai-employees.service';
 import { WorkspacesService } from '../../workspaces/workspaces.service';
 
 @Component({
@@ -29,9 +29,9 @@ export class MenuEmployeeComponent implements OnDestroy {
     private router: Router,
     private workspacesService: WorkspacesService,
     private authService: AuthService,
+    private employeesService: AIEmployeesService,
     changeDetectorRef: ChangeDetectorRef,
     media: MediaMatcher,
-    private cookieService: CookieService,
   ) {
     this.mobileQuery = media.matchMedia('(max-width: 600px)');
     this._mobileQueryListener = () => changeDetectorRef.detectChanges();
@@ -54,8 +54,16 @@ export class MenuEmployeeComponent implements OnDestroy {
     return this.workspacesService.selectedWorkspace;
   }
 
+  get employee() {
+    return this.employeesService.aiEmployee;
+  }
+
   ngOnDestroy(): void {
     this.mobileQuery.removeListener(this._mobileQueryListener);
+  }
+
+  onBack() {
+    return this.router.navigate(['workspaces', this.workspace._id, 'ai-employees']);
   }
 
 

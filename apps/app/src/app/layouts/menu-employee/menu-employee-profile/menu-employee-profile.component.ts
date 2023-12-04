@@ -1,7 +1,9 @@
 import { Component } from '@angular/core';
 import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
+import { Router } from '@angular/router';
 import { AuthService } from '../../../auth/auth.service';
+import { AIEmployeesService } from '../../../workspaces/ai-employees/ai-employees.service';
 import { UserType } from '../../../workspaces/settings-workspace/team-form/team-form.component';
 import { WorkspacesService } from '../../../workspaces/workspaces.service';
 
@@ -18,7 +20,9 @@ export class EmployeeProfileComponent {
 
   constructor(
     private workspaceService: WorkspacesService,
+    private employeesService: AIEmployeesService,
     private authService: AuthService,
+    private router: Router,
     iconRegistry: MatIconRegistry,
     sanitizer: DomSanitizer
   ) {
@@ -28,6 +32,10 @@ export class EmployeeProfileComponent {
 
   get workspace() {
     return this.workspaceService.selectedWorkspace;
+  }
+
+  get employee() {
+    return this.employeesService.aiEmployee;
   }
 
   get users() {
@@ -43,6 +51,10 @@ export class EmployeeProfileComponent {
     const userId = this.authService.user._id;
     const user = this.users.find(({ _id }) => _id === userId);
     return user ? user.permission === 'Admin' : false;
+  }
+
+  onBack() {
+    return this.router.navigate(['workspaces', this.workspace._id, 'ai-employees']);
   }
 
 }

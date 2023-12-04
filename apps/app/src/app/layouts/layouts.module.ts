@@ -10,6 +10,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { RouterModule } from '@angular/router';
 import { SharedModule } from '../shared/shared.module';
+import { AdminEmployeeComponent } from './admin-employee/admin-employee.component';
 import { AdminComponent } from './admin/admin.component';
 import { LoadingComponent } from './loading/loading.component';
 import { MenuEmployeeItemsComponent } from './menu-employee/menu-employee-items/menu-employee-items.component';
@@ -22,6 +23,7 @@ import { MenuComponent } from './menu/menu.component';
 
 const declarations: any[] = [
   AdminComponent,
+  AdminEmployeeComponent,
   LoadingComponent,
   MenuComponent,
   MenuEmployeeComponent,
