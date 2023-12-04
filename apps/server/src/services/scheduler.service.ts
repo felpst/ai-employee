@@ -11,11 +11,17 @@ enum HttpMethods {
   OPTIONS = 7
 }
 
-interface IJobRequest {
+interface JobRequest {
   uri: string;
   httpMethod: keyof typeof HttpMethods;
   headers?: { [k: string]: string; };
   body?: Uint8Array | string;
+}
+
+interface CreateJobParams {
+  request: JobRequest,
+  cronTab: string,
+  timeZone?: string;
 }
 
 export default class SchedulerService {
@@ -24,11 +30,12 @@ export default class SchedulerService {
     this.client = new CloudSchedulerClient();
   }
 
-  async createCron(request: IJobRequest, cronTab: string) {
+  async createCron(params: CreateJobParams) {
     return this.client.createJob({
       job: {
-        httpTarget: request,
-        schedule: cronTab
+        httpTarget: params.request,
+        schedule: params.cronTab,
+        timeZone: params.timeZone
       },
     });
   }
