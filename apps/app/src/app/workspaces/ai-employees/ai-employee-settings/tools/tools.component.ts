@@ -114,6 +114,7 @@ export class AIEmployeeToolsComponent {
       'mail-sender': 'Send test email to: ',
       'python': 'What is the 5th element of the Fibonacci sequence?',
       'sql-connector': 'Connect to a SQL database',
+      'linkedin-lead-scraper': 'Find 5 leads on LinkedIn: Web Developers in Brazil',
     };
     return testMessages[tool.id] || '';
   }

@@ -35,8 +35,9 @@ export class ChatServer {
 
         // Load Chat
         const chatRoom = await this.chatRoomRepository.getById(chatRoomId, {
-          populate: [{ path: 'aiEmployee', select: '_id name role avatar tools memory' }]
+          populate: [{ path: 'aiEmployee', select: '_id name role avatar tools workspace memory' }]
         });
+
         if (!chatRoom) { throw new Error('Chat Room not found'); }
         conn.setChatRoom(chatRoom);
 

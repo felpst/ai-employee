@@ -22,7 +22,7 @@ router.post(
   multer().single('file'),
   jsonParserMiddleware,
   YupValidatorMiddleware(addKnowledgeSchema),
-  knowledgeController.createKnowledgeBaseDocument,
+  // knowledgeController.createKnowledgeBaseDocument,
   knowledgeController.addOpenAIFile,
   knowledgeController.create
 );
@@ -32,7 +32,7 @@ router.put(
   checkPermissions,
   multer().single('file'),
   jsonParserMiddleware,
-  knowledgeController.updateKnowledgeBaseDocument,
+  // knowledgeController.updateKnowledgeBaseDocument,
   knowledgeController.replaceOpenAIFile,
   knowledgeController.update
 );
@@ -40,7 +40,7 @@ router.delete(
   '/:id',
   authMiddleware,
   checkPermissions,
-  knowledgeController.deleteKnowledgeBaseDocument,
+  // knowledgeController.deleteKnowledgeBaseDocument,
   knowledgeController.deleteOpenAIFile,
   knowledgeController.delete
 );

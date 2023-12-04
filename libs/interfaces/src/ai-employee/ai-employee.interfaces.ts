@@ -17,6 +17,7 @@ export interface IAIEmployee extends DefaultModel {
   call(input: string): Promise<IAgentCall>;
   memorySearch(question: string, context?: string[]): Promise<IMemorySearchResult>
   memoryInstruction(instruction: string, context?: string[]): Promise<IMemoryInstructionResult>
+  checkValidAnswer(input: string, answer: string, context?: string[]): Promise<boolean>
 }
 
 export interface IAIEmployeeMemory {

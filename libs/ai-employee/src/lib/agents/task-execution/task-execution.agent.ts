@@ -44,13 +44,12 @@ export class TaskExecutionAgent extends Agent {
     const model = new ChatModel();
     const executor = await initializeAgentExecutorWithOptions(this.tools([INTENTIONS.TASK_EXECUTION]), model, {
       agentType: "structured-chat-zero-shot-react-description",
-      // verbose: true,
+      verbose: true,
       memory: new BufferMemory({
         memoryKey: "chat_history",
         returnMessages: true,
       }),
       agentArgs: {
-        suffix: "IMPORTANT: If you don't have a tool to execute the job, your final answer must to be: 'NOT_POSSIBLE_TO_EXECUTE_THIS_ACTION'.",
         inputVariables: ["input", "agent_scratchpad", "chat_history"],
         memoryPrompts: [new MessagesPlaceholder("chat_history")],
       },
@@ -78,6 +77,7 @@ export class TaskExecutionAgent extends Agent {
         }
         return false;
       })
+    console.log(JSON.stringify([...commonTools, ...filteredToolsSettings]))
     const tools = AIEmployeeTools.get([...commonTools, ...filteredToolsSettings]);
     return tools
   }

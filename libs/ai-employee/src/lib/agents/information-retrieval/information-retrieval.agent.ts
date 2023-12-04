@@ -1,4 +1,5 @@
 import { IAIEmployee, IAgentCall } from "@cognum/interfaces";
+import { KnowledgeRetrieverService } from "@cognum/tools";
 import { INTENTIONS } from "../../utils/intent-classifier/intent-classifier.util";
 import { Agent } from "../agent";
 import { AgentTools } from "../agent-tools/agent-tools.agent";
@@ -12,24 +13,52 @@ export class InformationRetrievalAgent extends Agent {
 
   async call(question: string, intent: string): Promise<IAgentCall> {
     const agentCall = await this._initCall(question, intent);
+    let saveAnswer: boolean = true;
+    let hasAnswer: boolean = false;
+    let output = "I don't know";
 
     // Search on memory
-    console.log('RETRIEVAL MEMORY', JSON.stringify(this.aiEmployee.memory));
+    // console.log('RETRIEVAL MEMORY', JSON.stringify(this.aiEmployee.memory));
     const response = await this.aiEmployee.memorySearch(question);
-    console.log('response', JSON.stringify(response));
-    let output = response.answer;
+    hasAnswer = response.accuracy;
+    // console.log('response', JSON.stringify(response));
 
     // Check answer accuracy
-    if (!response.accuracy) {
+    if (!hasAnswer) {
+      output = "I don't know";
       console.log('Buscar resposta em outras fontes de dados');
 
+      // Knowledge Base
+      try {
+        const knowledgeRetrieverService = new KnowledgeRetrieverService({ workspaceId: this.aiEmployee.workspace.toString() })
+        const knowledgeBaseResponse = await knowledgeRetrieverService.question(question)
+        if (knowledgeBaseResponse) {
+          output = knowledgeBaseResponse;
+          hasAnswer = await this.aiEmployee.checkValidAnswer(question, output)
+          if (hasAnswer) saveAnswer = false;
+          console.log('knowledgeBaseResponse', knowledgeBaseResponse);
+          console.log('hasAnswer', hasAnswer);
+        }
+      } catch (error) {
+        console.error('knowledgeBaseResponse', error.message)
+      }
+
+
       // Search using tools
-      const agentTools = await new AgentTools(this.aiEmployee, [INTENTIONS.INFORMATION_RETRIEVAL]).init();
-      output = await agentTools.call(question);
+      if (!hasAnswer) {
+        try {
+          console.log('Searching using tools');
+          const agentTools = await new AgentTools(this.aiEmployee, [INTENTIONS.INFORMATION_RETRIEVAL]).init();
+          output = await agentTools.call(question);
+          hasAnswer = await this.aiEmployee.checkValidAnswer(question, output)
+          console.log('hasAnswer', hasAnswer);
+        } catch (error) {
+          console.error('Search using tools', error.message)
+        }
+      }
 
       // TODO Listar todas as fontes de dados disponíveis
       // - Histórico do chat atual
-      // - Knowledge Base
       // - Banco de dados
       // - Internet
 
@@ -41,9 +70,12 @@ export class InformationRetrievalAgent extends Agent {
 
       // Verificar resposta, tentar em outra ferramenta se necessário
 
+
+    }
+
+    if (hasAnswer && saveAnswer) {
       // Salvar Resposta
       await this.updateMemory(question, output)
-
     }
 
     await this._afterCall(agentCall, output);

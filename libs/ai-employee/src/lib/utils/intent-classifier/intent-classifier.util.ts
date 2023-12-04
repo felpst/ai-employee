@@ -29,17 +29,21 @@ export async function intentClassifier(input: string) {
     })
   );
 
-  const chain = RunnableSequence.from([
-    PromptTemplate.fromTemplate(
-      `Task: Analyze the request and identify the primary intention.
-      - If the input is a direct question or seeks specific information, categorize as 'Information Retrieval'.
-      - If the input requests a specific action to be performed, categorize as 'Task Execution'.
+  /**
+   *
       - If the input is seeking help or support on an issue, categorize as 'Assistance or Support'.
       - If the input requires deep analysis or evaluation, categorize as 'Analysis or Evaluation'.
       - If the input is about providing feedback or an opinion, categorize as 'Feedback or Opinion'.
       - If the input is seeking social interaction or casual engagement, categorize as 'Social Interaction or Engagement'.
       - If the input is about exploring options or conducting broad research, categorize as 'Exploration or Research'.
       - If the input is to adjust settings or personalize, categorize as 'Configuration or Customization'.
+   */
+
+  const chain = RunnableSequence.from([
+    PromptTemplate.fromTemplate(
+      `Task: Analyze the request and identify the primary intention.
+      - If the input is a direct question or seeks specific information, categorize as 'Information Retrieval'.
+      - If the input requests a specific action to be performed, categorize as 'Task Execution'.
       - If the input is providing specific information, categorize as 'Configuration or Customization'.
 
       {format_instructions}
