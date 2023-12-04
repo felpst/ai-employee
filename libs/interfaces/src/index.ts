@@ -4,6 +4,7 @@ export * from './chats';
 export * from './data-source.interface';
 export * from './default.model';
 export * from './feedback.interface';
+export * from './job.interface';
 export * from './knowledge.interface';
 export * from './openAILogs.interface';
 export * from './token.interface';
