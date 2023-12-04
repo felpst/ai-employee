@@ -8,6 +8,7 @@ import { AuthService } from '../../auth/auth.service';
 import { NotificationsService } from '../../services/notifications/notifications.service';
 import { WorkspacesService } from '../workspaces.service';
 import { KnowledgeBaseService } from './knowledge-base.service';
+import { KnowledgeChooseFormDialogComponent } from './knowledge-choose-form-dialog/knowledge-choose-form-dialog.component';
 import { KnowledgeFormComponent } from './knowledge-form/knowledge-form.component';
 import { KnowledgeModalComponent } from './knowledge-modal/knowledge-modal.component';
 
@@ -45,14 +46,21 @@ export class KnowledgeBaseComponent implements OnInit {
   }
 
   onForm(knowledge?: IKnowledge) {
-    const dialogRef = this.dialog.open(KnowledgeFormComponent, {
-      width: '640px',
-      data: { knowledge, workspace: this.workspace },
-    });
-    dialogRef.afterClosed().subscribe((res) => {
-      if (res) {
-        this.knowledgeBaseService.getAllFromWorkspace(this.workspace._id).subscribe((knowledgeBase) => {
-          this.knowledgeBases = knowledgeBase;
+    const chooseFormDialog = this.dialog.open(KnowledgeChooseFormDialogComponent);
+
+    chooseFormDialog.afterClosed().subscribe((pick: 'file' | 'document') => {
+      if (pick) {
+        const dialogRef = this.dialog.open(KnowledgeFormComponent, {
+          width: pick === 'document' ? '640px' : '420px',
+          data: { knowledge, workspace: this.workspace, inputType: pick },
+        });
+
+        dialogRef.afterClosed().subscribe((res) => {
+          if (res) {
+            this.knowledgeBaseService.getAllFromWorkspace(this.workspace._id).subscribe((knowledgeBase) => {
+              this.knowledgeBases = knowledgeBase;
+            });
+          }
         });
       }
     });
@@ -79,7 +87,7 @@ export class KnowledgeBaseComponent implements OnInit {
   }
 
   loadKnowledgeBase() {
-    const workspaceId = this.workspace?._id
+    const workspaceId = this.workspace?._id;
     return this.knowledgeBaseService
       .getAllFromWorkspace(workspaceId)
       .subscribe((knowledges) => {

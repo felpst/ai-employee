@@ -5,7 +5,17 @@ import { defaultSchemaProps, triggers } from './default.model';
 const schema = new Schema<IKnowledge>({
   title: { type: String, required: true },
   description: { type: String, required: true },
-  data: { type: String, required: true },
+  data: {
+    type: String, required: function () {
+      return this.isFile === false;
+    }
+  },
+  fileUrl: {
+    type: String,
+    required: function () {
+      return this.isFile !== false;
+    }
+  },
   workspace: { type: Schema.Types.ObjectId, ref: 'Workspace', required: true },
   employees: [
     { type: Schema.Types.ObjectId, ref: 'AIEmployee', required: false },
@@ -17,6 +27,7 @@ const schema = new Schema<IKnowledge>({
     },
   ],
   openaiFileId: { type: String, required: true },
+  isFile: { type: Boolean, required: true },
   ...defaultSchemaProps,
 });
 triggers(schema);

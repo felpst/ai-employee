@@ -1,0 +1,13 @@
+.header-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+mat-dialog-content {
+  padding: 0.5em 1em !important;
+}
+
+mat-dialog-actions {
+  margin-bottom: 10px;
+}

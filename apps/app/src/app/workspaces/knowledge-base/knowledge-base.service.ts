@@ -22,7 +22,7 @@ export class KnowledgeBaseService {
     return this.list({ params });
   }
 
-  create(data: Partial<IKnowledge>): Observable<IKnowledge> {
+  create(data: Partial<IKnowledge> | FormData): Observable<IKnowledge> {
     return this.coreApiService.post(this.route, data) as Observable<IKnowledge>;
   }
 
@@ -44,9 +44,11 @@ export class KnowledgeBaseService {
     ) as Observable<IKnowledge[]>;
   }
 
-  update(item: IKnowledge): Observable<IKnowledge> {
+  update(item: IKnowledge | FormData): Observable<IKnowledge> {
+    const id = item instanceof FormData ? item.get('_id') : item._id;
+
     return this.coreApiService.put(
-      `${this.route}/${item._id}`,
+      `${this.route}/${id}`,
       item
     ) as Observable<IKnowledge>;
   }
