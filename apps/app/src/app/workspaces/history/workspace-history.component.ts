@@ -3,11 +3,9 @@ import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { IChatRoom, IUser } from '@cognum/interfaces';
 import { ObjectId } from 'mongoose';
-import { AuthService } from '../../auth/auth.service';
 import { DialogComponent } from '../../shared/dialog/dialog.component';
 import { AIEmployeesService } from '../ai-employees/ai-employees.service';
 import { ChatsService } from '../ai-employees/chats/chats.service';
-import { WorkspacesService } from '../workspaces.service';
 
 
 @Component({
@@ -30,9 +28,7 @@ export class WorkspaceHistoryComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private authService: AuthService,
     private chatService: ChatsService,
-    private workspacesService: WorkspacesService,
     private aiEmployeesService: AIEmployeesService,
     private dialog: MatDialog) { }
 
@@ -79,7 +75,7 @@ export class WorkspaceHistoryComponent implements OnInit {
   }
 
   onChat(aiEmployee: ObjectId, chat: IChatRoom) {
-    this.router.navigate([aiEmployee, 'chats', chat._id], { relativeTo: this.route });
+    this.router.navigate(['..', 'employee', aiEmployee, 'chats', chat._id], { relativeTo: this.route });
   }
 
   formatChatDate(date: Date): string {
