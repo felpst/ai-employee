@@ -1,4 +1,6 @@
 import express, { Router } from 'express';
+import multer from 'multer';
+import jsonParserMiddleware from '../../middlewares/jsonParserMiddleware';
 import { checkPermissions } from '../../middlewares/permissions.validator';
 import YupValidatorMiddleware from '../../middlewares/yup.validator';
 import { authMiddleware } from '../auth/auth.middleware';
@@ -17,15 +19,21 @@ router.get('/:id', authMiddleware, knowledgeController.getById);
 router.post(
   '/',
   authMiddleware,
+  multer().single('file'),
+  jsonParserMiddleware,
   YupValidatorMiddleware(addKnowledgeSchema),
   knowledgeController.createKnowledgeBaseDocument,
+  knowledgeController.addOpenAIFile,
   knowledgeController.create
 );
 router.put(
   '/:id',
   authMiddleware,
   checkPermissions,
+  multer().single('file'),
+  jsonParserMiddleware,
   knowledgeController.updateKnowledgeBaseDocument,
+  knowledgeController.replaceOpenAIFile,
   knowledgeController.update
 );
 router.delete(
@@ -33,6 +41,7 @@ router.delete(
   authMiddleware,
   checkPermissions,
   knowledgeController.deleteKnowledgeBaseDocument,
+  knowledgeController.deleteOpenAIFile,
   knowledgeController.delete
 );
 

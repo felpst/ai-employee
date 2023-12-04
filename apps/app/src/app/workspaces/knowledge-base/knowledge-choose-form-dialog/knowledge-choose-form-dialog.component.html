@@ -1,0 +1,15 @@
+<div class="header-container">
+  <h2 mat-dialog-title>Choose Method</h2>
+  <mat-dialog-actions align="end">
+    <button mat-button (click)="closeModal()" class="close-btn">
+      <mat-icon style="margin: 0;">close</mat-icon>
+    </button>
+  </mat-dialog-actions>
+</div>
+<mat-dialog-content>
+  <p>How are you going to add this knowledge?</p>
+</mat-dialog-content>
+<mat-dialog-actions align="center">
+  <button mat-raised-button (click)="choose('file')">Add from File</button>
+  <button mat-raised-button (click)="choose('document')">Create a Document</button>
+</mat-dialog-actions>

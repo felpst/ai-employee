@@ -37,3 +37,29 @@ mat-dialog-content {
   bottom: 0;
   z-index: 9999;
 }
+
+.gray-content {
+  cursor: pointer;
+  position: relative;
+  width: 100%px;
+  height: 100px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: #f0f2f5;
+  border: 1px dotted #bfbfc2;
+  margin-top: 10px;
+  font-size: 14px;
+  font-weight: 500;
+
+  .inform-style {
+    margin: 0
+  }
+}
+
+.attachment-message {
+  display: flex;
+  flex-direction: column;
+  padding-top: 10px;
+}
