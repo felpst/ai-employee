@@ -16,10 +16,50 @@
   flex: 1 1 auto;
 }
 
-input {
-  width: 100%;
-  margin: 1.2em 0;
-  padding: 0.3em;
+.cdk-overlay-pane {
+  left: -10px !important;
+}
+
+form {
+  input {
+    width: 100%;
+    padding: 0.3em;
+    margin-bottom: 1em;
+  }
+  
+  #title-input {
+    margin: 1.2em 0;
+  }
+  
+  mat-label {
+    font-size: smaller;
+  }
+
+  mat-select {
+    width: 100px;
+  }
+  
+  .website-form {
+    display: flex;
+    flex-direction: column;
+
+    .frequency-selectors {
+      width: 100%;
+      display: flex;
+      flex-direction: row;
+      
+      .select-wrapper {
+        border: 1px solid;
+        padding: 0.3em;
+        border-color: -internal-light-dark(#767676, #858585);
+        border-radius: 3px;
+      }
+      
+      mat-select {
+          width: 120px;
+      }
+    }
+  }
 }
 
 mat-dialog-content {

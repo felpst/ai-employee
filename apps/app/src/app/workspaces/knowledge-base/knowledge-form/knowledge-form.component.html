@@ -9,10 +9,12 @@
 <mat-dialog-content>
   <form [formGroup]="form">
     <div>
-      <input matInput formControlName="title" placeholder="Title" required="true" />
+      <input id="title-input" matInput formControlName="title" placeholder="Title" required="true" />
     </div>
+
     <md-editor *ngIf="inputType === types.Document" formControlName="data" height="300px" required="true"
       [options]="markdownOptions"></md-editor>
+
     <div *ngIf="inputType === types.File" class="update-content">
       <div class="file-container">
         <label class="gray-content" for="knowledgeFileInput">
@@ -27,6 +29,13 @@
         </div>
       </div>
       <p class="cognum-text-12" style="width: 50px">&ensp;&ensp;</p>
+    </div>
+
+    <div *ngIf="inputType === types.Html" class="website-form">
+      <mat-label>URL*</mat-label>
+      <input matInput formControlName="contentUrl" placeholder="https://example.com" required="true" />
+      <mat-label>Update Frequency*</mat-label>
+      <input matInput formControlName="htmlUpdateFrequency" placeholder="Every Monday at 8am" required="true" />
     </div>
   </form>
 </mat-dialog-content>

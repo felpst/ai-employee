@@ -53,6 +53,8 @@ export class KnowledgeFormComponent {
       title: ['', [Validators.required]],
       data: ['', this.inputType === KnowledgeTypeEnum.Document ? [Validators.required] : []],
       file: ['', this.inputType === KnowledgeTypeEnum.File ? [Validators.required] : []],
+      contentUrl: ['', this.inputType === KnowledgeTypeEnum.Html ? [Validators.required] : []],
+      htmlUpdateFrequency: ['', this.inputType === KnowledgeTypeEnum.Html ? [Validators.required] : []],
     });
 
     this.initializeForm();
@@ -88,12 +90,12 @@ export class KnowledgeFormComponent {
     const data = this.form.value;
     const isFile = this.inputType === KnowledgeTypeEnum.File;
 
-    let contentUrl: string | undefined;
     if (isFile && data.file) {
-      contentUrl = await this.uploadFile(data.file);
+      data['contentUrl'] = await this.uploadFile(data.file);
+      delete data.file;
     }
 
-    const newKnowledge = this.prepareKnowledgeObject(contentUrl);
+    const newKnowledge = this.prepareKnowledgeObject(data);
     this.saveOrUpdateKnowledge(newKnowledge);
   }
 
@@ -117,12 +119,10 @@ export class KnowledgeFormComponent {
     }
   }
 
-  private prepareKnowledgeObject(contentUrl?: string): Partial<IKnowledge> {
+  private prepareKnowledgeObject(data: Partial<IKnowledge>): Partial<IKnowledge> {
     const newKnowledge: Partial<IKnowledge> = {
-      ...this.form.value,
+      ...data,
       type: this.inputType,
-      contentUrl,
-      file: undefined,
     };
 
     if (this.knowledge) {
