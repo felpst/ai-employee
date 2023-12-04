@@ -15,12 +15,8 @@ export class ConfigurationAgent extends Agent {
     const agentCall = await this._initCall(input, intent);
 
     // Update AIEmployee Memory
-    const memoryUpdateResponse = await this.memory.instruction(input, this.context)
+    const memoryUpdateResponse = await this.aiEmployee.memoryInstruction(input, this.context)
     console.log('memoryUpdateResponse', JSON.stringify(memoryUpdateResponse));
-    if (memoryUpdateResponse.updated) {
-      this.aiEmployee.memory = this.memory.get();
-      await this.aiEmployee.updateOne({ memory: this.aiEmployee.memory });
-    }
 
     // TODO add tools to settings
     const model = new ChatModel();

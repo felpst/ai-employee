@@ -71,7 +71,5 @@ const tools = [
     intentions: ['Information Retrieval'],
     show: false
   },
-
-
 ]
 export default tools;

@@ -4,12 +4,11 @@ import { AgentCall } from "@cognum/models";
 import { AgentExecutor } from "langchain/agents";
 import * as _ from 'lodash';
 import { Subject } from "rxjs";
-import { AIEmployeeMemory } from "../memory";
 import { AgentAIEmployeeHandlers } from "./agent-ai-employee/agent-ai-employee-handlers.handler";
 
 export class Agent {
   agent = 'Agent';
-  memory: AIEmployeeMemory = new AIEmployeeMemory();
+  // memory: AIEmployeeMemory = new AIEmployeeMemory();
   context: string[] = [];
 
   _executor: AgentExecutor;
@@ -24,7 +23,6 @@ export class Agent {
   ) { }
 
   async init() {
-    this.memory.set(this.aiEmployee.memory)
     return this;
   }
 

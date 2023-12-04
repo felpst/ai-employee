@@ -1,8 +1,8 @@
 import { AgentExecutor } from "langchain/agents";
 import { ObjectId } from "mongodb";
 import { Subject } from "rxjs";
+import { DefaultModel } from "../default.model";
 import { IAIEmployee } from "./ai-employee.interfaces";
-import { DefaultModel } from "./default.model";
 
 export interface TaskProcess {
   tool: string;

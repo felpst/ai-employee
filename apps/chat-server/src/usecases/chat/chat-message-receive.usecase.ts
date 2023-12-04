@@ -11,7 +11,7 @@ export class ChatMessageReceive {
   ) { }
 
   async execute(conn: Connection, data: IChatMessage) {
-    const agent = conn.session.agent
+    const aiEmployee = conn.session.aiEmployee
 
     // Save input message
     const message = await this.chatMessageCreate.execute(data);
@@ -29,18 +29,18 @@ export class ChatMessageReceive {
       call: null
     });
 
-    agent.$calls.subscribe((calls) => {
-      // Send calls to client
-      conn.messageSend.execute(conn, {
-        type: 'handleMessage', content: {
-          ...answerMessage.toObject(),
-          call: calls[calls.length - 1]
-        }
-      });
-    });
+    // agent.$calls.subscribe((calls) => {
+    //   // Send calls to client
+    //   conn.messageSend.execute(conn, {
+    //     type: 'handleMessage', content: {
+    //       ...answerMessage.toObject(),
+    //       call: calls[calls.length - 1]
+    //     }
+    //   });
+    // });
 
     // Send to AI Employee
-    const agentCall = await agent.call(message.content);
+    const agentCall = await aiEmployee.call(message.content);
     // console.log(answer);
 
     // Save answer

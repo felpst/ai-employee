@@ -23,12 +23,8 @@ export class GeneralAgent extends Agent {
     const chainValues = await this._executor.call({ input }, [this.handlers]);
 
     // Update AIEmployee Memory
-    const memoryUpdateResponse = await this.memory.instruction(`Check if there is any relevant information in this information to add to the database:` + JSON.stringify({ input: agentCall.input, output: agentCall.output }), this.context)
+    const memoryUpdateResponse = await this.aiEmployee.memoryInstruction(`Check if there is any relevant information in this information to add to the database:` + JSON.stringify({ input: agentCall.input, output: agentCall.output }), this.context)
     console.log({ memoryUpdateResponse });
-    if (memoryUpdateResponse.updated) {
-      this.aiEmployee.memory = this.memory.get();
-      await this.aiEmployee.updateOne({ memory: this.aiEmployee.memory });
-    }
 
     await this._afterCall(agentCall, chainValues.output);
     return agentCall;

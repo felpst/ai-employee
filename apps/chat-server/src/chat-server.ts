@@ -1,4 +1,3 @@
-import { AgentAIEmployee } from "@cognum/ai-employee";
 import { ChatMessageCreate, ChatMessageRepository, ChatRoomRepository } from "@cognum/chat";
 import { IAIEmployee, IUser } from "@cognum/interfaces";
 import { IncomingMessage } from "http";
@@ -36,7 +35,7 @@ export class ChatServer {
 
         // Load Chat
         const chatRoom = await this.chatRoomRepository.getById(chatRoomId, {
-          populate: [{ path: 'aiEmployee', select: '_id name role avatar tools' }]
+          populate: [{ path: 'aiEmployee', select: '_id name role avatar tools memory' }]
         });
         if (!chatRoom) { throw new Error('Chat Room not found'); }
         conn.setChatRoom(chatRoom);
@@ -52,10 +51,6 @@ export class ChatServer {
         // Load AI Employee
         const aiEmployee = chatRoom.aiEmployee as IAIEmployee;
         conn.setAIEmployee(aiEmployee);
-
-        // Load Agent
-        const agent = await new AgentAIEmployee(aiEmployee, chatMessages).init();
-        conn.setAgent(agent);
 
         // Load senders
         const senders: (IUser | IAIEmployee)[] = [conn.session.user, aiEmployee];

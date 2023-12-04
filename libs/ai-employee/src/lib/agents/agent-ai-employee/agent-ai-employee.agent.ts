@@ -25,7 +25,7 @@ export class AgentAIEmployee implements IAgent {
     private chatHistory?: Partial<IChatMessage>[]
   ) { }
 
-  async init(): Promise<IAgent> {
+  async init() {
     // AI Employee Tools
     this.aiEmployee.tools.push({
       id: 'knowledge-retriever',
@@ -142,7 +142,7 @@ export class AgentAIEmployee implements IAgent {
     return chatHistory
   }
 
-  async call(input: string, callbacks: unknown[] = []): Promise<IAgentCall> {
+  async call(input: string, intent: string, callbacks: unknown[] = []): Promise<IAgentCall> {
     const repository = new RepositoryHelper<IAgentCall>(AgentCall);
     const agentCall: IAgentCall = await repository.create({
       input,

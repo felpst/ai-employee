@@ -14,8 +14,9 @@ export class InformationRetrievalAgent extends Agent {
     const agentCall = await this._initCall(question, intent);
 
     // Search on memory
-    console.log('RETRIEVEL MEMORY', JSON.stringify(this.memory.get()));
-    const response = await this.memory.search(question, this.context);
+    console.log('RETRIEVAL MEMORY', JSON.stringify(this.aiEmployee.memory));
+    const response = await this.aiEmployee.memorySearch(question);
+    console.log('response', JSON.stringify(response));
     let output = response.answer;
 
     // Check answer accuracy
@@ -54,11 +55,7 @@ export class InformationRetrievalAgent extends Agent {
   async updateMemory(input: string, output: string) {
     // Update AIEmployee Memory
     const instruction = `Check if there is any relevant information in this information to add to the database:` + JSON.stringify({ input, output })
-    const memoryUpdateResponse = await this.memory.instruction(instruction, this.context)
-    console.log('memoryUpdateResponse', JSON.stringify(memoryUpdateResponse));
-    if (memoryUpdateResponse.updated) {
-      this.aiEmployee.memory = this.memory.get();
-      await this.aiEmployee.updateOne({ memory: this.aiEmployee.memory });
-    }
+    const memoryInstructionResult = await this.aiEmployee.memoryInstruction(instruction, this.context)
+    console.log('memoryInstructionResult', JSON.stringify(memoryInstructionResult));
   }
 }

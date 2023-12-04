@@ -1,11 +1,11 @@
-import { IAIEmployeeMemory } from "@cognum/interfaces";
+import { IAIEmployeeMemory, IMemorySearchResult } from "@cognum/interfaces";
 import { ChatModel } from "@cognum/llm";
 import { StructuredOutputParser } from "langchain/output_parsers";
 import { PromptTemplate } from "langchain/prompts";
 import { RunnableSequence } from "langchain/schema/runnable";
 import { z } from "zod";
 
-export async function memoryStoreRetriever(question: string, memory: IAIEmployeeMemory[], context: string[] = []) {
+export async function memorySearch(memory: IAIEmployeeMemory[], question: string, context: string[] = []): Promise<IMemorySearchResult> {
   if (!memory) {
     return {
       answer: "I don't know.",
@@ -22,7 +22,7 @@ export async function memoryStoreRetriever(question: string, memory: IAIEmployee
 
   const chain = RunnableSequence.from([
     PromptTemplate.fromTemplate(
-      `Task: Analyze the question and create a excelente answer usign only data below:
+      `Task: Analyze the question and create a excelent answer usign only data below:
       \`\`\`json
       {memory}
       \`\`\`
@@ -36,7 +36,7 @@ export async function memoryStoreRetriever(question: string, memory: IAIEmployee
   ]);
 
   const response = await chain.invoke({
-    memory: JSON.stringify(memory || {}),
+    memory: JSON.stringify(memory || []),
     context: context ? `User Context: ${JSON.stringify(context || [])}` : '',
     question,
     format_instructions: parser.getFormatInstructions(),

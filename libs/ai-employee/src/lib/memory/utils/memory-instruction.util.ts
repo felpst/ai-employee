@@ -1,11 +1,11 @@
-import { IAIEmployeeMemory } from "@cognum/interfaces";
+import { IAIEmployeeMemory, IMemoryInstructionResult } from "@cognum/interfaces";
 import { ChatModel } from "@cognum/llm";
 import { StructuredOutputParser } from "langchain/output_parsers";
 import { PromptTemplate } from "langchain/prompts";
 import { RunnableSequence } from "langchain/schema/runnable";
 import { z } from "zod";
 
-export async function memoryStoreInsert(instruction: string, memory: IAIEmployeeMemory[] = [], context: string[] = []) {
+export async function memoryInstruction(memory: IAIEmployeeMemory[] = [], instruction: string, context: string[] = []): Promise<IMemoryInstructionResult> {
   const parser = StructuredOutputParser.fromZodSchema(
     z.object({
       database: z.array(

@@ -1,5 +1,5 @@
 import { Schema } from 'mongoose';
-import { IAIEmployee } from './ai-employee.interfaces';
+import { IAIEmployee } from './ai-employee';
 import { DefaultModel } from './default.model';
 import { IWorkspace } from './workspace.interface';
 

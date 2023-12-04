@@ -45,7 +45,6 @@ export async function intentClassifier(input: string) {
       {format_instructions}
       User input: {input}`
     ),
-    // "Answer the users question as best as possible.\n{format_instructions}\n{input}"
     new ChatModel(),
     parser,
   ]);

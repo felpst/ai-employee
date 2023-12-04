@@ -1,4 +1,4 @@
-import { Agent, IAIEmployee, IChatMessage, IChatRoom, IUser } from "@cognum/interfaces";
+import { IAIEmployee, IChatMessage, IChatRoom, IUser } from "@cognum/interfaces";
 import { v4 as uuidv4 } from 'uuid';
 import { WebSocket } from "ws";
 import { ISession } from "../interfaces/session.interface";
@@ -11,7 +11,6 @@ export class Session implements ISession {
   chatMessages!: IChatMessage[];
   senders!: (IUser | IAIEmployee)[];
   aiEmployee!: IAIEmployee;
-  agent!: Agent;
 
   constructor(session: Partial<ISession>) {
     Object.assign(this, session);
