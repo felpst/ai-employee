@@ -216,9 +216,11 @@ export class KnowledgeController extends ModelController<typeof Knowledge> {
         if (knowledge.type === KnowledgeTypeEnum.Html) {
           knowledge.title ??= knowledge.contentUrl;
 
-          fileName = this._textToFilename(knowledge.title);
+          fileName = this._textToFilename(knowledge.title, 'html');
           fileContent = await fetch(knowledge.contentUrl)
             .then(response => response.text());
+
+          knowledge.description = fileName;
         }
 
         if (knowledge.type === KnowledgeTypeEnum.File) {

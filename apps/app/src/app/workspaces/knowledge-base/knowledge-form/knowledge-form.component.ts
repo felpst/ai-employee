@@ -92,7 +92,6 @@ export class KnowledgeFormComponent {
 
     if (isFile && data.file) {
       data['contentUrl'] = await this.uploadFile(data.file);
-      delete data.file;
     }
 
     const newKnowledge = this.prepareKnowledgeObject(data);
@@ -119,11 +118,12 @@ export class KnowledgeFormComponent {
     }
   }
 
-  private prepareKnowledgeObject(data: Partial<IKnowledge>): Partial<IKnowledge> {
+  private prepareKnowledgeObject(data: Partial<IKnowledge & { file: File; }>): Partial<IKnowledge> {
     const newKnowledge: Partial<IKnowledge> = {
       ...data,
       type: this.inputType,
     };
+    delete (<IKnowledge & { file?: File; }>newKnowledge).file;
 
     if (this.knowledge) {
       return {
