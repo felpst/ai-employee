@@ -13,7 +13,7 @@ export class JobController extends ModelController<typeof Job> {
       const data = req.body;
       const { frequency } = data
       if (frequency) {
-        data['frequency'] = await textToCron(frequency);
+        data['cron'] = await textToCron(frequency);
       }
       req.body = data;
       next();

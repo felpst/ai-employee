@@ -192,6 +192,8 @@ h3 {
 
         mat-icon {
           fill: #0d9488;
+          filter: invert(39%) sepia(94%) saturate(682%) hue-rotate(134deg)
+            brightness(91%) contrast(90%);
         }
 
         .actions {

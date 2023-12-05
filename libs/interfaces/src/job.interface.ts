@@ -6,7 +6,8 @@ export interface IJob extends DefaultModel {
   _id?: string;
   name: string;
   instructions: string;
-  frequency: string; /** Utilizar o LLM para converter o texto de frequencia do usuário para período CRON */
+  frequency: string;
+  cron: string; /** Utilizar o LLM para converter o texto de frequencia do usuário para período CRON */
   status: 'running' | 'done';
   employee: Schema.Types.ObjectId | IAIEmployee;
 }

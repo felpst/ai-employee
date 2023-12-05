@@ -15,6 +15,7 @@ import { NgxSkeletonLoaderModule } from 'ngx-skeleton-loader';
 import { LayoutsModule } from '../layouts/layouts.module';
 import { SharedModule } from '../shared/shared.module';
 import { WorkspaceHistoryComponent } from './history/workspace-history.component';
+import { JobsModule } from './jobs/jobs.module';
 import { KnowledgeBaseModule } from './knowledge-base/knowledge-base.module';
 import { SettingsWorkspaceModule } from './settings-workspace/settings-workspace.module';
 import { WorkspaceOnboardingAIEmployeeComponent } from './workspace-onboarding/workspace-onboarding-ai-employee/workspace-onboarding-ai-employee.component';
@@ -54,7 +55,8 @@ import { WorkspacesComponent } from './workspaces.components';
     KnowledgeBaseModule,
     SettingsWorkspaceModule,
     MatToolbarModule,
-    SharedModule
+    SharedModule,
+    JobsModule
   ],
 })
 export class WorkspacesModule { }

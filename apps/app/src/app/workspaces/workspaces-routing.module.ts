@@ -6,6 +6,7 @@ import { WorkspaceAdminGuard } from './admin.guard';
 import { AIEmployeeResolver } from './ai-employees/ai-employee.resolver';
 import { WorkspaceHistoryComponent } from './history/workspace-history.component';
 import { WorkspaceHistoryResolver } from './history/workspace-history.resolver';
+import { JobsResolver } from './jobs/jobs.resolver';
 import { KnowledgeBaseComponent } from './knowledge-base/knowledge-base.component';
 import { KnowledgeBaseResolver } from './knowledge-base/knowledge-base.resolver';
 import { SettingsGeneralComponent } from './settings-workspace/general/general.component';
@@ -89,6 +90,14 @@ const routes: Routes = [
                 loadChildren: () =>
                   import('./ai-employees/chats/chats.module').then(
                     (m) => m.ChatsModule
+                  ),
+              },
+              {
+                path: 'jobs',
+                resolve: [JobsResolver],
+                loadChildren: () =>
+                  import('./jobs/jobs.module').then(
+                    (m) => m.JobsModule
                   ),
               },
               {
