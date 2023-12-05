@@ -1,11 +1,15 @@
 import {
   AfterViewChecked,
+  AfterViewInit,
   Component,
   ElementRef,
-  ViewChild,
+  Inject,
+  Input,
+  Optional,
+  ViewChild
 } from '@angular/core';
 import { NgForm } from '@angular/forms';
-import { MatDialog } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import { IFeedback } from '@cognum/interfaces';
 import { AuthService } from '../../../../auth/auth.service';
@@ -27,7 +31,11 @@ type MessageUpdate = {
   templateUrl: './chat.component.html',
   styleUrls: ['./chat.component.scss'],
 })
-export class ChatComponent implements AfterViewChecked {
+export class ChatComponent implements AfterViewChecked, AfterViewInit {
+  @Input() chatId!: string;
+  @Input() tool: any;
+  @Input() testMessage!: string;
+
   @ViewChild('chatContent', { static: true }) private chatContent!: ElementRef;
   @ViewChild('inputMessage', { static: true })
   private inputMessage!: ElementRef;
@@ -41,11 +49,21 @@ export class ChatComponent implements AfterViewChecked {
     private messagesService: MessagesService,
     private notificationsService: NotificationsService,
     private aiEmployeesService: AIEmployeesService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    @Optional() @Inject(MAT_DIALOG_DATA) public data: any,
   ) { }
 
   get aiEmployee() {
     return this.aiEmployeesService.aiEmployee;
+  }
+
+  ngAfterViewInit(): void {
+    if (this.data && this.data.tool) {
+      setTimeout(() => {
+        this.inputMessage.nativeElement.value = this.data.testMessage;
+        this.inputMessage.nativeElement.dispatchEvent(new Event('input'));
+      }, 2);
+    }
   }
 
   ngAfterViewChecked(): void {
@@ -68,6 +86,7 @@ export class ChatComponent implements AfterViewChecked {
         sender: this.authService.user?._id,
         content
       },
+
     });
     form.resetForm();
   }
@@ -129,5 +148,17 @@ export class ChatComponent implements AfterViewChecked {
   private scrollToBottom(): void {
     this.chatContent.nativeElement.scrollTop =
       this.chatContent.nativeElement.scrollHeight;
+  }
+
+  get chatData() {
+    return this.data;
+  }
+
+  closeChat() {
+    this.chatsService.delete(this.chatService.selectedChat).subscribe({
+      next: () => {
+        this.dialog.closeAll();
+      },
+    });
   }
 }

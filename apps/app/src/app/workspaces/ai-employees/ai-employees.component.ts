@@ -48,13 +48,13 @@ export class AIEmployeesComponent implements OnInit {
 
     this.chatsService.create(chat).subscribe({
       next: (newChat) => {
-        this.router.navigate([aiEmployee, 'chats', newChat._id], { relativeTo: this.route });
+        this.router.navigate(['..', 'employee', aiEmployee, 'chats', newChat._id], { relativeTo: this.route });
       },
     });
   }
 
   onChat(aiEmployee: ObjectId, chat: IChatRoom) {
-    this.router.navigate([aiEmployee, 'chats', chat._id], { relativeTo: this.route });
+    this.router.navigate(['..', 'employee', aiEmployee, 'chats', chat._id], { relativeTo: this.route });
   }
 
   createEmployee() {

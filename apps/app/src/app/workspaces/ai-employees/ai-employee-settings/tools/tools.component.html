@@ -29,10 +29,8 @@
             </div>
           </div>
           <div class="options">
-            <mat-icon
-              svgIcon="delete"
-              (click)="$event.stopPropagation(); onDelete(i)"
-            ></mat-icon>
+            <button (click)="onTestTool(i)" mat-stroked-button>Test</button>
+            <mat-icon svgIcon="delete" (click)="$event.stopPropagation(); onDelete(i)"></mat-icon>
           </div>
         </div>
       </div>

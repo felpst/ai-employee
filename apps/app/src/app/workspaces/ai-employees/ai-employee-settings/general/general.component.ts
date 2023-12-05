@@ -107,7 +107,7 @@ export class AIEmployeeGeneralComponent implements OnInit {
     return this.employeesService.delete(this.employee).subscribe({
       next: () => {
         this.notificationsService.show('Employee deleted successfully!');
-        this.router.navigate(['../../'], { relativeTo: this.route });
+        this.router.navigate(['workspaces', this.workspace._id]);
       },
       error: (error) => {
         console.log({ error });
