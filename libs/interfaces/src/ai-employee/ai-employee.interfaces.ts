@@ -3,8 +3,8 @@ import { Schema } from 'mongoose';
 import { DefaultModel } from '../default.model';
 import { IToolSettings } from '../tool.interface';
 import { IWorkspace } from '../workspace.interface';
-import { IAgentCall } from './agent.interface';
-import { IMemoryInstructionResult, IMemorySearchResult } from './memory.interfaces';
+import { IAIEmployeeCall, IAIEmployeeCallData } from './call.interfaces';
+import { IAIEmployeeMemory, IMemoryInstructionResult, IMemorySearchResult } from './memory.interfaces';
 
 export interface IAIEmployee extends DefaultModel {
   name: string;
@@ -14,13 +14,8 @@ export interface IAIEmployee extends DefaultModel {
   tools: IToolSettings[];
   memory: IAIEmployeeMemory[];
 
-  call(input: string): Promise<IAgentCall>;
+  call(data: IAIEmployeeCallData): Promise<IAIEmployeeCall>;
   memorySearch(question: string, context?: string[]): Promise<IMemorySearchResult>
   memoryInstruction(instruction: string, context?: string[]): Promise<IMemoryInstructionResult>
   checkValidAnswer(input: string, answer: string, context?: string[]): Promise<boolean>
-}
-
-export interface IAIEmployeeMemory {
-  pageContent: string;
-  metadata?: { [key: string]: any }
 }

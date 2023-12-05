@@ -1,4 +1,7 @@
-import { IAIEmployeeMemory } from "@cognum/interfaces";
+export interface IAIEmployeeMemory {
+  pageContent: string;
+  metadata?: { [key: string]: any }
+}
 
 export interface IMemorySearchResult {
   answer?: string;

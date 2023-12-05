@@ -14,14 +14,13 @@ export class InformationRetrievalAgent extends Agent {
   async call(question: string, intent: string): Promise<IAgentCall> {
     const agentCall = await this._initCall(question, intent);
     let saveAnswer: boolean = true;
-    let hasAnswer: boolean = false;
-    let output = "I don't know";
 
     // Search on memory
-    // console.log('RETRIEVAL MEMORY', JSON.stringify(this.aiEmployee.memory));
+    console.log('RETRIEVAL MEMORY', JSON.stringify(this.aiEmployee.memory));
     const response = await this.aiEmployee.memorySearch(question);
-    hasAnswer = response.accuracy;
-    // console.log('response', JSON.stringify(response));
+    let output = response.answer;
+    let hasAnswer = response.accuracy;
+    console.log('response', JSON.stringify(response));
 
     // Check answer accuracy
     if (!hasAnswer) {
