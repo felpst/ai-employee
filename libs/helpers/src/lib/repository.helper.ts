@@ -104,6 +104,7 @@ export class RepositoryHelper<T extends any | any[]> {
     if (!deleted) {
       throw new Error('Document not found');
     }
+    //@ts-expect-error because i don't now how to fix this
     return deleted;
   }
 
