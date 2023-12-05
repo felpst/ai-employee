@@ -6,10 +6,12 @@ export const addKnowledgeSchema = yup.object({
     .object({
       title: yup.string().notRequired(),
       description: yup.string().notRequired(),
-      data: yup.string().when('type', {
-        is: (type: KnowledgeTypeEnum) => type === KnowledgeTypeEnum.Document,
-        then: (schema) => schema.required()
-      }),
+      data: yup
+        .string()
+        .when('type', {
+          is: (type: KnowledgeTypeEnum) => type === KnowledgeTypeEnum.Document,
+          then: (schema) => schema.required()
+        }),
       workspace: yup.string().required(),
       employees: yup.array().of(yup.string()).notRequired(),
       permissions: yup
@@ -21,11 +23,15 @@ export const addKnowledgeSchema = yup.object({
           })
         )
         .notRequired(),
-      contentUrl: yup.string().when('type', {
-        is: (type: KnowledgeTypeEnum) => type !== KnowledgeTypeEnum.Document,
-        then: (schema) => schema.required()
-      }),
-      type: yup.string()
+      contentUrl: yup
+        .string()
+        .url()
+        .when('type', {
+          is: (type: KnowledgeTypeEnum) => type !== KnowledgeTypeEnum.Document,
+          then: (schema) => schema.required()
+        }),
+      type: yup
+        .string()
         .oneOf(Object.values(KnowledgeTypeEnum))
         .required(),
     })

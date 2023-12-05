@@ -1,15 +1,14 @@
-import { IKnowledge } from '@cognum/interfaces';
+import { IKnowledge, KnowledgeTypeEnum } from '@cognum/interfaces';
 import KnowledgeBase, { KnowledgeMetadata } from '@cognum/knowledge-base';
 import { ChatModel } from '@cognum/llm';
 import { Knowledge } from '@cognum/models';
 import { NextFunction, Request, Response } from 'express';
-import fs from 'fs';
 import { LLMChain } from 'langchain/chains';
 import { Document } from 'langchain/document';
 import { PromptTemplate } from 'langchain/prompts';
 import mongoose from 'mongoose';
-import OpenAI from 'openai';
 import ModelController from '../../controllers/model.controller';
+import OpenAIFileService from '../../services/openai-file.service';
 
 export class KnowledgeController extends ModelController<typeof Knowledge> {
   constructor() {
@@ -205,38 +204,43 @@ export class KnowledgeController extends ModelController<typeof Knowledge> {
     next: NextFunction
   ): Promise<void> {
     try {
-      const openai = new OpenAI();
+      const openaiFileSvc = new OpenAIFileService();
 
-      const knowledges = Array.isArray(req.body) ? [...req.body] : [req.body];
+      const knowledges: Partial<IKnowledge>[] = Array.isArray(req.body) ? [...req.body] : [req.body];
       const newBody = [];
 
       for (const knowledge of knowledges) {
         let fileName: string;
         let fileContent: string | Buffer;
-        const { file } = req;
 
-        if (file) {
-          const originalName = file.filename || file.originalname;
-          const ext = originalName.split('.').at(-1);
-          fileName = knowledge.title ? this._textToFilename(knowledge.title, ext) : originalName;
+        if (knowledge.type === KnowledgeTypeEnum.Html) {
+          knowledge.title ??= knowledge.contentUrl;
 
-          fileContent = file.buffer;
-          knowledge.description = fileName;
-        } else {
-          const ext = 'txt';
-          const title = knowledge.title || (await this._generateTitle(knowledge.data));
-          fileName = this._textToFilename(title, ext);
-
-          fileContent = knowledge.data;
-          knowledge.title = title;
+          fileName = this._textToFilename(knowledge.title);
+          fileContent = await fetch(knowledge.contentUrl)
+            .then(response => response.text());
         }
 
-        fs.writeFileSync(`tmp/${fileName}`, fileContent);
-        const fileToUpload = fs.createReadStream(`tmp/${fileName}`);
+        if (knowledge.type === KnowledgeTypeEnum.File) {
+          const { file } = req;
 
-        const createdFile = await openai.files.create({ file: fileToUpload, purpose: 'assistants' });
-        knowledge['openaiFileId'] = createdFile.id;
+          fileContent = file.buffer;
+          fileName = file.filename || file.originalname;
 
+          knowledge.title ??= fileName;
+          knowledge.description = fileName;
+        }
+
+        if (knowledge.type === KnowledgeTypeEnum.Document) {
+          knowledge.title ??= await this._generateTitle(knowledge.data);
+
+          fileContent = knowledge.data;
+          fileName = this._textToFilename(knowledge.title, 'txt');
+        }
+
+        const createdFile = await openaiFileSvc.create(fileName, fileContent);
+
+        knowledge.openaiFileId = createdFile.id;
         newBody.push(knowledge);
       }
       req.body = newBody;
@@ -253,13 +257,12 @@ export class KnowledgeController extends ModelController<typeof Knowledge> {
     next: NextFunction
   ): Promise<void> {
     try {
-      const openai = new OpenAI();
       const { id } = req.params;
       const { openaiFileId } = await Knowledge
         .findById(id)
         .select('openaiFileId');
 
-      await openai.files.del(openaiFileId);
+      await new OpenAIFileService().delete(openaiFileId);
 
       next();
     } catch (error) {
@@ -269,7 +272,14 @@ export class KnowledgeController extends ModelController<typeof Knowledge> {
 
   public async replaceOpenAIFile(req: Request, _: Response, next: NextFunction): Promise<void> {
     try {
-      if (req.body.data || req.file)
+      const body: Partial<IKnowledge> = req.body;
+      const validFileReplacementCases = [
+        body.type === KnowledgeTypeEnum.Document && body.data,
+        body.type === KnowledgeTypeEnum.Html && body.contentUrl,
+        body.type === KnowledgeTypeEnum.File && req.file,
+      ].map(Boolean);
+
+      if (validFileReplacementCases.includes(true))
         await this.deleteOpenAIFile(req, _, async () => {
           await this.addOpenAIFile(req, _, next);
         });
