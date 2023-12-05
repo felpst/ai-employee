@@ -6,10 +6,10 @@ import { addJobSchema } from './job.schemas';
 
 const router: Router = express.Router();
 
-router.post('/', authMiddleware, YupValidatorMiddleware(addJobSchema), jobController.create);
+router.post('/', authMiddleware, YupValidatorMiddleware(addJobSchema), jobController.parseCronFrequency, jobController.create);
 router.get('/', authMiddleware, jobController.find);
 router.get('/:id', authMiddleware, jobController.getById);
-router.put('/:id', authMiddleware, jobController.update);
+router.put('/:id', authMiddleware, jobController.parseCronFrequency, jobController.update);
 router.delete('/:id', authMiddleware, jobController.delete);
 
 export default router;
