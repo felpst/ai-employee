@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
-import { IChatRoom, IUser } from '@cognum/interfaces';
+import { IChatRoom, IUser, IWorkspace } from '@cognum/interfaces';
 import { ObjectId } from 'mongoose';
 import { DialogComponent } from '../../shared/dialog/dialog.component';
 import { AIEmployeesService } from '../ai-employees/ai-employees.service';
 import { ChatsService } from '../ai-employees/chats/chats.service';
+import { WorkspacesService } from '../workspaces.service';
 
 
 @Component({
@@ -24,30 +25,36 @@ export class WorkspaceHistoryComponent implements OnInit {
   sortingType: 'newFirst' | 'oldFirst' | 'mix' = 'newFirst';
   sortingDirection: 'asc' | 'desc' = 'desc';
   activeButton = '';
+  workspace!: IWorkspace;
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private chatService: ChatsService,
     private aiEmployeesService: AIEmployeesService,
+    private workspaceService: WorkspacesService,
     private dialog: MatDialog) { }
 
   ngOnInit() {
-    this.originalChat = [...this.history];
-    this.sortChats();
-    for (const aiEmployee of this.aiEmployeesService.aiEmployees.values()) {
-      for (const chat of aiEmployee.chats) {
-        this.history.push({
-          _id: chat._id,
-          users: [chat.createdBy, aiEmployee],
-          date: chat.updatedAt,
-          createdAt: chat.createdAt,
-          historyTitle: `${(chat.createdBy as unknown as IUser).name || ''} started a new conversation with ${aiEmployee.name}`,
-          chatName: chat.name,
-          summary: chat.summary
-        })
-      }
-    }
+    this.workspace = this.workspaceService.selectedWorkspace;
+    this.loadChats();
+  }
+
+  loadChats() {
+    this.aiEmployeesService.load(this.workspace).subscribe(aiEmployeesWithChats => {
+      this.history = aiEmployeesWithChats.flatMap(aiEmployee => aiEmployee.chats.map(chat => ({
+        _id: chat._id,
+        users: [chat.createdBy, aiEmployee],
+        date: chat.updatedAt,
+        createdAt: chat.createdAt,
+        historyTitle: `${(chat.createdBy as unknown as IUser).name || ''} started a new conversation with ${aiEmployee.name}`,
+        chatName: chat.name,
+        summary: chat.summary
+      })));
+
+      this.originalChat = [...this.history];
+      this.sortChats();
+    });
   }
 
   deleteChat(chat: IChatRoom) {
@@ -64,7 +71,7 @@ export class WorkspaceHistoryComponent implements OnInit {
         if (result) {
           this.chatService.delete(chat).subscribe(
             () => {
-              this.chats = this.chats.filter(c => c._id !== chat._id);
+              this.loadChats();
             },
             error => {
               console.error(error);
@@ -83,12 +90,12 @@ export class WorkspaceHistoryComponent implements OnInit {
     const diffInSeconds = Math.floor((now.getTime() - new Date(date).getTime()) / 1000);
 
     const intervals = {
-      ano: 31536000,
-      mes: 2592000,
-      semana: 604800,
-      dia: 86400,
-      hora: 3600,
-      minuto: 60,
+      year: 31536000,
+      month: 2592000,
+      week: 604800,
+      day: 86400,
+      hour: 3600,
+      minute: 60,
     };
 
     let counter;
@@ -96,14 +103,14 @@ export class WorkspaceHistoryComponent implements OnInit {
       counter = Math.floor(diffInSeconds / secondsInUnit);
       if (counter > 0) {
         if (counter === 1) {
-          return `Há ${counter} ${unit} atrás`;
+          return `${counter} ${unit} ago`;
         } else {
-          return `Há ${counter} ${unit}s atrás`;
+          return `${counter} ${unit}s ago`;
         }
       }
     }
 
-    return 'Agora mesmo';
+    return 'Just now';
   }
 
   filterChats() {
