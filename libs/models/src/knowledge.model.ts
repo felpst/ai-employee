@@ -29,7 +29,7 @@ const schema = new Schema<IKnowledge>({
   openaiFileId: { type: String, required: true },
   type: { type: String, enum: KnowledgeTypeEnum, required: true },
   ...defaultSchemaProps,
-});
+}, { strict: true });
 triggers(schema);
 
 const Knowledge = model<IKnowledge>('Knowledge', schema);
