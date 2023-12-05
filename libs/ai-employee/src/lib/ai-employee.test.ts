@@ -27,9 +27,6 @@ describe('InformationRetrievalaiEmployee', () => {
         }
       ]
     }) as IAIEmployee
-
-    // aiEmployee = await new AIEmployee(aiEmployee)
-    // aiEmployee.context = ['chat', `user id: ${process.env.USER_ID}`]
   });
 
   it('should answer question correctly about email', async () => {

@@ -49,12 +49,16 @@
             {{ step.status === 'running' ? 'Running' : 'Done' }}
           </div>
           <div>
-            <mat-icon matTooltip="Input">exit_to_app</mat-icon>
-            {{ step.input | json }}
+            <mat-icon matTooltip="Input">description</mat-icon>
+            {{ step.description }}
           </div>
-          <div *ngIf="step.output">
+          <div>
+            <mat-icon matTooltip="Input">exit_to_app</mat-icon>
+            {{ step.inputs | json }}
+          </div>
+          <div *ngIf="step.outputs">
             <mat-icon matTooltip="Output">output</mat-icon>
-            {{ step.output | json }}
+            {{ step.outputs | json }}
           </div>
           <div *ngIf="step.status === 'done'">
             <mat-icon matTooltip="Execution Time">timer</mat-icon>

@@ -21,8 +21,9 @@ export interface IAIEmployeeCall extends DefaultModel {
 
 export interface IAIEmployeeCallStep {
   type: IAIEmployeeCallStepType;
-  input: any;
-  output: any;
+  description: string;
+  inputs: any;
+  outputs: any;
   tokenUsage: number;
   status: 'not_started' | 'running' | 'done';
   startAt: Date;

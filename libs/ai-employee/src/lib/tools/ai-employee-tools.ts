@@ -1,9 +1,35 @@
-import { IToolSettings } from "@cognum/interfaces";
+import { ToolsHelper } from "@cognum/helpers";
+import { IAIEmployee, IToolSettings } from "@cognum/interfaces";
 import { KnowledgeRetrieverTool, LinkedInLeadScraperTool, MailSenderTool, PythonTool, RandomNumberTool, SQLConnectorTool, WebBrowserTool } from "@cognum/tools";
 import { DynamicStructuredTool, SerpAPI, Tool } from "langchain/tools";
 import { Calculator } from "langchain/tools/calculator";
 
 export class AIEmployeeTools {
+
+  static intetionTools(options: { aiEmployee: IAIEmployee; intentions: string[]; }) {
+    const { intentions, aiEmployee } = options;
+
+    const commonTools = ToolsHelper.tools
+      .filter(tool => !tool.show)
+      .filter(tool => {
+        for (const intetion of tool.intentions || []) {
+          if (intentions.includes(intetion)) return true;
+        }
+        return false;
+      })
+      .map(tool => ({ id: tool.id, }))
+
+    const filteredToolsSettings = aiEmployee.tools.filter(toolSettings => {
+      const tool = ToolsHelper.get(toolSettings.id);
+      if (tool.show) return false;
+      for (const intetion of tool.intentions || []) {
+        if (intentions.includes(intetion)) return true;
+      }
+      return false;
+    })
+    const tools = AIEmployeeTools.get([...commonTools, ...filteredToolsSettings]);
+    return tools;
+  }
 
   static get(toolsSettings: IToolSettings[] = []): Tool[] {
     const tools: Tool[] = [];
