@@ -18,25 +18,48 @@ interface JobRequest {
   body?: Uint8Array | string;
 }
 
-interface CreateJobParams {
+interface JobParams {
+  name: string,
   request: JobRequest,
   cronTab: string,
   timeZone?: string;
 }
 
 export default class SchedulerService {
-  private client: CloudSchedulerClient;
+  private _client: CloudSchedulerClient;
+  private _parent = 'projects/cognum/locations/us-central1';
   constructor() {
-    this.client = new CloudSchedulerClient();
+    this._client = new CloudSchedulerClient({
+      keyFilename: 'cognum.secrets.json'
+    });
   }
 
-  async createCron(params: CreateJobParams) {
-    return this.client.createJob({
+  async createJob(params: JobParams) {
+    return await this._client.createJob({
       job: {
+        name: `${this._parent}/jobs/${params.name}`,
         httpTarget: params.request,
         schedule: params.cronTab,
         timeZone: params.timeZone
       },
+      parent: this._parent
+    });
+  }
+
+  async updateJob(params: JobParams) {
+    return this._client.updateJob({
+      job: {
+        name: `${this._parent}/jobs/${params.name}`,
+        httpTarget: params.request,
+        schedule: params.cronTab,
+        timeZone: params.timeZone
+      },
+    });
+  }
+
+  async deleteJob(name: string) {
+    return this._client.deleteJob({
+      name: `${this._parent}/jobs/${name}`
     });
   }
 }
