@@ -209,7 +209,8 @@ export class KnowledgeController extends ModelController<typeof Knowledge> {
     try {
       const openaiFileSvc = new OpenAIFileService();
 
-      const knowledges: Partial<IKnowledge>[] = Array.isArray(req.body) ? [...req.body] : [req.body];
+      const knowledges: Partial<IKnowledge & { timeZone?: string; }>[] =
+        Array.isArray(req.body) ? [...req.body] : [req.body];
       const newBody = [];
 
       for (const knowledge of knowledges) {
@@ -217,12 +218,13 @@ export class KnowledgeController extends ModelController<typeof Knowledge> {
         let fileContent: string | Buffer;
 
         if (knowledge.type === KnowledgeTypeEnum.Html) {
+          const timeZone = knowledge.timeZone;
+          delete knowledge.timeZone;
+
           const knowledgeId =
             knowledge._id || new mongoose.mongo.ObjectId();
-
           knowledge.title ??= knowledge.contentUrl;
-          knowledge.htmlUpdateFrequency =
-            await textToCron(knowledge.htmlUpdateFrequency);
+          const cron = await textToCron(knowledge.htmlUpdateFrequency);
 
           fileName = this._textToFilename(knowledge.title, 'html');
           fileContent = await fetch(knowledge.contentUrl)
@@ -231,11 +233,12 @@ export class KnowledgeController extends ModelController<typeof Knowledge> {
           const schedulerSvc = new SchedulerService();
           await schedulerSvc.createJob({
             name: `knowledge-${knowledgeId}-content-update`,
-            schedule: knowledge.htmlUpdateFrequency,
-            appEngineHttpTarget: {
+            schedule: cron,
+            httpTarget: {
+              uri: `${process.env.SERVER_HOST}/knowledges/${knowledgeId}/scheduled-update`,
               httpMethod: 'PATCH',
-              relativeUri: `/knowledges/${knowledgeId}/scheduled-update`
-            }
+            },
+            timeZone
           });
 
           knowledge.description = fileName;

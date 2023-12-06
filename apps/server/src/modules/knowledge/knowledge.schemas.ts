@@ -31,6 +31,7 @@ export const addKnowledgeSchema = yup.object({
           then: (schema) => schema.required()
         }),
       htmlUpdateFrequency: yup.string().notRequired(),
+      timeZone: yup.string().notRequired(),
       type: yup
         .string()
         .oneOf(Object.values(KnowledgeTypeEnum))

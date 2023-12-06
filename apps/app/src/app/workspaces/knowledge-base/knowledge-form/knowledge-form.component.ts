@@ -135,9 +135,16 @@ export class KnowledgeFormComponent {
     return { ...newKnowledge, workspace: this.workspace._id, permissions: this.getDefaultPermissions() };
   }
 
-  private saveOrUpdateKnowledge(newKnowledge: Partial<IKnowledge>) {
+  private saveOrUpdateKnowledge(newKnowledge: Partial<IKnowledge> & { timeZone?: string; }) {
     const formData = new FormData();
-    this.knowledge ? formData.append('_id', this.knowledge._id + '') : null;
+    const isUpdate = !!this.knowledge;
+
+    if (isUpdate) {
+      formData.append('_id', this.knowledge?._id + '');
+    } else if (this.inputType === KnowledgeTypeEnum.Html) {
+      newKnowledge.timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    }
+
     formData.append('json', JSON.stringify(newKnowledge));
     formData.append('file', this.form.value.file);
 
@@ -147,11 +154,11 @@ export class KnowledgeFormComponent {
 
     request.subscribe({
       next: (res) => this.handleSuccess(
-        this.knowledge ? 'Successfully updated knowledge' : 'Successfully created knowledge',
+        isUpdate ? 'Successfully updated knowledge' : 'Successfully created knowledge',
         res
       ),
       error: (error) => this.handleError(
-        this.knowledge ? 'Error updating knowledge. Please try again.' : 'Error creating knowledge. Please try again.',
+        isUpdate ? 'Error updating knowledge. Please try again.' : 'Error creating knowledge. Please try again.',
         error
       ),
     });
