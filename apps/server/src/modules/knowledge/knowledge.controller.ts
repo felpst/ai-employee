@@ -8,7 +8,9 @@ import { Document } from 'langchain/document';
 import { PromptTemplate } from 'langchain/prompts';
 import mongoose from 'mongoose';
 import ModelController from '../../controllers/model.controller';
+import { textToCron } from '../../helpers/cron.helper';
 import OpenAIFileService from '../../services/openai-file.service';
+import SchedulerService from '../../services/scheduler.service';
 
 export class KnowledgeController extends ModelController<typeof Knowledge> {
   constructor() {
@@ -214,11 +216,29 @@ export class KnowledgeController extends ModelController<typeof Knowledge> {
         let fileContent: string | Buffer;
 
         if (knowledge.type === KnowledgeTypeEnum.Html) {
+          const knowledgeId =
+            knowledge._id || new mongoose.mongo.ObjectId();
+
           knowledge.title ??= knowledge.contentUrl;
+          knowledge.htmlUpdateFrequency =
+            await textToCron(knowledge.htmlUpdateFrequency);
 
           fileName = this._textToFilename(knowledge.title, 'html');
           fileContent = await fetch(knowledge.contentUrl)
             .then(response => response.text());
+
+          const schedulerSvc = new SchedulerService();
+          await schedulerSvc.createJob({
+            name: `knowledge-${knowledgeId}-content-update`,
+            schedule: knowledge.htmlUpdateFrequency,
+            appEngineHttpTarget: {
+              httpMethod: 'PATCH',
+              relativeUri: `/knowledges/${knowledgeId}/scheduled-update`,
+              body: JSON.stringify({
+                url: knowledge.contentUrl
+              })
+            }
+          });
 
           knowledge.description = fileName;
         }
@@ -260,10 +280,12 @@ export class KnowledgeController extends ModelController<typeof Knowledge> {
   ): Promise<void> {
     try {
       const { id } = req.params;
-      const { openaiFileId } = await Knowledge
+      const { openaiFileId, type } = await Knowledge
         .findById(id)
-        .select('openaiFileId');
+        .select(['openaiFileId', 'type']);
 
+      if (type === KnowledgeTypeEnum.Html)
+        await new SchedulerService().deleteJob(`knowledge-${id}-content-update`);
       await new OpenAIFileService().delete(openaiFileId);
 
       next();

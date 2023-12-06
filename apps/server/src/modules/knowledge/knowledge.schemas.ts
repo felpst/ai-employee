@@ -30,6 +30,7 @@ export const addKnowledgeSchema = yup.object({
           is: (type: KnowledgeTypeEnum) => type !== KnowledgeTypeEnum.Document,
           then: (schema) => schema.required()
         }),
+      htmlUpdateFrequency: yup.string().notRequired(),
       type: yup
         .string()
         .oneOf(Object.values(KnowledgeTypeEnum))

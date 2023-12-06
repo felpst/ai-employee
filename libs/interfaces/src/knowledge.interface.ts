@@ -16,6 +16,7 @@ export interface IKnowledge extends DefaultModel {
   type: KnowledgeTypeEnum,
   data?: string;
   contentUrl?: string;
+  htmlUpdateFrequency?: string;
   openaiFileId: string;
   workspace: Schema.Types.ObjectId | IWorkspace;
   employees: Schema.Types.ObjectId[] | IAIEmployee[];
