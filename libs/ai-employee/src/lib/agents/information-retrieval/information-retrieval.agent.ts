@@ -66,10 +66,10 @@ export class InformationRetrievalAgent {
 
     }
 
-    // if (hasAnswer && saveAnswer) {
-    //   // Salvar Resposta
-    //   await this.updateMemory(question, output)
-    // }
+    if (result.accuracy && saveAnswer) {
+      // Salvar Resposta
+      await this.updateMemory(options, result)
+    }
 
     // Retornar a resposta
     return result;
@@ -185,10 +185,45 @@ export class InformationRetrievalAgent {
     return searchOnToolsResult;
   }
 
-  // async updateMemory(input: string, output: string) {
-  //   // Update AIEmployee Memory
-  //   const instruction = `Check if there is any relevant information in this information to add to the database:` + JSON.stringify({ input, output })
-  //   const memoryInstructionResult = await aiEmployee.memoryInstruction(instruction, this.context)
-  //   console.log('memoryInstructionResult', JSON.stringify(memoryInstructionResult));
-  // }
+  async updateMemory(options: IInformationRetrievalAgentOptions, result: IInformationRetrievalAgentOutput): Promise<IInformationRetrievalAgentOutput> {
+    const { $call, question, context, aiEmployee } = options;
+
+    const call = options.$call.value;
+    const step: IAIEmployeeCallStep = {
+      type: 'action',
+      description: 'Update Memory',
+      inputs: {
+        question,
+        answer: result.text
+      },
+      outputs: {},
+      tokenUsage: 0,
+      status: 'running',
+      startAt: new Date(),
+      endAt: null
+    }
+    const index = call.steps.push(step);
+    await call.save()
+    $call.next(call)
+
+    // Update AIEmployee Memory
+    const instruction = `Check if there is any relevant information in this information to add to the database:` + JSON.stringify({ question, answer: result.text })
+    const memoryInstructionResult = await aiEmployee.memoryInstruction(instruction, context)
+    console.log('memoryInstructionResult', JSON.stringify(memoryInstructionResult));
+
+    // TODO token usage
+    step.outputs = {
+      text: result.text,
+      ...memoryInstructionResult
+    };
+    step.status = 'done';
+    step.endAt = new Date();
+
+    // Update call
+    call.steps[index - 1] = step
+    await call.save()
+    $call.next(call)
+
+    return result;
+  }
 }

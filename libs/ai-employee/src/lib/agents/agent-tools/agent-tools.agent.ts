@@ -1,4 +1,4 @@
-import { IAIEmployee, IAIEmployeeCall, IAIEmployeeCallStep } from "@cognum/interfaces";
+import { IAIEmployee, IAIEmployeeCall, IAIEmployeeCallStep, IMemoryInstructionResult } from "@cognum/interfaces";
 import { ChatModel } from "@cognum/llm";
 import { AgentExecutor, initializeAgentExecutorWithOptions } from "langchain/agents";
 import { Serialized } from "langchain/load/serializable";
@@ -15,6 +15,7 @@ export interface IAgentToolsOptions {
   aiEmployee: IAIEmployee;
   intentions: string[]
 }
+
 export class AgentTools {
   private _executor: AgentExecutor;
 
@@ -55,7 +56,6 @@ export class AgentTools {
     const callbacks = [{
       handleChainStart: async (chain: Serialized, inputs: ChainValues) => {
         if (inputs.agent_scratchpad === undefined) return;
-        console.log('handleChainStart')
         // Analisar o contexto e definir próxima ação
         step = {
           type: 'action',
@@ -80,7 +80,6 @@ export class AgentTools {
       //   console.log('handleLLMEnd');
       // },
       handleChainEnd: async (outputs: ChainValues, runId: string) => {
-        console.log('handleChainEnd')
         // Definiu a próxima ação, seja uma resposta final ou a execução de uma ferramenta
         // TODO token usage
         step.outputs = {
@@ -98,7 +97,6 @@ export class AgentTools {
       //   // Escolheu a ferramenta para execução
       // },
       handleToolStart: async (tool: Serialized, input: string, runId: string, parentRunId?: string, tags?: string[], metadata?: Record<string, unknown>, name?: string) => {
-        console.log('handleToolStart')
         // Iniciou a execução da ferramenta
         // Analisar o contexto e definir próxima ação
         step = {
@@ -118,7 +116,6 @@ export class AgentTools {
         $call.next(call)
       },
       handleToolEnd: async (output: string, runId: string, parentRunId?: string, tags?: string[]) => {
-        console.log('handleToolEnd')
         // Finalizou a execução da ferramenta
         // TODO token usage
         step.outputs = {
@@ -137,11 +134,54 @@ export class AgentTools {
     try {
       const chainValues = await this._executor.call({ input }, callbacks);
       const response = chainValues.output;
+      await this.updateMemory(options, response);
       return response;
     } catch (error) {
       console.error('[AgentTools Call]', error.message)
       return error.message;
     }
+  }
+
+  async updateMemory(options: IAgentToolsOptions, output: string): Promise<IMemoryInstructionResult> {
+    const { $call, input, context, aiEmployee } = options;
+
+    const call = options.$call.value;
+    const step: IAIEmployeeCallStep = {
+      type: 'action',
+      description: 'Update Memory',
+      inputs: {
+        input,
+        output
+      },
+      outputs: {},
+      tokenUsage: 0,
+      status: 'running',
+      startAt: new Date(),
+      endAt: null
+    }
+    const index = call.steps.push(step);
+    await call.save()
+    $call.next(call)
+
+    // Update AIEmployee Memory
+    const instruction = `Check if there is any relevant information in this information to add to the database:` + JSON.stringify({ input, output })
+    const memoryInstructionResult = await aiEmployee.memoryInstruction(instruction, context)
+    console.log('memoryInstructionResult', JSON.stringify(memoryInstructionResult));
+
+    // TODO token usage
+    step.outputs = {
+      text: output,
+      memoryInstructionResult
+    };
+    step.status = 'done';
+    step.endAt = new Date();
+
+    // Update call
+    call.steps[index - 1] = step
+    await call.save()
+    $call.next(call)
+
+    return memoryInstructionResult;
   }
 
 }

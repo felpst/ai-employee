@@ -7,6 +7,7 @@ import { BehaviorSubject, Observable } from "rxjs";
 import { z } from "zod";
 import { GeneralAgent } from "../../agents/general";
 import { InformationRetrievalAgent } from "../../agents/information-retrieval";
+import { TaskExecutionAgent } from "../../agents/task-execution";
 import { INTENTIONS, intentClassifier } from "../../utils/intent-classifier/intent-classifier.util";
 
 interface StepInput {
@@ -71,14 +72,13 @@ export function run(): Observable<IAIEmployeeCall> {
 
     // Run intent classification
     const intentClassifierResult = await intentClassifier(call.input)
-    console.log(intentClassifierResult);
+    // console.log(intentClassifierResult);
 
     // TODO token usage
     stepIntentClassification.outputs = intentClassifierResult;
     stepIntentClassification.status = 'done';
     stepIntentClassification.endAt = new Date();
     call.steps[index - 1] = stepIntentClassification
-    console.log(JSON.stringify(call.steps))
     await call.save()
     $call.next(call)
 
@@ -93,19 +93,26 @@ export function run(): Observable<IAIEmployeeCall> {
     let agentCall: IAgentCall;
     switch (stepIntentClassification.outputs.intention) {
       case INTENTIONS.INFORMATION_RETRIEVAL:
-        const options = {
+        const informationRetrievalAgentOptions = {
           $call,
           question: stepIntentClassification.inputs.text,
           context: stepIntentClassification.inputs.context,
           aiEmployee: call.aiEmployee as IAIEmployee
         }
         const informationRetrievalAgent = new InformationRetrievalAgent()
-        await informationRetrievalAgent.call(options)
+        await informationRetrievalAgent.call(informationRetrievalAgentOptions)
         break;
-      // case INTENTIONS.TASK_EXECUTION:
-      //   const taskExecutionAgent = await new TaskExecutionAgent(call.aiEmployee as IAIEmployee).init()
-      //   agentCall = await taskExecutionAgent.call(stepIntentClassification.input.text, intention)
-      //   break;
+      case INTENTIONS.TASK_EXECUTION:
+        const taskExecutionAgentOptions = {
+          $call,
+          input: stepIntentClassification.inputs.text,
+          context: stepIntentClassification.inputs.context,
+          aiEmployee: call.aiEmployee as IAIEmployee,
+          intentions: [INTENTIONS.TASK_EXECUTION]
+        }
+        const taskExecutionAgent = new TaskExecutionAgent()
+        await taskExecutionAgent.call(taskExecutionAgentOptions)
+        break;
       // case INTENTIONS.CONFIGURATION_OR_CUSTOMIZATION:
       //   const configurationAgent = await new ConfigurationAgent(call.aiEmployee as IAIEmployee).init()
       //   agentCall = await configurationAgent.call(stepIntentClassification.input.text, intention)
@@ -115,6 +122,8 @@ export function run(): Observable<IAIEmployeeCall> {
         agentCall = await generalAgent.call(stepIntentClassification.inputs.text, '')
         break;
     }
+
+    // TODO update memory
 
     return call.steps[call.steps.length - 1];
   }

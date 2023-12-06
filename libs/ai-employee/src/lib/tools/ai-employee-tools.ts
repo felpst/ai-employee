@@ -21,13 +21,13 @@ export class AIEmployeeTools {
 
     const filteredToolsSettings = aiEmployee.tools.filter(toolSettings => {
       const tool = ToolsHelper.get(toolSettings.id);
-      if (tool.show) return false;
       for (const intetion of tool.intentions || []) {
         if (intentions.includes(intetion)) return true;
       }
       return false;
     })
-    const tools = AIEmployeeTools.get([...commonTools, ...filteredToolsSettings]);
+    const toolsSettings = [...commonTools, ...filteredToolsSettings]
+    const tools = AIEmployeeTools.get(toolsSettings);
     return tools;
   }
 
