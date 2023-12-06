@@ -11,6 +11,7 @@ import { NotificationsService } from '../../../services/notifications/notificati
 import { UploadsService } from '../../../services/uploads/uploads.service';
 import { UsersService } from '../../../services/users/users.service';
 import { DialogComponent } from '../../../shared/dialog/dialog.component';
+import { validatorUrl } from '../../../shared/validations';
 import { WorkspacesService } from '../../workspaces.service';
 import { KnowledgeBaseService } from '../knowledge-base.service';
 
@@ -49,11 +50,12 @@ export class KnowledgeFormComponent {
       inputType: KnowledgeTypeEnum;
     }
   ) {
+
     this.form = this.formBuilder.group({
       title: ['', [Validators.required]],
       data: ['', this.inputType === KnowledgeTypeEnum.Document ? [Validators.required] : []],
       file: ['', this.inputType === KnowledgeTypeEnum.File ? [Validators.required] : []],
-      contentUrl: ['', this.inputType === KnowledgeTypeEnum.Html ? [Validators.required] : []],
+      contentUrl: ['', this.inputType === KnowledgeTypeEnum.Html ? [Validators.required, validatorUrl] : []],
       htmlUpdateFrequency: ['', this.inputType === KnowledgeTypeEnum.Html ? [Validators.required] : []],
     });
 
@@ -281,5 +283,13 @@ export class KnowledgeFormComponent {
 
   closeModal(): void {
     this.dialogRef.close();
+  }
+
+  ensureValidation() {
+    const control = this.form.get('contentUrl');
+    control?.setValidators([validatorUrl, Validators.required]); // force validators
+    control?.updateValueAndValidity();
+
+    console.log({ form: this.form });
   }
 }

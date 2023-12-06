@@ -24,7 +24,12 @@ form {
   input {
     width: 100%;
     padding: 0.3em;
+  }
+  
+  .input-wrapper {
+    width: 100%;
     margin-bottom: 1em;
+    height: 5rem;
   }
   
   #title-input {
@@ -37,6 +42,14 @@ form {
 
   mat-select {
     width: 100px;
+  }
+
+  mat-error {
+    font-size: 12px;
+    font-weight: 500;
+    color: #d40000;
+    position: relative;
+    top: -3px
   }
   
   .website-form {

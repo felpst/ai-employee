@@ -32,10 +32,17 @@
     </div>
 
     <div *ngIf="inputType === types.Html" class="website-form">
-      <mat-label>URL*</mat-label>
-      <input matInput formControlName="contentUrl" placeholder="https://example.com" required="true" />
-      <mat-label>Update Frequency*</mat-label>
-      <input matInput formControlName="htmlUpdateFrequency" placeholder="Every Monday at 8am" required="true" />
+      <div class="input-wrapper">
+        <mat-label>URL*</mat-label>
+        <input matInput formControlName="contentUrl" (change)="ensureValidation()" placeholder="https://example.com"
+          required="true" />
+        <mat-error *ngIf="true && form.controls['contentUrl'].errors; let errors">{{ errors?.['invalidUrl']
+          }}</mat-error>
+      </div>
+      <div class="input-wrapper">
+        <mat-label>Update Frequency*</mat-label>
+        <input matInput formControlName="htmlUpdateFrequency" placeholder="Every Monday at 8am" required="true" />
+      </div>
     </div>
   </form>
 </mat-dialog-content>
