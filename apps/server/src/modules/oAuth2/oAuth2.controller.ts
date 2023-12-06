@@ -25,7 +25,7 @@ class OAuth2Controller {
 
             res.send('Token Success! You can close this window.');
         } catch (error) {
-            console.error('Token Error', error);
+            console.error('Token Error:', error);
             res.status(500).send('One error is ocurred');
         }
     }
