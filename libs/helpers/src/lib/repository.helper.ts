@@ -99,7 +99,7 @@ export class RepositoryHelper<T extends any | any[]> {
   }
 
   // Delete document
-  public async delete(_id: string): Promise<T> {
+  public async delete(_id: string) {
     const deleted = await this.model.findByIdAndDelete(_id);
     if (!deleted) {
       throw new Error('Document not found');
