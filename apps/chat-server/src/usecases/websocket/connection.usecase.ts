@@ -1,4 +1,4 @@
-import { Agent, IAIEmployee, IChatMessage, IChatRoom, IUser } from '@cognum/interfaces';
+import { IAIEmployee, IChatMessage, IChatRoom, IUser } from '@cognum/interfaces';
 import { WebSocket } from 'ws';
 import { IMessage } from '../../interfaces/message.interface';
 import { sessionsService } from '../../services/sessions.service';
@@ -67,11 +67,6 @@ export class Connection {
 
   setAIEmployee(aiEmployee: IAIEmployee) {
     this.session.aiEmployee = aiEmployee;
-    sessionsService.set(this.session);
-  }
-
-  setAgent(agent: Agent) {
-    this.session.agent = agent;
     sessionsService.set(this.session);
   }
 

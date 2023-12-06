@@ -8,6 +8,7 @@ import { ChatComponent } from '../../chats/chat/chat.component';
 import { ChatService } from '../../chats/chat/chat.service';
 import { ChatsService } from '../../chats/chats.service';
 import { AIToolAddComponent } from './tool-add/tool-add.component';
+import { AIToolSettingsLinkedInLeadScraperComponent } from './tool-settings/linkedin-lead-scraper/tool-settings-linkedin-lead-scraper.component';
 import { AIToolSettingsMailSenderComponent } from './tool-settings/mail-sender/tool-settings-mail-sender.component';
 import { AIToolSettingsSQLConnectorComponent } from './tool-settings/sql-connector/tool-settings-sql-connector.component';
 
@@ -48,7 +49,11 @@ export class AIEmployeeToolsComponent {
       case 'mail-sender':
         component = AIToolSettingsMailSenderComponent;
         break;
+      case 'linkedin-lead-scraper':
+        component = AIToolSettingsLinkedInLeadScraperComponent;
+        break;
     }
+
     if (component) {
       const dialogRef = this.dialog.open(component, { width: '400px', data: { tool } });
       dialogRef.afterClosed().subscribe((data) => {
@@ -109,6 +114,7 @@ export class AIEmployeeToolsComponent {
       'mail-sender': 'Send test email to: ',
       'python': 'What is the 5th element of the Fibonacci sequence?',
       'sql-connector': 'Connect to a SQL database',
+      'linkedin-lead-scraper': 'Find 5 leads on LinkedIn: Web Developers in Brazil',
     };
     return testMessages[tool.id] || '';
   }

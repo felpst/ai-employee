@@ -1,5 +1,5 @@
-export * from './agent.interface';
-export * from './ai-employee.interface';
+export * from './ai-employee';
+export * from './ai-employee/agent.interface';
 export * from './chats';
 export * from './data-source.interface';
 export * from './default.model';

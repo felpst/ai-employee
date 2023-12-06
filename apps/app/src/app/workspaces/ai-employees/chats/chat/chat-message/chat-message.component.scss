@@ -19,13 +19,13 @@
     }
   }
 
-  .tasks {
+  .steps {
     width: 100%;
     display: flex;
     flex-direction: column;
     gap: 16px;
 
-    .task {
+    .step {
       display: flex;
       flex-direction: row;
       align-items: start;
@@ -58,6 +58,12 @@
       .info {
         display: flex;
         flex-direction: column;
+
+        div {
+          display: flex;
+          flex-direction: row;
+          align-items: center;
+        }
       }
     }
   }
