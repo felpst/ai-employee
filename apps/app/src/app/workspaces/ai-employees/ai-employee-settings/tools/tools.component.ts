@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ToolsHelper } from '@cognum/helpers';
 import { IChatRoom } from '@cognum/interfaces';
@@ -10,16 +10,18 @@ import { ChatsService } from '../../chats/chats.service';
 import { AIToolAddComponent } from './tool-add/tool-add.component';
 import { AIToolSettingsMailSenderComponent } from './tool-settings/mail-sender/tool-settings-mail-sender.component';
 import { AIToolSettingsSQLConnectorComponent } from './tool-settings/sql-connector/tool-settings-sql-connector.component';
+import { ToolsService } from './tools.service';
 
 @Component({
   selector: 'cognum-ai-employee-tools',
   templateUrl: './tools.component.html',
   styleUrls: ['./tools.component.scss'],
 })
-export class AIEmployeeToolsComponent {
+export class AIEmployeeToolsComponent implements OnInit {
   constructor(
     private dialog: MatDialog,
     private aiEmployeeService: AIEmployeesService,
+    private toolsService: ToolsService,
     private chatsService: ChatsService,
     private chatService: ChatService
   ) { }
@@ -31,6 +33,13 @@ export class AIEmployeeToolsComponent {
       icon: ToolsHelper.get(tool.id)?.icon,
       description: ToolsHelper.get(tool.id)?.description,
     }));
+  }
+
+  ngOnInit() {
+    this.toolsService.toolSelected.subscribe(tool => {
+      const index = this.tools.findIndex(t => t.id === tool.id);
+      this.onSelect(index);
+    });
   }
 
   addTool() {
@@ -111,6 +120,16 @@ export class AIEmployeeToolsComponent {
       'sql-connector': 'Connect to a SQL database',
     };
     return testMessages[tool.id] || '';
+  }
+
+  areToolSettingsFilled(index: number): boolean {
+    const tool = this.aiEmployeeService.aiEmployee.tools[index]
+    const toolsWithoutSettings = ['calculator', 'random-number', 'google-search', 'web-browser', 'python'];
+
+    if (toolsWithoutSettings.includes(tool.id)) {
+      return true;
+    }
+    return tool && tool.options && Object.keys(tool.options).length > 0;
   }
 
   onDelete(index: number) {
