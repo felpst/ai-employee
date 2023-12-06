@@ -1,4 +1,4 @@
-import { IAIEmployee, IAIEmployeeCall, IAIEmployeeCallStep, IMemoryInstructionResult } from "@cognum/interfaces";
+import { IAIEmployee, IAIEmployeeCall, IAIEmployeeCallStep } from "@cognum/interfaces";
 import { ChatModel } from "@cognum/llm";
 import { AgentExecutor, initializeAgentExecutorWithOptions } from "langchain/agents";
 import { Serialized } from "langchain/load/serializable";
@@ -134,7 +134,6 @@ export class AgentTools {
     try {
       const chainValues = await this._executor.call({ input }, callbacks);
       const response = chainValues.output;
-      await this.updateMemory(options, response);
       return response;
     } catch (error) {
       console.error('[AgentTools Call]', error.message)
@@ -142,46 +141,6 @@ export class AgentTools {
     }
   }
 
-  async updateMemory(options: IAgentToolsOptions, output: string): Promise<IMemoryInstructionResult> {
-    const { $call, input, context, aiEmployee } = options;
 
-    const call = options.$call.value;
-    const step: IAIEmployeeCallStep = {
-      type: 'action',
-      description: 'Update Memory',
-      inputs: {
-        input,
-        output
-      },
-      outputs: {},
-      tokenUsage: 0,
-      status: 'running',
-      startAt: new Date(),
-      endAt: null
-    }
-    const index = call.steps.push(step);
-    await call.save()
-    $call.next(call)
-
-    // Update AIEmployee Memory
-    const instruction = `Check if there is any relevant information in this information to add to the database:` + JSON.stringify({ input, output })
-    const memoryInstructionResult = await aiEmployee.memoryInstruction(instruction, context)
-    console.log('memoryInstructionResult', JSON.stringify(memoryInstructionResult));
-
-    // TODO token usage
-    step.outputs = {
-      text: output,
-      memoryInstructionResult
-    };
-    step.status = 'done';
-    step.endAt = new Date();
-
-    // Update call
-    call.steps[index - 1] = step
-    await call.save()
-    $call.next(call)
-
-    return memoryInstructionResult;
-  }
 
 }
