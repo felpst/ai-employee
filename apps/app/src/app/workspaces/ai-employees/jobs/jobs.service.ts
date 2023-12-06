@@ -3,7 +3,7 @@ import { HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { IAIEmployee, IJob } from '@cognum/interfaces';
 import { Observable } from 'rxjs';
-import { CoreApiService } from '../../services/apis/core-api.service';
+import { CoreApiService } from '../../../services/apis/core-api.service';
 
 @Injectable({
   providedIn: 'root',

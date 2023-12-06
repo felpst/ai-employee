@@ -1,12 +1,9 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { AdminEmployeeComponent } from '../layouts/admin-employee/admin-employee.component';
 import { AdminComponent } from '../layouts/admin/admin.component';
 import { WorkspaceAdminGuard } from './admin.guard';
-import { AIEmployeeResolver } from './ai-employees/ai-employee.resolver';
 import { WorkspaceHistoryComponent } from './history/workspace-history.component';
 import { WorkspaceHistoryResolver } from './history/workspace-history.resolver';
-import { JobsResolver } from './jobs/jobs.resolver';
 import { KnowledgeBaseComponent } from './knowledge-base/knowledge-base.component';
 import { KnowledgeBaseResolver } from './knowledge-base/knowledge-base.resolver';
 import { SettingsGeneralComponent } from './settings-workspace/general/general.component';
@@ -72,52 +69,12 @@ const routes: Routes = [
         ],
       },
 
-      // Employee
       {
-        path: 'employee',
-        component: AdminEmployeeComponent,
-        children: [
-          {
-            path: ':id',
-            resolve: [AIEmployeeResolver],
-            children: [
-              {
-                path: 'overview',
-                component: WorkspaceComponent
-              },
-              {
-                path: 'chats',
-                loadChildren: () =>
-                  import('./ai-employees/chats/chats.module').then(
-                    (m) => m.ChatsModule
-                  ),
-              },
-              {
-                path: 'jobs',
-                resolve: [JobsResolver],
-                loadChildren: () =>
-                  import('./jobs/jobs.module').then(
-                    (m) => m.JobsModule
-                  ),
-              },
-              {
-                path: 'settings',
-                loadChildren: () =>
-                  import('./ai-employees/ai-employee-settings/ai-employee-settings.module').then(
-                    (m) => m.AIEmployeeSettingsModule
-                  ),
-              },
-              {
-                path: 'history',
-                resolve: [WorkspaceHistoryResolver],
-                component: WorkspaceHistoryComponent,
-              },
-              { path: '**', redirectTo: 'overview', pathMatch: 'full' },
-            ],
-          },
-          { path: '**', redirectTo: 'overview', pathMatch: 'full' },
-        ]
-
+        path: 'ai-employees',
+        loadChildren: () =>
+          import('./ai-employees/ai-employees.module').then(
+            (m) => m.AIEmployeesModule
+          ),
       },
 
       // Admin
@@ -128,13 +85,6 @@ const routes: Routes = [
           {
             path: 'overview',
             component: WorkspaceComponent,
-          },
-          {
-            path: 'ai-employees',
-            loadChildren: () =>
-              import('./ai-employees/ai-employees.module').then(
-                (m) => m.AIEmployeesModule
-              ),
           },
           {
             path: 'history',

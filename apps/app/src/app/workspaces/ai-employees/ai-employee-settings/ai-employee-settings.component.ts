@@ -1,7 +1,8 @@
 
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import {
   FormBuilder,
+  FormGroup,
   Validators
 } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -11,24 +12,17 @@ import { NotificationsService } from '../../../services/notifications/notificati
 import { Step } from '../../../shared/stepper/stepper.component';
 import { AIEmployeesService } from '../ai-employees.service';
 
-
 @Component({
   selector: 'cognum-ai-employee-settings',
   templateUrl: './ai-employee-settings.component.html',
   styleUrls: ['./ai-employee-settings.component.scss'],
 })
-export class AIEmployeeSettingsComponent implements OnInit {
+export class AIEmployeeSettingsComponent {
   navs: Step[] = [
     { title: 'General', routerLink: './' },
     { title: 'Tools', routerLink: './tools' }
   ]
-  name = '';
-  role = '';
-  updateForm = this.formBuilder.group({
-    name: [this.name, [Validators.required]],
-    role: [this.role, [Validators.required]],
-
-  });
+  updateForm: FormGroup;
   submitting = false;
   showUpdateError = false;
   errors = [];
@@ -48,10 +42,11 @@ export class AIEmployeeSettingsComponent implements OnInit {
     private notificationsService: NotificationsService,
     private aiAIEmployeesService: AIEmployeesService
   ) {
-    this.updateForm.valueChanges.subscribe(() => {
-      this.showUpdateError = false;
-    });
 
+    this.updateForm = this.formBuilder.group({
+      name: [this.aiEmployee.name, [Validators.required]],
+      role: [this.aiEmployee.role, [Validators.required]],
+    });
   }
 
   openDeleteAiEmployeeModal() {
@@ -67,29 +62,12 @@ export class AIEmployeeSettingsComponent implements OnInit {
   }
 
   selectAvatar(avatarPath: string) {
-
     this.selectedAvatar = avatarPath;
-
     this.isAvatarSelected = true;
-
   }
 
-
-  ngOnInit() {
-    this.route.params.subscribe(params => {
-      const employeeId = params['id'];
-      this.aiAIEmployeesService.get(employeeId).subscribe({
-        next: (response) => {
-          this.name = response.name;
-          this.role = response.role;
-        },
-      });
-    });
-  }
 
   confirmDeleteAiEmployee() {
-
-
     const employeeId = this.route.snapshot.params['id'];
     const updateData: Partial<IAIEmployee> = {
       _id: employeeId,
@@ -99,8 +77,6 @@ export class AIEmployeeSettingsComponent implements OnInit {
         this.router.navigate(['/'], { relativeTo: this.route });
       },
     });
-
-
     this.showDeleteConfirmation = false;
   }
 
@@ -136,7 +112,7 @@ export class AIEmployeeSettingsComponent implements OnInit {
     this.selectedItem = itemNumber;
   }
 
-  get employee() {
+  get aiEmployee() {
     return this.aiAIEmployeesService.aiEmployee;
   }
 }

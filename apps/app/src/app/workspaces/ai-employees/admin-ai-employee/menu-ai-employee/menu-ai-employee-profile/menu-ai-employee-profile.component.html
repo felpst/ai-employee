@@ -2,8 +2,7 @@
   class="profile"
   mat-button
   [ngClass]="{ active: isActivedMenu }"
-  (click)="isActivedMenu = true"
-  #btn
+  (click)="onBack()"
 >
   <div class="content">
     <mat-icon
@@ -11,7 +10,6 @@
       aria-label="Return"
       svgIcon="arrow-left"
       class="back small"
-      (click)="onBack()"
     ></mat-icon>
     <div class="photo-container">
       <img class="photo" [src]="workspacePhoto" />

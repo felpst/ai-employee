@@ -5,8 +5,8 @@ import { MatDialog } from '@angular/material/dialog';
 
 import { ActivatedRoute } from '@angular/router';
 import { IJob } from '@cognum/interfaces';
-import { AIEmployeesService } from '../ai-employees/ai-employees.service';
-import { WorkspacesService } from '../workspaces.service';
+import { WorkspacesService } from '../../workspaces.service';
+import { AIEmployeesService } from '../ai-employees.service';
 import { JobFormComponent } from './job-form/job-form.component';
 import { JobModalComponent } from './job-modal/job-modal.component';
 import { JobsService } from './jobs.service';

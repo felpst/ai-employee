@@ -5,7 +5,7 @@ import {
   MatDialogRef
 } from '@angular/material/dialog';
 import { IJob } from '@cognum/interfaces';
-import { AIEmployeesService } from '../../ai-employees/ai-employees.service';
+import { AIEmployeesService } from '../../ai-employees.service';
 import { JobsService } from '../jobs.service';
 
 @Component({

@@ -17,7 +17,8 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MarkdownModule } from 'ngx-markdown';
 import { LMarkdownEditorModule } from 'ngx-markdown-editor';
-import { SharedModule } from '../../shared/shared.module';
+import { LayoutsModule } from '../../../layouts/layouts.module';
+import { SharedModule } from '../../../shared/shared.module';
 import { JobActionsComponent } from './job-actions/job-actions.component';
 import { JobFormComponent } from './job-form/job-form.component';
 import { JobModalComponent } from './job-modal/job-modal.component';
@@ -47,6 +48,7 @@ import { JobsRoutingModule } from './jobs-routing.module';
     MatProgressSpinnerModule,
     MatMenuModule,
     LMarkdownEditorModule,
+    LayoutsModule,
     SharedModule,
     JobsRoutingModule
   ],

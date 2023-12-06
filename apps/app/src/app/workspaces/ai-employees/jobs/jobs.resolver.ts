@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { IJob } from "@cognum/interfaces";
 import { Observable } from "rxjs";
-import { AIEmployeesService } from "../ai-employees/ai-employees.service";
+import { AIEmployeesService } from "../ai-employees.service";
 import { JobsService } from "./jobs.service";
 
 

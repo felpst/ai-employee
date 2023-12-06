@@ -7,10 +7,10 @@ import {
   MatDialogRef,
 } from '@angular/material/dialog';
 import { IJob, IUser } from '@cognum/interfaces';
-import { NotificationsService } from '../../../services/notifications/notifications.service';
-import { DialogComponent } from '../../../shared/dialog/dialog.component';
-import { inListValidator } from '../../../shared/validations';
-import { AIEmployeesService } from '../../ai-employees/ai-employees.service';
+import { NotificationsService } from 'apps/app/src/app/services/notifications/notifications.service';
+import { DialogComponent } from 'apps/app/src/app/shared/dialog/dialog.component';
+import { inListValidator } from 'apps/app/src/app/shared/validations';
+import { AIEmployeesService } from '../../ai-employees.service';
 import { JobsService } from '../jobs.service';
 
 @Component({

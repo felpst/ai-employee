@@ -1,24 +1,47 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { AdminComponent } from '../../layouts/admin/admin.component';
+import { WorkspaceComponent } from '../workspace/workspace.component';
+import { AdminAIEmployeeComponent } from './admin-ai-employee/admin-ai-employee.component';
 import { AIEmployeeResolver } from './ai-employee.resolver';
 import { AIEmployeesComponent } from './ai-employees.component';
 import { AIEmployeesResolver } from './ai-employees.resolver';
+import { JobsResolver } from './jobs/jobs.resolver';
 
 const routes: Routes = [
   {
     path: '',
-    resolve: [AIEmployeesResolver],
-    component: AIEmployeesComponent,
+    component: AdminComponent,
+    children: [
+      {
+        path: '',
+        resolve: [AIEmployeesResolver],
+        component: AIEmployeesComponent,
+      }
+    ]
   },
   {
     path: ':id',
+    component: AdminAIEmployeeComponent,
     resolve: [AIEmployeeResolver],
     children: [
+      {
+        path: 'overview',
+        component: WorkspaceComponent
+      },
       {
         path: 'chats',
         loadChildren: () =>
           import('./chats/chats.module').then(
             (m) => m.ChatsModule
+          ),
+      },
+      {
+        path: 'jobs',
+        resolve: [JobsResolver],
+        loadChildren: () =>
+          import('./jobs/jobs.module').then(
+            (m) => m.JobsModule
           ),
       },
       {
@@ -28,7 +51,7 @@ const routes: Routes = [
             (m) => m.AIEmployeeSettingsModule
           ),
       },
-      { path: '**', redirectTo: 'settings', pathMatch: 'full' },
+      { path: '**', redirectTo: 'overview', pathMatch: 'full' },
     ],
   },
   { path: '**', redirectTo: '', pathMatch: 'full' },

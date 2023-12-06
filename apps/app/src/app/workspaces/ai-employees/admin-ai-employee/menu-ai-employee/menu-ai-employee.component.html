@@ -1,0 +1,22 @@
+<div class="cognum-menu">
+  <header>
+    <cognum-menu-ai-employee-profile></cognum-menu-ai-employee-profile>
+
+    <div class="cognum-menu-divisor"></div>
+
+    <cognum-menu-ai-employee-items></cognum-menu-ai-employee-items>
+  </header>
+
+  <footer>
+    <div>
+      <button mat-menu-item>
+        <div class="account" routerLink="/account">
+          <cognum-users-avatar [users]="[user]"></cognum-users-avatar>
+          <div class="cognum-text truncate">
+            {{ user.name }}
+          </div>
+        </div>
+      </button>
+    </div>
+  </footer>
+</div>

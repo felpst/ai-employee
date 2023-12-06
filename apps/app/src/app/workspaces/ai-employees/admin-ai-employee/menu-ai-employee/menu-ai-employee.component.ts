@@ -5,16 +5,16 @@ import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { IUser } from '@cognum/interfaces';
-import { AuthService } from '../../auth/auth.service';
-import { AIEmployeesService } from '../../workspaces/ai-employees/ai-employees.service';
-import { WorkspacesService } from '../../workspaces/workspaces.service';
+import { AuthService } from 'apps/app/src/app/auth/auth.service';
+import { WorkspacesService } from '../../../workspaces.service';
+import { AIEmployeesService } from '../../ai-employees.service';
 
 @Component({
-  selector: 'cognum-menu-employee',
-  templateUrl: './menu-employee.component.html',
-  styleUrls: ['./menu-employee.component.scss'],
+  selector: 'cognum-menu-ai-employee',
+  templateUrl: './menu-ai-employee.component.html',
+  styleUrls: ['./menu-ai-employee.component.scss'],
 })
-export class MenuEmployeeComponent implements OnDestroy {
+export class MenuAIEmployeeComponent implements OnDestroy {
   mobileQuery: MediaQueryList;
   isLoading = true;
   showMenu = false;

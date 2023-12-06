@@ -1,9 +1,9 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { IJob } from '@cognum/interfaces';
-import { DialogComponent } from '../../../shared/dialog/dialog.component';
-import { AIEmployeesService } from '../../ai-employees/ai-employees.service';
-import { WorkspacesService } from '../../workspaces.service';
+import { DialogComponent } from 'apps/app/src/app/shared/dialog/dialog.component';
+import { WorkspacesService } from '../../../workspaces.service';
+import { AIEmployeesService } from '../../ai-employees.service';
 import { JobFormComponent } from '../job-form/job-form.component';
 import { JobsService } from '../jobs.service';
 
@@ -22,9 +22,7 @@ export class JobActionsComponent {
     private jobsService: JobsService,
     private workspacesService: WorkspacesService,
     private employeesService: AIEmployeesService
-  ) {
-
-  }
+  ) { }
 
   onForm(job?: IJob) {
     const dialogRef = this.dialog.open(JobFormComponent, {
