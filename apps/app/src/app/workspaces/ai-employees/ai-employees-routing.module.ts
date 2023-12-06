@@ -3,6 +3,8 @@ import { RouterModule, Routes } from '@angular/router';
 import { AdminComponent } from '../../layouts/admin/admin.component';
 import { WorkspaceComponent } from '../workspace/workspace.component';
 import { AdminAIEmployeeComponent } from './admin-ai-employee/admin-ai-employee.component';
+import { AIEmployeeMemoryComponent } from './ai-employee-memory/ai-employee-memory.component';
+import { AIEmployeeMemoryResolver } from './ai-employee-memory/ai-employee-memory.resolver';
 import { AIEmployeeResolver } from './ai-employee.resolver';
 import { AIEmployeesComponent } from './ai-employees.component';
 import { AIEmployeesResolver } from './ai-employees.resolver';
@@ -43,6 +45,11 @@ const routes: Routes = [
           import('./jobs/jobs.module').then(
             (m) => m.JobsModule
           ),
+      },
+      {
+        path: 'memory',
+        resolve: [AIEmployeeMemoryResolver],
+        component: AIEmployeeMemoryComponent
       },
       {
         path: 'settings',

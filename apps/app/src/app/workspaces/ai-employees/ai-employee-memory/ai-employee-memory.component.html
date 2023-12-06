@@ -1,0 +1,32 @@
+<div class="page">
+  <div class="header">
+    <div class="">
+      <h2>{{ aiEmployee.name }}'s Memory</h2>
+    </div>
+
+    <div class="controls">
+      <button
+        mat-raised-button
+        color="primary"
+        (click)="openForm()"
+        class="new-info-btn"
+      >
+        <mat-icon>add</mat-icon>
+        New Memory
+      </button>
+    </div>
+  </div>
+
+  <div class="knowledges">
+    <ng-container *ngFor="let item of memory; let i = index">
+      <mat-card (click)="openForm(i, item)" class="knowledge-card" mat-ripple>
+        <mat-card-content>
+          <p>{{ item.pageContent }}</p>
+        </mat-card-content>
+      </mat-card>
+    </ng-container>
+  </div>
+  <div *ngIf="memory.length === 0">
+    <p style="text-align: center">AI Employee Memory is Empty</p>
+  </div>
+</div>

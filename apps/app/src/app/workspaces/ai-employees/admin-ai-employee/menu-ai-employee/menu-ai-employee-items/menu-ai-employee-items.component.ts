@@ -32,6 +32,11 @@ export class MenuAIEmployeeItemsComponent {
       text: 'Jobs',
       icon: 'cognum-unordered-list',
     },
+    {
+      path: 'memory',
+      text: 'Memory',
+      icon: 'cognum-unordered-list',
+    },
     // {
     //   path: 'history',
     //   text: 'History',
