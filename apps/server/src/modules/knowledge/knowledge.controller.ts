@@ -17,6 +17,7 @@ export class KnowledgeController extends ModelController<typeof Knowledge> {
     super(Knowledge);
     this.addOpenAIFile = this.addOpenAIFile.bind(this);
     this.replaceOpenAIFile = this.replaceOpenAIFile.bind(this);
+    this.cronUpdate = this.cronUpdate.bind(this);
   }
 
   private async _generateTitle(data: string) {
@@ -308,6 +309,33 @@ export class KnowledgeController extends ModelController<typeof Knowledge> {
           await this.addOpenAIFile(req, _, next);
         });
       else next();
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  public async cronUpdate(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const { id } = req.params;
+      const { title, contentUrl, openaiFileId } = await Knowledge
+        .findById(id)
+        .select(['title', 'contentUrl', 'openaiFileId']);
+
+      const fileName = this._textToFilename(title, 'html');
+      const content = await fetch(contentUrl)
+        .then(response => response.text());
+
+      const openaiFileSvc = new OpenAIFileService();
+      await openaiFileSvc.delete(openaiFileId);
+      const newFile = await openaiFileSvc.create(fileName, content);
+
+      const result = await Knowledge.findByIdAndUpdate(id, {
+        $set: {
+          openaiFileId: newFile.id
+        }
+      });
+
+      res.json(result);
     } catch (error) {
       next(error);
     }
