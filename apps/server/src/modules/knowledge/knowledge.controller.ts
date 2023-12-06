@@ -234,10 +234,7 @@ export class KnowledgeController extends ModelController<typeof Knowledge> {
             schedule: knowledge.htmlUpdateFrequency,
             appEngineHttpTarget: {
               httpMethod: 'PATCH',
-              relativeUri: `/knowledges/${knowledgeId}/scheduled-update`,
-              body: JSON.stringify({
-                url: knowledge.contentUrl
-              })
+              relativeUri: `/knowledges/${knowledgeId}/scheduled-update`
             }
           });
 
