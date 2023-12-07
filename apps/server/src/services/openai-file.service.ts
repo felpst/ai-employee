@@ -8,10 +8,10 @@ export default class OpenAIFileService {
   }
 
   async create(fileName: string, content: string | Buffer) {
-    fs.writeFileSync(`tmp/${fileName}`, content);
+    fs.writeFileSync(`/tmp/${fileName}`, content);
 
     return this._client.create({
-      file: fs.createReadStream(`tmp/${fileName}`),
+      file: fs.createReadStream(`/tmp/${fileName}`),
       purpose: 'assistants'
     });
   }

@@ -6,7 +6,8 @@ export default class SchedulerService {
   private _parent = 'projects/cognum/locations/us-central1';
   constructor() {
     this._client = new CloudSchedulerClient({
-      keyFilename: 'cognum.secrets.json'
+      keyFilename: process.env.PROD === 'true' ? undefined : 'cognum.secrets.json',
+      projectId: 'cognum',
     });
   }
 
