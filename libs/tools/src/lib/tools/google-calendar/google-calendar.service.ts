@@ -13,7 +13,6 @@ export class GoogleCalendarService {
 
         const calendar = google.calendar({ version: 'v3', auth: this.oAuth2Client });
         const res = await calendar.events.list(options);
-        console.log(res.data)
         const events = res.data.items;
         if (!events || events.length === 0) {
             return 'No upcoming events found.';
@@ -24,6 +23,8 @@ export class GoogleCalendarService {
             return { id, summary, start };
         });
         const json = JSON.stringify(results);
+        console.log(json);
+
         return json;
     }
 
@@ -33,7 +34,9 @@ export class GoogleCalendarService {
             calendarId: 'primary',
             requestBody: event,
         });
-        return res.statusText;
+        if (res.status === 200) {
+            return 'Event created Successfully';
+        }
     }
 
     async updateEvent(eventId: string, event: calendar_v3.Schema$Event) {
@@ -43,7 +46,10 @@ export class GoogleCalendarService {
             eventId,
             requestBody: event,
         });
-        return res.statusText;
+        console.log(res)
+        if (res.status === 200) {
+            return 'Event updated Successfully';
+        }
 
     }
 
@@ -53,19 +59,41 @@ export class GoogleCalendarService {
             calendarId: 'primary',
             eventId,
         });
-        return res.statusText;
+        if (res.status === 204) {
+            return 'Event deleted Successfully';
+        }
     }
 
 
 };
-const token = "ya29.a0AfB_byBdUway3wd36iWiCVp2Uv_zytzALBXyWQmSBEtCmanWz4WI8_zC3AtzvWYQ7fVw5pSfquhC083IrW3x12pOnydxQ48roAOv06mehdvXVG83p02KldMBBufbj30Hxb9YFkER-hjW-baFf-puxQtE8fgVX_jOBvQaCgYKAZwSARMSFQHGX2MiQWuRC1LtT3zwvzj_qCbQ3g0170"
+// const token = "ya29.a0AfB_byDIYr-SPkoKL-vR4epe9gG22au53GvTngHgwKirfd297VezGCNsPqFi6tOf6dpMmiGfTvuq5NMy6uTHrvqT_02aRhH5nYWV1D0HK6nSGE6nQ_IEpW7uZWPY_5HA_ATQpfvzMTB4oWiUKsl0SfnpwYzF1SodHtsaCgYKAW0SARMSFQHGX2MixM1ksS8ZDRMeim7JZjALFw0170"
 
-const googleService = new GoogleCalendarService(token)
-const options = {
-    calendarId: 'primary',
-    timeMin: new Date().toISOString(),
-    maxResults: 10,
-    singleEvents: true,
-    orderBy: 'startTime',
-}
-googleService.listEvents(options)
+// const googleService = new GoogleCalendarService(token)
+// const options = {
+//     calendarId: 'primary',
+//     timeMin: new Date().toISOString(),
+//     maxResults: 10,
+//     singleEvents: true,
+//     orderBy: 'startTime',
+// }
+// googleService.listEvents(options)
+
+// const options = {
+//     summary: 'Google I/O 2015',
+//     location: '800 Howard St., San Francisco, CA 94103',
+//     description: 'A chance to hear more about Google\'s developer products.',
+//     start: {
+//         dateTime: '2023-12-08T09:00:00-07:00',
+//         timeZone: 'America/Los_Angeles'
+//     },
+//     end: {
+//         dateTime: '2023-12-08T17:00:00-07:00',
+//         timeZone: 'America/Los_Angeles'
+//     },
+//     attendees: [
+//         { email: 'devrenatorodrigues@gmail.com' },
+//     ],
+// }
+// const eventId = "3rsq8694pesbav04s3vh5l2is0"
+// googleService.updateEvent(eventId, options)
+// googleService.deleteEvent(eventId)

@@ -1,3 +1,4 @@
+import { calendar_v3 } from 'googleapis';
 import { DynamicStructuredTool } from 'langchain/tools';
 import { z } from 'zod';
 import { GoogleCalendarService } from './google-calendar.service';
@@ -16,7 +17,7 @@ export class GoogleCalendarListEventsTool extends DynamicStructuredTool {
             func: async ({ maxResults, orderBy }) => {
                 try {
                     const googleCalendarService = new GoogleCalendarService(token);
-                    const options = {
+                    const options: calendar_v3.Params$Resource$Events$List = {
                         calendarId: 'primary',
                         timeMin: new Date().toISOString(),
                         singleEvents: true,

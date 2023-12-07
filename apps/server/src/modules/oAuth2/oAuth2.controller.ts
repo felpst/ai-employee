@@ -23,9 +23,8 @@ class OAuth2Controller {
             const { tokens } = await OAuth2Service.getToken(code);
             console.log('Access Token:', tokens.access_token);
 
-            res.send('Token Success! You can close this window.');
+            res.status(200).json(tokens.access_token);
         } catch (error) {
-            console.error('Token Error:', error);
             res.status(500).send('One error is ocurred');
         }
     }

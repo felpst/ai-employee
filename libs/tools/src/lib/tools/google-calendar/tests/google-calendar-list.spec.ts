@@ -2,11 +2,11 @@ import 'dotenv/config';
 import {
     AgentExecutor
 } from 'langchain/agents';
-import { agentTest } from '../../tests/agent-test';
-import { GoogleCalendarListEventsTool } from './google-calendar-list-events.tool';
+import { agentTest } from '../../../tests/agent-test';
+import { GoogleCalendarListEventsTool } from '../google-calendar-list-events.tool';
 
 
-describe('LinkedInLeadScraperTool test', () => {
+describe('GoogleCalendarTools test', () => {
     jest.setTimeout(300000)
     let executor!: AgentExecutor;
 
@@ -18,10 +18,10 @@ describe('LinkedInLeadScraperTool test', () => {
         executor = await agentTest(tools);
     });
 
-    it('should return list of leads', async () => {
+    it('should return list of events', async () => {
         const result = await executor.call({ input: 'Get the next 30 events in my google calendar and order by start time' });
         console.log(result.output);
-        expect(result.output).toContain('Here are some leads')
+        expect(result.output).toContain('Event list:')
     })
 
 });
