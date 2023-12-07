@@ -11,14 +11,14 @@ export class GoogleCalendarUpdateEventTool extends DynamicStructuredTool {
             description:
                 'Use this tool to update events from Google Calendar, you can use the google calendar list tool to get the event id.',
             schema: z.object({
-                eventId: z.string().describe('id of event to update'),
-                startTime: z.string().describe("start time of event, the format is 'YYYY-MM-DDTHH:MM:SS'"),
-                endTime: z.string().describe("end time of event, the format is 'YYYY-MM-DDTHH:MM:SS'"),
-                summary: z.string().describe('summary of event'),
-                location: z.string().describe('location of event'),
-                description: z.string().describe('description of event'),
-                timeZone: z.string().describe('time zone of event, the format is "America/Los_Angeles"'),
-                attendees: z.array(z.object({ email: z.string() })).describe('Event participants must be represented by an array of objects, where each object contains an unquoted email key associated with a value that represents an email address"'),
+                eventId: z.string().optional().describe('ID of event to update'),
+                startTime: z.string().optional().describe("Start time of event, format: 'YYYY-MM-DDTHH:MM:SS'"),
+                endTime: z.string().optional().describe("End time of event, format: 'YYYY-MM-DDTHH:MM:SS'"),
+                summary: z.string().optional().describe('Summary of event'),
+                location: z.string().optional().describe('Location of event'),
+                description: z.string().optional().describe('Description of event'),
+                timeZone: z.string().optional().describe('Time zone of event, format: "America/Los_Angeles"'),
+                attendees: z.array(z.object({ email: z.string() })).optional().describe('Event participants represented by an array of objects, where each object contains an email key associated with an email address'),
 
             }),
             func: async ({
@@ -34,19 +34,23 @@ export class GoogleCalendarUpdateEventTool extends DynamicStructuredTool {
                 try {
                     const googleCalendarService = new GoogleCalendarService(token);
                     const options: calendar_v3.Schema$Event = {
-                        summary,
-                        location,
-                        description,
-                        start: {
-                            dateTime: startTime,
-                            timeZone,
-                        },
-                        end: {
-                            dateTime: endTime,
-                            timeZone,
-                        },
-                        attendees,
-                    }
+                        ...(summary && { summary }),
+                        ...(location && { location }),
+                        ...(description && { description }),
+                        ...(startTime && timeZone && {
+                            start: {
+                                dateTime: startTime,
+                                timeZone,
+                            },
+                        }),
+                        ...(endTime && timeZone && {
+                            end: {
+                                dateTime: endTime,
+                                timeZone,
+                            },
+                        }),
+                        ...(attendees && { attendees }),
+                    };
                     const updateEvent = await googleCalendarService.updateEvent(eventId, options);
                     return updateEvent;
                 } catch (error) {

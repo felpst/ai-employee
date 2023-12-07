@@ -25,7 +25,6 @@ export class GoogleCalendarListEventsTool extends DynamicStructuredTool {
                         orderBy,
                     }
                     const eventList = await googleCalendarService.listEvents(options);
-                    console.log(eventList);
                     return "Events list: \n```json\n" + eventList + "\n```";
                 } catch (error) {
                     return error.message;

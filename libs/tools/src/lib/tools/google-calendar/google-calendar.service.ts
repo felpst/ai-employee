@@ -41,7 +41,7 @@ export class GoogleCalendarService {
 
     async updateEvent(eventId: string, event: calendar_v3.Schema$Event) {
         const calendar = google.calendar({ version: 'v3', auth: this.oAuth2Client });
-        const res = await calendar.events.update({
+        const res = await calendar.events.patch({
             calendarId: 'primary',
             eventId,
             requestBody: event,

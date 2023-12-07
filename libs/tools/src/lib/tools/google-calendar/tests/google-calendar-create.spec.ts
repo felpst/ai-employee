@@ -11,7 +11,7 @@ describe('GoogleCalendarTools test', () => {
     let executor!: AgentExecutor;
 
     beforeAll(async () => {
-        const token = "ya29.a0AfB_byBM8nXThCVR1yAisO6ql1Oe5j2EVjMIbFQQm9BiuX8NVbRT2_a8hCaFtAR2hvEc7x2ys191YNZyJy04Q1jOStoMuRLd0LVD0sza45Xit5-bAhHi1ynRpQz0O1iwqioQMcxmTMzydYBIgclcgISIjSd0JWUq0YIaCgYKAQkSARMSFQHGX2MiYgwECN9xLp7pXmMOCIYr1w0170"
+        const token = "ya29.a0AfB_byCSsE76jRGa1IC-4RTI9iqxPijt-jywZJIDcXTxX5hXjKw-hzYUMAoHWcxX19HpCsyXZGwo-xFTXT36NuNTH0WhlNEBAnhpURTEWkAqjFprglBxdr3XOUP8XAAdY3LcGvbY88nipxyoN4WPdzDVmdBuaYAjwL0aCgYKAXgSARMSFQHGX2MihtyexKnQ-UYzLN-CmrFXtA0170"
         const tools = [
             new GoogleCalendarCreateEventTool(token)
         ];

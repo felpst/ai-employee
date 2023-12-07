@@ -3,8 +3,8 @@ import { google } from 'googleapis';
 class OAuth2Service {
     private credentials = {
         client: {
-            id: "406835646817-0s22gb6hb6pg1uac6cgp1drvopusihqa.apps.googleusercontent.com",
-            secret: "***REMOVED***",
+            id: process.env.GOOGLE_CLIENT_ID,
+            secret: process.env.GOOGLE_CLIENT_SECRET,
         },
         callbackURL: 'http://localhost:3001/tools-settings/auth2/google/callback',
     }

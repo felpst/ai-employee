@@ -13,11 +13,11 @@ export class GoogleCalendarCreateEventTool extends DynamicStructuredTool {
             schema: z.object({
                 startTime: z.string().describe("start time of event, the format is 'YYYY-MM-DDTHH:MM:SS'"),
                 endTime: z.string().describe("end time of event, the format is 'YYYY-MM-DDTHH:MM:SS'"),
-                summary: z.string().describe('summary of event'),
-                location: z.string().describe('location of event'),
-                description: z.string().describe('description of event'),
-                timeZone: z.string().describe('time zone of event, the format is "America/Los_Angeles"'),
-                attendees: z.array(z.object({ email: z.string() })).describe('Event participants must be represented by an array of objects, where each object contains an unquoted email key associated with a value that represents an email address"'),
+                summary: z.string().optional().describe('summary of event'),
+                location: z.string().optional().describe('location of event'),
+                description: z.string().optional().describe('description of event'),
+                timeZone: z.string().optional().describe('time zone of event, the format is "America/Los_Angeles"'),
+                attendees: z.array(z.object({ email: z.string() })).optional().describe('Event participants must be represented by an array of objects, where each object contains an unquoted email key associated with a value that represents an email address"'),
 
             }),
             func: async ({
