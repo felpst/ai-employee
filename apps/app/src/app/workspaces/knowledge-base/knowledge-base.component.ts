@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 
 import { ActivatedRoute } from '@angular/router';
-import { IKnowledge, IWorkspace } from '@cognum/interfaces';
+import { IKnowledge, IWorkspace, KnowledgeTypeEnum } from '@cognum/interfaces';
 import { AuthService } from '../../auth/auth.service';
 import { NotificationsService } from '../../services/notifications/notifications.service';
 import { WorkspacesService } from '../workspaces.service';
@@ -45,13 +45,22 @@ export class KnowledgeBaseComponent implements OnInit {
     });
   }
 
+  public get types() {
+    return KnowledgeTypeEnum;
+  }
+
   onForm(knowledge?: IKnowledge) {
     const chooseFormDialog = this.dialog.open(KnowledgeChooseFormDialogComponent);
+    const formWidth: Record<KnowledgeTypeEnum, string> = {
+      doc: '640px',
+      file: '420px',
+      html: '500px'
+    };
 
-    chooseFormDialog.afterClosed().subscribe((pick: 'file' | 'document') => {
+    chooseFormDialog.afterClosed().subscribe((pick: KnowledgeTypeEnum) => {
       if (pick) {
         const dialogRef = this.dialog.open(KnowledgeFormComponent, {
-          width: pick === 'document' ? '640px' : '420px',
+          width: formWidth[pick],
           data: { knowledge, workspace: this.workspace, inputType: pick },
         });
 
@@ -77,7 +86,7 @@ export class KnowledgeBaseComponent implements OnInit {
 
     this.searchText = searchText;
     this.knowledgeBases = this.knowledgeBases.filter(knowledge =>
-      knowledge.data.toLowerCase().includes(searchText)
+      knowledge.data?.toLowerCase().includes(searchText)
     );
   }
 

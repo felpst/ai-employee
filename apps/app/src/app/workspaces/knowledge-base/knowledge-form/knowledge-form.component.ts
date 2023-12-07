@@ -5,12 +5,13 @@ import {
   MatDialog,
   MatDialogRef,
 } from '@angular/material/dialog';
-import { IKnowledge, IUser, IWorkspace } from '@cognum/interfaces';
+import { IKnowledge, IUser, IWorkspace, KnowledgeTypeEnum } from '@cognum/interfaces';
 import { AuthService } from '../../../auth/auth.service';
 import { NotificationsService } from '../../../services/notifications/notifications.service';
 import { UploadsService } from '../../../services/uploads/uploads.service';
 import { UsersService } from '../../../services/users/users.service';
 import { DialogComponent } from '../../../shared/dialog/dialog.component';
+import { validatorUrl } from '../../../shared/validations';
 import { WorkspacesService } from '../../workspaces.service';
 import { KnowledgeBaseService } from '../knowledge-base.service';
 
@@ -22,7 +23,7 @@ import { KnowledgeBaseService } from '../knowledge-base.service';
 export class KnowledgeFormComponent {
   knowledge: IKnowledge | undefined;
   workspace!: IWorkspace;
-  inputType!: 'document' | 'file';
+  inputType!: KnowledgeTypeEnum;
   members: IUser[] = [];
   fileName: string | undefined;
   form!: FormGroup;
@@ -46,13 +47,16 @@ export class KnowledgeFormComponent {
     private data: {
       knowledge: IKnowledge;
       workspace: IWorkspace;
-      inputType: 'document' | 'file';
+      inputType: KnowledgeTypeEnum;
     }
   ) {
+
     this.form = this.formBuilder.group({
       title: ['', [Validators.required]],
-      data: ['', this.inputType === 'document' ? [Validators.required] : []],
-      file: ['', this.inputType === 'file' ? [Validators.required] : []],
+      data: ['', this.inputType === KnowledgeTypeEnum.Document ? [Validators.required] : []],
+      file: ['', this.inputType === KnowledgeTypeEnum.File ? [Validators.required] : []],
+      contentUrl: ['', this.inputType === KnowledgeTypeEnum.Html ? [Validators.required, validatorUrl] : []],
+      htmlUpdateFrequency: ['', this.inputType === KnowledgeTypeEnum.Html ? [Validators.required] : []],
     });
 
     this.initializeForm();
@@ -60,12 +64,16 @@ export class KnowledgeFormComponent {
     this.workspace = this.workspaceService.selectedWorkspace;
   }
 
+  public get types() {
+    return KnowledgeTypeEnum;
+  }
+
   initializeForm(): void {
     if (this.data.knowledge) {
       this.knowledge = this.data.knowledge;
       this.form.patchValue(this.data.knowledge);
 
-      this.inputType = this.knowledge.data ? 'document' : 'file';
+      this.inputType = this.knowledge.type;
       if (this.inputType === 'file') this.fileName = this.knowledge.description;
     } else {
       this.inputType = this.data.inputType;
@@ -82,14 +90,13 @@ export class KnowledgeFormComponent {
   async onSave() {
     this.isLoading = true;
     const data = this.form.value;
-    const isFile = this.inputType === 'file';
+    const isFile = this.inputType === KnowledgeTypeEnum.File;
 
-    let fileUrl: string | undefined;
     if (isFile && data.file) {
-      fileUrl = await this.uploadFile(data.file);
+      data['contentUrl'] = await this.uploadFile(data.file);
     }
 
-    const newKnowledge = this.prepareKnowledgeObject(fileUrl);
+    const newKnowledge = this.prepareKnowledgeObject(data);
     this.saveOrUpdateKnowledge(newKnowledge);
   }
 
@@ -113,13 +120,12 @@ export class KnowledgeFormComponent {
     }
   }
 
-  private prepareKnowledgeObject(fileUrl?: string): Partial<IKnowledge> {
+  private prepareKnowledgeObject(data: Partial<IKnowledge & { file: File; }>): Partial<IKnowledge> {
     const newKnowledge: Partial<IKnowledge> = {
-      ...this.form.value,
-      isFile: this.inputType === 'file',
-      fileUrl,
-      file: undefined,
+      ...data,
+      type: this.inputType,
     };
+    delete (<IKnowledge & { file?: File; }>newKnowledge).file;
 
     if (this.knowledge) {
       return {
@@ -131,9 +137,16 @@ export class KnowledgeFormComponent {
     return { ...newKnowledge, workspace: this.workspace._id, permissions: this.getDefaultPermissions() };
   }
 
-  private saveOrUpdateKnowledge(newKnowledge: Partial<IKnowledge>) {
+  private saveOrUpdateKnowledge(newKnowledge: Partial<IKnowledge> & { timeZone?: string; }) {
     const formData = new FormData();
-    this.knowledge ? formData.append('_id', this.knowledge._id + '') : null;
+    const isUpdate = !!this.knowledge;
+
+    if (isUpdate) {
+      formData.append('_id', this.knowledge?._id + '');
+    } else if (this.inputType === KnowledgeTypeEnum.Html) {
+      newKnowledge.timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    }
+
     formData.append('json', JSON.stringify(newKnowledge));
     formData.append('file', this.form.value.file);
 
@@ -143,11 +156,11 @@ export class KnowledgeFormComponent {
 
     request.subscribe({
       next: (res) => this.handleSuccess(
-        this.knowledge ? 'Successfully updated knowledge' : 'Successfully created knowledge',
+        isUpdate ? 'Successfully updated knowledge' : 'Successfully created knowledge',
         res
       ),
       error: (error) => this.handleError(
-        this.knowledge ? 'Error updating knowledge. Please try again.' : 'Error creating knowledge. Please try again.',
+        isUpdate ? 'Error updating knowledge. Please try again.' : 'Error creating knowledge. Please try again.',
         error
       ),
     });
@@ -270,5 +283,13 @@ export class KnowledgeFormComponent {
 
   closeModal(): void {
     this.dialogRef.close();
+  }
+
+  ensureValidation() {
+    const control = this.form.get('contentUrl');
+    control?.setValidators([validatorUrl, Validators.required]); // force validators
+    control?.updateValueAndValidity();
+
+    console.log({ form: this.form });
   }
 }
