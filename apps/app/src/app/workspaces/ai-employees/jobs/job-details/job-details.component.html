@@ -1,0 +1,12 @@
+<div class="body">
+  <div class="description">
+    <h1>{{ job.name }} details</h1>
+    <span>Adjust job {{ job.name }} settings here</span>
+    <div class="cognum-white-content-w720 without-padding">
+      <div class="cognum-mb-0">
+        <cognum-tab-navigator [navs]="navs"></cognum-tab-navigator>
+      </div>
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+</div>

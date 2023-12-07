@@ -8,7 +8,6 @@ import { AIEmployeeMemoryResolver } from './ai-employee-memory/ai-employee-memor
 import { AIEmployeeResolver } from './ai-employee.resolver';
 import { AIEmployeesComponent } from './ai-employees.component';
 import { AIEmployeesResolver } from './ai-employees.resolver';
-import { JobsResolver } from './jobs/jobs.resolver';
 
 const routes: Routes = [
   {
@@ -40,7 +39,6 @@ const routes: Routes = [
       },
       {
         path: 'jobs',
-        resolve: [JobsResolver],
         loadChildren: () =>
           import('./jobs/jobs.module').then(
             (m) => m.JobsModule

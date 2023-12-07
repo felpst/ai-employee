@@ -20,15 +20,14 @@ import { LMarkdownEditorModule } from 'ngx-markdown-editor';
 import { LayoutsModule } from '../../../layouts/layouts.module';
 import { SharedModule } from '../../../shared/shared.module';
 import { JobActionsComponent } from './job-actions/job-actions.component';
+import { JobDetailsModule } from './job-details/job-details.module';
 import { JobFormComponent } from './job-form/job-form.component';
-import { JobModalComponent } from './job-modal/job-modal.component';
 import { JobsRoutingModule } from './jobs-routing.module';
 
 @NgModule({
   declarations: [
     JobsComponent,
     JobFormComponent,
-    JobModalComponent,
     JobActionsComponent
   ],
   imports: [
@@ -50,7 +49,8 @@ import { JobsRoutingModule } from './jobs-routing.module';
     LMarkdownEditorModule,
     LayoutsModule,
     SharedModule,
-    JobsRoutingModule
+    JobsRoutingModule,
+    JobDetailsModule
   ],
 })
 export class JobsModule { }

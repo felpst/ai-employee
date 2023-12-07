@@ -1,14 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @typescript-eslint/no-empty-function */
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 
-import { ActivatedRoute } from '@angular/router';
 import { IJob } from '@cognum/interfaces';
+import { LoadingService } from '../../../layouts/loading/loading.service';
 import { WorkspacesService } from '../../workspaces.service';
 import { AIEmployeesService } from '../ai-employees.service';
 import { JobFormComponent } from './job-form/job-form.component';
-import { JobModalComponent } from './job-modal/job-modal.component';
 import { JobsService } from './jobs.service';
 
 @Component({
@@ -26,17 +24,22 @@ export class JobsComponent implements OnInit {
   isLoading = true;
 
   constructor(
-    private route: ActivatedRoute,
     private jobsService: JobsService,
     private workspacesService: WorkspacesService,
     private employeesService: AIEmployeesService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private loadingService: LoadingService,
   ) { }
 
   ngOnInit(): void {
-    this.route.data.subscribe((data) => {
-      this.jobs = data['0'] as IJob[];
-      this.isLoading = false;
+    this.onLoadList();
+  }
+
+  onLoadList() {
+    this.loadingService.add('onLoadingJobs');
+    this.jobsService.load(this.employee).subscribe((data) => {
+      this.jobs = data;
+      this.loadingService.remove('onLoadingJobs');
     });
   }
 
@@ -85,18 +88,6 @@ export class JobsComponent implements OnInit {
 
   handleKnowledgeDeleted() {
     this.loadKnowledgeBase();
-  }
-
-  openKnowledgeModal(job: IJob): void {
-    const dialogRef = this.dialog.open(JobModalComponent, {
-      width: '60%',
-      height: '80%',
-      data: job,
-    });
-
-    dialogRef.afterClosed().subscribe(() => this.jobsService.load(this.employee).subscribe((jobBase) => {
-      this.jobs = jobBase;
-    }));
   }
 
   updatedTimeDifference(updatedAt: Date | undefined): string {

@@ -15,6 +15,13 @@ export class JobsService {
 
   constructor(private coreApiService: CoreApiService) { }
 
+  get(id: string, options?: any): Observable<IJob> {
+    return this.coreApiService.get(
+      `${this.route}/${id}`,
+      options
+    ) as Observable<IJob>;
+  }
+
   load(employee: IAIEmployee): Observable<IJob[]> {
     let params = new HttpParams();
     params = params.set('filter[employee]', employee._id);
@@ -33,6 +40,9 @@ export class JobsService {
         this.coreApiService.get(this.route, options) as Observable<IJob[]>
       ).subscribe({
         next: (jobs: IJob[]) => {
+          jobs.forEach((job) =>
+            this.jobs.set(job._id!, job)
+          );
           observer.next(jobs);
         },
       });
