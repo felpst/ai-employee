@@ -2,6 +2,7 @@ import { IKnowledge } from '@cognum/interfaces';
 import KnowledgeBase, { KnowledgeMetadata } from '@cognum/knowledge-base';
 import { ChatModel } from '@cognum/llm';
 import { Knowledge } from '@cognum/models';
+import { KnowledgeRetrieverService } from '@cognum/tools';
 import { NextFunction, Request, Response } from 'express';
 import fs from 'fs';
 import { LLMChain } from 'langchain/chains';
@@ -274,6 +275,19 @@ export class KnowledgeController extends ModelController<typeof Knowledge> {
           await this.addOpenAIFile(req, _, next);
         });
       else next();
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  public async askQuestionUsingAll(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const { question } = req.query;
+      const { workspaceId } = req.params;
+      const retrieverService = new KnowledgeRetrieverService({ workspaceId });
+      const text = await retrieverService.question(question.toString());
+
+      res.json({ text });
     } catch (error) {
       next(error);
     }
