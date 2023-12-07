@@ -317,10 +317,31 @@ export class KnowledgeController extends ModelController<typeof Knowledge> {
 
   public async askQuestionUsingAll(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-      const { question } = req.query;
+      const question = req.query.question?.toString();
       const { workspaceId } = req.params;
+      if (!question?.trim())
+        throw new Error('Invalid question. Question must be a non-empty string.');
+
       const retrieverService = new KnowledgeRetrieverService({ workspaceId });
-      const text = await retrieverService.question(question.toString());
+      const text = await retrieverService.question(question);
+
+      res.json({ text });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  public async askQuestionById(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const question = req.query.question?.toString();
+      const { id } = req.params;
+      if (!question?.trim())
+        throw new Error('Invalid question. Question must be a non-empty string.');
+
+      const { workspace, openaiFileId } = await Knowledge.findById(id);
+
+      const retrieverService = new KnowledgeRetrieverService({ workspaceId: `${workspace}` });
+      const text = await retrieverService.askByFileIds(question, [openaiFileId]);
 
       res.json({ text });
     } catch (error) {

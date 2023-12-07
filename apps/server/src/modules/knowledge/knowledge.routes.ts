@@ -49,6 +49,11 @@ router.delete(
   knowledgeController.deleteOpenAIFile,
   knowledgeController.delete
 );
+router.get(
+  '/:id/ask',
+  authMiddleware,
+  knowledgeController.askQuestionById
+);
 router.patch('/:id/scheduled-update', knowledgeController.cronUpdate);
 
 export default router;
