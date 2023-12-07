@@ -225,22 +225,23 @@ export class KnowledgeController extends ModelController<typeof Knowledge> {
           const knowledgeId =
             knowledge._id || new mongoose.mongo.ObjectId();
           knowledge.title ??= knowledge.contentUrl;
-          const cron = await textToCron(knowledge.htmlUpdateFrequency);
 
           fileName = this._textToFilename(knowledge.title, 'html');
           fileContent = await fetch(knowledge.contentUrl)
             .then(response => response.text());
 
-          const schedulerSvc = new SchedulerService();
-          await schedulerSvc.createJob({
-            name: `knowledge-${knowledgeId}-content-update`,
-            schedule: cron,
-            httpTarget: {
-              uri: `${process.env.SERVER_HOST}/knowledges/${knowledgeId}/scheduled-update`,
-              httpMethod: 'PATCH',
-            },
-            timeZone
-          });
+          if (knowledge.htmlUpdateFrequency) {
+            const cron = await textToCron(knowledge.htmlUpdateFrequency);
+            await new SchedulerService().createJob({
+              name: `knowledge-${knowledgeId}-content-update`,
+              schedule: cron,
+              httpTarget: {
+                uri: `${process.env.SERVER_HOST}/knowledges/${knowledgeId}/scheduled-update`,
+                httpMethod: 'PATCH',
+              },
+              timeZone
+            });
+          }
 
           knowledge.description = fileName;
         }
@@ -282,11 +283,11 @@ export class KnowledgeController extends ModelController<typeof Knowledge> {
   ): Promise<void> {
     try {
       const { id } = req.params;
-      const { openaiFileId, type } = await Knowledge
+      const { openaiFileId, htmlUpdateFrequency } = await Knowledge
         .findById(id)
-        .select(['openaiFileId', 'type']);
+        .select(['openaiFileId', 'htmlUpdateFrequency']);
 
-      if (type === KnowledgeTypeEnum.Html)
+      if (htmlUpdateFrequency)
         await new SchedulerService().deleteJob(`knowledge-${id}-content-update`);
       await new OpenAIFileService().delete(openaiFileId);
 

@@ -56,7 +56,7 @@ export class KnowledgeFormComponent {
       data: ['', this.inputType === KnowledgeTypeEnum.Document ? [Validators.required] : []],
       file: ['', this.inputType === KnowledgeTypeEnum.File ? [Validators.required] : []],
       contentUrl: ['', this.inputType === KnowledgeTypeEnum.Html ? [Validators.required, validatorUrl] : []],
-      htmlUpdateFrequency: ['', this.inputType === KnowledgeTypeEnum.Html ? [Validators.required] : []],
+      htmlUpdateFrequency: [''],
     });
 
     this.initializeForm();
