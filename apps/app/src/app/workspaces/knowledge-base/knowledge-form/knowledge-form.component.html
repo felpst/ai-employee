@@ -2,26 +2,32 @@
   <h2 mat-dialog-title>{{ knowledge ? 'Edit' : 'New' }} knowledge</h2>
   <mat-dialog-actions align="end">
     <button mat-button (click)="closeModal()" class="close-btn">
-      <mat-icon>close</mat-icon>
+      <mat-icon style="margin: 0;">close</mat-icon>
     </button>
   </mat-dialog-actions>
 </div>
 <mat-dialog-content>
   <form [formGroup]="form">
     <div>
-      <input
-        matInput
-        formControlName="title"
-        placeholder="Title"
-        required="true"
-      />
+      <input matInput formControlName="title" placeholder="Title" required="true" />
     </div>
-    <md-editor
-      formControlName="data"
-      height="300px"
-      required="true"
-      [options]="markdownOptions"
-    ></md-editor>
+    <md-editor *ngIf="inputType === 'document'" formControlName="data" height="300px" required="true"
+      [options]="markdownOptions"></md-editor>
+    <div *ngIf="inputType === 'file'" class="update-content">
+      <div class="file-container">
+        <label class="gray-content" for="knowledgeFileInput">
+          <mat-icon>{{ fileName ? 'insert_drive_file': 'upload_file'}}</mat-icon>
+          <p class="inform-style">{{ fileName || 'Attach File' }}</p>
+        </label>
+        <input class="input-style" type="file" id="knowledgeFileInput" name="knowledgeFile" accept=".pdf"
+          style="display: none" (change)="onFileSelected($event)" />
+        <div class="cognum-text-12 warning-message attachment-message">
+          <span>Valid formats: .pdf</span>
+          <span>Maximum size: 500MB</span>
+        </div>
+      </div>
+      <p class="cognum-text-12" style="width: 50px">&ensp;&ensp;</p>
+    </div>
   </form>
 </mat-dialog-content>
 <mat-dialog-actions align="end">
@@ -32,12 +38,7 @@
   <span class="spacer"></span>
 
   <button mat-button mat-dialog-close>Cancel</button>
-  <button
-    mat-raised-button
-    color="primary"
-    (click)="onSave()"
-    [disabled]="!form.valid"
-  >
+  <button mat-raised-button color="primary" (click)="onSave()" [disabled]="!form.valid">
     Save
   </button>
 </mat-dialog-actions>

@@ -1,32 +1,19 @@
 import { IAIEmployee } from '@cognum/interfaces';
-import { defaultSchemaProps, triggers } from '@cognum/models';
-import { Schema, model, models } from 'mongoose';
+import { triggers } from '@cognum/models';
+import { model, models } from 'mongoose';
+import { aiEmployeeCall } from '../methods';
+import { aiEmployeeCheckValidAnswer } from '../methods/check-valid-answer';
+import { aiEmployeeMemoryInstruction } from '../methods/memory-instruction';
+import { aiEmployeeMemorySearch } from '../methods/memory-search';
+import { aiEmployeeSchema } from '../schemas';
 
-const toolSchemaProps = {
-  id: { type: String, required: true },
-  options: {
-    type: Schema.Types.Mixed,
-    required: false,
-    default: {},
-  }
-};
+triggers(aiEmployeeSchema);
 
-const schema = new Schema<IAIEmployee>(
-  {
-    name: { type: String, default: 'Atlas' },
-    role: { type: String, default: 'Assistant' },
-    avatar: { type: String, default: 'https://storage.googleapis.com/factory-assets/avatars/Avatar1.jpeg' },
-    workspace: { type: Schema.Types.ObjectId, ref: 'Workspace' },
-    tools: { type: [toolSchemaProps], default: [] },
-    ...defaultSchemaProps,
-  },
-  {
-    timestamps: true,
-    collection: 'ai-employees',
-  }
-);
-triggers(schema);
+aiEmployeeSchema.methods.call = aiEmployeeCall;
+aiEmployeeSchema.methods.memorySearch = aiEmployeeMemorySearch;
+aiEmployeeSchema.methods.memoryInstruction = aiEmployeeMemoryInstruction;
+aiEmployeeSchema.methods.checkValidAnswer = aiEmployeeCheckValidAnswer;
 
-const AIEmployee = models['AIEmployee'] || model<IAIEmployee>('AIEmployee', schema);
+const AIEmployee = models['AIEmployee'] || model<IAIEmployee>('AIEmployee', aiEmployeeSchema);
 export { AIEmployee };
 

@@ -36,7 +36,7 @@
           Access
         </button>
       </div>
-
+      
       <div class="search-container">
         <input
           type="text"
@@ -77,7 +77,7 @@
           </div>
         </div>
 
-        <button class="subject"  (click)="onChat(chat.users[1]._id, chat)">Chat Subject</button>
+        <button class="subject"  (click)="onChat(chat.users[1]._id, chat)">{{ chat.chatName }}</button>
 
         <p class="conversation" *ngIf="chat && chat.summary">
           {{ chat.summary.slice(0, 300)

@@ -12,9 +12,9 @@
         [src]="avatar.photo"
         [title]="avatar.name"
       />
-      <span *ngIf="!avatar.photo" class="initials">
+      <div *ngIf="!avatar.photo" class="initials">
         {{ avatar.initials }}
-      </span>
+      </div>
       <mat-spinner *ngIf="loading" diameter="32"></mat-spinner>
     </div>
   </div>

@@ -1,14 +1,17 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { AdminEmployeeComponent } from '../layouts/admin-employee/admin-employee.component';
 import { AdminComponent } from '../layouts/admin/admin.component';
 import { WorkspaceAdminGuard } from './admin.guard';
+import { AIEmployeeResolver } from './ai-employees/ai-employee.resolver';
 import { WorkspaceHistoryComponent } from './history/workspace-history.component';
 import { WorkspaceHistoryResolver } from './history/workspace-history.resolver';
+import { JobsResolver } from './jobs/jobs.resolver';
 import { KnowledgeBaseComponent } from './knowledge-base/knowledge-base.component';
 import { KnowledgeBaseResolver } from './knowledge-base/knowledge-base.resolver';
+import { SettingsGeneralComponent } from './settings-workspace/general/general.component';
 import { SettingsWorkspaceComponent } from './settings-workspace/settings-workspace.component';
 import { SettingsTeamFormComponent } from './settings-workspace/team-form/team-form.component';
-import { SettingsGeneralComponent } from './settings-workspace/general/general.component';
 import { WorkspaceOnboardingAIEmployeeComponent } from './workspace-onboarding/workspace-onboarding-ai-employee/workspace-onboarding-ai-employee.component';
 import { WorkspaceOnboardingWorkspaceComponent } from './workspace-onboarding/workspace-onboarding-workspace/workspace-onboarding-workspace.component';
 import { WorkspaceOnboardingYourTeamComponent } from './workspace-onboarding/workspace-onboarding-your-team/workspace-onboarding-your-team.component';
@@ -52,7 +55,7 @@ const routes: Routes = [
       {
         path: 'settings',
         component: SettingsWorkspaceComponent,
-        canActivate:[WorkspaceAdminGuard],
+        canActivate: [WorkspaceAdminGuard],
         children: [
           {
             path: 'general',
@@ -68,6 +71,55 @@ const routes: Routes = [
           { path: '**', redirectTo: 'general', pathMatch: 'full' },
         ],
       },
+
+      // Employee
+      {
+        path: 'employee',
+        component: AdminEmployeeComponent,
+        children: [
+          {
+            path: ':id',
+            resolve: [AIEmployeeResolver],
+            children: [
+              {
+                path: 'overview',
+                component: WorkspaceComponent
+              },
+              {
+                path: 'chats',
+                loadChildren: () =>
+                  import('./ai-employees/chats/chats.module').then(
+                    (m) => m.ChatsModule
+                  ),
+              },
+              {
+                path: 'jobs',
+                resolve: [JobsResolver],
+                loadChildren: () =>
+                  import('./jobs/jobs.module').then(
+                    (m) => m.JobsModule
+                  ),
+              },
+              {
+                path: 'settings',
+                loadChildren: () =>
+                  import('./ai-employees/ai-employee-settings/ai-employee-settings.module').then(
+                    (m) => m.AIEmployeeSettingsModule
+                  ),
+              },
+              {
+                path: 'history',
+                resolve: [WorkspaceHistoryResolver],
+                component: WorkspaceHistoryComponent,
+              },
+              { path: '**', redirectTo: 'overview', pathMatch: 'full' },
+            ],
+          },
+          { path: '**', redirectTo: 'overview', pathMatch: 'full' },
+        ]
+
+      },
+
       // Admin
       {
         path: '',
@@ -97,6 +149,8 @@ const routes: Routes = [
           { path: '**', redirectTo: 'overview', pathMatch: 'full' },
         ]
       },
+
+
     ],
   },
   { path: '**', redirectTo: '/', pathMatch: 'full' },

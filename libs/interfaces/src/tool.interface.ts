@@ -3,6 +3,7 @@ export interface ITool {
   name: string;
   description: string;
   icon: string;
+  intentions?: string[];
   show: boolean;
 }
 

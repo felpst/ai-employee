@@ -11,8 +11,9 @@ import { AIEmployeeSettingsRoutingModule } from './ai-employee-settings-routing.
 import { AIEmployeeSettingsComponent } from './ai-employee-settings.component';
 import { AIEmployeeGeneralComponent } from './general/general.component';
 import { AIToolAddComponent } from './tools/tool-add/tool-add.component';
-import { AIToolSettingsDatabaseComponent } from './tools/tool-settings/database/tool-settings-database.component';
+import { AIToolSettingsLinkedInLeadScraperComponent } from './tools/tool-settings/linkedin-lead-scraper/tool-settings-linkedin-lead-scraper.component';
 import { AIToolSettingsMailSenderComponent } from './tools/tool-settings/mail-sender/tool-settings-mail-sender.component';
+import { AIToolSettingsSQLConnectorComponent } from './tools/tool-settings/sql-connector/tool-settings-sql-connector.component';
 import { AIEmployeeToolsComponent } from './tools/tools.component';
 
 @NgModule({
@@ -22,7 +23,8 @@ import { AIEmployeeToolsComponent } from './tools/tools.component';
     AIEmployeeToolsComponent,
     AIToolAddComponent,
     AIToolSettingsMailSenderComponent,
-    AIToolSettingsDatabaseComponent
+    AIToolSettingsSQLConnectorComponent,
+    AIToolSettingsLinkedInLeadScraperComponent
   ],
   imports: [
     RouterModule,

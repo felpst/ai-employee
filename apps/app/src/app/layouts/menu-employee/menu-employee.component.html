@@ -1,0 +1,33 @@
+<div class="cognum-menu">
+  <header>
+    <cognum-menu-employee-profile></cognum-menu-employee-profile>
+
+    <div class="cognum-menu-divisor"></div>
+
+    <div class="pad cursor-pointer">
+      <div class="cognum-text">Workspace members</div>
+      <cognum-users-avatar
+        [routerLink]="['./', workspace._id, 'settings']"
+        [users]="users"
+        [showAdd]="true"
+      ></cognum-users-avatar>
+    </div>
+
+    <div class="cognum-menu-divisor"></div>
+
+    <cognum-menu-employee-items></cognum-menu-employee-items>
+  </header>
+
+  <footer>
+    <div>
+      <button mat-menu-item>
+        <div class="account" routerLink="/account">
+          <cognum-users-avatar [users]="[user]"></cognum-users-avatar>
+          <div class="cognum-text truncate">
+            {{ user.name }}
+          </div>
+        </div>
+      </button>
+    </div>
+  </footer>
+</div>

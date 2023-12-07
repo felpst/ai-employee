@@ -8,7 +8,7 @@ const schema = new Schema<IChatMessage>(
     sender: { type: Schema.Types.ObjectId, required: true },
     role: { type: Schema.Types.String, required: true, enum: ['user', 'bot'] },
     chatRoom: { type: Schema.Types.ObjectId, ref: 'ChatRoom', required: true, },
-    call: { type: Schema.Types.ObjectId, ref: 'AgentCall' },
+    call: { type: Schema.Types.ObjectId, ref: 'AIEmployeeCall' },
     ...defaultSchemaProps,
   },
   {

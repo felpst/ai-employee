@@ -36,6 +36,7 @@ export class ChatService {
   ) { }
 
   load(chatId: string): Observable<IChatRoom> {
+    this.messages = []
     return new Observable((observer) => {
       this.chatsService.get(chatId).subscribe({
         next: (chat) => {

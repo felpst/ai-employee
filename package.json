@@ -19,7 +19,9 @@
     "stage:chat-server:build": "nx build chat-server && cd dist/apps/chat-server && npm i --package-lock-only",
     "stage:chat-server:yaml": "xcopy .\\apps\\chat-server\\chat-server-stage.yaml .\\dist\\apps\\chat-server\\chat-server-stage.yaml /F /Y",
     "stage:chat-server:deploy": "npm run stage:chat-server:build && npm run stage:chat-server:yaml && gcloud app deploy dist/apps/chat-server/chat-server-stage.yaml",
-    "python:deploy": "gcloud app deploy apps/python_api/python.yaml"
+    "python:deploy": "gcloud app deploy apps/python_api/python.yaml",
+    "prod:deploy": "npm run app:deploy && npm run server:deploy && npm run chat-server:deploy && npm run python:deploy",
+    "stage:deploy": "npm run stage:app:deploy && npm run stage:server:deploy && npm run stage:chat-server:deploy && npm run python:deploy"
   },
   "private": true,
   "dependencies": {
@@ -34,6 +36,7 @@
     "@angular/router": "~17.0.0",
     "@babel/runtime": "^7.23.1",
     "@google-cloud/bigquery": "^7.0.0",
+    "@google-cloud/scheduler": "^4.0.1",
     "@google-cloud/storage": "^6.10.1",
     "@zilliz/milvus2-sdk-node": "^2.3.2",
     "ace-builds": "^1.24.1",
@@ -113,6 +116,7 @@
     "@types/express": "~4.17.13",
     "@types/jest": "^29.4.0",
     "@types/jsonwebtoken": "^9.0.2",
+    "@types/lodash": "^4.14.202",
     "@types/multer": "^1.4.7",
     "@types/node": "~20.9.0",
     "@types/nodemailer": "^6.4.13",

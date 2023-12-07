@@ -1,9 +1,9 @@
-import { Agent } from "../../../../interfaces/src/agent.interface";
+import { IAgent } from "@cognum/interfaces";
 
 export class AIEmployeeCall {
 
   constructor(
-    private aiEmployeeAgent: Agent
+    private aiEmployeeAgent: IAgent
   ) { }
 
   async execute(input: string, callbacks?: any) {

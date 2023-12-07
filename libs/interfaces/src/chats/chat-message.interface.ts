@@ -1,4 +1,4 @@
-import { DefaultModel, IAgentCall } from "@cognum/interfaces";
+import { DefaultModel, IAIEmployeeCall } from "@cognum/interfaces";
 import { Schema } from "mongoose";
 
 export interface IChatMessage extends DefaultModel {
@@ -7,5 +7,5 @@ export interface IChatMessage extends DefaultModel {
   sender: string | Schema.Types.ObjectId;
   role: 'user' | 'bot';
   chatRoom: string | Schema.Types.ObjectId;
-  call?: string | Schema.Types.ObjectId | IAgentCall;
+  call?: string | Schema.Types.ObjectId | IAIEmployeeCall;
 }

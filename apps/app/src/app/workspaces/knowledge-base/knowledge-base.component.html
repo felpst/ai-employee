@@ -3,26 +3,19 @@
     <div class="">
       <h2>General Knowledge base</h2>
     </div>
-    
+
     <div class="controls">
       <div class="sorting-buttons">
-        <button *ngFor="let button of ['new', 'old', 'acess']"
-          mat-stroked-button
-          [ngClass]="{
+        <button *ngFor="let button of ['new', 'old', 'acess']" mat-stroked-button [ngClass]="{
             'active-button': activeButton === button,
             'inactive-button': activeButton !== button
-          }"
-          (click)="onButtonClick(button)"
-        >
+          }" (click)="onButtonClick(button)">
           {{ button.charAt(0).toUpperCase() + button.slice(1) }}
         </button>
       </div>
-  
-      <cognum-search-bar
-        (searchUpdated)="onSearch($event)"
-        (searchCleared)="clearSearch()"
-      ></cognum-search-bar>
-  
+
+      <cognum-search-bar (searchUpdated)="onSearch($event)" (searchCleared)="clearSearch()"></cognum-search-bar>
+
       <button mat-raised-button color="primary" (click)="onForm()" class="new-info-btn">
         <mat-icon>add</mat-icon>
         New Information
@@ -33,20 +26,22 @@
   <div class="knowledges">
     <mat-card *ngFor="let knowledge of knowledgeBases" class="knowledge-card">
       <mat-card-header>
-        <div class="header-title-subtitle" (click)="openKnowledgeModal(knowledge)">
+        <div class="header-title-subtitle" (click)="!knowledge.isFile ? openKnowledgeModal(knowledge) : ''">
           <mat-card-title>{{ knowledge.title }}</mat-card-title>
           <mat-card-subtitle>
             last updated {{ knowledge.updatedAt ? updatedTimeDifference(knowledge.updatedAt) : 'N/A' }}
           </mat-card-subtitle>
         </div>
-        <knowledge-actions 
-          [knowledge]="knowledge" 
-          (knowledgeEdited)="handleKnowledgeEdited()" 
+        <knowledge-actions [knowledge]="knowledge" (knowledgeEdited)="handleKnowledgeEdited()"
           (knowledgeDeleted)="handleKnowledgeDeleted()">
         </knowledge-actions>
       </mat-card-header>
-      <mat-card-content (click)="openKnowledgeModal(knowledge)">
+      <mat-card-content *ngIf="!knowledge.isFile" (click)="openKnowledgeModal(knowledge)">
         <p>{{ knowledge.description }}</p>
+      </mat-card-content>
+      <mat-card-content *ngIf="knowledge.isFile" class="file-card">
+        <img src="../../../assets/icons/document.svg" alt="file document icon" title="File" />
+        <span>{{ knowledge.description }}</span>
       </mat-card-content>
     </mat-card>
   </div>

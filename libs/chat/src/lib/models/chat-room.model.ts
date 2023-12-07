@@ -1,3 +1,4 @@
+import { AIEmployee } from '@cognum/ai-employee';
 import { IChatRoom } from '@cognum/interfaces';
 import { defaultSchemaProps, triggers } from '@cognum/models';
 import { Schema, model, models } from 'mongoose';
@@ -16,6 +17,9 @@ const schema = new Schema<IChatRoom>(
   }
 );
 triggers(schema);
+
+// Force import models
+AIEmployee;
 
 const ChatRoom = models['ChatRoom'] || model<IChatRoom>('ChatRoom', schema);
 export { ChatRoom };
