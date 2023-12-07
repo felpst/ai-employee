@@ -49,5 +49,6 @@ router.delete(
   knowledgeController.deleteOpenAIFile,
   knowledgeController.delete
 );
+router.patch('/:id/scheduled-update', knowledgeController.cronUpdate);
 
 export default router;

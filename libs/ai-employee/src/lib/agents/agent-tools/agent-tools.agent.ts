@@ -129,6 +129,20 @@ export class AgentTools {
         await call.save()
         $call.next(call)
       },
+      handleToolError: async (err: any, runId: string, parentRunId?: string, tags?: string[]) => {
+        // Erro na execução da ferramenta
+        // TODO token usage
+        step.outputs = {
+          text: err.message
+        };
+        step.status = 'done';
+        step.endAt = new Date();
+
+        // Update call
+        call.steps[stepIndex - 1] = step
+        await call.save()
+        $call.next(call)
+      }
     }]
 
     try {
