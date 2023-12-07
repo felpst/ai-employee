@@ -4,6 +4,7 @@ import {
 } from 'langchain/agents';
 import { agentTest } from '../../../tests/agent-test';
 import { GoogleCalendarDeleteEventTool } from '../google-calendar-delete-event.tool';
+import { GoogleCalendarListEventsTool } from '../google-calendar-list-events.tool';
 
 
 describe('GoogleCalendarTools test', () => {
@@ -11,18 +12,19 @@ describe('GoogleCalendarTools test', () => {
     let executor!: AgentExecutor;
 
     beforeAll(async () => {
-        const token = "ya29.a0AfB_byCmIur3s22RK2RhZGlfkZrZl_iNNuIAeLhmczxcdfJacR4mZdAxDMQCmhSUqSSkyk5Kg8FG31eQaQiMMA_gmch8lcEhcvodxDIEjr0Ev7E9ePrPgsHf0hgAFdqb8SFoiK1LCf4KZe-bL_OpoUZhNQloCLpI-boaCgYKAfoSARMSFQHGX2MiE_Xkgfrz2PamgMyNiHfeWA0170"
+        const token = "ya29.a0AfB_byBxhrfBNLqUYXPFgarUaPaFDoaVV5mBeKwacQy427H3Xx2_Iafu2OvaxoRUKo0xFoMnh3bOWBbwTWcNELOlNx28SZb5QTK_EJBXwxh7Iyrti7fuEIFvEjSAKXI0Rwi7spX0eALB318k0L80Lsq5Neh7L0Er0dwaCgYKAYMSARMSFQHGX2MiTI8yjk5KxIFgQhRm6CjeSQ0170"
         const tools = [
+            new GoogleCalendarListEventsTool(token),
             new GoogleCalendarDeleteEventTool(token)
         ];
         executor = await agentTest(tools);
     });
 
     it('should return list of events', async () => {
-        const inputText = 'Delete an event for December 10th that starts at 11 am and ends at 5 pm with the title Cognum News and the description of a weekly update meeting';
+        const inputText = 'Delete the December 10th Cognum Update event.';
         const result = await executor.call({ input: inputText });
         console.log(result.output);
-        expect(result.output).toContain('Event updated successfully')
+        expect(result.output).toContain('has been successfully deleted')
     })
 
 });

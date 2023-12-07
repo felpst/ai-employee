@@ -7,7 +7,7 @@ export class GoogleCalendarDeleteEventTool extends DynamicTool {
         super({
             name: 'Google Calendar Delete Events',
             description:
-                'Use to delete events from Google Calendar. Input should be the event id.',
+                'Use to delete events from Google Calendar. Input should be the event id, you can use the google calendar list tool to get the event id.',
             func: async (input: string) => {
                 try {
                     const googleCalendarService = new GoogleCalendarService(token);

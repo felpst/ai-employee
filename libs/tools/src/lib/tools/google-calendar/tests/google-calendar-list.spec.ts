@@ -9,9 +9,9 @@ import { GoogleCalendarListEventsTool } from '../google-calendar-list-events.too
 describe('GoogleCalendarTools test', () => {
     jest.setTimeout(300000)
     let executor!: AgentExecutor;
+    const token = "ya29.a0AfB_byBM8nXThCVR1yAisO6ql1Oe5j2EVjMIbFQQm9BiuX8NVbRT2_a8hCaFtAR2hvEc7x2ys191YNZyJy04Q1jOStoMuRLd0LVD0sza45Xit5-bAhHi1ynRpQz0O1iwqioQMcxmTMzydYBIgclcgISIjSd0JWUq0YIaCgYKAQkSARMSFQHGX2MiYgwECN9xLp7pXmMOCIYr1w0170"
 
     beforeAll(async () => {
-        const token = "ya29.a0AfB_byCmIur3s22RK2RhZGlfkZrZl_iNNuIAeLhmczxcdfJacR4mZdAxDMQCmhSUqSSkyk5Kg8FG31eQaQiMMA_gmch8lcEhcvodxDIEjr0Ev7E9ePrPgsHf0hgAFdqb8SFoiK1LCf4KZe-bL_OpoUZhNQloCLpI-boaCgYKAfoSARMSFQHGX2MiE_Xkgfrz2PamgMyNiHfeWA0170"
         const tools = [
             new GoogleCalendarListEventsTool(token)
         ];

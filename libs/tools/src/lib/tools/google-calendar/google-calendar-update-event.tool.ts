@@ -9,7 +9,7 @@ export class GoogleCalendarUpdateEventTool extends DynamicStructuredTool {
         super({
             name: 'Google Calendar Update Events',
             description:
-                'Use this tool to update events from Google Calendar.',
+                'Use this tool to update events from Google Calendar, you can use the google calendar list tool to get the event id.',
             schema: z.object({
                 eventId: z.string().describe('id of event to update'),
                 startTime: z.string().describe("start time of event, the format is 'YYYY-MM-DDTHH:MM:SS'"),
@@ -18,7 +18,7 @@ export class GoogleCalendarUpdateEventTool extends DynamicStructuredTool {
                 location: z.string().describe('location of event'),
                 description: z.string().describe('description of event'),
                 timeZone: z.string().describe('time zone of event, the format is "America/Los_Angeles"'),
-                attendees: z.array(z.string()).describe('attendees of event, the format is {email: example@example.com}"'),
+                attendees: z.array(z.object({ email: z.string() })).describe('Event participants must be represented by an array of objects, where each object contains an unquoted email key associated with a value that represents an email address"'),
 
             }),
             func: async ({

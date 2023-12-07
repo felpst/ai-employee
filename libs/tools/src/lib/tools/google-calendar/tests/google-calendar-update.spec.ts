@@ -3,6 +3,7 @@ import {
     AgentExecutor
 } from 'langchain/agents';
 import { agentTest } from '../../../tests/agent-test';
+import { GoogleCalendarListEventsTool } from '../google-calendar-list-events.tool';
 import { GoogleCalendarUpdateEventTool } from '../google-calendar-update-event.tool';
 
 
@@ -11,15 +12,16 @@ describe('GoogleCalendarTools test', () => {
     let executor!: AgentExecutor;
 
     beforeAll(async () => {
-        const token = "ya29.a0AfB_byCmIur3s22RK2RhZGlfkZrZl_iNNuIAeLhmczxcdfJacR4mZdAxDMQCmhSUqSSkyk5Kg8FG31eQaQiMMA_gmch8lcEhcvodxDIEjr0Ev7E9ePrPgsHf0hgAFdqb8SFoiK1LCf4KZe-bL_OpoUZhNQloCLpI-boaCgYKAfoSARMSFQHGX2MiE_Xkgfrz2PamgMyNiHfeWA0170"
+        const token = "ya29.a0AfB_byBxhrfBNLqUYXPFgarUaPaFDoaVV5mBeKwacQy427H3Xx2_Iafu2OvaxoRUKo0xFoMnh3bOWBbwTWcNELOlNx28SZb5QTK_EJBXwxh7Iyrti7fuEIFvEjSAKXI0Rwi7spX0eALB318k0L80Lsq5Neh7L0Er0dwaCgYKAYMSARMSFQHGX2MiTI8yjk5KxIFgQhRm6CjeSQ0170"
         const tools = [
-            new GoogleCalendarUpdateEventTool(token)
+            new GoogleCalendarUpdateEventTool(token),
+            new GoogleCalendarListEventsTool(token)
         ];
         executor = await agentTest(tools);
     });
 
     it('should return list of events', async () => {
-        const inputText = 'Update an event for December 10th that starts at 11 am and ends at 5 pm with the title Cognum News and the description of a weekly update meeting, invite the following emails to this event devrenatorodrigues@gmail.com and rehrlz@gmail.com';
+        const inputText = 'Update the December 10th Cognum Update event to start at 11am and end at 5pm with timezone of São Paulo and change its title to Cognum News and the description to a weekly update meeting.';
         const result = await executor.call({ input: inputText });
         console.log(result.output);
         expect(result.output).toContain('Event updated successfully')

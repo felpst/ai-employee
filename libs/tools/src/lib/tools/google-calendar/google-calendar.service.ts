@@ -66,7 +66,7 @@ export class GoogleCalendarService {
 
 
 };
-// const token = "ya29.a0AfB_byDIYr-SPkoKL-vR4epe9gG22au53GvTngHgwKirfd297VezGCNsPqFi6tOf6dpMmiGfTvuq5NMy6uTHrvqT_02aRhH5nYWV1D0HK6nSGE6nQ_IEpW7uZWPY_5HA_ATQpfvzMTB4oWiUKsl0SfnpwYzF1SodHtsaCgYKAW0SARMSFQHGX2MixM1ksS8ZDRMeim7JZjALFw0170"
+// const token = "ya29.a0AfB_byBM8nXThCVR1yAisO6ql1Oe5j2EVjMIbFQQm9BiuX8NVbRT2_a8hCaFtAR2hvEc7x2ys191YNZyJy04Q1jOStoMuRLd0LVD0sza45Xit5-bAhHi1ynRpQz0O1iwqioQMcxmTMzydYBIgclcgISIjSd0JWUq0YIaCgYKAQkSARMSFQHGX2MiYgwECN9xLp7pXmMOCIYr1w0170"
 
 // const googleService = new GoogleCalendarService(token)
 // const options = {
@@ -94,6 +94,8 @@ export class GoogleCalendarService {
 //         { email: 'devrenatorodrigues@gmail.com' },
 //     ],
 // }
+//  googleService.cEvent(eventId, options)
+
 // const eventId = "3rsq8694pesbav04s3vh5l2is0"
 // googleService.updateEvent(eventId, options)
 // googleService.deleteEvent(eventId)
