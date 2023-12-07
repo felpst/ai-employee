@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
+import { KnowledgeTypeEnum } from '@cognum/interfaces';
 
 @Component({
   selector: 'cognum-knowledge-choose-form-dialog',
@@ -8,8 +9,11 @@ import { MatDialogRef } from '@angular/material/dialog';
 })
 export class KnowledgeChooseFormDialogComponent {
   constructor(public dialogRef: MatDialogRef<KnowledgeChooseFormDialogComponent>) { }
+  public get options() {
+    return KnowledgeTypeEnum;
+  }
 
-  choose(option: 'file' | 'document'): void {
+  choose(option: KnowledgeTypeEnum): void {
     this.dialogRef.close(option);
   }
 
