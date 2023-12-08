@@ -5,8 +5,11 @@ import {
   ElementRef,
   Inject,
   Input,
+  OnDestroy,
+  OnInit,
   Optional,
-  ViewChild
+  ViewChild,
+  HostListener
 } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
@@ -18,6 +21,7 @@ import { NotificationsService } from '../../../../services/notifications/notific
 import { AIEmployeesService } from '../../ai-employees.service';
 import { ChatsService } from '../chats.service';
 import { ChatService } from './chat.service';
+import { interval, Subscription } from 'rxjs';
 import { FeedbackFormComponent } from './feedback-form/feedback-form.component';
 
 type MessageUpdate = {
@@ -39,6 +43,7 @@ export class ChatComponent implements AfterViewChecked, AfterViewInit {
   @ViewChild('chatContent', { static: true }) private chatContent!: ElementRef;
   @ViewChild('inputMessage', { static: true })
   private inputMessage!: ElementRef;
+
   status = 'Ready';
 
   constructor(
@@ -50,12 +55,25 @@ export class ChatComponent implements AfterViewChecked, AfterViewInit {
     private notificationsService: NotificationsService,
     private aiEmployeesService: AIEmployeesService,
     private dialog: MatDialog,
+    private elementRef: ElementRef,
     @Optional() @Inject(MAT_DIALOG_DATA) public data: any,
-  ) { }
+  ) {
+  }
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: Event): void {
+    // Verifique se o clique foi fora do componente
+    if (!this.elementRef.nativeElement.contains(event.target)) {
+      // Feche o chat apenas se não houver mensagens
+      if (this.chatService.messages.length === 0) {
+        this.closeChat();
+      }
+    }
+  }
 
   get aiEmployee() {
     return this.aiEmployeesService.aiEmployee;
   }
+
 
   ngAfterViewInit(): void {
     if (this.data && this.data.tool) {
@@ -65,6 +83,13 @@ export class ChatComponent implements AfterViewChecked, AfterViewInit {
       }, 2);
     }
   }
+
+  ngOnDestroy(): void {
+    if (this.chatService.messages.length === 0) {
+      this.closeChat();
+    }
+  }
+
 
   ngAfterViewChecked(): void {
     this.scrollToBottom();
