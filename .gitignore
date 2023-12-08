@@ -8,6 +8,7 @@ data
 # dependencies
 node_modules
 .nx
+package-lock.json
 
 # IDEs and editors
 /.idea
@@ -52,5 +53,8 @@ docs
 .venv
 *.pyc
 __pycache__/
+
+#json keys
+oauth2.keys.json
 
 

@@ -101,7 +101,7 @@ export class LinkedInWebDriver {
         leads.push(...pageLeads);
 
         // Wait
-        this.driver.sleep(5000);
+        await this.driver.sleep(5000);
 
         // Next Page
         await this.driver.executeScript("window.scrollTo(0, document.body.scrollHeight)");
