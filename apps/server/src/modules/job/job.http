@@ -54,3 +54,11 @@ Authorization: Bearer {{$authToken}}
 
 DELETE {{baseUrl}}/{{apiRoute}}/{{id}}
 Authorization: Bearer {{$authToken}}
+
+### Execute tool ###
+
+POST {{baseUrl}}/{{apiRoute}}/656f82f780aedf1172eb5ab7/execute
+Content-Type: application/json
+Authorization: Bearer {{$authToken}}
+
+{ }

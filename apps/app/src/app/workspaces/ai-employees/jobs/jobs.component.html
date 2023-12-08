@@ -37,9 +37,13 @@
   </div>
 
   <div class="knowledges">
-    <mat-card *ngFor="let job of jobs" class="knowledge-card">
+    <mat-card
+      *ngFor="let job of jobs"
+      class="knowledge-card"
+      [routerLink]="['.', job._id]"
+    >
       <mat-card-header>
-        <div class="header-title-subtitle" (click)="openKnowledgeModal(job)">
+        <div class="header-title-subtitle">
           <mat-card-title>{{ job.name }}</mat-card-title>
           <mat-card-subtitle>
             last updated
@@ -47,7 +51,7 @@
           </mat-card-subtitle>
         </div>
       </mat-card-header>
-      <mat-card-content (click)="openKnowledgeModal(job)">
+      <mat-card-content>
         <p>{{ job.instructions }}</p>
       </mat-card-content>
     </mat-card>

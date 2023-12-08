@@ -11,5 +11,6 @@ router.get('/', authMiddleware, jobController.find);
 router.get('/:id', authMiddleware, jobController.getById);
 router.put('/:id', authMiddleware, jobController.parseCronFrequency, jobController.update);
 router.delete('/:id', authMiddleware, jobController.delete);
+router.post('/:id/execute', jobController.execute);
 
 export default router;
