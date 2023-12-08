@@ -1,15 +1,5 @@
-
 .btn-more-icon {
-    justify-self: flex-end;
-    margin-left: auto;
-    padding: 0 !important;
-}
-
-::ng-deep .mat-mdc-menu-content {
-    padding: 0 !important;
-}
-
-button.mat-mdc-menu-item,
-button.mat-mdc-menu-item mat-icon {
-    font-size: 0.875em !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
