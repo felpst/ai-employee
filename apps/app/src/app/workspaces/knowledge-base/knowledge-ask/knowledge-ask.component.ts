@@ -37,8 +37,8 @@ export class KnowledgeAskComponent {
     if (!question) return;
 
     this.addMessage({ source: 'human', content: question });
+    (event.target as unknown as { value: string; }).value = '';
     this.loadingResponse = true;
-
 
     const observable = this.knowledgeId
       ? this.knowledgeService.askByKnowledge(question, this.knowledgeId)
