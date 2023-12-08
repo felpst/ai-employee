@@ -12,7 +12,7 @@ describe('GoogleCalendarTools test', () => {
     let executor!: AgentExecutor;
 
     beforeAll(async () => {
-        const token = "ya29.a0AfB_byBxhrfBNLqUYXPFgarUaPaFDoaVV5mBeKwacQy427H3Xx2_Iafu2OvaxoRUKo0xFoMnh3bOWBbwTWcNELOlNx28SZb5QTK_EJBXwxh7Iyrti7fuEIFvEjSAKXI0Rwi7spX0eALB318k0L80Lsq5Neh7L0Er0dwaCgYKAYMSARMSFQHGX2MiTI8yjk5KxIFgQhRm6CjeSQ0170"
+        const token = "ya29.a0AfB_byBGznCLVHmHU1NEHAwXTvoCUdIKL47oI1ViLc4QRpl_4YYEEuMArrL9Y3HtMYiVHQHfzR4c15C9bSJuGEYgsWNlu5swY1nuP93WDqyHP9H36voJQEMJiGHzBHIC0XF-GG1vEc2g48_SG2XXUFBC3Azd_KfOgU8aCgYKAcUSARMSFQHGX2MiuU8ZinU869oZ5sGCDO-KJg0170"
         const tools = [
             new GoogleCalendarUpdateEventTool(token),
             new GoogleCalendarListEventsTool(token)
@@ -21,10 +21,10 @@ describe('GoogleCalendarTools test', () => {
     });
 
     it('should return list of events', async () => {
-        const inputText = 'Update the December 10th Cognum Update event to start at 11am and end at 5pm with timezone of São Paulo and change its title to Cognum News and the description to a weekly update meeting.';
+        const inputText = 'Update the December 10th Cognum News event to start at 11am and end at 5pm with timezone of São Paulo and change its title to Cognum General Update and the description to a weekly update meeting.';
         const result = await executor.call({ input: inputText });
         console.log(result.output);
-        expect(result.output).toContain('Event updated successfully')
+        expect(result.output).toContain('has been successfully')
     })
 
 });

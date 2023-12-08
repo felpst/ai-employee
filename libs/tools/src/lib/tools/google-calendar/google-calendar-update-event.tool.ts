@@ -34,23 +34,19 @@ export class GoogleCalendarUpdateEventTool extends DynamicStructuredTool {
                 try {
                     const googleCalendarService = new GoogleCalendarService(token);
                     const options: calendar_v3.Schema$Event = {
-                        ...(summary && { summary }),
-                        ...(location && { location }),
-                        ...(description && { description }),
-                        ...(startTime && timeZone && {
-                            start: {
-                                dateTime: startTime,
-                                timeZone,
-                            },
-                        }),
-                        ...(endTime && timeZone && {
-                            end: {
-                                dateTime: endTime,
-                                timeZone,
-                            },
-                        }),
-                        ...(attendees && { attendees }),
-                    };
+                        summary,
+                        location,
+                        description,
+                        start: {
+                            dateTime: startTime,
+                            timeZone,
+                        },
+                        end: {
+                            dateTime: endTime,
+                            timeZone,
+                        },
+                        attendees,
+                    }
                     const updateEvent = await googleCalendarService.updateEvent(eventId, options);
                     return updateEvent;
                 } catch (error) {
