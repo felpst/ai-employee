@@ -16,12 +16,7 @@ const schema = new Schema<IKnowledge>({
       return this.type !== KnowledgeTypeEnum.Document;
     }
   },
-  htmlUpdateFrequency: {
-    type: String,
-    required: function () {
-      return this.type === KnowledgeTypeEnum.Html;
-    }
-  },
+  htmlUpdateFrequency: { type: String },
   workspace: { type: Schema.Types.ObjectId, ref: 'Workspace', required: true },
   employees: [
     { type: Schema.Types.ObjectId, ref: 'AIEmployee', required: false },

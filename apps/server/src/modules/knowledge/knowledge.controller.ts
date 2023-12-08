@@ -2,6 +2,7 @@ import { IKnowledge, KnowledgeTypeEnum } from '@cognum/interfaces';
 import KnowledgeBase, { KnowledgeMetadata } from '@cognum/knowledge-base';
 import { ChatModel } from '@cognum/llm';
 import { Knowledge } from '@cognum/models';
+import { KnowledgeRetrieverService } from '@cognum/tools';
 import { NextFunction, Request, Response } from 'express';
 import { LLMChain } from 'langchain/chains';
 import { Document } from 'langchain/document';
@@ -224,22 +225,23 @@ export class KnowledgeController extends ModelController<typeof Knowledge> {
           const knowledgeId =
             knowledge._id || new mongoose.mongo.ObjectId();
           knowledge.title ??= knowledge.contentUrl;
-          const cron = await textToCron(knowledge.htmlUpdateFrequency);
 
           fileName = this._textToFilename(knowledge.title, 'html');
           fileContent = await fetch(knowledge.contentUrl)
             .then(response => response.text());
 
-          const schedulerSvc = new SchedulerService();
-          await schedulerSvc.createJob({
-            name: `knowledge-${knowledgeId}-content-update`,
-            schedule: cron,
-            httpTarget: {
-              uri: `${process.env.SERVER_HOST}/knowledges/${knowledgeId}/scheduled-update`,
-              httpMethod: 'PATCH',
-            },
-            timeZone
-          });
+          if (knowledge.htmlUpdateFrequency) {
+            const cron = await textToCron(knowledge.htmlUpdateFrequency);
+            await new SchedulerService().createJob({
+              name: `knowledge-${knowledgeId}-content-update`,
+              schedule: cron,
+              httpTarget: {
+                uri: `${process.env.SERVER_HOST}/knowledges/${knowledgeId}/scheduled-update`,
+                httpMethod: 'PATCH',
+              },
+              timeZone
+            });
+          }
 
           knowledge.description = fileName;
         }
@@ -281,11 +283,11 @@ export class KnowledgeController extends ModelController<typeof Knowledge> {
   ): Promise<void> {
     try {
       const { id } = req.params;
-      const { openaiFileId, type } = await Knowledge
+      const { openaiFileId, htmlUpdateFrequency } = await Knowledge
         .findById(id)
-        .select(['openaiFileId', 'type']);
+        .select(['openaiFileId', 'htmlUpdateFrequency']);
 
-      if (type === KnowledgeTypeEnum.Html)
+      if (htmlUpdateFrequency)
         await new SchedulerService().deleteJob(`knowledge-${id}-content-update`);
       await new OpenAIFileService().delete(openaiFileId);
 
@@ -309,6 +311,40 @@ export class KnowledgeController extends ModelController<typeof Knowledge> {
           await this.addOpenAIFile(req, _, next);
         });
       else next();
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  public async askQuestionUsingAll(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const question = req.query.question?.toString();
+      const { workspaceId } = req.params;
+      if (!question?.trim())
+        throw new Error('Invalid question. Question must be a non-empty string.');
+
+      const retrieverService = new KnowledgeRetrieverService({ workspaceId });
+      const text = await retrieverService.question(question);
+
+      res.json({ text });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  public async askQuestionById(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const question = req.query.question?.toString();
+      const { id } = req.params;
+      if (!question?.trim())
+        throw new Error('Invalid question. Question must be a non-empty string.');
+
+      const { workspace, openaiFileId } = await Knowledge.findById(id);
+
+      const retrieverService = new KnowledgeRetrieverService({ workspaceId: `${workspace}` });
+      const text = await retrieverService.askByFileIds(question, [openaiFileId]);
+
+      res.json({ text });
     } catch (error) {
       next(error);
     }
