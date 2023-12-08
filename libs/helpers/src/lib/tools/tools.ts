@@ -64,6 +64,15 @@ const tools = [
     show: true
   },
   {
+    "id": "google-calendar",
+    "name": "Google Calendar",
+    "description": "Manage your Google Calendar",
+    "icon": "https://storage.googleapis.com/factory-assets/tools/google-calendar.png",
+    scope: 'https://www.googleapis.com/auth/calendar',
+    intentions: ['Task Execution'],
+    show: true
+  },
+  {
     "id": "knowledge-retriever",
     "name": "Knowledge Retrieve",
     "description": "Storing information in the knowledge base, carrying out research on it and building knowledge from it",

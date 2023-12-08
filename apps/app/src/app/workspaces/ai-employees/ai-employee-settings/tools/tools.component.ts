@@ -8,6 +8,7 @@ import { ChatComponent } from '../../chats/chat/chat.component';
 import { ChatService } from '../../chats/chat/chat.service';
 import { ChatsService } from '../../chats/chats.service';
 import { AIToolAddComponent } from './tool-add/tool-add.component';
+import { AIToolSettingsGoogleCalendarComponent } from './tool-settings/google-calendar/tool-settings-google-calendar.component';
 import { AIToolSettingsLinkedInLeadScraperComponent } from './tool-settings/linkedin-lead-scraper/tool-settings-linkedin-lead-scraper.component';
 import { AIToolSettingsMailSenderComponent } from './tool-settings/mail-sender/tool-settings-mail-sender.component';
 import { AIToolSettingsSQLConnectorComponent } from './tool-settings/sql-connector/tool-settings-sql-connector.component';
@@ -46,11 +47,12 @@ export class AIEmployeeToolsComponent implements OnInit {
     this.dialog.open(AIToolAddComponent, { width: '400px' });
   }
 
-  onSelect(index: number) {
-    const tool = this.aiEmployeeService.aiEmployee.tools[index];
+  async onSelect(index: number) {
+    const toolSettings = this.aiEmployeeService.aiEmployee.tools[index];
+    const tool = ToolsHelper.get(toolSettings.id);
     let component: any;
 
-    switch (tool.id) {
+    switch (toolSettings.id) {
       case 'sql-connector':
         component = AIToolSettingsSQLConnectorComponent;
         break;
@@ -60,10 +62,34 @@ export class AIEmployeeToolsComponent implements OnInit {
       case 'linkedin-lead-scraper':
         component = AIToolSettingsLinkedInLeadScraperComponent;
         break;
+      case 'google-calendar':
+        if (!toolSettings.options?.token) {
+          try {
+            await new Promise(async (resolve, reject) => {
+              try {
+                const accessToken = await this.toolsService.googleOAuth2(tool)
+
+                if (!toolSettings.options) toolSettings.options = {};
+                toolSettings.options.tools = { list: true, create: true, update: true, delete: true };
+                toolSettings.options.token = accessToken;
+                this.aiEmployeeService.aiEmployee.tools[index].options = toolSettings.options;
+                this.aiEmployeeService.update({
+                  _id: this.aiEmployeeService.aiEmployee._id,
+                  tools: this.aiEmployeeService.aiEmployee.tools
+                }).subscribe(updatedEmployee => {
+                  this.aiEmployeeService.aiEmployee = updatedEmployee;
+                  resolve(updatedEmployee)
+                });
+              } catch (error) { return reject(); }
+            });
+          } catch (error) { return; }
+        }
+        component = AIToolSettingsGoogleCalendarComponent;
+        break;
     }
 
     if (component) {
-      const dialogRef = this.dialog.open(component, { width: '400px', data: { tool } });
+      const dialogRef = this.dialog.open(component, { width: '400px', data: { tool: toolSettings } });
       dialogRef.afterClosed().subscribe((data) => {
         if (data) {
           this.aiEmployeeService.aiEmployee.tools[index].options = data;
