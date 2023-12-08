@@ -37,8 +37,7 @@ export class AIEmployeeToolsComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.toolsService.toolSelected.subscribe(tool => {
-      const index = this.tools.findIndex(t => t.id === tool.id);
+    this.toolsService.toolSelected.subscribe(({ tool, index }) => {
       this.onSelect(index);
     });
   }
