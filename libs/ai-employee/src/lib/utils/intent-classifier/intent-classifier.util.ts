@@ -37,6 +37,7 @@ export async function intentClassifier(input: string) {
       - If the input is seeking social interaction or casual engagement, categorize as 'Social Interaction or Engagement'.
       - If the input is about exploring options or conducting broad research, categorize as 'Exploration or Research'.
       - If the input is to adjust settings or personalize, categorize as 'Configuration or Customization'.
+      - If the input is providing specific information, categorize as 'Configuration or Customization'.
    */
 
   const chain = RunnableSequence.from([

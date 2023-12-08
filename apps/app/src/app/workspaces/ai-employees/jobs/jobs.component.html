@@ -1,0 +1,62 @@
+<div class="page">
+  <div class="header">
+    <div class="">
+      <h2>Registered jobs</h2>
+    </div>
+
+    <div class="controls">
+      <div class="sorting-buttons">
+        <button
+          *ngFor="let button of ['new', 'old', 'acess']"
+          mat-stroked-button
+          [ngClass]="{
+            'active-button': activeButton === button,
+            'inactive-button': activeButton !== button
+          }"
+          (click)="onButtonClick(button)"
+        >
+          {{ button.charAt(0).toUpperCase() + button.slice(1) }}
+        </button>
+      </div>
+
+      <cognum-search-bar
+        (searchUpdated)="onSearch($event)"
+        (searchCleared)="clearSearch()"
+      ></cognum-search-bar>
+
+      <button
+        mat-raised-button
+        color="primary"
+        (click)="onForm()"
+        class="new-info-btn"
+      >
+        <mat-icon>add</mat-icon>
+        New Job
+      </button>
+    </div>
+  </div>
+
+  <div class="knowledges">
+    <mat-card
+      *ngFor="let job of jobs"
+      class="knowledge-card"
+      [routerLink]="['.', job._id]"
+    >
+      <mat-card-header>
+        <div class="header-title-subtitle">
+          <mat-card-title>{{ job.name }}</mat-card-title>
+          <mat-card-subtitle>
+            last updated
+            {{ job.updatedAt ? updatedTimeDifference(job.updatedAt) : 'N/A' }}
+          </mat-card-subtitle>
+        </div>
+      </mat-card-header>
+      <mat-card-content>
+        <p>{{ job.instructions }}</p>
+      </mat-card-content>
+    </mat-card>
+  </div>
+  <div *ngIf="jobs.length === 0">
+    <p style="text-align: center">No job found</p>
+  </div>
+</div>

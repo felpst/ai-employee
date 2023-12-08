@@ -1,0 +1,32 @@
+.row {
+  display: flex;
+  flex: 1;
+  width: 100%;
+  margin: 0;
+  padding: 18px 20px;
+  border: 1px solid #f0f0f0;
+  border-right: none;
+  border-left: none;
+  border-bottom: none;
+  gap: 16px;
+  position: relative;
+}
+
+.buttons {
+  display: flex;
+  flex: 1;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.spinner-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 9999;
+}

@@ -37,6 +37,10 @@ export class AgentAIEmployeeHandlers extends BaseCallbackHandler {
 
   }
 
+  handleToolError(err: any, runId: string, parentRunId?: string, tags?: string[]) {
+
+  }
+
   handleAgentEnd(action: AgentFinish, runId: string, parentRunId?: string, tags?: string[]): void | Promise<void> {
 
   }

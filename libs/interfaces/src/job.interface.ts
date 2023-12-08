@@ -1,5 +1,5 @@
 import { Schema } from 'mongoose';
-import { IAIEmployee } from './ai-employee/ai-employee.interfaces';
+import { IAIEmployee } from './ai-employee';
 import { DefaultModel } from './default.model';
 
 export interface IJob extends DefaultModel {

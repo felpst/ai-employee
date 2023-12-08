@@ -26,7 +26,7 @@
   <div class="knowledges">
     <mat-card *ngFor="let knowledge of knowledgeBases" class="knowledge-card">
       <mat-card-header>
-        <div class="header-title-subtitle" (click)="!knowledge.isFile ? openKnowledgeModal(knowledge) : ''">
+        <div class="header-title-subtitle" (click)="knowledge.type === 'doc' ? openKnowledgeModal(knowledge) : ''">
           <mat-card-title>{{ knowledge.title }}</mat-card-title>
           <mat-card-subtitle>
             last updated {{ knowledge.updatedAt ? updatedTimeDifference(knowledge.updatedAt) : 'N/A' }}
@@ -36,11 +36,14 @@
           (knowledgeDeleted)="handleKnowledgeDeleted()">
         </knowledge-actions>
       </mat-card-header>
-      <mat-card-content *ngIf="!knowledge.isFile" (click)="openKnowledgeModal(knowledge)">
+      <mat-card-content *ngIf="knowledge.type === types.Document" (click)="openKnowledgeModal(knowledge)">
         <p>{{ knowledge.description }}</p>
       </mat-card-content>
-      <mat-card-content *ngIf="knowledge.isFile" class="file-card">
-        <img src="../../../assets/icons/document.svg" alt="file document icon" title="File" />
+      <mat-card-content *ngIf="knowledge.type !== types.Document" class="file-card">
+        <img *ngIf="knowledge.type === types.File" src="../../../assets/icons/document.svg" alt="File icon"
+          title="File" />
+        <img *ngIf="knowledge.type === types.Html" src="../../../assets/icons/web.svg" alt="Website icon"
+          title="Website" />
         <span>{{ knowledge.description }}</span>
       </mat-card-content>
     </mat-card>

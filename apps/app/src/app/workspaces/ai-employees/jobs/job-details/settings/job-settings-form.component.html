@@ -1,0 +1,83 @@
+<div class="row">
+  <div class="spinner-container" *ngIf="isLoading">
+    <mat-spinner></mat-spinner>
+  </div>
+  <form [formGroup]="form">
+    <div class="cognum-form-row-4">
+      <span class="cognum-heading-4 title">Name</span>
+      <input formControlName="name" type="text" placeholder="Job name" />
+      <mat-error
+        *ngIf="hasInputError('name', 'required')"
+        class="cognum-text-12 warning-message"
+      >
+        Name field is required
+      </mat-error>
+    </div>
+
+    <div class="cognum-form-row-4">
+      <span class="cognum-heading-4 title">Frequency</span>
+      <input
+        formControlName="frequency"
+        title="Describe how frequently your work should be performed"
+        type="text"
+        placeholder="Example: Run weekly once, on Wednesdays at 5 pm"
+      />
+      <mat-error
+        *ngIf="hasInputError('frequency', 'required')"
+        class="cognum-text-12 warning-message"
+      >
+        Frequency field is required
+      </mat-error>
+    </div>
+
+    <div class="cognum-form-row-4">
+      <span class="cognum-heading-4 title">Instructions</span>
+      <md-editor
+        title="Describe the action to be performed by your employee"
+        height="300px"
+        required="true"
+        placeholder="Example: Send a reminder email to workspace employees"
+        formControlName="instructions"
+        [options]="markdownOptions"
+      ></md-editor>
+      <mat-error
+        *ngIf="hasInputError('instructions', 'required')"
+        class="cognum-text-12 warning-message"
+      >
+        Instructions field is required
+      </mat-error>
+    </div>
+
+    <div class="cognum-form-row-4">
+      <span class="cognum-heading-4 title">Status</span>
+      <select
+        class="form-select no-focus-outline"
+        aria-label="Status"
+        formControlName="status"
+      >
+        <option *ngFor="let status of statuses" [value]="status">
+          {{ status }}
+        </option>
+      </select>
+      <mat-error
+        *ngIf="hasInputError('status', 'inList')"
+        class="cognum-text-12 warning-message"
+      >
+        Invalid status
+      </mat-error>
+    </div>
+  </form>
+
+  <div class="buttons">
+    <button
+      mat-raised-button
+      color="primary"
+      (click)="onSave()"
+      [disabled]="!form.valid || isLoading"
+    >
+      Save
+    </button>
+
+    <button mat-button color="warn" (click)="onRemove()">Delete</button>
+  </div>
+</div>
