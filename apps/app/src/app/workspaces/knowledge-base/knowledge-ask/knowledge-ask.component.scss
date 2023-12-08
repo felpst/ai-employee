@@ -29,7 +29,7 @@ form {
     width: fit-content;
     max-width: 92%;
   }
-
+  
   .human-message {
     background-color: #efefef;
     text-align: left;
@@ -39,10 +39,12 @@ form {
     align-self: end;
     background-color: #5a8f8c;
     color: white;
-  }
-  
-  .loading-ai-message {
-    align-self: end;
-    color: #5a8f8c;
+    border-radius: 5px;
+    
+    mat-spinner {
+      margin: 10px;
+    }::ng-deep circle {
+      stroke: #fff;
+    }
   }
 }

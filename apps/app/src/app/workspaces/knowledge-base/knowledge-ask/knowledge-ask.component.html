@@ -19,5 +19,7 @@
     [ngClass]="{'human-message': message.source === 'human', 'ai-message': message.source === 'ai'}">
     {{ message.content }}
   </div>
-  <mat-spinner *ngIf="loadingResponse" class="loading-ai-message" diameter={{20}}></mat-spinner>
+  <div *ngIf="loadingResponse" class="ai-message">
+    <mat-spinner diameter={{20}}></mat-spinner>
+  </div>
 </div>
