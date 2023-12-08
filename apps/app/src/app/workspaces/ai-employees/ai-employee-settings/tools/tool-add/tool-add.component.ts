@@ -25,16 +25,15 @@ export class AIToolAddComponent {
   }
 
   onSelect(tool: ITool) {
+    const newIndex = this.aiEmployeeService.aiEmployee.tools.length;
     this.aiEmployeeService.aiEmployee.tools.push({
       id: tool.id,
       options: {}
-    })
-    // Close modal add tools
+    });
     this.dialogRef.close();
 
     this.aiEmployeeService.update(this.aiEmployeeService.aiEmployee).subscribe(updatedEmployee => {
-      // Open modal form tool (optional)
-      this.toolsService.toolSelected.emit(tool);
+      this.toolsService.toolSelected.emit({ tool, index: newIndex });
     });
   }
 }

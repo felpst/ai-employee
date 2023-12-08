@@ -5,5 +5,5 @@ import { ITool } from '@cognum/interfaces';
     providedIn: 'root'
 })
 export class ToolsService {
-    toolSelected = new EventEmitter<ITool>();
+    toolSelected = new EventEmitter<{ tool: ITool, index: number }>();
 }
