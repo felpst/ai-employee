@@ -1,6 +1,6 @@
 import { ToolsHelper } from "@cognum/helpers";
 import { IAIEmployee, IToolSettings } from "@cognum/interfaces";
-import { KnowledgeRetrieverTool, LinkedInLeadScraperTool, MailSenderTool, PythonTool, RandomNumberTool, SQLConnectorTool, WebBrowserTool } from "@cognum/tools";
+import { GoogleCalendarCreateEventTool, GoogleCalendarDeleteEventTool, GoogleCalendarListEventsTool, GoogleCalendarUpdateEventTool, KnowledgeRetrieverTool, LinkedInLeadScraperTool, MailSenderTool, PythonTool, RandomNumberTool, SQLConnectorTool, WebBrowserTool } from "@cognum/tools";
 import { DynamicStructuredTool, SerpAPI, Tool } from "langchain/tools";
 import { Calculator } from "langchain/tools/calculator";
 
@@ -34,37 +34,53 @@ export class AIEmployeeTools {
   static get(toolsSettings: IToolSettings[] = []): Tool[] {
     const tools: Tool[] = [];
     for (const toolSettings of toolsSettings) {
-      const tool = AIEmployeeTools.initTool(toolSettings) as Tool
-      if (tool) tools.push(tool);
+      const tool = AIEmployeeTools.initTool(toolSettings) as Tool[]
+      if (tool) tools.push(...tool);
     }
     return tools
   }
 
-  static initTool(toolSettings: IToolSettings): Tool | DynamicStructuredTool {
+  static initTool(toolSettings: IToolSettings): DynamicStructuredTool[] | Tool[] {
     switch (toolSettings.id) {
       case 'calculator':
-        return new Calculator();
+        return [new Calculator()];
       case 'google-search':
         // eslint-disable-next-line no-case-declarations
         const tool = new SerpAPI();
         tool.metadata = {
           id: 'google-search',
         }
-        return tool;
+        return [tool];
       case 'web-browser':
-        return new WebBrowserTool();
+        return [new WebBrowserTool()];
       case 'random-number':
-        return new RandomNumberTool();
+        return [new RandomNumberTool()];
       case 'mail-sender':
-        return new MailSenderTool(toolSettings.options);
+        return [new MailSenderTool(toolSettings.options)];
       case 'python':
-        return new PythonTool();
+        return [new PythonTool()];
       case 'sql-connector':
-        return new SQLConnectorTool(toolSettings.options);
+        return [new SQLConnectorTool(toolSettings.options)];
       case 'knowledge-retriever':
-        return new KnowledgeRetrieverTool(toolSettings.options)
+        return [new KnowledgeRetrieverTool(toolSettings.options)]
       case 'linkedin-lead-scraper':
-        return new LinkedInLeadScraperTool(toolSettings.options)
+        return [new LinkedInLeadScraperTool(toolSettings.options)]
+      case 'google-calendar':
+        const tools = []
+        if (toolSettings.options.tools.list) {
+          tools.push(new GoogleCalendarListEventsTool(toolSettings.options.token))
+        }
+        if (toolSettings.options.tools.create) {
+          tools.push(new GoogleCalendarCreateEventTool(toolSettings.options.token))
+        }
+        if (toolSettings.options.tools.update) {
+          tools.push(new GoogleCalendarUpdateEventTool(toolSettings.options.token))
+        }
+        if (toolSettings.options.tools.delete) {
+          tools.push(new GoogleCalendarDeleteEventTool(toolSettings.options.token))
+        }
+        return tools;
+
     }
   }
 }

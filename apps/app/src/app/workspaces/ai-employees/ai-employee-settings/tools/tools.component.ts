@@ -149,6 +149,7 @@ export class AIEmployeeToolsComponent implements OnInit {
       'python': 'What is the 5th element of the Fibonacci sequence?',
       'sql-connector': 'Connect to a SQL database',
       'linkedin-lead-scraper': 'Find 5 leads on LinkedIn: Web Developers in Brazil',
+      'google-calendar': 'List my 5 next events',
     };
     return testMessages[tool.id] || '';
   }
