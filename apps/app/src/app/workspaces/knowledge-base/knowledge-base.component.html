@@ -16,6 +16,10 @@
 
       <cognum-search-bar (searchUpdated)="onSearch($event)" (searchCleared)="clearSearch()"></cognum-search-bar>
 
+      <button mat-raised-button color="secondary" (click)="onAsk()" class="new-info-btn">
+        Ask a Question
+      </button>
+
       <button mat-raised-button color="primary" (click)="onForm()" class="new-info-btn">
         <mat-icon>add</mat-icon>
         New Information

@@ -4,6 +4,7 @@ import { IKnowledge, IWorkspace } from '@cognum/interfaces';
 import { AuthService } from '../../../auth/auth.service';
 import { DialogComponent } from '../../../shared/dialog/dialog.component';
 import { WorkspacesService } from '../../workspaces.service';
+import { KnowledgeAskComponent } from '../knowledge-ask/knowledge-ask.component';
 import { KnowledgeBaseService } from '../knowledge-base.service';
 import { KnowledgeFormComponent } from '../knowledge-form/knowledge-form.component';
 
@@ -55,6 +56,20 @@ export class KnowledgeActionsComponent {
             if (result) {
                 this.deleteKnowledge(knowledge);
             }
+        });
+    }
+
+    openAskKnowledge(knowledge: IKnowledge) {
+        this.dialog.open(KnowledgeAskComponent, {
+            data: {
+                knowledgeId: knowledge._id,
+                workspaceId: knowledge.workspace
+            },
+            width: '540px',
+            maxHeight: '600px',
+            position: {
+                top: '100px'
+            },
         });
     }
 
