@@ -101,6 +101,24 @@ export class SettingsTeamFormComponent {
   }
 
   onSubmit() {
+    if (this.teamForm.valid) {
+      const email = this.teamForm.value.email as string;
+      if (email) {
+        this.workspacesService.sendEmailToMembers(this.workspace._id, email).subscribe({
+          next: () => {
+            this.notificationsService.show('Email sent successfully!');
+            this.addUserMember();
+          },
+          error: (error) => {
+            console.error('Error sending email:', error);
+            this.notificationsService.show('Failed to send email. Please try again.');
+          },
+        });
+      } 
+    }
+  }
+
+  addUserMember(){
     const { email, permission } = this.teamForm.value;
     if (!this.teamForm.valid || !email || !permission) return;
     const _users = this.users.map(({ email, permission }) => ({ user: email, permission }));
@@ -108,9 +126,7 @@ export class SettingsTeamFormComponent {
     // @ts-ignore
     return this.updateData({ ...this.workspace, users: [..._users, { user: email, permission }] }, 'User added successfully!');
   }
-
-
-
+  
   changePermission(target: any, userId: string) {
     const users = this.users.map(user => ({ user: user.email, permission: user._id === userId ? target.value : user.permission }))
     return this.updateData({ ...this.workspace, users }, 'Permission changed successfully!');
