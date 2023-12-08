@@ -50,8 +50,9 @@ export class KnowledgeRetrieverService {
 
     const messages = await openai.beta.threads.messages.list(thread.id);
     const response = messages.data[0].content[0] as OpenAI.Beta.Threads.Messages.MessageContentText;
+    const textRemovedSource = response.text.value.replace(/【.*?】/g, '').trim();
 
     await openai.beta.threads.del(thread.id);
-    return response.text.value;
+    return textRemovedSource;
   }
 }
