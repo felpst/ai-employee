@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { IChatRoom, IUser, IWorkspace } from '@cognum/interfaces';
@@ -16,15 +16,14 @@ import { WorkspacesService } from '../workspaces.service';
 })
 
 export class WorkspaceHistoryComponent implements OnInit {
+
+  @Output() sortedData = new EventEmitter<any[]>();
+
   originalChat: IChatRoom[] = [];
   chats: IChatRoom[] = [];
   searchText = '';
   createdByUser: IUser | null = null;
   history: any[] = [];
-
-  sortingType: 'newFirst' | 'oldFirst' | 'mix' = 'newFirst';
-  sortingDirection: 'asc' | 'desc' = 'desc';
-  activeButton = '';
   workspace!: IWorkspace;
 
   constructor(
@@ -53,8 +52,11 @@ export class WorkspaceHistoryComponent implements OnInit {
       })));
 
       this.originalChat = [...this.history];
-      this.sortChats();
     });
+  }
+
+  handleSortedData(sortedChats: IChatRoom[]) {
+    this.history = sortedChats;
   }
 
   deleteChat(chat: IChatRoom) {
@@ -114,36 +116,19 @@ export class WorkspaceHistoryComponent implements OnInit {
   }
 
   filterChats() {
-    this.chats = this.originalChat.filter(chat =>
-      chat.name.toLowerCase().includes(this.searchText.toLowerCase())
-    );
+    this.chats = this.history.filter(chat =>
+      this.searchText && chat.chatName && chat.chatName.toLowerCase().includes(this.searchText.toLowerCase())
+    ) || [...this.history];
   }
 
-  onSearch(event: any) {
-    this.searchText = event.target.value;
-    this.filterChats();
+  onSearch(searchText: string) {
+    this.searchText = searchText;
+    this.searchText ? this.filterChats() : this.clearSearch();
   }
 
   clearSearch() {
     this.searchText = '';
-    this.chats = this.originalChat;
+    this.filterChats();
   }
 
-  sortChats() {
-    if (this.sortingType === 'newFirst') {
-      this.history.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
-    } else if (this.sortingType === 'oldFirst') {
-      this.history.sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
-    }
-
-    if (this.sortingDirection === 'desc') {
-      this.history.reverse();
-    }
-  }
-
-  onButtonClick(sortingType: 'newFirst' | 'oldFirst' | 'mix') {
-    this.sortingType = sortingType;
-    this.sortChats();
-    this.activeButton = sortingType;
-  }
 }

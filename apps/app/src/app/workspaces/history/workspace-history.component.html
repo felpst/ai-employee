@@ -4,40 +4,18 @@
       <h2>General History</h2>
     </div>
     <div class="filters">
-      <div class="sorting-buttons">
-        <button
-          mat-stroked-button
-          [ngClass]="{
-            'active-button': activeButton === 'newFirst',
-            'inactive-button': activeButton !== 'newFirst'
-          }"
-          (click)="onButtonClick('newFirst')"
-        >
-          New
-        </button>
-        <button
-          mat-stroked-button
-          [ngClass]="{
-            'active-button': activeButton === 'oldFirst',
-            'inactive-button': activeButton !== 'oldFirst'
-          }"
-          (click)="onButtonClick('oldFirst')"
-        >
-          Old
-        </button>
-        <button
-          mat-stroked-button
-          [ngClass]="{
-            'active-button': activeButton === 'mix',
-            'inactive-button': activeButton !== 'mix'
-          }"
-          (click)="onButtonClick('mix')"
-        >
-          Access
-        </button>
-      </div>
+      <cognum-sort-buttons
+        [data]="history"
+        [dateField]="'createdAt'"
+        (sortedData)="handleSortedData($event)">
+      </cognum-sort-buttons>
+
+      <cognum-search-bar 
+        (searchUpdated)="onSearch($event)" 
+        (searchCleared)="clearSearch()">
+      </cognum-search-bar>
       
-      <div class="search-container">
+      <!-- <div class="search-container">
         <input
           type="text"
           [(ngModel)]="searchText"
@@ -62,7 +40,7 @@
         >
           <mat-icon>close</mat-icon>
         </button>
-      </div>
+      </div> -->
     </div>
   </div>
 

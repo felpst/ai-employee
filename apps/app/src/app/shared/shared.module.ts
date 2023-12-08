@@ -19,7 +19,9 @@ import { AIEmployeeFormComponent } from './ai-employee-form/ai-employee-form.com
 import { DefaultPageComponent } from './default-page/default-page.component';
 import { DialogComponent } from './dialog/dialog.component';
 import { HeaderComponent } from './header/header.component';
+import { HistoryComponent } from './history/history.component';
 import { SearchBarComponent } from './search-bar/search-bar.component';
+import { SortButtonsComponent } from './sort-buttons/sort-buttons.component';
 import { StepperComponent } from './stepper/stepper.component';
 import { TabNavigatorComponent } from './tab-navigator/tab-navigator.component';
 import { UploadImageComponent } from './upload-image/upload-image.component';
@@ -34,7 +36,9 @@ const declarations: any[] = [
   AIEmployeeFormComponent,
   DefaultPageComponent,
   TabNavigatorComponent,
-  UploadImageComponent
+  UploadImageComponent,
+  HistoryComponent,
+  SortButtonsComponent
 ];
 
 const Modules: any[] = [
