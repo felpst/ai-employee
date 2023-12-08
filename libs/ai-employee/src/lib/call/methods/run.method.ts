@@ -123,8 +123,6 @@ export function run(): Observable<IAIEmployeeCall> {
         break;
     }
 
-    // TODO update memory
-
     return call.steps[call.steps.length - 1];
   }
 

@@ -1,0 +1,45 @@
+<div class="header-container">
+  <h2 mat-dialog-title>AI Employee Memory</h2>
+  <mat-dialog-actions align="end">
+    <button mat-button (click)="closeModal()" class="close-btn">
+      <mat-icon style="margin: 0">close</mat-icon>
+    </button>
+  </mat-dialog-actions>
+</div>
+<mat-dialog-content>
+  <form [formGroup]="form">
+    <div class="cognum-form-row-4">
+      <md-editor
+        formControlName="pageContent"
+        title="Describe the action to be performed by your employee"
+        height="300px"
+        required="true"
+        [options]="markdownOptions"
+        placeholder="Example: Send a reminder email to workspace employees"
+      ></md-editor>
+      <mat-error
+        *ngIf="hasInputError('instructions', 'required')"
+        class="cognum-text-12 warning-message"
+      >
+        Instructions field is required
+      </mat-error>
+    </div>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button *ngIf="data.memory" mat-button color="warn" (click)="onRemove()">
+    Remove
+  </button>
+
+  <span class="spacer"></span>
+
+  <button mat-button mat-dialog-close>Cancel</button>
+  <button
+    mat-raised-button
+    color="primary"
+    (click)="onSave()"
+    [disabled]="!form.valid"
+  >
+    Save
+  </button>
+</mat-dialog-actions>

@@ -7,15 +7,19 @@ export class KnowledgeRetrieverService {
     private settings: KnowledgeRetrieverToolSettings
   ) { }
 
-  async question(input: string,) {
+  async question(input: string) {
+    const knowledges = (await Knowledge.find({ workspace: this.settings.workspaceId }).select('openaiFileId').lean());
+    const fileIds = knowledges.map(knowledge => knowledge.openaiFileId);
+
+    return this.askByFileIds(input, fileIds);
+  }
+
+  async askByFileIds(input: string, fileIds: string[]) {
     const openai = new OpenAI();
 
     const thread = await openai.beta.threads.create();
 
     const { openaiAssistantId } = await Workspace.findById(this.settings.workspaceId).lean();
-    const knowledges = (await Knowledge.find({ workspace: this.settings.workspaceId }).select('openaiFileId').lean());
-
-    const fileIds = knowledges.map(knowledge => knowledge.openaiFileId);
 
     await openai.beta.threads.messages.create(thread.id, {
       role: "user",

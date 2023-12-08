@@ -11,6 +11,11 @@ const router: Router = express.Router();
 
 router.get('/', authMiddleware, knowledgeController.find);
 router.get(
+  '/workspaces/:workspaceId/ask',
+  authMiddleware,
+  knowledgeController.askQuestionUsingAll
+);
+router.get(
   '/workspaces/:workspaceId',
   authMiddleware,
   knowledgeController.getAllFromWorkspace
@@ -44,5 +49,11 @@ router.delete(
   knowledgeController.deleteOpenAIFile,
   knowledgeController.delete
 );
+router.get(
+  '/:id/ask',
+  authMiddleware,
+  knowledgeController.askQuestionById
+);
+router.patch('/:id/scheduled-update', knowledgeController.cronUpdate);
 
 export default router;

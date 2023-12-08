@@ -73,7 +73,12 @@
 
   <div class="content">
     <div class="list">
-      <div class="white-content" *ngFor="let employee of employees">
+      <div
+        class="white-content cursor-pointer"
+        (click)="onAIEmployee(employee)"
+        *ngFor="let employee of employees"
+        mat-ripple
+      >
         <div class="ai-employee">
           <img [src]="employee.avatar" alt="" />
           <div class="description">
@@ -85,14 +90,20 @@
           <button
             class="subject truncate"
             *ngFor="let chat of employee.chats"
-            (click)="onChat(employee._id, chat)"
+            (click)="$event.stopPropagation(); onChat(employee._id, chat)"
           >
             {{ chat.name }}
           </button>
-          <button class="new" (click)="onNewChat(employee)">New Chat</button>
+          <button
+            class="new"
+            (click)="$event.stopPropagation(); onNewChat(employee)"
+          >
+            New Chat
+          </button>
         </div>
         <div class="menu">
           <button
+            (click)="$event.stopPropagation()"
             mat-icon-button
             [matMenuTriggerFor]="menu"
             aria-label="Example icon-button with a menu"

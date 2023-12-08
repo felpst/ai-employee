@@ -1,3 +1,4 @@
+import { KnowledgeTypeEnum } from '@cognum/interfaces';
 import * as yup from 'yup';
 
 export const addKnowledgeSchema = yup.object({
@@ -5,10 +6,12 @@ export const addKnowledgeSchema = yup.object({
     .object({
       title: yup.string().notRequired(),
       description: yup.string().notRequired(),
-      data: yup.string().when('isFile', {
-        is: (isFile: boolean) => !isFile,
-        then: (schema) => schema.required()
-      }),
+      data: yup
+        .string()
+        .when('type', {
+          is: (type: KnowledgeTypeEnum) => type === KnowledgeTypeEnum.Document,
+          then: (schema) => schema.required()
+        }),
       workspace: yup.string().required(),
       employees: yup.array().of(yup.string()).notRequired(),
       permissions: yup
@@ -20,11 +23,19 @@ export const addKnowledgeSchema = yup.object({
           })
         )
         .notRequired(),
-      fileUrl: yup.string().when('isFile', {
-        is: (isFile: boolean) => isFile,
-        then: (schema) => schema.required()
-      }),
-      isFile: yup.boolean().required(),
+      contentUrl: yup
+        .string()
+        .url()
+        .when('type', {
+          is: (type: KnowledgeTypeEnum) => type !== KnowledgeTypeEnum.Document,
+          then: (schema) => schema.required()
+        }),
+      htmlUpdateFrequency: yup.string().notRequired(),
+      timeZone: yup.string().notRequired(),
+      type: yup
+        .string()
+        .oneOf(Object.values(KnowledgeTypeEnum))
+        .required(),
     })
     .noUnknown()
     .required(),
