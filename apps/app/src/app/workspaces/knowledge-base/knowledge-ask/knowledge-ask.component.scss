@@ -1,0 +1,48 @@
+.header-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+mat-dialog-actions {
+  margin-bottom: 10px;
+}
+
+form {
+  mat-form-field {
+    width: 100%;
+    padding: 0 10px;
+  }
+}
+
+.chat-container {
+  padding: 0 20px 10px 20px;
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  overflow-y: scroll;
+
+  .message {
+    padding: 10px;
+    border-radius: 5px;
+    width: fit-content;
+    max-width: 92%;
+  }
+
+  .human-message {
+    background-color: #efefef;
+    text-align: left;
+  }
+  
+  .ai-message {
+    align-self: end;
+    background-color: #5a8f8c;
+    color: white;
+  }
+  
+  .loading-ai-message {
+    align-self: end;
+    color: #5a8f8c;
+  }
+}

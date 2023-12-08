@@ -1,0 +1,23 @@
+<div class="header-container">
+  <h2 mat-dialog-title>Ask a Question</h2>
+  <mat-dialog-actions align="end">
+    <button mat-button (click)="closeModal()" class="close-btn">
+      <mat-icon style="margin: 0;">close</mat-icon>
+    </button>
+  </mat-dialog-actions>
+</div>
+
+<form>
+  <mat-form-field>
+    <input matInput placeholder="{{ knowledgeId ? 'Ask about the document' : 'Ask about the documents of the section'}}"
+      (keydown.enter)="ask($event)" />
+  </mat-form-field>
+</form>
+
+<div #chatContainer class="chat-container">
+  <div *ngFor="let message of messages" class="message"
+    [ngClass]="{'human-message': message.source === 'human', 'ai-message': message.source === 'ai'}">
+    {{ message.content }}
+  </div>
+  <mat-spinner *ngIf="loadingResponse" class="loading-ai-message" diameter={{20}}></mat-spinner>
+</div>

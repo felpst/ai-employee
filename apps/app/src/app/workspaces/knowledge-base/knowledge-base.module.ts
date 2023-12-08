@@ -19,6 +19,7 @@ import { MarkdownModule } from 'ngx-markdown';
 import { LMarkdownEditorModule } from 'ngx-markdown-editor';
 import { SharedModule } from '../../shared/shared.module';
 import { KnowledgeActionsComponent } from './knowledge-actions/knowledge-actions.component';
+import { KnowledgeAskComponent } from './knowledge-ask/knowledge-ask.component';
 import { KnowledgeChooseFormDialogComponent } from './knowledge-choose-form-dialog/knowledge-choose-form-dialog.component';
 import { KnowledgeFormComponent } from './knowledge-form/knowledge-form.component';
 import { KnowledgeModalComponent } from './knowledge-modal/knowledge-modal.component';
@@ -29,7 +30,8 @@ import { KnowledgeModalComponent } from './knowledge-modal/knowledge-modal.compo
     KnowledgeFormComponent,
     KnowledgeModalComponent,
     KnowledgeActionsComponent,
-    KnowledgeChooseFormDialogComponent
+    KnowledgeChooseFormDialogComponent,
+    KnowledgeAskComponent
   ],
   imports: [
     CommonModule,
