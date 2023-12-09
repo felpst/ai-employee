@@ -55,8 +55,8 @@
         aria-label="Status"
         formControlName="status"
       >
-        <option *ngFor="let status of statuses" [value]="status">
-          {{ status }}
+        <option *ngFor="let status of statusOptions" [value]="status.value">
+          {{ status.label }}
         </option>
       </select>
       <mat-error
@@ -69,6 +69,8 @@
   </form>
 
   <div class="buttons">
+    <button mat-button color="warn" (click)="onRemove()">Delete</button>
+
     <button
       mat-raised-button
       color="primary"
@@ -77,7 +79,5 @@
     >
       Save
     </button>
-
-    <button mat-button color="warn" (click)="onRemove()">Delete</button>
   </div>
 </div>

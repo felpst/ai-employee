@@ -236,7 +236,7 @@ export class KnowledgeController extends ModelController<typeof Knowledge> {
               name: `knowledge-${knowledgeId}-content-update`,
               schedule: cron,
               httpTarget: {
-                uri: `${process.env.SERVER_HOST}/knowledges/${knowledgeId}/scheduled-update`,
+                uri: `${process.env.SERVER_URL}/knowledges/${knowledgeId}/scheduled-update`,
                 httpMethod: 'PATCH',
               },
               timeZone
@@ -287,9 +287,13 @@ export class KnowledgeController extends ModelController<typeof Knowledge> {
         .findById(id)
         .select(['openaiFileId', 'htmlUpdateFrequency']);
 
-      if (htmlUpdateFrequency)
+      try {
         await new SchedulerService().deleteJob(`knowledge-${id}-content-update`);
-      await new OpenAIFileService().delete(openaiFileId);
+      } catch (error) { }
+
+      try {
+        await new OpenAIFileService().delete(openaiFileId);
+      } catch (error) { }
 
       next();
     } catch (error) {

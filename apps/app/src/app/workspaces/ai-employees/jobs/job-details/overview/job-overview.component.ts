@@ -14,5 +14,17 @@ export class JobOverviewComponent {
     return this.jobsService.job;
   }
 
+  onExecute() {
+    console.log('onExecute');
+    this.jobsService.execute(this.job).subscribe({
+      next: (result) => {
+        console.log(result);
+      },
+      error: (error) => {
+        console.error(error);
+      }
+    });
+  }
+
 
 }

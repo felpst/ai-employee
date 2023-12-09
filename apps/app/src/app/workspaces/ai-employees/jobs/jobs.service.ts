@@ -22,12 +22,15 @@ export class JobsService {
     ) as Observable<IJob>;
   }
 
-  load(employee: IAIEmployee): Observable<IJob[]> {
+  load(aiEmployee: IAIEmployee): Observable<IJob[]> {
     let params = new HttpParams();
-    params = params.set('filter[employee]', employee._id);
+    params = params.set('filter[aiEmployee]', aiEmployee._id);
     params = params.set('sort', '-updatedAt');
-
     return this.list({ params });
+  }
+
+  execute(job: IJob): Observable<any> {
+    return this.coreApiService.post(`${this.route}/${job._id}/execute`, {}) as Observable<IJob>;
   }
 
   create(data: Partial<IJob>): Observable<IJob> {

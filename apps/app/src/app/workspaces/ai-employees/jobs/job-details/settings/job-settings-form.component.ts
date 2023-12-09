@@ -22,7 +22,10 @@ export class JobSettingsFormComponent {
     showPreviewPanel: false,
   };
   isLoading = false;
-  statuses = ['Running', 'Done']
+  statusOptions = [
+    { value: 'running', label: 'Run' },
+    { value: 'stopped', label: 'Stop' },
+  ]
 
   constructor(
     private formBuilder: FormBuilder,
@@ -37,7 +40,7 @@ export class JobSettingsFormComponent {
       name: ['', [Validators.required]],
       instructions: ['', Validators.required],
       frequency: ['', Validators.required],
-      status: ['Running', [Validators.required, inListValidator(this.statuses)]]
+      status: ['Running', [Validators.required, inListValidator(this.statusOptions.map(({ value }) => value))]],
     });
 
     this.initializeForm();
@@ -55,7 +58,7 @@ export class JobSettingsFormComponent {
     this.isLoading = true;
     const { status, ...rest } = this.form.value
     const _status = status.toLowerCase();
-    const data = { ...this.job, ...rest, status: _status, employee: this.employee._id }
+    const data = { ...this.job, ...rest, status: _status, aiEmployee: this.aiEmployee._id }
     return this.jobsService.update(data).subscribe({
       next: (res) => this.handleSuccess('Successfully updated job', res),
       error: (error) => this.handleError('Error updating job. Please try again.', error)
@@ -111,7 +114,7 @@ export class JobSettingsFormComponent {
     return this.jobsService.job
   }
 
-  get employee() {
+  get aiEmployee() {
     return this.employeesService.aiEmployee
   }
 }

@@ -68,7 +68,7 @@ export class JobFormComponent {
     this.isLoading = true;
     const { status, ...rest } = this.form.value
     const _status = status.toLowerCase();
-    const data = { ...this.job, ...rest, status: _status, employee: this.employee._id }
+    const data = { ...this.job, ...rest, status: _status, aiEmployee: this.aiEmployee._id }
     if (this.job) {
       return this.jobsService.update(data).subscribe({
         next: (res) => this.handleSuccess('Successfully updated job', res),
@@ -130,7 +130,7 @@ export class JobFormComponent {
     );
   }
 
-  get employee() {
+  get aiEmployee() {
     return this.employeesService.aiEmployee
   }
 }

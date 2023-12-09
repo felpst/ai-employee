@@ -6,6 +6,9 @@ import {
   SystemMessagePromptTemplate,
 } from "langchain/prompts";
 
+export async function cron() {
+
+}
 
 export async function textToCron(text: string) {
   const template =

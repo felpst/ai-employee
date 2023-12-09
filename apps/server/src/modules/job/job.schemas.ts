@@ -7,7 +7,7 @@ export const addJobSchema = yup.object({
       instructions: yup.string().required(),
       frequency: yup.string().required(),
       status: yup.string().required().oneOf(['running', 'done']),
-      employee: yup.string().required()
+      aiEmployee: yup.string().required()
     })
     .noUnknown()
     .required(),
