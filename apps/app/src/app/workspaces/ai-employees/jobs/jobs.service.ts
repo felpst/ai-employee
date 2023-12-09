@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { IAIEmployee, IJob } from '@cognum/interfaces';
+import { IAIEmployee, IAIEmployeeCall, IJob } from '@cognum/interfaces';
 import { Observable } from 'rxjs';
 import { CoreApiService } from '../../../services/apis/core-api.service';
 
@@ -12,6 +12,7 @@ export class JobsService {
   private route = 'jobs';
   job!: IJob;
   jobs: Map<string, IJob> = new Map<string, IJob>();
+  calls: IAIEmployeeCall[] = []
 
   constructor(private coreApiService: CoreApiService) { }
 
@@ -20,6 +21,27 @@ export class JobsService {
       `${this.route}/${id}`,
       options
     ) as Observable<IJob>;
+  }
+
+  loadCalls(job: IJob): Observable<IAIEmployeeCall[]> {
+    const jobId = job._id?.toString() as string;
+
+    let params = new HttpParams();
+    params = params.set('filter[context.job._id]', jobId);
+    params = params.set('sort', '-updatedAt');
+
+    return new Observable((observer) => {
+      (
+        this.coreApiService.get(this.route + '/calls/', { params }) as Observable<IAIEmployeeCall[]>
+      ).subscribe({
+        next: (calls: IAIEmployeeCall[]) => {
+          this.calls = calls;
+          console.log(this.calls);
+
+          observer.next(calls);
+        },
+      });
+    });
   }
 
   load(aiEmployee: IAIEmployee): Observable<IJob[]> {

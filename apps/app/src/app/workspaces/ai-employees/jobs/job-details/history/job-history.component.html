@@ -1,6 +1,5 @@
 <div class="row">
-  <div class="overview">
-    <img src="../../../../../../assets/icons/build.svg" />
-    <strong>History is under development</strong>
+  <div class="message" *ngFor="let message of history">
+    <cognum-chat-message [message]="message"></cognum-chat-message>
   </div>
 </div>

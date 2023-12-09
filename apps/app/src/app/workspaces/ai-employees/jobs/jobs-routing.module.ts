@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { JobHistoryComponent } from './job-details/history/job-history.component';
+import { JobHistoyResolver } from './job-details/history/job-history.resolver';
 import { JobDetailsComponent } from './job-details/job-details.component';
 import { JobOverviewComponent } from './job-details/overview/job-overview.component';
 import { JobSettingsFormComponent } from './job-details/settings/job-settings-form.component';
@@ -25,6 +26,7 @@ const routes: Routes = [
       },
       {
         path: 'history',
+        resolve: [JobHistoyResolver],
         data: { nav: { select: 1 } },
         component: JobHistoryComponent
       },

@@ -2,11 +2,13 @@ import express, { Router } from 'express';
 import YupValidatorMiddleware from '../../middlewares/yup.validator';
 import { authMiddleware } from '../auth/auth.middleware';
 import { userMiddleware } from '../user/user.middleware';
+import callRoutes from './calls/jobs-calls.routes';
 import jobController from './job.controller';
 import { addJobSchema } from './job.schemas';
 
 const router: Router = express.Router();
 
+router.use('/calls', callRoutes);
 router.post('/', authMiddleware, userMiddleware, YupValidatorMiddleware(addJobSchema), jobController.cron, jobController.create);
 router.get('/', authMiddleware, jobController.find);
 router.get('/:id', authMiddleware, jobController.getById);

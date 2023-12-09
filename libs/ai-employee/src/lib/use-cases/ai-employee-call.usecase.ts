@@ -1,6 +1,6 @@
 import { IAgent } from "@cognum/interfaces";
 
-export class AIEmployeeCall {
+export class AIEmployeeCallUseCase {
 
   constructor(
     private aiEmployeeAgent: IAgent

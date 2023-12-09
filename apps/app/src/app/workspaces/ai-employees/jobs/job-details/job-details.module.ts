@@ -7,6 +7,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { RouterModule } from '@angular/router';
 import { SharedModule } from 'apps/app/src/app/shared/shared.module';
 import { LMarkdownEditorModule } from 'ngx-markdown-editor';
+import { ChatsModule } from '../../chats/chats.module';
 import { JobHistoryComponent } from './history/job-history.component';
 import { JobDetailsComponent } from './job-details.component';
 import { JobOverviewComponent } from './overview/job-overview.component';
@@ -17,7 +18,7 @@ import { JobSettingsFormComponent } from './settings/job-settings-form.component
     JobDetailsComponent,
     JobHistoryComponent,
     JobOverviewComponent,
-    JobSettingsFormComponent
+    JobSettingsFormComponent,
   ],
   imports: [
     RouterModule,
@@ -27,7 +28,8 @@ import { JobSettingsFormComponent } from './settings/job-settings-form.component
     MatIconModule,
     MatProgressSpinnerModule,
     SharedModule,
-    LMarkdownEditorModule
+    LMarkdownEditorModule,
+    ChatsModule
   ],
 })
 export class JobDetailsModule { }

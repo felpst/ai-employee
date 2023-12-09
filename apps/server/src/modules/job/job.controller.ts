@@ -95,6 +95,7 @@ export class JobController extends ModelController<typeof Job> {
         input: job.instructions,
         context: {
           job: {
+            _id: job._id.toString(),
             name: job.name,
             frequency: job.frequency,
             status: job.status,
