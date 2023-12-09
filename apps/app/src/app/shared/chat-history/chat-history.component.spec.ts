@@ -1,16 +1,16 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { HistoryComponent } from './history.component';
+import { ChatHistoryComponent } from './chat-history.component';
 
-describe('HistoryComponent', () => {
-  let component: HistoryComponent;
-  let fixture: ComponentFixture<HistoryComponent>;
+describe('ChatHistoryComponent', () => {
+  let component: ChatHistoryComponent;
+  let fixture: ComponentFixture<ChatHistoryComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [HistoryComponent],
+      imports: [ChatHistoryComponent],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(HistoryComponent);
+    fixture = TestBed.createComponent(ChatHistoryComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

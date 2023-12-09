@@ -5,7 +5,7 @@
     </div>
     <div class="filters">
       <cognum-sort-buttons
-        [data]="history"
+        [data]="chats"
         [dateField]="'createdAt'"
         (sortedData)="handleSortedData($event)">
       </cognum-sort-buttons>
@@ -14,71 +14,9 @@
         (searchUpdated)="onSearch($event)" 
         (searchCleared)="clearSearch()">
       </cognum-search-bar>
-      
-      <!-- <div class="search-container">
-        <input
-          type="text"
-          [(ngModel)]="searchText"
-          (keyup)="onSearch($event)"
-          placeholder="input search text"
-          class="search-input"
-        />
-        <button
-          *ngIf="!searchText"
-          mat-icon-button
-          aria-label="Clear"
-          (click)="clearSearch()"
-        >
-          <mat-icon>search</mat-icon>
-        </button>
-        <button
-          *ngIf="searchText"
-          matSuffix
-          mat-icon-button
-          aria-label="Clear"
-          (click)="clearSearch()"
-        >
-          <mat-icon>close</mat-icon>
-        </button>
-      </div> -->
     </div>
   </div>
 
-  <div class="content">
-    <div class="list">
-      <div class="white-content" *ngFor="let chat of history">
-        <div class="chats">
-          <cognum-users-avatar [users]="chat.users" ></cognum-users-avatar>
-          <div class="description">
-            <p>{{ chat.historyTitle}}</p>
-            <p>{{ formatChatDate(chat.date) }}</p>
-          </div>
-        </div>
-
-        <button class="subject"  (click)="onChat(chat.users[1]._id, chat)">{{ chat.chatName }}</button>
-
-        <p class="conversation" *ngIf="chat && chat.summary">
-          {{ chat.summary.slice(0, 300)
-          }}{{ chat.summary.length > 300 ? '...' : '' }}
-        </p>
-
-        <div class="menu">
-          <button
-            mat-icon-button
-            [matMenuTriggerFor]="menu"
-            aria-label="Example icon-button with a menu"
-          >
-            <mat-icon>more_horizon</mat-icon>
-          </button>
-          <mat-menu #menu="matMenu">
-            <button (click)="deleteChat(chat)" mat-menu-item>
-              <mat-icon>delete_outline</mat-icon>
-              <span>delete</span>
-            </button>
-          </mat-menu>
-        </div>
-      </div>
-    </div>
-  </div>
+  <cognum-chat-history [chats]="chats" (chatDeleted)="loadChats()"></cognum-chat-history>
 </div>
 <router-outlet></router-outlet>
