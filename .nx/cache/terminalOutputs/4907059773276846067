@@ -1,0 +1,21 @@
+[37m[39m
+[37m[0m[1mInitial Chunk Files[22m          [2m | [22m[1mNames[22m                           [2m | [22m [1mRaw Size[22m[2m | [22m[1mEstimated Transfer Size[22m[0m[39m
+[37m[0m[92mmain.265380d1776af57c.js[39m[37m     [2m | [22mmain                            [2m | [22m[96m904.73 kB[39m[37m[2m | [22m              [96m199.85 kB[39m[37m[0m[39m
+[37m[0m[92mstyles.25ebc2c25b370008.css[39m[37m  [2m | [22mstyles                          [2m | [22m[96m339.07 kB[39m[37m[2m | [22m               [96m36.40 kB[39m[37m[0m[39m
+[37m[0m[92mscripts.18276aa0ff285c4b.js[39m[37m  [2m | [22mscripts                         [2m | [22m [96m63.26 kB[39m[37m[2m | [22m               [96m21.85 kB[39m[37m[0m[39m
+[37m[0m[92mpolyfills.a9525efbc089c23d.js[39m[37m[2m | [22mpolyfills                       [2m | [22m [96m32.95 kB[39m[37m[2m | [22m               [96m10.63 kB[39m[37m[0m[39m
+[37m[0m[92mruntime.3abb0a3bcdf4ab92.js[39m[37m  [2m | [22mruntime                         [2m | [22m  [96m2.87 kB[39m[37m[2m | [22m                [96m1.40 kB[39m[37m[0m[39m
+[37m[0m[0m[39m
+[37m[0m[1m [22m                            [2m | [22m[1mInitial Total[22m                   [2m | [22m  [1m1.31 MB[22m[2m | [22m              [1m270.12 kB[22m[0m[39m
+[37m[0m[0m[39m
+[37m[0m[1mLazy Chunk Files[22m             [2m | [22m[1mNames[22m                           [2m | [22m [1mRaw Size[22m[2m | [22m[1mEstimated Transfer Size[22m[0m[39m
+[37m[0m[92m432.2b36deaef2eeb7f8.js[39m[37m      [2m | [22maccount-account-module          [2m | [22m  [96m1.12 MB[39m[37m[2m | [22m               [96m89.87 kB[39m[37m[0m[39m
+[37m[0m[92m125.6085c960c18e717d.js[39m[37m      [2m | [22mworkspaces-workspaces-module    [2m | [22m[96m996.94 kB[39m[37m[2m | [22m              [96m209.74 kB[39m[37m[0m[39m
+[37m[0m[92m314.21e0f533ba010abd.js[39m[37m      [2m | [22mai-employees-ai-employees-module[2m | [22m[96m101.38 kB[39m[37m[2m | [22m               [96m22.49 kB[39m[37m[0m[39m
+[37m[0m[92m978.ddfb34e67cb0d121.js[39m[37m      [2m | [22mauth-auth-module                [2m | [22m [96m39.99 kB[[39m[37m39m[2m | [22m                [96m6.68 kB[39m[37m[0m[39m
+[37m[0m[92m986.e72f5f2a5c5b7779.js[39m[37m      [2m | [22mauth-auth-module                [2m | [22m [96m29.27 kB[39m[37m[2m | [22m                [96m4.64 kB[39m[37m[0m[39m
+[37m[0m[92m743.c7341a396d1c1ff0.js[39m[37m      [2m | [22mjobs-jobs-module                [2m | [22m [96m28.27 kB[39m[37m[2m | [22m                [96m6.15 kB[39m[37m[0m[39m
+[37m[0m[92m278.4c37634f26be151c.js[39m[37m      [2m | [22maccount-account-module          [2m | [22m [96m24.07 kB[39m[37m[2m | [22m                [96m6.60 kB[39m[37m[0m[39m
+[37m[0m[92m828.bb5b2ebb62be87a2.js[39m[37m      [2m | [22mchats-chats-module              [2m | [22m  [96m5.44 kB[39m[37m[2m | [22m                [96m1.85 kB[39m[37m[0m[39m
+[37m[0m[0m[39m
+[37m[0mBuild at: [1m[37m2023-12-10T08:24:25.598Z[39m[37m[22m - Hash: [1m[37m322ce98403d55db5[39m[37m[22m - Time: [1m[37m14809[39m[37m[22mms[0m[39m

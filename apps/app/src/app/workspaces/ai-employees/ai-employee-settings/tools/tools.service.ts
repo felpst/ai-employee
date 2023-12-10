@@ -2,7 +2,6 @@ import { HttpParams } from '@angular/common/http';
 import { EventEmitter, Injectable } from '@angular/core';
 import { ITool } from '@cognum/interfaces';
 import { CoreApiService } from 'apps/app/src/app/services/apis/core-api.service';
-import { env } from 'apps/app/src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -39,8 +38,9 @@ export class ToolsService {
       }).subscribe(async (res: any) => {
         const { authUrl } = res;
         const code = await this.openOAuth2Window(authUrl);
+        console.log(code);
 
-        if (!code) return reject(null);
+        if (!code) return;
 
         let params = new HttpParams();
         params = params.set('code', code);
@@ -66,25 +66,37 @@ export class ToolsService {
       const windowFeatures = `width=${width},height=${height},top=${top},left=${left},scrollbars=yes,status=yes,resizable=yes`;
 
       this.windowRef = window.open(url, 'AuthWindow', windowFeatures) as Window;
-      if (this.windowRef) {
-        this.messageHandler = this.createMessageHandler(resolve);
-        this.windowRef.addEventListener('message', this.messageHandler, false);
-        this.windowRef.onbeforeunload = () => {
-          window.removeEventListener('message', this.messageHandler, false);
-        };
-      } else {
-        reject(new Error('Não foi possível abrir a janela de autenticação'));
-      }
+      const interval = setInterval(() => {
+        const code = this.code;
+        if (code) {
+          clearInterval(interval);
+          resolve(code);
+        } else if (this.windowRef.closed) {
+          clearInterval(interval);
+          reject(new Error('Janela de autenticação fechada'));
+        }
+      }, 500);
+
+      // if (this.windowRef) {
+      //   this.messageHandler = this.createMessageHandler(resolve);
+      //   this.windowRef.addEventListener('message', this.messageHandler, false);
+      //   this.windowRef.onbeforeunload = () => {
+      //     window.removeEventListener('message', this.messageHandler, false);
+      //   };
+      // } else {
+      //   reject(new Error('Não foi possível abrir a janela de autenticação'));
+      // }
     })
   }
 
-  createMessageHandler(resolve: any) {
-    return (event: MessageEvent) => {
-      const code = event.data?.code || this.code;
-      if (event.origin === env.app_url && code) {
-        resolve(code)
-      }
-    }
-  }
+  // createMessageHandler(resolve: any) {
+  //   return (event: MessageEvent) => {
+  //     console.log(event.data);
+  //     const code = event.data?.code || this.code;
+  //     if (event.origin === env.app_url && code) {
+  //       resolve(code)
+  //     }
+  //   }
+  // }
 
 }

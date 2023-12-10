@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { env } from 'apps/app/src/environments/environment';
 import { ToolsService } from '../tools.service';
 
 @Component({
@@ -24,7 +23,7 @@ export class ToolOAuth2Component {
       if (params.has('code')) {
         const code = params.get('code');
         this.toolsService.code = code as string;
-        (window.opener as Window).postMessage({ code }, env.app_url);
+        (window.opener as Window).postMessage({ code }, '*');
         window.close();
       }
     } else {

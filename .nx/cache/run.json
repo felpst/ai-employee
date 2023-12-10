@@ -1,18 +1,18 @@
 {
   "run": {
-    "command": "nx build chat-server",
-    "startTime": "2023-12-10T01:41:09.059Z",
-    "endTime": "2023-12-10T01:41:20.458Z",
+    "command": "nx build server",
+    "startTime": "2023-12-10T08:47:33.816Z",
+    "endTime": "2023-12-10T08:47:52.929Z",
     "inner": false
   },
   "tasks": [
     {
-      "taskId": "chat-server:build:production",
+      "taskId": "server:build:production",
       "target": "build",
-      "projectName": "chat-server",
-      "hash": "6138599583768308230",
-      "startTime": "2023-12-10T01:41:09.070Z",
-      "endTime": "2023-12-10T01:41:20.457Z",
+      "projectName": "server",
+      "hash": "17027955868225496308",
+      "startTime": "2023-12-10T08:47:33.837Z",
+      "endTime": "2023-12-10T08:47:52.929Z",
       "params": "",
       "cacheStatus": "cache-miss",
       "status": 0

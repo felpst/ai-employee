@@ -4,10 +4,16 @@ entrypoint: node main.js
 
 env_variables:
   PROD: 'true'
-  OPEN_AI_KEY: ''
+  APP_URL: 'https://cognum.web.app'
+  SERVER_URL: 'https://staging-server-dot-cognum.uc.r.appspot.com'
   MONGO_URL: ''
   AUTH_SECRET_KEY: ''
-  CORS_ORIGIN: '["https://cognum.web.app", "wss://chat-dot-cognum.uc.r.appspot.com"]'
+  CORS_ORIGIN: '["https://cognum.web.app"]'
+  OPENAI_API_KEY: ''
+  EMAIL_USER: ''
+  EMAIL_PASSWORD: ''
+  GOOGLE_CLIENT_ID: ''
+  GOOGLE_CLIENT_SECRET: ''
 
 automatic_scaling:
   target_cpu_utilization: 0.65
