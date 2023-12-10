@@ -8,13 +8,17 @@ export class ConnectionClose {
   ) { }
 
   execute(conn: Connection, message = 'Connection closed') {
-    const session = conn.session;
+    try {
+      const session = conn.session;
 
-    this.messageSend.execute(conn, {
-      type: 'connection',
-      content: { sessionId: session.id, isConnected: false, message },
-    });
-    session.socket.close();
-    console.log(`Closed session with id ${session.id}`, message);
+      this.messageSend.execute(conn, {
+        type: 'connection',
+        content: { sessionId: session.id, isConnected: false, message },
+      });
+      session.socket.close();
+      console.log(`Closed session with id ${session.id}`, message);
+    } catch (error) {
+      console.error(error.message);
+    }
   }
 }

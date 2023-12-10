@@ -18,7 +18,7 @@
     "stage:server:deploy": "npm run stage:server:build && npm run stage:server:yaml && gcloud app deploy dist/apps/server/app-stage.yaml",
     "stage:chat-server:build": "nx build chat-server && cd dist/apps/chat-server && npm i --package-lock-only",
     "stage:chat-server:yaml": "xcopy .\\apps\\chat-server\\chat-server-stage.yaml .\\dist\\apps\\chat-server\\chat-server-stage.yaml /F /Y",
-    "stage:chat-server:deploy": "npm run stage:chat-server:yaml && gcloud app deploy dist/apps/chat-server/chat-server-stage.yaml",
+    "stage:chat-server:deploy": "npm run stage:chat-server:build && npm run stage:chat-server:yaml && gcloud app deploy dist/apps/chat-server/chat-server-stage.yaml",
     "python:deploy": "gcloud app deploy apps/python_api/python.yaml",
     "prod:deploy": "npm run app:deploy && npm run server:deploy && npm run chat-server:deploy && npm run python:deploy",
     "stage:deploy": "npm run stage:app:deploy && npm run stage:server:deploy && npm run stage:chat-server:deploy && npm run python:deploy"

@@ -18350,6 +18350,11 @@
         "source": "data-connection",
         "target": "interfaces",
         "type": "static"
+      },
+      {
+        "source": "data-connection",
+        "target": "npm:langchain",
+        "type": "static"
       }
     ],
     "knowledge-base": [
@@ -18361,6 +18366,11 @@
       {
         "source": "knowledge-base",
         "target": "npm:@zilliz/milvus2-sdk-node",
+        "type": "static"
+      },
+      {
+        "source": "knowledge-base",
+        "target": "npm:langchain",
         "type": "static"
       },
       {
@@ -18387,6 +18397,11 @@
       },
       {
         "source": "ai-employee",
+        "target": "npm:langchain",
+        "type": "static"
+      },
+      {
+        "source": "ai-employee",
         "target": "helpers",
         "type": "static"
       },
@@ -18408,6 +18423,11 @@
       {
         "source": "ai-employee",
         "target": "npm:rxjs",
+        "type": "static"
+      },
+      {
+        "source": "ai-employee",
+        "target": "npm:dotenv",
         "type": "static"
       },
       {
@@ -18491,6 +18511,11 @@
     "interfaces": [
       {
         "source": "interfaces",
+        "target": "npm:langchain",
+        "type": "static"
+      },
+      {
+        "source": "interfaces",
         "target": "npm:mongodb",
         "type": "static"
       },
@@ -18526,6 +18551,11 @@
       {
         "source": "app-e2e",
         "target": "npm:cypress",
+        "type": "static"
+      },
+      {
+        "source": "app-e2e",
+        "target": "npm:@nx/cypress",
         "type": "static"
       }
     ],
@@ -18617,6 +18647,11 @@
       {
         "source": "server",
         "target": "npm:cors",
+        "type": "static"
+      },
+      {
+        "source": "server",
+        "target": "npm:dotenv",
         "type": "static"
       },
       {
@@ -18713,6 +18748,11 @@
     "tools": [
       {
         "source": "tools",
+        "target": "npm:langchain",
+        "type": "static"
+      },
+      {
+        "source": "tools",
         "target": "llm",
         "type": "static"
       },
@@ -18749,6 +18789,11 @@
       {
         "source": "tools",
         "target": "npm:google-auth-library",
+        "type": "static"
+      },
+      {
+        "source": "tools",
+        "target": "npm:dotenv",
         "type": "static"
       },
       {
@@ -18861,6 +18906,11 @@
       },
       {
         "source": "app",
+        "target": "npm:@angular/material",
+        "type": "static"
+      },
+      {
+        "source": "app",
         "target": "interfaces",
         "type": "static"
       },
@@ -18892,6 +18942,11 @@
       {
         "source": "app",
         "target": "npm:ngx-markdown",
+        "type": "static"
+      },
+      {
+        "source": "app",
+        "target": "npm:@angular/cdk",
         "type": "static"
       },
       {
@@ -18929,6 +18984,11 @@
       {
         "source": "llm",
         "target": "logs",
+        "type": "static"
+      },
+      {
+        "source": "llm",
+        "target": "npm:langchain",
         "type": "static"
       },
       {

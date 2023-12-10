@@ -1,6 +1,6 @@
 import { ToolsHelper } from "@cognum/helpers";
 import { IAIEmployee, IToolSettings } from "@cognum/interfaces";
-import { GoogleCalendarCreateEventTool, GoogleCalendarDeleteEventTool, GoogleCalendarListEventsTool, GoogleCalendarUpdateEventTool, KnowledgeRetrieverTool, LinkedInLeadScraperTool, MailSenderTool, PythonTool, RandomNumberTool, SQLConnectorTool, WebBrowserTool } from "@cognum/tools";
+import { GoogleCalendarCreateEventTool, GoogleCalendarDeleteEventTool, GoogleCalendarListEventsTool, GoogleCalendarUpdateEventTool, KnowledgeRetrieverTool, LinkedInFindLeadsTool, MailSenderTool, PythonTool, RandomNumberTool, SQLConnectorTool, WebBrowserTool } from "@cognum/tools";
 import { DynamicStructuredTool, SerpAPI, Tool } from "langchain/tools";
 import { Calculator } from "langchain/tools/calculator";
 
@@ -64,7 +64,7 @@ export class AIEmployeeTools {
       case 'knowledge-retriever':
         return [new KnowledgeRetrieverTool(toolSettings.options)]
       case 'linkedin-lead-scraper':
-        return [new LinkedInLeadScraperTool(toolSettings.options)]
+        return [new LinkedInFindLeadsTool(toolSettings.options)]
       case 'google-calendar':
         const tools = []
         if (toolSettings.options.tools.list) {

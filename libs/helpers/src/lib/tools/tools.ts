@@ -56,8 +56,8 @@ const tools = [
     show: true
   },
   {
-    "id": "linkedin-lead-scraper",
-    "name": "LinkedIn Lead Extractor",
+    "id": "linkedin",
+    "name": "LinkedIn Tools",
     "description": "Find leads on LinkedIn",
     "icon": "https://storage.googleapis.com/factory-assets/tools/linkedin-lead-scraper-tool.png",
     intentions: ['Task Execution'],

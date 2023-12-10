@@ -17,10 +17,10 @@ class WebSocketService {
 
   constructor() {
     this.app.get('/readiness_check', (req, res) => {
-      res.status(200).send('OK');
+      res.status(200).send();
     });
     this.app.get('/liveness_check', (req, res) => {
-      res.status(200).send('OK');
+      res.status(200).send();
     });
 
     this.httpServer = createServer(this.app);

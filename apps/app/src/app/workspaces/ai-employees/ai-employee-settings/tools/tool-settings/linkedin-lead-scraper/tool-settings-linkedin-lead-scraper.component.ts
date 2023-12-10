@@ -18,8 +18,13 @@ export class AIToolSettingsLinkedInLeadScraperComponent {
     private dialogRef: MatDialogRef<AIToolSettingsLinkedInLeadScraperComponent>,
   ) {
     this.formGroup = new FormGroup({
-      user: new FormControl(this.data.tool.options?.user, [Validators.required]),
-      password: new FormControl(this.data.tool.options?.password, [Validators.required])
+      auth: new FormGroup({
+        user: new FormControl(this.data.tool.options?.user, [Validators.required]),
+        password: new FormControl(this.data.tool.options?.password, [Validators.required]),
+      }),
+      tools: new FormGroup({
+        findLeads: new FormControl(this.data.tool.options?.tools?.findLeads, [Validators.required]),
+      })
     });
   }
 
