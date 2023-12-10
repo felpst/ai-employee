@@ -7,8 +7,6 @@ tmp
 data
 # dependencies
 node_modules
-.nx
-package-lock.json
 
 # IDEs and editors
 /.idea
