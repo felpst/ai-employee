@@ -14,6 +14,8 @@ export interface WebSocketMessage {
   providedIn: 'root',
 })
 export class ChatService {
+  loading = false;
+
   private socket!: WebSocket;
   selectedChat!: IChatRoom;
   messages: any[] = [];
@@ -36,6 +38,8 @@ export class ChatService {
   ) { }
 
   load(chatId: string): Observable<IChatRoom> {
+    this.loading = true;
+    this.messages = []
     return new Observable((observer) => {
       this.chatsService.get(chatId).subscribe({
         next: (chat) => {
@@ -84,8 +88,10 @@ export class ChatService {
             this.senders.set(sender._id, sender);
           }
 
+          this.loading = false;
         } else {
           if (!env.production) console.error('Connection refused', data.message);
+          this.loading = false;
         }
       },
       auth: (data: any) => {

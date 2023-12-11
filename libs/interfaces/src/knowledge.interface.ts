@@ -1,17 +1,27 @@
 import { Schema } from 'mongoose';
-import { IAIEmployee } from './ai-employee.interface';
+import { IAIEmployee } from './ai-employee';
 import { DefaultModel } from './default.model';
 import { IWorkspace } from './workspace.interface';
 
+export enum KnowledgeTypeEnum {
+  Document = 'doc',
+  File = 'file',
+  Html = 'html',
+}
+
 export interface IKnowledge extends DefaultModel {
+  _id?: string;
   title: string;
   description: string;
-  data: string;
+  type: KnowledgeTypeEnum,
+  data?: string;
+  contentUrl?: string;
+  htmlUpdateFrequency?: string;
+  openaiFileId: string;
   workspace: Schema.Types.ObjectId | IWorkspace;
   employees: Schema.Types.ObjectId[] | IAIEmployee[];
   permissions: Array<{
     userId: string;
     permission: 'Reader' | 'Editor';
   }>;
-  openaiFileId: string;
 }

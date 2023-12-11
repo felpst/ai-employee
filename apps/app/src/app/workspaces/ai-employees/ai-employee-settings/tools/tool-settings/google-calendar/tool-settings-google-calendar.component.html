@@ -1,0 +1,32 @@
+<h2 mat-dialog-title>Settings: {{ tool.name }}</h2>
+<mat-dialog-content>
+  <form [formGroup]="formGroup" (ngSubmit)="onSubmit()">
+    <div class="cognum-heading-2">Tools</div>
+    <div>
+      <mat-checkbox color="primary" formControlName="list">
+        List events
+      </mat-checkbox>
+    </div>
+    <div>
+      <mat-checkbox color="primary" formControlName="create">
+        Create events
+      </mat-checkbox>
+    </div>
+    <div>
+      <mat-checkbox color="primary" formControlName="update">
+        Update events
+      </mat-checkbox>
+    </div>
+    <div>
+      <mat-checkbox color="primary" formControlName="delete">
+        Delete events
+      </mat-checkbox>
+    </div>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Cancel</button>
+  <button mat-button (click)="onSubmit()" [disabled]="!formGroup.valid">
+    Save
+  </button>
+</mat-dialog-actions>

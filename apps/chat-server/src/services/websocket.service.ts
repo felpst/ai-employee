@@ -16,6 +16,13 @@ class WebSocketService {
   private webSocketServer: WebSocketServer;
 
   constructor() {
+    this.app.get('/readiness_check', (req, res) => {
+      res.status(200).send();
+    });
+    this.app.get('/liveness_check', (req, res) => {
+      res.status(200).send();
+    });
+
     this.httpServer = createServer(this.app);
     this.webSocketServer = new WebSocketServer({
       server: this.httpServer,

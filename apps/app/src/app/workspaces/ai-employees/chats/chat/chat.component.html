@@ -1,4 +1,9 @@
 <div class="chat">
+  <mat-dialog-actions align="end" *ngIf="chatData && chatData.tool">
+    <button id="close-btn" (click)="closeChat()">
+      <mat-icon>close</mat-icon>  
+    </button>
+  </mat-dialog-actions>
   <div
     class="messages"
     #chatContent

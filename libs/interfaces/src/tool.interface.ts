@@ -3,6 +3,8 @@ export interface ITool {
   name: string;
   description: string;
   icon: string;
+  scope?: string;
+  intentions?: string[];
   show: boolean;
 }
 

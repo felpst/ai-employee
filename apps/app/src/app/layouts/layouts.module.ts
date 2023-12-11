@@ -42,4 +42,4 @@ const MaterialModules: any[] = [
   exports: [declarations],
   imports: [CommonModule, RouterModule, MaterialModules, SharedModule],
 })
-export class LayoutsModule {}
+export class LayoutsModule { }

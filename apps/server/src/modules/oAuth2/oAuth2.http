@@ -1,0 +1,10 @@
+@baseUrl=http://localhost:3001
+@apiRoute=users
+
+### login
+
+# @name LoginAPI
+GET {{baseUrl}}/tools-settings/auth2/google-calendar
+Content-Type: application/json
+
+

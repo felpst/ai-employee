@@ -1,0 +1,64 @@
+@baseUrl=http://localhost:3000
+@apiRoute=jobs
+
+### login
+
+# @name LoginAPI
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{ "email": "{{email}}", "password": "{{password}}" }
+
+
+### authToken
+
+@$authToken = {{LoginAPI.response.headers.X-Auth-Token}}
+
+### Create ###
+
+POST {{baseUrl}}/{{apiRoute}}
+Content-Type: application/json
+Authorization: Bearer {{$authToken}}
+
+{
+  "name": "Job test",
+  "instructions": "-------",
+  "frequency": "Essa rotina deve ser executada semanalmente, toda segunda-feira apenas 1 vez, às 8 horas da manhã. Com exceção do caso onde a segunda for dia 2 do mês em questão",
+  "status": "running",
+  "employee": "65664a46e6fbfd8712533eb8"
+}
+
+### Get all ###
+# @name ListAPI
+
+GET {{baseUrl}}/{{apiRoute}}
+Authorization: Bearer {{$authToken}}
+
+### Get a Employee by ID ###
+@id = {{ListAPI.response.body.0._id}}
+
+GET {{baseUrl}}/{{apiRoute}}/{{id}}
+Authorization: Bearer {{$authToken}}
+
+### Update a Employee ###
+
+PUT {{baseUrl}}/{{apiRoute}}/{{id}}
+Content-Type: application/json
+Authorization: Bearer {{$authToken}}
+
+{
+  "frequency": "Essa rotina deve ser executada semanalmente, toda sexta-feira apenas 1 vez, às 8 horas da manhã. Com exceção do caso onde a sexta for dia 13 do mês em questão"
+}
+
+### Delete ###
+
+DELETE {{baseUrl}}/{{apiRoute}}/{{id}}
+Authorization: Bearer {{$authToken}}
+
+### Execute tool ###
+
+POST {{baseUrl}}/{{apiRoute}}/656f82f780aedf1172eb5ab7/execute
+Content-Type: application/json
+Authorization: Bearer {{$authToken}}
+
+{ }

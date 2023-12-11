@@ -47,5 +47,11 @@ import { ChatsComponent } from './chats.component';
     MarkdownModule.forChild(),
     MatProgressSpinnerModule
   ],
+  exports: [
+    ChatsComponent,
+    ChatComponent,
+    ChatMessageComponent,
+    FeedbackFormComponent
+  ]
 })
 export class ChatsModule { }

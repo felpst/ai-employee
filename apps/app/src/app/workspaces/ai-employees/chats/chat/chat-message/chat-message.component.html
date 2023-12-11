@@ -20,22 +20,68 @@
     <div class="message" *ngIf="message.content || call?.output">
       <markdown [data]="message.content || call.output"></markdown>
     </div>
-    <div class="tasks" *ngIf="call && (showActions || loading)">
-      <div class="task" *ngFor="let task of call.tasks">
-        <div class="icon" *ngIf="task.status === 'done'">
-          <img [src]="getTool(task.tool).icon" alt="" />
+    <div class="steps" *ngIf="call && (showActions || loading)">
+      <div class="step" *ngFor="let step of call.steps">
+        <div class="icon">
+          <mat-icon
+            *ngIf="step.type === 'intent-classification'"
+            matTooltip="Intent classification"
+            >psychology_alt</mat-icon
+          >
+          <mat-icon *ngIf="step.type === 'action'" matTooltip="Action"
+            >bolt</mat-icon
+          >
+          <mat-icon
+            *ngIf="step.type === 'final-answer'"
+            matTooltip="Final Answer"
+            >sms</mat-icon
+          >
+          <!-- {{ step.type }} -->
         </div>
-        <div class="loading-icon" *ngIf="task.status === 'running'">
-          <img [src]="getTool(task.tool).icon" alt="" />
+        <div class="info">
+          <div>
+            <mat-icon *ngIf="step.status === 'running'" matTooltip="Running"
+              >pending</mat-icon
+            >
+            <mat-icon *ngIf="step.status === 'done'" matTooltip="Running"
+              >done</mat-icon
+            >
+            {{ step.status === 'running' ? 'Running' : 'Done' }}
+          </div>
+          <div>
+            <mat-icon matTooltip="Input">description</mat-icon>
+            {{ step.description }}
+          </div>
+          <div>
+            <mat-icon matTooltip="Input">exit_to_app</mat-icon>
+            {{ step.inputs | json }}
+          </div>
+          <div *ngIf="step.outputs">
+            <mat-icon matTooltip="Output">output</mat-icon>
+            {{ step.outputs | json }}
+          </div>
+          <div *ngIf="step.status === 'done'">
+            <mat-icon matTooltip="Execution Time">timer</mat-icon>
+            {{
+              utilsService.timeDifference(step.startAt, step.endAt, 'seconds')
+            }}
+          </div>
+        </div>
+        <!-- {{ step | json }} -->
+        <!-- <div class="icon" *ngIf="step.status === 'done'">
+          <img [src]="getTool(step.tool).icon" alt="" />
+        </div>
+        <div class="loading-icon" *ngIf="step.status === 'running'">
+          <img [src]="getTool(step.tool).icon" alt="" />
           <mat-spinner diameter="32"></mat-spinner>
         </div>
         <div class="info">
           <div class="name cognum-font-strong">
-            {{ getTool(task.tool).name }}
+            {{ getTool(step.tool).name }}
           </div>
-          <div class="input">{{ task.input }}</div>
-          <div class="output">{{ task.output }}</div>
-        </div>
+          <div class="input">{{ step.input }}</div>
+          <div class="output">{{ step.output }}</div>
+        </div> -->
       </div>
     </div>
   </div>
@@ -43,7 +89,7 @@
 
 <div
   class="showActions"
-  *ngIf="(call?.tasks?.length || 0) > 0 && !loading"
+  *ngIf="(call?.steps?.length || 0) > 0 && !loading"
   (click)="showActions = !showActions"
   [matTooltip]="!showActions ? 'Show actions' : 'Hide actions'"
   mat-ripple

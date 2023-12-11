@@ -14,15 +14,36 @@ Authorization: Bearer {{$authToken}}
 
 @$authToken = {{LoginAPI.response.headers.X-Auth-Token}}
 
+### get by workspace
+GET {{baseUrl}}/knowledges/workspaces/6512c07bbf8fd1ac503f3df9
+Content-Type: application/json
+Authorization: Bearer {{$authToken}}
+
+### ask by all knowledges in workspace
+GET {{baseUrl}}/knowledges/workspaces/6512c07bbf8fd1ac503f3df9/ask?question=How%20old%20is%20Linecker%3F
+Content-Type: application/json
+Authorization: Bearer {{$authToken}}
+
+### ask by knowledge
+GET {{baseUrl}}/knowledges/{{knowledgeId}}/ask?question=How%20old%20is%20Linecker%3F
+Content-Type: application/json
+Authorization: Bearer {{$authToken}}
+
 ### create
+# @name CreateAPI
 POST {{baseUrl}}/knowledges
 Content-Type: application/json
 Authorization: Bearer {{$authToken}}
 
 {
   "data": "Meu nome é Linecker e eu tenho 30 anos.",
-  "workspace": "6512c07bbf8fd1ac503f3df9"
+  "workspace": "655f69b0cc417e274bbf1c4f",
+  "type": "doc",
+  "contentUrl": "https://storage.google.com/file.txt"
 }
+
+### knowledgeId
+@knowledgeId = {{CreateAPI.response.body._id}}
 
 ### find all
 GET {{baseUrl}}/knowledges?sort=-createdAt

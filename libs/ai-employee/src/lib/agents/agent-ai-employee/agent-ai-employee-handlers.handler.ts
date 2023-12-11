@@ -1,7 +1,7 @@
 import { CallProcess } from "@cognum/interfaces";
 import { BaseCallbackHandler } from "langchain/callbacks";
 import { Serialized } from "langchain/load/serializable";
-import { AgentAction, ChainValues, LLMResult } from "langchain/schema";
+import { AgentAction, AgentFinish, ChainValues, LLMResult } from "langchain/schema";
 
 export class AgentAIEmployeeHandlers extends BaseCallbackHandler {
   name = "AgentAIEmployeeHandler";
@@ -25,8 +25,24 @@ export class AgentAIEmployeeHandlers extends BaseCallbackHandler {
     this.process.logs.push(['handleChainEnd', runId, outputs]);
   }
 
-  async handleAgentAction(action: AgentAction) {
-    this.process.logs.push(['handleAgentAction', action.log]);
+  handleAgentAction(action: AgentAction, runId: string, parentRunId?: string, tags?: string[]): void | Promise<void> {
+
+  }
+
+  handleToolStart(tool: Serialized, input: string, runId: string, parentRunId?: string, tags?: string[], metadata?: Record<string, unknown>, name?: string) {
+
+  }
+
+  handleToolEnd(output: string, runId: string, parentRunId?: string, tags?: string[]) {
+
+  }
+
+  handleToolError(err: any, runId: string, parentRunId?: string, tags?: string[]) {
+
+  }
+
+  handleAgentEnd(action: AgentFinish, runId: string, parentRunId?: string, tags?: string[]): void | Promise<void> {
+
   }
 
   handleLLMStart(llm: Serialized, prompts: string[]) {

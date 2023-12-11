@@ -172,14 +172,14 @@ describe('aiEmployeeCall', () => {
       console.log(response);
       expect(response.output).toBe('NOT_POSSIBLE_TO_EXECUTE_THIS_ACTION')
     });
+  });
 
-    afterAll(async () => {
-      await workspaceRepo.delete(workspace._id);
-      await aiEmployeeRepo.delete(aiEmployee._id);
-      await knowledgeRepo.delete(knowledge._id);
-      await openai.beta.assistants.del(openaiAssistant.id);
+  afterAll(async () => {
+    await workspaceRepo.delete(workspace._id);
+    await aiEmployeeRepo.delete(aiEmployee._id);
+    await knowledgeRepo.delete(knowledge._id);
+    await openai.beta.assistants.del(openaiAssistant.id);
 
-      await mongoose.connection.close();
-    });
+    await mongoose.connection.close();
   });
 });

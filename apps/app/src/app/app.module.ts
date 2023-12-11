@@ -13,9 +13,10 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { LayoutsModule } from './layouts/layouts.module';
 import { SharedModule } from './shared/shared.module';
+import { ToolOAuth2Component } from './workspaces/ai-employees/ai-employee-settings/tools/tool-oauth2/tool-oauth2.component';
 
 @NgModule({
-  declarations: [AppComponent],
+  declarations: [AppComponent, ToolOAuth2Component],
   imports: [
     BrowserModule,
     AppRoutingModule,

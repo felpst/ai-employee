@@ -11,7 +11,7 @@ export class ChatMessageReceive {
   ) { }
 
   async execute(conn: Connection, data: IChatMessage) {
-    const agent = conn.session.agent
+    const aiEmployee = conn.session.aiEmployee
 
     // Save input message
     const message = await this.chatMessageCreate.execute(data);
@@ -20,59 +20,76 @@ export class ChatMessageReceive {
     // Send message to client
     conn.messageSend.execute(conn, { type: 'message', content: message });
 
+    // Send to AI Employee
+    const call = await aiEmployee.call({
+      input: message.content,
+      createdBy: conn.session.user._id,
+      updatedBy: conn.session.user._id,
+      context: {
+        chatRoom: conn.session.chatRoom._id,
+        chatMessages: conn.session.chatMessages.map(m => ({
+          _id: m._id,
+          content: m.content,
+          role: m.role,
+          sender: m.sender
+        })),
+      }
+    });
+    // console.log(answer);
+
     // Message answer
     const answerMessage = await this.chatMessageCreate.execute({
       content: '',
       sender: conn.session.aiEmployee._id,
       role: 'bot',
       chatRoom: data.chatRoom,
-      call: null
+      call: call._id
     });
 
-    agent.$calls.subscribe((calls) => {
-      // Send calls to client
+    // Run
+    call.run().subscribe(async (call) => {
+      // Send call to client
       conn.messageSend.execute(conn, {
         type: 'handleMessage', content: {
           ...answerMessage.toObject(),
-          call: calls[calls.length - 1]
+          call: call.toObject()
         }
       });
-    });
 
-    // Send to AI Employee
-    const agentCall = await agent.call(message.content);
-    // console.log(answer);
+      if (call.status === 'done') {
+        // Save answer
+        answerMessage.content = call.output;
+        await answerMessage.save()
+        conn.session.chatMessages.push(answerMessage);
 
-    // Save answer
-    answerMessage.content = agentCall.output;
-    answerMessage.call = agentCall._id;
-    await answerMessage.save()
-    conn.session.chatMessages.push(answerMessage);
+        // Send final message
+        conn.messageSend.execute(conn, {
+          type: 'message', content: {
+            ...answerMessage.toObject(),
+            call: call.toObject()
+          }
+        });
 
-    // Send answer to client
-    conn.messageSend.execute(conn, {
-      type: 'message', content: {
-        ...answerMessage.toObject(),
-        call: agentCall
+        // Chat name
+        if (conn.session.chatRoom.name === 'New chat') {
+          await ChatHelper.generateChatName(conn.session.chatRoom, conn.session.chatMessages, {
+            handleLLMNewTokenChatName: (token: string) => {
+              // Send chat name token to client
+              token = token.trim().replace(/"/g, '');
+              conn.messageSend.execute(conn, { type: 'handleLLMNewTokenChatName', content: token });
+            },
+            handleEndChatName: (outputs: any) => {
+              const chatName = outputs.text.trim().replace(/"/g, '');
+              conn.session.chatRoom.name = chatName;
+              // Send chat name to client
+              conn.messageSend.execute(conn, { type: 'handleEndChatName', content: chatName });
+            }
+          })
+        }
       }
     });
 
-    // Chat name
-    if (conn.session.chatRoom.name === 'New chat') {
-      await ChatHelper.generateChatName(conn.session.chatRoom, conn.session.chatMessages, {
-        handleLLMNewTokenChatName: (token: string) => {
-          // Send chat name token to client
-          token = token.trim().replace(/"/g, '');
-          conn.messageSend.execute(conn, { type: 'handleLLMNewTokenChatName', content: token });
-        },
-        handleEndChatName: (outputs: any) => {
-          const chatName = outputs.text.trim().replace(/"/g, '');
-          conn.session.chatRoom.name = chatName;
-          // Send chat name to client
-          conn.messageSend.execute(conn, { type: 'handleEndChatName', content: chatName });
-        }
-      })
-    }
+
   }
 
 }

@@ -22,7 +22,7 @@ export class KnowledgeBaseService {
     return this.list({ params });
   }
 
-  create(data: Partial<IKnowledge>): Observable<IKnowledge> {
+  create(data: Partial<IKnowledge> | FormData): Observable<IKnowledge> {
     return this.coreApiService.post(this.route, data) as Observable<IKnowledge>;
   }
 
@@ -44,9 +44,11 @@ export class KnowledgeBaseService {
     ) as Observable<IKnowledge[]>;
   }
 
-  update(item: IKnowledge): Observable<IKnowledge> {
+  update(item: IKnowledge | FormData): Observable<IKnowledge> {
+    const id = item instanceof FormData ? item.get('_id') : item._id;
+
     return this.coreApiService.put(
-      `${this.route}/${item._id}`,
+      `${this.route}/${id}`,
       item
     ) as Observable<IKnowledge>;
   }
@@ -65,5 +67,19 @@ export class KnowledgeBaseService {
       return userPermission?.permission === 'Editor';
     }
     return false;
+  }
+
+  askByWorkspace(question: string, workspaceId: string) {
+    return this.coreApiService.get(
+      `${this.route}/workspaces/${workspaceId}/ask`, {
+      params: { question }
+    }) as Observable<{ text: string; }>;
+  }
+
+  askByKnowledge(question: string, knowledgeId: string) {
+    return this.coreApiService.get(
+      `${this.route}/${knowledgeId}/ask`, {
+      params: { question }
+    }) as Observable<{ text: string; }>;
   }
 }

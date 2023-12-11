@@ -1,8 +1,8 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { IChatRoom, IWorkspace } from '@cognum/interfaces';
-import { firstValueFrom } from 'rxjs';
+import { Subscription, firstValueFrom } from 'rxjs';
 import { DialogComponent } from '../../../shared/dialog/dialog.component';
 import { AIEmployeesService } from '../ai-employees.service';
 import { ChatService } from './chat/chat.service';
@@ -13,9 +13,10 @@ import { ChatsService, ICategorizedChats } from './chats.service';
   templateUrl: './chats.component.html',
   styleUrls: ['./chats.component.scss'],
 })
-export class ChatsComponent {
+export class ChatsComponent implements OnInit {
   selected: IChatRoom | null = null;
   workspace!: IWorkspace;
+  subscription!: Subscription;
 
   constructor(
     private router: Router,
@@ -23,9 +24,18 @@ export class ChatsComponent {
     private chatsService: ChatsService,
     private chatService: ChatService,
     private aiEmployeesService: AIEmployeesService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private _cdr: ChangeDetectorRef
   ) {
     this.chatsService.categorizedChats = this.chatsService.categorizedList();
+  }
+
+  ngOnInit(): void {
+    this.subscription = this.chatsService.$onUpdate.subscribe(() => { this._cdr.detectChanges(); });
+  }
+
+  ngOnDestroy(): void {
+    if (this.subscription) { this.subscription.unsubscribe(); }
   }
 
   get categorizedChats(): ICategorizedChats {
@@ -40,7 +50,7 @@ export class ChatsComponent {
     return this.chatService.selectedChat;
   }
 
-  async loadWorkspaceChats() {
+  async loadAIEmployeeChats() {
     await firstValueFrom(this.chatsService.load(this.aiEmployeesService.aiEmployee));
     this.chatsService.categorizedChats = this.chatsService.categorizedList();
   }
@@ -52,7 +62,7 @@ export class ChatsComponent {
 
     this.chatsService.create(chat).subscribe({
       next: (newChat) => {
-        this.loadWorkspaceChats()
+        this.loadAIEmployeeChats()
         this.router.navigate([newChat._id], { relativeTo: this.route });
       },
     });
@@ -76,7 +86,7 @@ export class ChatsComponent {
         if (result) {
           this.chatsService.delete(chat).subscribe({
             next: () => {
-              this.loadWorkspaceChats()
+              this.loadAIEmployeeChats()
               this.router.navigate(['./'], { relativeTo: this.route });
             },
           });

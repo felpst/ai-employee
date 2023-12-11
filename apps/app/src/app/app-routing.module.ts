@@ -1,12 +1,19 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from './auth/auth.guard';
+import { ToolOAuth2Component } from './workspaces/ai-employees/ai-employee-settings/tools/tool-oauth2/tool-oauth2.component';
 
 const routes: Routes = [
   // Public routes
   {
     path: 'auth',
     loadChildren: () => import('./auth/auth.module').then((m) => m.AuthModule),
+  },
+  {
+    path: 'oAuth2',
+    children: [
+      { path: 'google/callback', component: ToolOAuth2Component, },
+    ]
   },
 
   // Admin routes
@@ -38,4 +45,4 @@ const routes: Routes = [
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule],
 })
-export class AppRoutingModule {}
+export class AppRoutingModule { }

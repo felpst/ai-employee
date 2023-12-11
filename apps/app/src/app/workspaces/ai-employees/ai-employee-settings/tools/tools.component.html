@@ -29,10 +29,9 @@
             </div>
           </div>
           <div class="options">
-            <mat-icon
-              svgIcon="delete"
-              (click)="$event.stopPropagation(); onDelete(i)"
-            ></mat-icon>
+            <button *ngIf="areToolSettingsFilled(i)" (click)="onTestTool(i)" mat-stroked-button>Test</button>
+            <button *ngIf="!areToolSettingsFilled(i)" mat-stroked-button>Settings</button>
+            <mat-icon svgIcon="delete" (click)="$event.stopPropagation(); onDelete(i)"></mat-icon>
           </div>
         </div>
       </div>

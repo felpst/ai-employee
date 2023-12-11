@@ -1,17 +1,24 @@
-import { IKnowledge } from '@cognum/interfaces';
+import { IKnowledge, KnowledgeTypeEnum } from '@cognum/interfaces';
 import KnowledgeBase, { KnowledgeMetadata } from '@cognum/knowledge-base';
 import { ChatModel } from '@cognum/llm';
 import { Knowledge } from '@cognum/models';
+import { KnowledgeRetrieverService } from '@cognum/tools';
 import { NextFunction, Request, Response } from 'express';
 import { LLMChain } from 'langchain/chains';
 import { Document } from 'langchain/document';
 import { PromptTemplate } from 'langchain/prompts';
 import mongoose from 'mongoose';
 import ModelController from '../../controllers/model.controller';
+import { textToCron } from '../../helpers/cron.helper';
+import OpenAIFileService from '../../services/openai-file.service';
+import SchedulerService from '../../services/scheduler.service';
 
 export class KnowledgeController extends ModelController<typeof Knowledge> {
   constructor() {
     super(Knowledge);
+    this.addOpenAIFile = this.addOpenAIFile.bind(this);
+    this.replaceOpenAIFile = this.replaceOpenAIFile.bind(this);
+    this.cronUpdate = this.cronUpdate.bind(this);
   }
 
   private async _generateTitle(data: string) {
@@ -190,6 +197,185 @@ export class KnowledgeController extends ModelController<typeof Knowledge> {
       await vectorDb.addDocuments([doc]);
 
       next();
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  public async addOpenAIFile(
+    req: Request,
+    _: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const openaiFileSvc = new OpenAIFileService();
+
+      const knowledges: Partial<IKnowledge & { timeZone?: string; }>[] =
+        Array.isArray(req.body) ? [...req.body] : [req.body];
+      const newBody = [];
+
+      for (const knowledge of knowledges) {
+        let fileName: string;
+        let fileContent: string | Buffer;
+
+        if (knowledge.type === KnowledgeTypeEnum.Html) {
+          const timeZone = knowledge.timeZone;
+          delete knowledge.timeZone;
+
+          const knowledgeId =
+            knowledge._id || new mongoose.mongo.ObjectId();
+          knowledge.title ??= knowledge.contentUrl;
+
+          fileName = this._textToFilename(knowledge.title, 'html');
+          fileContent = await fetch(knowledge.contentUrl)
+            .then(response => response.text());
+
+          if (knowledge.htmlUpdateFrequency) {
+            const cron = await textToCron(knowledge.htmlUpdateFrequency);
+            await new SchedulerService().createJob({
+              name: `knowledge-${knowledgeId}-content-update`,
+              schedule: cron,
+              httpTarget: {
+                uri: `${process.env.SERVER_URL}/knowledges/${knowledgeId}/scheduled-update`,
+                httpMethod: 'PATCH',
+              },
+              timeZone
+            });
+          }
+
+          knowledge.description = fileName;
+        }
+
+        if (knowledge.type === KnowledgeTypeEnum.File) {
+          const { file } = req;
+
+          fileContent = file.buffer;
+          fileName = file.filename || file.originalname;
+
+          knowledge.title ??= fileName;
+          knowledge.description = fileName;
+        }
+
+        if (knowledge.type === KnowledgeTypeEnum.Document) {
+          knowledge.title ??= await this._generateTitle(knowledge.data);
+
+          fileContent = knowledge.data;
+          fileName = this._textToFilename(knowledge.title, 'txt');
+        }
+
+        const createdFile = await openaiFileSvc.create(fileName, fileContent);
+
+        knowledge.openaiFileId = createdFile.id;
+        newBody.push(knowledge);
+      }
+      req.body = newBody;
+
+      next();
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  public async deleteOpenAIFile(
+    req: Request,
+    _: Response,
+    next: NextFunction
+  ): Promise<void> {
+    try {
+      const { id } = req.params;
+      const { openaiFileId, htmlUpdateFrequency } = await Knowledge
+        .findById(id)
+        .select(['openaiFileId', 'htmlUpdateFrequency']);
+
+      try {
+        await new SchedulerService().deleteJob(`knowledge-${id}-content-update`);
+      } catch (error) { }
+
+      try {
+        await new OpenAIFileService().delete(openaiFileId);
+      } catch (error) { }
+
+      next();
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  public async replaceOpenAIFile(req: Request, _: Response, next: NextFunction): Promise<void> {
+    try {
+      const body: Partial<IKnowledge> = req.body;
+      const validFileReplacementCases = [
+        body.type === KnowledgeTypeEnum.Document && body.data,
+        body.type === KnowledgeTypeEnum.Html && body.contentUrl,
+        body.type === KnowledgeTypeEnum.File && req.file,
+      ].map(Boolean);
+
+      if (validFileReplacementCases.includes(true))
+        await this.deleteOpenAIFile(req, _, async () => {
+          await this.addOpenAIFile(req, _, next);
+        });
+      else next();
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  public async askQuestionUsingAll(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const question = req.query.question?.toString();
+      const { workspaceId } = req.params;
+      if (!question?.trim())
+        throw new Error('Invalid question. Question must be a non-empty string.');
+
+      const retrieverService = new KnowledgeRetrieverService({ workspaceId });
+      const text = await retrieverService.question(question);
+
+      res.json({ text });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  public async askQuestionById(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const question = req.query.question?.toString();
+      const { id } = req.params;
+      if (!question?.trim())
+        throw new Error('Invalid question. Question must be a non-empty string.');
+
+      const { workspace, openaiFileId } = await Knowledge.findById(id);
+
+      const retrieverService = new KnowledgeRetrieverService({ workspaceId: `${workspace}` });
+      const text = await retrieverService.askByFileIds(question, [openaiFileId]);
+
+      res.json({ text });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  public async cronUpdate(req: Request, res: Response, next: NextFunction): Promise<void> {
+    try {
+      const { id } = req.params;
+      const { title, contentUrl, openaiFileId } = await Knowledge
+        .findById(id)
+        .select(['title', 'contentUrl', 'openaiFileId']);
+
+      const fileName = this._textToFilename(title, 'html');
+      const content = await fetch(contentUrl)
+        .then(response => response.text());
+
+      const openaiFileSvc = new OpenAIFileService();
+      await openaiFileSvc.delete(openaiFileId);
+      const newFile = await openaiFileSvc.create(fileName, content);
+
+      const result = await Knowledge.findByIdAndUpdate(id, {
+        $set: {
+          openaiFileId: newFile.id
+        }
+      });
+
+      res.json(result);
     } catch (error) {
       next(error);
     }

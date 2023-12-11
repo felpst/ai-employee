@@ -6,9 +6,9 @@ import { WorkspaceHistoryComponent } from './history/workspace-history.component
 import { WorkspaceHistoryResolver } from './history/workspace-history.resolver';
 import { KnowledgeBaseComponent } from './knowledge-base/knowledge-base.component';
 import { KnowledgeBaseResolver } from './knowledge-base/knowledge-base.resolver';
+import { SettingsGeneralComponent } from './settings-workspace/general/general.component';
 import { SettingsWorkspaceComponent } from './settings-workspace/settings-workspace.component';
 import { SettingsTeamFormComponent } from './settings-workspace/team-form/team-form.component';
-import { SettingsGeneralComponent } from './settings-workspace/general/general.component';
 import { WorkspaceOnboardingAIEmployeeComponent } from './workspace-onboarding/workspace-onboarding-ai-employee/workspace-onboarding-ai-employee.component';
 import { WorkspaceOnboardingWorkspaceComponent } from './workspace-onboarding/workspace-onboarding-workspace/workspace-onboarding-workspace.component';
 import { WorkspaceOnboardingYourTeamComponent } from './workspace-onboarding/workspace-onboarding-your-team/workspace-onboarding-your-team.component';
@@ -52,7 +52,7 @@ const routes: Routes = [
       {
         path: 'settings',
         component: SettingsWorkspaceComponent,
-        canActivate:[WorkspaceAdminGuard],
+        canActivate: [WorkspaceAdminGuard],
         children: [
           {
             path: 'general',
@@ -68,6 +68,15 @@ const routes: Routes = [
           { path: '**', redirectTo: 'general', pathMatch: 'full' },
         ],
       },
+
+      {
+        path: 'ai-employees',
+        loadChildren: () =>
+          import('./ai-employees/ai-employees.module').then(
+            (m) => m.AIEmployeesModule
+          ),
+      },
+
       // Admin
       {
         path: '',
@@ -76,13 +85,6 @@ const routes: Routes = [
           {
             path: 'overview',
             component: WorkspaceComponent,
-          },
-          {
-            path: 'ai-employees',
-            loadChildren: () =>
-              import('./ai-employees/ai-employees.module').then(
-                (m) => m.AIEmployeesModule
-              ),
           },
           {
             path: 'history',
@@ -97,6 +99,8 @@ const routes: Routes = [
           { path: '**', redirectTo: 'overview', pathMatch: 'full' },
         ]
       },
+
+
     ],
   },
   { path: '**', redirectTo: '/', pathMatch: 'full' },

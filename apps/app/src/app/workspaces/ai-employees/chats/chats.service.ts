@@ -1,7 +1,7 @@
 import { HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { IAIEmployee, IChatRoom } from '@cognum/interfaces';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { CoreApiService } from '../../../services/apis/core-api.service';
 
 export interface ICategorizedChats {
@@ -18,6 +18,7 @@ export class ChatsService {
   private route = 'chats';
   chats: Map<string, IChatRoom> = new Map<string, IChatRoom>();
   categorizedChats: ICategorizedChats;
+  $onUpdate: Subject<boolean> = new BehaviorSubject<boolean>(false);
 
   constructor(
     private coreApiService: CoreApiService
@@ -110,6 +111,7 @@ export class ChatsService {
       }
     }
 
+    this.$onUpdate.next(true);
     return list;
   }
 }

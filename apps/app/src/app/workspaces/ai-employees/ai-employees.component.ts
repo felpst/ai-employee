@@ -41,20 +41,24 @@ export class AIEmployeesComponent implements OnInit {
     return Array.from(this.aiEmployeesService.aiEmployees.values());
   }
 
-  onNewChat(aiEmployee: ObjectId) {
+  onNewChat(aiEmployee: IAIEmployee) {
     const chat: Partial<IChatRoom> = {
-      aiEmployee
+      aiEmployee: aiEmployee._id,
     }
 
     this.chatsService.create(chat).subscribe({
       next: (newChat) => {
-        this.router.navigate([aiEmployee, 'chats', newChat._id], { relativeTo: this.route });
+        this.router.navigate([aiEmployee._id, 'chats', newChat._id], { relativeTo: this.route });
       },
     });
   }
 
   onChat(aiEmployee: ObjectId, chat: IChatRoom) {
     this.router.navigate([aiEmployee, 'chats', chat._id], { relativeTo: this.route });
+  }
+
+  onAIEmployee(aiEmployee: IAIEmployee) {
+    this.router.navigate([aiEmployee._id], { relativeTo: this.route });
   }
 
   createEmployee() {

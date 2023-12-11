@@ -17,8 +17,11 @@
 
           <div class="cognum-menu-divisor"></div>
 
-          <div class="category" *ngFor="let category of categories">
-            <ng-container *ngIf="categorizedChats[category].chats.length">
+          <ng-container *ngFor="let category of categories">
+            <div
+              class="category"
+              *ngIf="categorizedChats[category].chats.length"
+            >
               <div class="title cognum-text-12 cognum-font-color-grey-light">
                 {{ categorizedChats[category].title }}
               </div>
@@ -42,8 +45,8 @@
                   </div>
                 </div>
               </button>
-            </ng-container>
-          </div>
+            </div>
+          </ng-container>
         </header>
       </div>
     </ng-scrollbar>
