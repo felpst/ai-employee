@@ -5,7 +5,7 @@ import {
   Validators
 } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { IUser } from '@cognum/interfaces';
 import * as moment from 'moment-timezone';
 import { CookieService } from 'ngx-cookie-service';
@@ -36,7 +36,6 @@ export class AccountSettingsComponent {
     private formBuilder: FormBuilder,
     private notificationsService: NotificationsService,
     private usersService: UsersService,
-    private route: ActivatedRoute,
     private dialog: MatDialog,
     private router: Router,
     private cookieService: CookieService
@@ -116,9 +115,9 @@ export class AccountSettingsComponent {
     this.usersService.delete(this.user._id).subscribe({
       next: () => {
         this.authService.logout();
-        this.cookieService.delete('token')
+        this.cookieService.delete('token');
         this.notificationsService.show('Operation carried out successfully!');
-        this.router.navigate(['/']);
+        this.router.navigate(['/auth/login']);
       },
       error: (error) => {
         console.log('An error occurred while deleting information', { error });

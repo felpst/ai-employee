@@ -118,8 +118,7 @@ export class OnboardingComponent {
     const { name } = this.onboardingForm.value;
     this.usersService.update(this.user._id, { ...this.user, name }).subscribe({
       next: (user) => {
-        const { name } = user;
-        this.authService.user.name = name;
+        this.authService.user = user;
         this.isSubmitting = false;
         this.router.navigate(['/']);
         this.notificationsService.show(`Welcome, ${name}!`);
