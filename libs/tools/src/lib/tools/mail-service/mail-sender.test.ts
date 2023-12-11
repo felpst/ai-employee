@@ -1,14 +1,14 @@
 import 'dotenv/config';
 import { agentTest } from '../../tests/agent-test';
-import { MailSenderSettings } from './mail-sender.interfaces';
 import { MailSenderTool } from './mail-sender.tool';
+import { MailReaderSettings, MailSenderSettings } from './mail.interfaces';
 
 describe('SendEmail tool test', () => {
   jest.setTimeout(300000)
   let executor = null;
 
   beforeAll(async () => {
-    const settings: MailSenderSettings = {
+    const settingsSender: MailSenderSettings = {
       host: 'smtp.gmail.com',
       port: 465,
       secure: true,
@@ -18,8 +18,20 @@ describe('SendEmail tool test', () => {
       }
     };
 
+    const settingsReader: MailReaderSettings = {
+      user: process.env.EMAIL_USER,
+      password: process.env.EMAIL_PASSWORD,
+      host: 'imap.gmail.com',
+      port: 993,
+      tls: true,
+      tlsOptions: {
+        servername: 'imap.gmail.com'
+      },
+      authTimeout: 60000
+    };
+
     const tools = [
-      new MailSenderTool(settings),
+      new MailSenderTool(settingsSender, settingsReader),
     ];
     executor = await agentTest(tools);
   });
