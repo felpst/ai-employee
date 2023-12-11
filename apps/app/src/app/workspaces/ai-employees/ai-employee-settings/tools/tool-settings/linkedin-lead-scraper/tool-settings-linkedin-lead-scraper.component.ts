@@ -21,8 +21,8 @@ export class AIToolSettingsLinkedInLeadScraperComponent {
   ) {
     this.formGroup = new FormGroup({
       auth: new FormGroup({
-        user: new FormControl(this.data.tool.options?.auth.user, [Validators.required]),
-        password: new FormControl(this.data.tool.options?.auth.password, [Validators.required]),
+        user: new FormControl(this.data.tool.options?.auth?.user, [Validators.required]),
+        password: new FormControl(this.data.tool.options?.auth?.password, [Validators.required]),
       }),
       tools: new FormGroup({
         findLeads: new FormControl(this.data.tool.options?.tools?.findLeads, [Validators.required]),
