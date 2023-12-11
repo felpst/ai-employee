@@ -1,13 +1,11 @@
 import { By } from "selenium-webdriver";
-import { LinkedInDriver } from "../drivers/linkedin.driver";
+import { WebBrowser } from "../../../web-browser/web-browser";
 
 export class SelectFilterUseCase {
 
   constructor(
-    private linkedinDriver: LinkedInDriver
-  ) {
-    this._validation();
-  }
+    private webBrowser: WebBrowser
+  ) {}
 
   async execute(filterButton: 'Jobs' | 'People' | 'Services' | 'Posts' | 'Groups' | 'Companies') {
     console.log(`Clicking "${filterButton}" filter button...`);
@@ -25,11 +23,7 @@ export class SelectFilterUseCase {
   }
 
   get driver() {
-    return this.linkedinDriver.driver;
+    return this.webBrowser.driver;
   }
 
-  _validation() {
-    if (!this.linkedinDriver.isAuthenticaded)
-      throw new Error('LinkedIn is not authenticated');
-  }
 }

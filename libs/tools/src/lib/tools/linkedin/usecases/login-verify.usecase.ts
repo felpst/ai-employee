@@ -1,9 +1,9 @@
-import { LinkedInDriver } from "../drivers/linkedin.driver";
+import { WebBrowser } from "../../../web-browser/web-browser";
 
 export class LoginVerifyUseCase {
 
   constructor(
-    private linkedinDriver: LinkedInDriver
+    private webBrowser: WebBrowser
   ) { }
 
   async execute(verificationCode: string) {

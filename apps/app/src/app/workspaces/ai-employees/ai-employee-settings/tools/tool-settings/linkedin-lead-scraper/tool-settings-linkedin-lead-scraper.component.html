@@ -19,11 +19,14 @@
         }}</mat-icon>
       </mat-form-field>
     </div>
+
+    <h3>Tools</h3>
     <div formGroupName="tools">
       <div>
         <mat-checkbox color="primary" formControlName="findLeads">
           Find Leads
         </mat-checkbox>
+        <button type="button" mat-button (click)="onTest()">Test</button>
       </div>
     </div>
   </form>

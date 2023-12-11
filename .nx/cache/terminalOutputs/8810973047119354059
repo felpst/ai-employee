@@ -1,2 +1,1007 @@
 [1m[33mOption "browserTarget" is deprecated: Use 'buildTarget' instead.[39m[22m
-[36m⠋[39m Generating browser application bundles (phase: setup)...[2K[1G[1A[2K[1G[36m⠙[39m Generating browser application bundles (phase: setup)...[2K[1G[1A[2K[1G[36m⠹[39m Generating browser application bundles (phase: building)...[2K[1G[1A[2K[1G[36m⠸[39m Generating browser application bundles (phase: building)...[2K[1G[1A[2K[1G[36m⠼[39m Generating browser application bundles (phase: building)...[2K[1G[1A[2K[1G[36m⠴[39m Generating browser application bundles (phase: building)...[2K[1G[1A[2K[1G[36m⠦[39m Generating browser application bundles (phase: building)...[2K[1G[1A[2K[1G[36m⠧[39m Generating browser application bundles (phase: building)...[2K[1G[1A[2K[1G[36m⠇[39m Generating browser application bundles (phase: building)...[2K[1G[1A[2K[1G[36m⠏[39m Generating browser application bundles (phase: building)...[2K[1G[1A[2K[1G[36m⠋[39m Generating browser application bundles (phase: building)...[2K[1G[1A[2K[1G[36m⠙[39m Generating browser application bundles (phase: building)...[2K[1G[1A[2K[1G[36m⠹[39m Generating browser application bundles (phase: building)...[2K[1G[1A[2K[1G[36m⠸[39m Generating browser application bundles (phase: building)...[2K[1G[1A[2K[1G[36m⠼[39m Generating browser application bundles (phase: building)...[2K[1G[1A[2K[1G[36m⠴[39m Generating browser application bundles (phase: building)...[2K[1G[1A[2K[1G[36m⠦[39m Generating browser application bundles (phase: building)...[2K[1G[1A[2K[1G[36m⠧[39m Generating browser application bundles (phase: building)...[2K[1G[1A[2K[1G[36m⠇[39m Generating browser application bundles (phase: building)...[2K[1G[1A[2K[1G[36m⠏[39m Generating browser application bundles (phase: building)...[2K[1G[1A[2K[1G[36m⠋[39m Generating browser application bundles (phase: building)...[2K[1G[1A[2K[1G[36m⠙[39m Generating browser application bundles (phase: building)...[2K[1G[1A[2K[1G[36m⠹[39m Generating browser application bundles (phase: building)...[2K[1G[1A[2K[1G[36m⠸[39m Generating browser application bundles (phase: building)...[2K[1G[1A[2K[1G[36m⠼[39m Generating browser application bundles (phase: building)...[2K[1G[1A[2K[1G[36m⠴[39m Generating browser application bundles (phase: building)...[2K[1G[1A[2K[1G[36m⠦[39m Generating browser application bundles (phase: building)...[2K[1G[1A[2K[1G[36m⠧[39m Generating browser application bundles (phase: building)...[2K[1G[1A[2K[1G[36m⠇[39m Generating browser application bundles (phase: building)...[2K[1G[1A[2K[1G[36m⠏[39m Generating browser application bundles (phase: building)...[2K[1G[1A[2K[1G[36m⠋[39m Generating browser application bundles (phase: building)...[2K[1G[1A[2K[1G[36m⠙[39m Generating browser application bundles (phase: building)...[2K[1G[1A[2K[1G[36m⠹[39m Generating browser application bundles (phase: building)...[2K[1G[1A[2K[1G[36m⠸[39m Generating browser application bundles (phase: building)...[2K[1G[1A[2K[1G[36m⠼[39m Generating browser application bundles (phase: building)...
+[36m⠋[39m Generating browser application bundles (phase: setup)...[2K[1G[1A[2K[1G[36m⠙[39m Generating browser application bundles (phase: setup)...[2K[1G[1A[2K[1G[36m⠹[39m Generating browser application bundles (phase: building)...[2K[1G[1A[2K[1G[36m⠸[39m Generating browser application bundles (phase: building)...[2K[1G[1A[2K[1G[36m⠼[39m Generating browser application bundles (phase: building)...[2K[1G[1A[2K[1G[36m⠴[39m Generating browser application bundles (phase: building)...[2K[1G[1A[2K[1G[36m⠦[39m Generating browser application bundles (phase: building)...[2K[1G[1A[2K[1G[36m⠧[39m Generating browser application bundles (phase: building)...[2K[1G[1A[2K[1G[36m⠇[39m Generating browser application bundles (phase: building)...[2K[1G[1A[2K[1G[36m⠏[39m Generating browser application bundles (phase: building)...[2K[1G[1A[2K[1G[36m⠋[39m Generating browser application bundles (phase: building)...[2K[1G[1A[2K[1G[36m⠙[39m Generating browser application bundles (phase: building)...[2K[1G[1A[2K[1G[36m⠹[39m Generating browser application bundles (phase: building)...[2K[1G[1A[2K[1G[36m⠸[39m Generating browser application bundles (phase: building)...[2K[1G[1A[2K[1G[36m⠼[39m Generating browser application bundles (phase: building)...[2K[1G[1A[2K[1G[36m⠴[39m Generating browser application bundles (phase: building)...[2K[1G[1A[2K[1G[36m⠦[39m Generating browser application bundles (phase: building)...[2K[1G[1A[2K[1G[36m⠧[39m Generating browser application bundles (phase: building)...[2K[1G[1A[2K[1G[36m⠇[39m Generating browser application bundles (phase: building)...[2K[1G[1A[2K[1G[36m⠏[39m Generating browser application bundles (phase: building)...[2K[1G[1A[2K[1G[36m⠋[39m Generating browser application bundles (phase: building)...[2K[1G[1A[2K[1G[36m⠙[39m Generating browser application bundles (phase: building)...[2K[1G[1A[2K[1G[36m⠹[39m Generating browser application bundles (phase: building)...[2K[1G[1A[2K[1G[36m⠸[39m Generating browser application bundles (phase: building)...[2K[1G[1A[2K[1G[36m⠼[39m Generating browser application bundles (phase: building)...[2K[1G[1A[2K[1G[36m⠴[39m Generating browser application bundles (phase: building)...[2K[1G[1A[2K[1G[36m⠦[39m Generating browser application bundles (phase: building)...[2K[1G[1A[2K[1G[36m⠧[39m Generating browser application bundles (phase: building)...[2K[1G[1A[2K[1G[36m⠇[39m Generating browser application bundles (phase: building)...[2K[1G[1A[2K[1G[36m⠏[39m Generating browser application bundles (phase: building)...[2K[1G[1A[2K[1G[36m⠋[39m Generating browser application bundles (phase: building)...[2K[1G[1A[2K[1G[36m⠙[39m Generating browser application bundles (phase: building)...[2K[1G[1A[2K[1G[36m⠹[39m Generating browser application bundles (phase: building)...[2K[1G[1A[2K[1G[36m⠸[39m Generating browser application bundles (phase: building)...[2K[1G[1A[2K[1G[36m⠼[39m Generating browser application bundles (phase: building)...[2K[1G[1A[2K[1G[36m⠴[39m Generating browser application bundles (phase: sealing)...[2K[1G[1A[2K[1G[36m⠦[39m Generating browser application bundles (phase: sealing)...[2K[1G[1A[2K[1G[36m⠧[39m Generating browser application bundles (phase: sealing)...[2K[1G[1A[2K[1G[36m⠇[39m Generating browser application bundles (phase: sealing)...[2K[1G[1A[2K[1G[36m⠏[39m Generating browser application bundles (phase: sealing)...[2K[1G[1A[2K[1G[36m⠋[39m Generating browser application bundles (phase: emitting)...[2K[1G[1A[2K[1G[36m⠙[39m Generating browser application bundles (phase: emitting)...[2K[1G[1A[2K[1G[32m✔[39m Browser application bundle generation complete.
+[37m[39m
+[37m[0m[1mInitial Chunk Files[22m                                                                                    [2m | [22m[1mNames[22m                           [2m | [22m [1mRaw Size[22m[0m[39m
+[37m[0m[92mvendor.js[39m[37m                                                                                              [2m | [22mvendor                          [2m | [22m  [96m5.19 MB[39m[37m[2m | [22m[0m[39m
+[37m[0m[92mstyles.css, styles.js[39m[37m                                                                                  [2m | [22mstyles                          [2m | [22m[96m586.24 kB[39m[37m[2m | [22m[0m[39m
+[37m[0m[92mpolyfills.js[39m[37m                                                                                           [2m | [22mpolyfills                       [2m | [22m[96m333.05 kB[39m[37m[2m | [22m[0m[39m
+[37m[0m[92mmain.js[39m[37m                                                                                                [2m | [22mmain                            [2m | [22m[96m195.69 kB[39m[37m[2m | [22m[0m[39m
+[37m[0m[92mscripts.js[39m[37m                                                                                             [2m | [22mscripts                         [2m | [22m [96m67.04 kB[39m[37m[2m | [22m[0m[39m
+[37m[0m[92mruntime.js[39m[37m                                                                                             [2m | [22mruntime                         [2m | [22m [96m12.94 kB[39m[37m[2m | [22m[0m[39m
+[37m[0m[0m[39m
+[37m[0m[1m [22m                                                                                                      [2m | [22m[1mInitial Total[22m                   [2m | [22m  [1m6.36 MB[22m[0m[39m
+[37m[0m[0m[39m
+[37m[0m[1mLazy Chunk Files[22m                                                                                       [2m | [22m[1mNames[22m                           [2m | [22m [1mRaw Size[22m[0m[39m
+[37m[0m[92mapps_app_src_app_workspaces_workspaces_module_ts.js[39m[37m                                                  [39m[37m  [2m | [22mworkspaces-workspaces-module    [2m | [22m  [96m1.78 MB[39m[37m[2m | [22m[0m[39m
+[37m[0m[92mapps_app_src_app_account_account_module_ts.js[39m[37m                                                          [2m | [22maccount-account-module          [2m | [22m  [96m1.38 MB[39m[37m[2m | [22m[0m[39m
+[37m[0m[92mapps_app_src_app_workspaces_ai-employees_ai-employees_module_ts.js[39m[37m                                     [2m | [22mai-employees-ai-employees-module[2m | [22m[96m332.48 kB[39m[37m[2m | [22m[0m[39m
+[37m[0m[92mapps_app_src_app_auth_auth_module_ts.js[39m[37m                                                                [2m | [22mauth-auth-module                [2m | [22m[96m127.78 kB[39m[37m[2m | [22m[0m[39m
+[37m[0m[92mapps_app_src_app_workspaces_ai-employees_jobs_jobs_module_ts.js[39m[37m                                        [2m | [22mjobs-jobs-module                [2m | [22m[96m118.81 kB[39m[37m[2m | [22m[0m[39m
+[37m[0m[92mdefault-apps_app_src_app_services_users_users_service_ts-node_modules_angular_material_fesm20-2d4a4c.js[39m[37m[2m | [22maccount-account-module          [2m | [22m [96m82.09 kB[39m[37m[2m | [22m[0m[39m
+[37m[0m[92mdefault-node_modules_angular_material_fesm2022_checkbox_mjs.js[39m[37m                                         [2m | [22mauth-auth-module                [2m | [22m [96m75.64 kB[39m[37m[2m | [22m[0m[39m
+[37m[0m[92mdefault-apps_app_src_app_workspaces_ai-employees_chats_chats_module_ts.js[39m[37m                              [2m | [22mchats-chats-module              [2m | [22m [96m40.27 kB[39m[37m[2m | [22m[0m[39m
+[37m[0m[0m[39m
+[37m[0mBuild at: [1m[37m2023-12-10T23:20:01.130Z[39m[37m[22m - Hash: [1m[37mde2f0409ca486698[39m[37m[22m - Time: [1m[37m17165[39m[37m[22mms[0m[39m
+[1m[33m[39m[22m
+[1m[33m[0m[36m./apps/app/src/app/layouts/menu/menu-workspace-profile/menu-workspace-profile.component.scss?ngResource[39m[33m[0m - [0m[33mWarning: [39m[33m[0mModule Warning (from ./node_modules/postcss-loader/dist/cjs.js):[39m[22m
+[1m[33m(14:3) from "autoprefixer" plugin: start value has mixed support, consider using flex-start instead[39m[22m
+[1m[33m[39m[22m
+[1m[33mCode:[39m[22m
+[1m[33m  justify-content: start[39m[22m
+[1m[33m[39m[22m
+[1m[33m[39m[22m
+[1m[33m[0m[36m./apps/app/src/app/workspaces/ai-employees/admin-ai-employee/menu-ai-employee/menu-ai-employee-profile/menu-ai-employee-profile.component.scss?ngResource[39m[33m[0m - [0m[33mWarning: [39m[33m[0mModule Warning (from ./node_modules/postcss-loader/dist/cjs.js):[39m[22m
+[1m[33m(14:3) from "autoprefixer" plugin: start value has mixed support, consider using flex-start instead[39m[22m
+[1m[33m[39m[22m
+[1m[33mCode:[39m[22m
+[1m[33m  justify-content: start[39m[22m
+[1m[33m[39m[22m
+[1m[33m[39m[22m
+[1m[33m[0m[36m./apps/app/src/app/workspaces/ai-employees/chats/chat/chat-message/chat-message.component.scss?ngResource[39m[33m[0m - [0m[33mWarning: [39m[33m[0mModule Warning (from ./node_modules/postcss-loader/dist/cjs.js):[39m[22m
+[1m[33m(29:3) from "autoprefixer" plugin: start value has mixed support, consider using flex-start instead[39m[22m
+[1m[33m[39m[22m
+[1m[33mCode:[39m[22m
+[1m[33m  align-items: start[39m[22m
+[1m[33m[39m[22m
+[1m[33m[39m[22m
+[1m[33m[0m[33mWarning: [39m[33m[0mC:\dev\cognum\cognum\apps\app\src\app\account\account-settings\account-settings.component.ts depends on 'moment-timezone'. CommonJS or AMD dependencies can cause optimization bailouts.[39m[22m
+[1m[33mFor more info see: https://angular.io/guide/build#configuring-commonjs-dependencies[39m[22m
+[1m[33m[39m[22m
+[1m[33m[0m[33mWarning: [39m[33m[0mC:\dev\cognum\cognum\libs\interfaces\src\default.model.ts depends on 'mongoose'. CommonJS or AMD dependencies can cause optimization bailouts.[39m[22m
+[1m[33mFor more info see: https://angular.io/guide/build#configuring-commonjs-dependencies[39m[22m
+[1m[33m[39m[22m
+[1m[33m[39m[22m
+[37m[39m
+[37m** Angular Live Development Server is listening on localhost:4200, open your browser on https://localhost:4200/ **[39m
+[37m[39m
+[37m[39m
+[37m[92m√[39m[37m Compiled successfully.[39m
+[36m⠋[39m Generating browser application bundles...[2K[1G[36m⠙[39m Generating browser application bundles (phase: building)...[2K[1G[1A[2K[1G[36m⠹[39m Generating browser application bundles (phase: sealing)...[2K[1G[1A[2K[1G[36m⠸[39m Generating browser application bundles (phase: emitting)...[2K[1G[1A[2K[1G[32m✔[39m Browser application bundle generation complete.
+[37m[39m
+[37m[0m[1mInitial Chunk Files[22m[2m | [22m[1mNames[22m  [2m | [22m[1mRaw Size[22m[0m[39m
+[37m[0m[92mruntime.js[39m[37m         [2m | [22mruntime[2m | [22m[96m12.94 kB[39m[37m[2m | [22m[0m[39m
+[37m[0m[0m[39m
+[37m[0m13 unchanged chunks[0m[39m
+[37m[0m[0m[39m
+[37m[0mBuild at: [1m[37m2023-12-10T23:20:03.419Z[39m[37m[22m - Hash: [1m[37m8ab781804c62dcdd[39m[37m[22m - Time: [1m[37m1485[39m[37m[22mms[0m[39m
+[37m[39m
+[37m[92m√[39m[37m Compiled successfully.[39m
+[36m⠋[39m Generating browser application bundles...[2K[1G[36m⠙[39m Generating browser application bundles (phase: building)...[2K[1G[1A[2K[1G[36m⠹[39m Generating browser application bundles (phase: building)...[2K[1G[1A[2K[1G[36m⠸[39m Generating browser application bundles (phase: building)...[2K[1G[1A[2K[1G[36m⠼[39m Generating browser application bundles (phase: building)...[2K[1G[1A[2K[1G[36m⠴[39m Generating browser application bundles (phase: building)...[2K[1G[1A[2K[1G[36m⠦[39m Generating browser application bundles (phase: building)...[2K[1G[1A[2K[1G[36m⠧[39m Generating browser application bundles (phase: sealing)...[2K[1G[1A[2K[1G[36m⠇[39m Generating browser application bundles (phase: emitting)...[2K[1G[1A[2K[1G[32m✔[39m Browser application bundle generation complete.
+[37m[39m
+[37m[0m[1mInitial Chunk Files[22m                                               [2m | [22m[1mNames[22m                           [2m | [22m [1mRaw Size[22m[0m[39m
+[37m[0m[92mruntime.js[39m[37m                                                        [2m | [22mruntime                         [2m | [22m [96m12.94 kB[39m[37m[2m | [22m[0m[39m
+[37m[0m[0m[39m
+[37m[0m[1mLazy Chunk Files[22m                                                  [2m | [22m[1mNames[22m                           [2m | [22m [1mRaw Size[22m[0m[39m
+[37m[0m[92mapps_app_src_app_workspaces_ai-employees_ai-employees_module_ts.js[39m[37m[2m | [22mai-employees-ai-employees-module[2m | [22m[96m332.46 kB[39m[37m[2m | [22m[0m[39m
+[37m[0m[0m[39m
+[37m[0m12 unchanged chunks[0m[39m
+[37m[0m[0m[39m
+[37m[0mBuild at: [1m[37m2023-12-10T23:21:58.740Z[39m[37m[22m - Hash: [1m[37m3af1d2015f73cca7[39m[37m[22m - Time: [1m[37m1705[39m[37m[22mms[0m[39m
+[37m[39m
+[37m[92m√[39m[37m Compiled successfully.[39m
+[36m⠋[39m Generating browser application bundles...[2K[1G[36m⠙[39m Generating browser application bundles (phase: building)...[2K[1G[1A[2K[1G[36m⠹[39m Generating browser application bundles (phase: building)...[2K[1G[1A[2K[1G[36m⠸[39m Generating browser application bundles (phase: sealing)...[2K[1G[1A[2K[1G[36m⠼[39m Generating browser application bundles (phase: emitting)...[2K[1G[1A[2K[1G[36m⠴[39m Generating browser application bundles (phase: emitting)...[2K[1G[1A[2K[1G[32m✔[39m Browser application bundle generation complete.
+[37m[39m
+[37m[0m[1mInitial Chunk Files[22m                                               [2m | [22m[1mNames[22m                           [2m | [22m [1mRaw Size[22m[0m[39m
+[37m[0m[92mruntime.js[39m[37m                                                        [2m | [22mruntime                         [2m | [22m [96m12.94 kB[39m[37m[2m | [22m[0m[39m
+[37m[0m[0m[39m
+[37m[0m[1mLazy Chunk Files[22m                                                  [2m | [22m[1mNames[22m                           [2m | [22m [1mRaw Size[22m[0m[39m
+[37m[0m[92mapps_app_src_app_workspaces_ai-employees_ai-employees_module_ts.js[39m[37m[2m | [22mai-employees-ai-employees-module[2m | [22m[96m332.68 kB[39m[37m[2m | [22m[0m[39m
+[37m[0m[0m[39m
+[37m[0m12 unchanged chunks[0m[39m
+[37m[0m[0m[39m
+[37m[0mBuild at: [1m[37m2023-12-10T23:22:23.388Z[39m[37m[22m - Hash: [1m[37m886976f4bb5c574e[39m[37m[22m - Time: [1m[37m729[39m[37m[22mms[0m[39m
+[37m[39m
+[37m[92m√[39m[37m Compiled successfully.[39m
+[36m⠋[39m Generating browser application bundles...[2K[1G[36m⠙[39m Generating browser application bundles (phase: building)...[2K[1G[1A[2K[1G[36m⠹[39m Generating browser application bundles (phase: building)...[2K[1G[1A[2K[1G[36m⠸[39m Generating browser application bundles (phase: building)...[2K[1G[1A[2K[1G[36m⠼[39m Generating browser application bundles (phase: building)...[2K[1G[1A[2K[1G[36m⠴[39m Generating browser application bundles (phase: sealing)...[2K[1G[1A[2K[1G[32m✔[39m Browser application bundle generation complete.
+[37m[39m
+[37m[0m[1mInitial Chunk Files[22m                                                      [2m | [22m[1mNames[22m                           [2m | [22m [1mRaw Size[22m[0m[39m
+[37m[0m[92mruntime.js[39m[37m                                                               [2m | [22mruntime                         [2m | [22m [96m12.94 kB[39m[37m[2m | [22m[0m[39m
+[37m[0m[0m[39m
+[37m[0m[1mLazy Chunk Files[22m                                                         [2m | [22m[1mNames[22m                           [2m | [22m [1mRaw Size[22m[0m[39m
+[37m[0m[92mapps_app_src_app_workspaces_ai-employees_ai-employees_module_ts.js[39m[37m       [2m | [22mai-employees-ai-employees-module[2m | [22m[96m242.58 kB[39m[37m[2m | [22m[0m[39m
+[37m[0m[92mdefault-apps_app_src_app_workspaces_ai-employees_chats_chats_module_ts.js[39m[37m[2m | [22mchats-chats-module              [2m | [22m[96m114.73 kB[39m[37m[2m | [22m[0m[39m
+[37m[0m[0m[39m
+[37m[0m11 unchanged chunks[0m[39m
+[37m[0m[0m[39m
+[37m[0mBuild at: [1m[37m2023-12-10T23:24:28.069Z[39m[37m[22m - Hash: [1m[37mafd1b0ce7409e7e6[39m[37m[22m - Time: [1m[37m1507[39m[37m[22mms[0m[39m
+[1m[31m[39m[22m
+[1m[31m[0m[36m./apps/app/src/app/workspaces/ai-employees/ai-employee-settings/tools/tools.component.ts[39m[31m[0m - [0m[91mError: [39m[31m[0mModule build failed (from ./node_modules/@angular-devkit/build-angular/src/tools/babel/webpack-loader.js):[39m[22m
+[1m[31mSyntaxError: C:\dev\cognum\cognum\apps\app\src\app\workspaces\ai-employees\ai-employee-settings\tools\tools.component.ts: Unexpected reserved word 'await'. (135:28)[39m[22m
+[1m[31m[39m[22m
+[1m[31m[0m [90m 133 |[39m[31m                     [36mif[39m[31m ([33m![39m[31mtoolSettings[33m.[39m[31moptions[33m?[39m[31m[33m.[39m[31mtoken) {[0m[39m[22m
+[1m[31m[0m [90m 134 |[39m[31m                         [36mtry[39m[31m {[0m[39m[22m
+[1m[31m[0m[31m[1m>[22m[1m[39m[31m[90m 135 |[39m[31m                             [36mawait[39m[31m [36mnew[39m[31m [33mPromise[39m[31m([36masync[39m[31m (resolve[33m,[39m[31m reject) [33m=>[39m[31m {[0m[39m[22m
+[1m[31m[0m [90m     |[39m[31m                             [31m[1m^[22m[1m[39m[31m[0m[39m[22m
+[1m[31m[0m [90m 136 |[39m[31m                                 [36mtry[39m[31m {[0m[39m[22m
+[1m[31m[0m [90m 137 |[39m[31m                                     [36mconst[39m[31m accessToken [33m=[39m[31m [36mawait[39m[31m [36mthis[39m[31m[33m.[39m[31mtoolsService[33m.[39m[31mgoogleOAuth2(tool)[33m;[39m[31m[0m[39m[22m
+[1m[31m[0m [90m 138 |[39m[31m                                     [36mif[39m[31m ([33m![39m[31mtoolSettings[33m.[39m[31moptions)[0m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[0m[91mError: [39m[31m[0m[96mapps/app/src/app/workspaces/ai-employees/ai-employee-settings/tools/tools.component.html[0m:[93m8[0m:[93m18[0m - [91merror[0m[90m TS2339: [0mProperty 'addTool' does not exist on type 'AIEmployeeToolsComponent'.[39m[22m
+[1m[31m[39m[22m
+[1m[31m[7m8[0m         (click)="addTool()"[39m[22m
+[1m[31m[7m [0m [91m                 ~~~~~~~[0m[39m[22m
+[1m[31m[39m[22m
+[1m[31m  [96mapps/app/src/app/workspaces/ai-employees/ai-employee-settings/tools/tools.component.ts[0m:[93m20[0m:[93m16[0m[39m[22m
+[1m[31m    [7m20[0m   templateUrl: './tools.component.html',[39m[22m
+[1m[31m    [7m  [0m [96m               ~~~~~~~~~~~~~~~~~~~~~~~~[0m[39m[22m
+[1m[31m    Error occurs in the template of component AIEmployeeToolsComponent.[39m[22m
+[1m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[0m[91mError: [39m[31m[0m[96mapps/app/src/app/workspaces/ai-employees/ai-employee-setting[39m[22m[1m[31ms/tools/tools.component.html[0m:[93m21[0m:[93m20[0m - [91merror[0m[90m TS2339: [0mProperty 'onSelect' does not exist on type 'AIEmployeeToolsComponent'.[39m[22m
+[1m[31m[39m[22m
+[1m[31m[7m21[0m           (click)="onSelect(i)"[39m[22m
+[1m[31m[7m  [0m [91m                   ~~~~~~~~[0m[39m[22m
+[1m[31m[39m[22m
+[1m[31m  [96mapps/app/src/app/workspaces/ai-employees/ai-employee-settings/tools/tools.component.ts[0m:[93m20[0m:[93m16[0m[39m[22m
+[1m[31m    [7m20[0m   templateUrl: './tools.component.html',[39m[22m
+[1m[31m    [7m  [0m [96m               ~~~~~~~~~~~~~~~~~~~~~~~~[0m[39m[22m
+[1m[31m    Error occurs in the template of component AIEmployeeToolsComponent.[39m[22m
+[1m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[0m[91mError: [39m[31m[0m[96mapps/app/src/app/workspaces/ai-employees/ai-employee-settings/tools/tools.component.html[0m:[93m32[0m:[93m28[0m - [91merror[0m[90m TS2339: [0mProperty 'areToolSettingsFilled' does not exist on type 'AIEmployeeToolsComponent'.[39m[22m
+[1m[31m[39m[22m
+[1m[31m[7m32[0m             <button *ngIf="areToolSettingsFilled(i)" (click)="onTestTool(i)" mat-stroked-button>Test</button>[39m[22m
+[1m[31m[7m  [0m [91m                           ~~~~~~~~~~~~~~~~~~~~~[0m[39m[22m
+[1m[31m[39m[22m
+[1m[31m  [96mapps/app/src/app/workspaces/ai-employees/ai-employee-settings/tools/tools.component.ts[0m:[93m20[0m:[93m16[0m[39m[22m
+[1m[31m    [7m20[0m   templateUrl: './tools.component.html',[39m[22m
+[1m[31m    [7m  [0m [96m               ~~~~~~~~~~~~~~~~~~~~~~~~[0m[39m[22m
+[1m[31m    Error occurs in the template of component AIEmployeeToolsComponent.[39m[22m
+[1m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[0m[91mError: [39m[31m[0m[96mapps/app/src/app/workspaces/ai-employees/ai-employee-settings/tools/tools.component.html[0m:[93m32[0m:[93m63[0m - [91merror[0m[90m TS2339: [0mProperty 'onTestTool' does not exist on type 'AIEmployeeToolsComponent'.[39m[22m
+[1m[31m[39m[22m
+[1m[31m[7m32[0m             <button *ngIf="areToolSettingsFilled(i)" (click)="onTestTool(i)" mat-stroked-button>Test</button>[39m[22m
+[1m[31m[7m  [0m [91m                                                              ~~~~~~~~~~[0m[39m[22m
+[1m[31m[39m[22m
+[1m[31m  [96mapps/app/src/app/workspaces/ai-employees/ai-employee-settings/tools/tools.component.ts[0m:[93m20[0m:[93m16[0m[39m[22m
+[1m[31m    [7m20[0m   templateUrl: './tools.c[39m[22m[1m[31momponent.html',[39m[22m
+[1m[31m    [7m  [0m [96m               ~~~~~~~~~~~~~~~~~~~~~~~~[0m[39m[22m
+[1m[31m    Error occurs in the template of component AIEmployeeToolsComponent.[39m[22m
+[1m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[0m[91mError: [39m[31m[0m[96mapps/app/src/app/workspaces/ai-employees/ai-employee-settings/tools/tools.component.html[0m:[93m33[0m:[93m29[0m - [91merror[0m[90m TS2339: [0mProperty 'areToolSettingsFilled' does not exist on type 'AIEmployeeToolsComponent'.[39m[22m
+[1m[31m[39m[22m
+[1m[31m[7m33[0m             <button *ngIf="!areToolSettingsFilled(i)" mat-stroked-button>Settings</button>[39m[22m
+[1m[31m[7m  [0m [91m                            ~~~~~~~~~~~~~~~~~~~~~[0m[39m[22m
+[1m[31m[39m[22m
+[1m[31m  [96mapps/app/src/app/workspaces/ai-employees/ai-employee-settings/tools/tools.component.ts[0m:[93m20[0m:[93m16[0m[39m[22m
+[1m[31m    [7m20[0m   templateUrl: './tools.component.html',[39m[22m
+[1m[31m    [7m  [0m [96m               ~~~~~~~~~~~~~~~~~~~~~~~~[0m[39m[22m
+[1m[31m    Error occurs in the template of component AIEmployeeToolsComponent.[39m[22m
+[1m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[0m[91mError: [39m[31m[0m[96mapps/app/src/app/workspaces/ai-employees/ai-employee-settings/tools/tools.component.html[0m:[93m34[0m:[93m75[0m - [91merror[0m[90m TS2339: [0mProperty 'onDelete' does not exist on type 'AIEmployeeToolsComponent'.[39m[22m
+[1m[31m[39m[22m
+[1m[31m[7m34[0m             <mat-icon svgIcon="delete" (click)="$event.stopPropagation(); onDelete(i)"></mat-icon>[39m[22m
+[1m[31m[7m  [0m [91m                                                                          ~~~~~~~~[0m[39m[22m
+[1m[31m[39m[22m
+[1m[31m  [96mapps/app/src/app/workspaces/ai-employees/ai-employee-settings/tools/tools.component.ts[0m:[93m20[0m:[93m16[0m[39m[22m
+[1m[31m    [7m20[0m   templateUrl: './tools.component.html',[39m[22m
+[1m[31m    [7m  [0m [96m               ~~~~~~~~~~~~~~~~~~~~~~~~[0m[39m[22m
+[1m[31m    Error occurs in the template of component AIEmployeeToolsComponent.[39m[22m
+[1m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[0m[91mError: [39m[31m[0m[96mapps/app/src/app/workspaces/ai-employees/ai-employee-settings/tools/tools.component.ts[0m:[93m44[0m:[93m12[0m - [91merror[0m[90m TS2339: [0mProperty 'onSelect' does not exist on type 'AIEmployeeToolsComponent'.[39m[22m
+[1m[31m[39m[22m
+[1m[31m[7m44[0m       this.onSelect(ind[39m[22m[1m[31mex);[39m[22m
+[1m[31m[7m  [0m [91m           ~~~~~~~~[0m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[0m[91mError: [39m[31m[0m[96mapps/app/src/app/workspaces/ai-employees/ai-employee-settings/tools/tools.component.ts[0m:[93m60[0m:[93m5[0m - [91merror[0m[90m TS2304: [0mCannot find name 'addTool'.[39m[22m
+[1m[31m[39m[22m
+[1m[31m[7m60[0m     addTool() {[39m[22m
+[1m[31m[7m  [0m [91m    ~~~~~~~[0m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[0m[91mError: [39m[31m[0m[96mapps/app/src/app/workspaces/ai-employees/ai-employee-settings/tools/tools.component.ts[0m:[93m60[0m:[93m15[0m - [91merror[0m[90m TS1005: [0m';' expected.[39m[22m
+[1m[31m[39m[22m
+[1m[31m[7m60[0m     addTool() {[39m[22m
+[1m[31m[7m  [0m [91m              ~[0m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[0m[91mError: [39m[31m[0m[96mapps/app/src/app/workspaces/ai-employees/ai-employee-settings/tools/tools.component.ts[0m:[93m64[0m:[93m3[0m - [91merror[0m[90m TS1434: [0mUnexpected keyword or identifier.[39m[22m
+[1m[31m[39m[22m
+[1m[31m[7m64[0m   async onSelect(index: number) {[39m[22m
+[1m[31m[7m  [0m [91m  ~~~~~[0m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[0m[91mError: [39m[31m[0m[96mapps/app/src/app/workspaces/ai-employees/ai-employee-settings/tools/tools.component.ts[0m:[93m64[0m:[93m3[0m - [91merror[0m[90m TS2304: [0mCannot find name 'async'.[39m[22m
+[1m[31m[39m[22m
+[1m[31m[7m64[0m   async onSelect(index: number) {[39m[22m
+[1m[31m[7m  [0m [91m  ~~~~~[0m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[0m[91mError: [39m[31m[0m[96mapps/app/src/app/workspaces/ai-employees/ai-employee-settings/tools/tools.component.ts[0m:[93m64[0m:[93m9[0m - [91merror[0m[90m TS2552: [0mCannot find name 'onSelect'. Did you mean 'onselect'?[39m[22m
+[1m[31m[39m[22m
+[1m[31m[7m64[0m   async onSelect(index: number) {[39m[22m
+[1m[31m[7m  [0m [91m        ~~~~~~~~[0m[39m[22m
+[1m[31m[39m[22m
+[1m[31m  [96mnode_modules/typescript/lib/lib.dom.d.ts[0m:[93m27781[0m:[93m13[0m[39m[22m
+[1m[31m    [7m27781[0m declare var onselect: ((this: Window, ev: Event) => any) | null;[39m[22m
+[1m[31m    [7m     [0m [96m            ~~~~~~~~[0m[39m[22m
+[1m[31m    'onselect' is declared here.[39m[22m
+[1m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[0m[91mError: [39m[31m[0m[96mapps/app/src/app/workspaces/ai-employees/ai-employee-settings/tools/tools.component.ts[0m:[93m64[0m:[93m18[0m - [91merror[0m[90m TS2304: [0mCannot find name 'index'.[39m[22m
+[1m[31m[39m[22m
+[1m[31m[7m64[0m   async onSelect(index: number) {[39m[22m
+[1m[31m[7m  [0m [91m[39m[22m[1m[31m                 ~~~~~[0m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[0m[91mError: [39m[31m[0m[96mapps/app/src/app/workspaces/ai-employees/ai-employee-settings/tools/tools.component.ts[0m:[93m64[0m:[93m23[0m - [91merror[0m[90m TS1005: [0m',' expected.[39m[22m
+[1m[31m[39m[22m
+[1m[31m[7m64[0m   async onSelect(index: number) {[39m[22m
+[1m[31m[7m  [0m [91m                      ~[0m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[0m[91mError: [39m[31m[0m[96mapps/app/src/app/workspaces/ai-employees/ai-employee-settings/tools/tools.component.ts[0m:[93m64[0m:[93m25[0m - [91merror[0m[90m TS2693: [0m'number' only refers to a type, but is being used as a value here.[39m[22m
+[1m[31m[39m[22m
+[1m[31m[7m64[0m   async onSelect(index: number) {[39m[22m
+[1m[31m[7m  [0m [91m                        ~~~~~~[0m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[0m[91mError: [39m[31m[0m[96mapps/app/src/app/workspaces/ai-employees/ai-employee-settings/tools/tools.component.ts[0m:[93m64[0m:[93m33[0m - [91merror[0m[90m TS1005: [0m';' expected.[39m[22m
+[1m[31m[39m[22m
+[1m[31m[7m64[0m   async onSelect(index: number) {[39m[22m
+[1m[31m[7m  [0m [91m                                ~[0m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[0m[91mError: [39m[31m[0m[96mapps/app/src/app/workspaces/ai-employees/ai-employee-settings/tools/tools.component.ts[0m:[93m65[0m:[93m68[0m - [91merror[0m[90m TS2304: [0mCannot find name 'index'.[39m[22m
+[1m[31m[39m[22m
+[1m[31m[7m65[0m       const toolSettings = this.aiEmployeeService.aiEmployee.tools[index];[39m[22m
+[1m[31m[7m  [0m [91m                                                                   ~~~~~[0m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[0m[91mError: [39m[31m[0m[96mapps/app/src/app/workspaces/ai-employees/ai-employee-settings/tools/tools.component.ts[0m:[93m89[0m:[93m59[0m - [91merror[0m[90m TS2304: [0mCannot find name 'index'.[39m[22m
+[1m[31m[39m[22m
+[1m[31m[7m89[0m                   this.aiEmployeeService.aiEmployee.tools[index].options = toolSettings.options;[39m[22m
+[1m[31m[7m  [0m [91m                                                          ~~~~~[0m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[0m[91mError: [39m[31m[0m[96mapps/app/src/app/workspaces/ai-employees/ai-employee-settings/tools/tools.component.ts[0m:[93m109[0m:[93m53[0m - [91merror[0m[90m TS2304: [0mCannot find name 'index'.[39m[22m
+[1m[31m[39m[22m
+[1m[31m[7m109[0m             this.[39m[22m[1m[31maiEmployeeService.aiEmployee.tools[index].options = data;[39m[22m
+[1m[31m[7m   [0m [91m                                                    ~~~~~[0m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[0m[91mError: [39m[31m[0m[96mapps/app/src/app/workspaces/ai-employees/ai-employee-settings/tools/tools.component.ts[0m:[93m121[0m:[93m5[0m - [91merror[0m[90m TS2304: [0mCannot find name 'onTestTool'.[39m[22m
+[1m[31m[39m[22m
+[1m[31m[7m121[0m     onTestTool(index: number) {[39m[22m
+[1m[31m[7m   [0m [91m    ~~~~~~~~~~[0m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[0m[91mError: [39m[31m[0m[96mapps/app/src/app/workspaces/ai-employees/ai-employee-settings/tools/tools.component.ts[0m:[93m121[0m:[93m16[0m - [91merror[0m[90m TS2304: [0mCannot find name 'index'.[39m[22m
+[1m[31m[39m[22m
+[1m[31m[7m121[0m     onTestTool(index: number) {[39m[22m
+[1m[31m[7m   [0m [91m               ~~~~~[0m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[0m[91mError: [39m[31m[0m[96mapps/app/src/app/workspaces/ai-employees/ai-employee-settings/tools/tools.component.ts[0m:[93m121[0m:[93m21[0m - [91merror[0m[90m TS1005: [0m',' expected.[39m[22m
+[1m[31m[39m[22m
+[1m[31m[7m121[0m     onTestTool(index: number) {[39m[22m
+[1m[31m[7m   [0m [91m                    ~[0m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[0m[91mError: [39m[31m[0m[96mapps/app/src/app/workspaces/ai-employees/ai-employee-settings/tools/tools.component.ts[0m:[93m121[0m:[93m23[0m - [91merror[0m[90m TS2693: [0m'number' only refers to a type, but is being used as a value here.[39m[22m
+[1m[31m[39m[22m
+[1m[31m[7m121[0m     onTestTool(index: number) {[39m[22m
+[1m[31m[7m   [0m [91m                      ~~~~~~[0m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[0m[91mError: [39m[31m[0m[96mapps/app/src/app/workspaces/ai-employees/ai-employee-settings/tools/tools.component.ts[0m:[93m121[0m:[93m31[0m - [91merror[0m[90m TS1005: [0m';' expected.[39m[22m
+[1m[31m[39m[22m
+[1m[31m[7m121[0m     onTestTool(index: number) {[39m[22m
+[1m[31m[7m   [0m [91m                              ~[0m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[0m[91mError: [39m[31m[0m[96mapps/app/src/app/workspaces/ai-employees/ai-employee-settings/tools/tools.component.ts[0m:[93m122[0m:[93m60[0m - [91merror[0m[90m TS2304: [0mCannot find name 'index'.[39m[22m
+[1m[31m[39m[22m
+[1m[31m[7m122[0m       const tool = this.aiEmployeeService.aiEmployee.tools[index];[39m[22m
+[1m[31m[7m   [0m [91m                       [39m[22m[1m[31m                                    ~~~~~[0m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[0m[91mError: [39m[31m[0m[96mapps/app/src/app/workspaces/ai-employees/ai-employee-settings/tools/tools.component.ts[0m:[93m126[0m:[93m32[0m - [91merror[0m[90m TS2339: [0mProperty 'testMessage' does not exist on type 'AIEmployeeToolsComponent'.[39m[22m
+[1m[31m[39m[22m
+[1m[31m[7m126[0m       const testMessage = this.testMessage(tool);[39m[22m
+[1m[31m[7m   [0m [91m                               ~~~~~~~~~~~[0m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[0m[91mError: [39m[31m[0m[96mapps/app/src/app/workspaces/ai-employees/ai-employee-settings/tools/tools.component.ts[0m:[93m130[0m:[93m16[0m - [91merror[0m[90m TS2339: [0mProperty 'openChatModal' does not exist on type 'AIEmployeeToolsComponent'.[39m[22m
+[1m[31m[39m[22m
+[1m[31m[7m130[0m           this.openChatModal(newChat, tool, testMessage);[39m[22m
+[1m[31m[7m   [0m [91m               ~~~~~~~~~~~~~[0m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[0m[91mError: [39m[31m[0m[96mapps/app/src/app/workspaces/ai-employees/ai-employee-settings/tools/tools.component.ts[0m:[93m135[0m:[93m5[0m - [91merror[0m[90m TS2304: [0mCannot find name 'openChatModal'.[39m[22m
+[1m[31m[39m[22m
+[1m[31m[7m135[0m     openChatModal(chat: IChatRoom, tool: any, testMessage: string) {[39m[22m
+[1m[31m[7m   [0m [91m    ~~~~~~~~~~~~~[0m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[0m[91mError: [39m[31m[0m[96mapps/app/src/app/workspaces/ai-employees/ai-employee-settings/tools/tools.component.ts[0m:[93m135[0m:[93m19[0m - [91merror[0m[90m TS2304: [0mCannot find name 'chat'.[39m[22m
+[1m[31m[39m[22m
+[1m[31m[7m135[0m     openChatModal(chat: IChatRoom, tool: any, testMessage: string) {[39m[22m
+[1m[31m[7m   [0m [91m                  ~~~~[0m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[0m[91mError: [39m[31m[0m[96mapps/app/src/app/workspaces/ai-employees/ai-employee-settings/tools/tools.component.ts[0m:[93m135[0m:[93m23[0m - [91merror[0m[90m TS1005: [0m',' expected.[39m[22m
+[1m[31m[39m[22m
+[1m[31m[7m135[0m     openChatModal(chat: IChatRoom, tool: any, testMessage: string) {[39m[22m
+[1m[31m[7m   [0m [91m                      ~[0m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[0m[91mError: [39m[31m[0m[96mapps/app/src/app/workspaces/ai-employees/ai-employee-settings/tools/tools.component.ts[0m:[93m135[0m:[93m25[0m - [91merror[0m[90m TS2693: [39m[22m[1m[31m[0m'IChatRoom' only refers to a type, but is being used as a value here.[39m[22m
+[1m[31m[39m[22m
+[1m[31m[7m135[0m     openChatModal(chat: IChatRoom, tool: any, testMessage: string) {[39m[22m
+[1m[31m[7m   [0m [91m                        ~~~~~~~~~[0m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[0m[91mError: [39m[31m[0m[96mapps/app/src/app/workspaces/ai-employees/ai-employee-settings/tools/tools.component.ts[0m:[93m135[0m:[93m36[0m - [91merror[0m[90m TS2304: [0mCannot find name 'tool'.[39m[22m
+[1m[31m[39m[22m
+[1m[31m[7m135[0m     openChatModal(chat: IChatRoom, tool: any, testMessage: string) {[39m[22m
+[1m[31m[7m   [0m [91m                                   ~~~~[0m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[0m[91mError: [39m[31m[0m[96mapps/app/src/app/workspaces/ai-employees/ai-employee-settings/tools/tools.component.ts[0m:[93m135[0m:[93m40[0m - [91merror[0m[90m TS1005: [0m',' expected.[39m[22m
+[1m[31m[39m[22m
+[1m[31m[7m135[0m     openChatModal(chat: IChatRoom, tool: any, testMessage: string) {[39m[22m
+[1m[31m[7m   [0m [91m                                       ~[0m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[0m[91mError: [39m[31m[0m[96mapps/app/src/app/workspaces/ai-employees/ai-employee-settings/tools/tools.component.ts[0m:[93m135[0m:[93m42[0m - [91merror[0m[90m TS2693: [0m'any' only refers to a type, but is being used as a value here.[39m[22m
+[1m[31m[39m[22m
+[1m[31m[7m135[0m     openChatModal(chat: IChatRoom, tool: any, testMessage: string) {[39m[22m
+[1m[31m[7m   [0m [91m                                         ~~~[0m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[0m[91mError: [39m[31m[0m[96mapps/app/src/app/workspaces/ai-employees/ai-employee-settings/tools/tools.component.ts[0m:[93m135[0m:[93m47[0m - [91merror[0m[90m TS2304: [0mCannot find name 'testMessage'.[39m[22m
+[1m[31m[39m[22m
+[1m[31m[7m135[0m     openChatModal(chat: IChatRoom, tool: any, testMessage: string) {[39m[22m
+[1m[31m[7m   [0m [91m                                              ~~~~~~~~~~~[0m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[0m[91mError: [39m[31m[0m[96mapps/app/src/app/workspaces/ai-employees/ai-employee-settings/tools/tools.component.ts[0m:[93m135[0m:[93m58[0m - [91merror[0m[90m TS1005: [0m',' expected.[39m[22m
+[1m[31m[39m[22m
+[1m[31m[7m135[0m     openChatModal(chat: IChatRoom, tool: any, testMessage: string) {[39m[22m
+[1m[31m[7m   [0m [91m             [39m[22m[1m[31m                                            ~[0m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[0m[91mError: [39m[31m[0m[96mapps/app/src/app/workspaces/ai-employees/ai-employee-settings/tools/tools.component.ts[0m:[93m135[0m:[93m60[0m - [91merror[0m[90m TS2693: [0m'string' only refers to a type, but is being used as a value here.[39m[22m
+[1m[31m[39m[22m
+[1m[31m[7m135[0m     openChatModal(chat: IChatRoom, tool: any, testMessage: string) {[39m[22m
+[1m[31m[7m   [0m [91m                                                           ~~~~~~[0m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[0m[91mError: [39m[31m[0m[96mapps/app/src/app/workspaces/ai-employees/ai-employee-settings/tools/tools.component.ts[0m:[93m135[0m:[93m68[0m - [91merror[0m[90m TS1005: [0m';' expected.[39m[22m
+[1m[31m[39m[22m
+[1m[31m[7m135[0m     openChatModal(chat: IChatRoom, tool: any, testMessage: string) {[39m[22m
+[1m[31m[7m   [0m [91m                                                                   ~[0m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[0m[91mError: [39m[31m[0m[96mapps/app/src/app/workspaces/ai-employees/ai-employee-settings/tools/tools.component.ts[0m:[93m136[0m:[93m22[0m - [91merror[0m[90m TS2304: [0mCannot find name 'chat'.[39m[22m
+[1m[31m[39m[22m
+[1m[31m[7m136[0m       const chatId = chat._id as string;[39m[22m
+[1m[31m[7m   [0m [91m                     ~~~~[0m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[0m[91mError: [39m[31m[0m[96mapps/app/src/app/workspaces/ai-employees/ai-employee-settings/tools/tools.component.ts[0m:[93m140[0m:[93m25[0m - [91merror[0m[90m TS18004: [0mNo value exists in scope for the shorthand property 'tool'. Either declare one or provide an initializer.[39m[22m
+[1m[31m[39m[22m
+[1m[31m[7m140[0m         data: { chatId, tool, testMessage },[39m[22m
+[1m[31m[7m   [0m [91m                        ~~~~[0m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[0m[91mError: [39m[31m[0m[96mapps/app/src/app/workspaces/ai-employees/ai-employee-settings/tools/tools.component.ts[0m:[93m140[0m:[93m31[0m - [91merror[0m[90m TS18004: [0mNo value exists in scope for the shorthand property 'testMessage'. Either declare one or provide an initializer.[39m[22m
+[1m[31m[39m[22m
+[1m[31m[7m140[0m         data: { chatId, tool, testMessage },[39m[22m
+[1m[31m[7m   [0m [91m                              ~~~~~~~~~~~[0m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[0m[91mError: [3[39m[22m[1m[31m9m[0m[96mapps/app/src/app/workspaces/ai-employees/ai-employee-settings/tools/tools.component.ts[0m:[93m148[0m:[93m34[0m - [91merror[0m[90m TS2304: [0mCannot find name 'chat'.[39m[22m
+[1m[31m[39m[22m
+[1m[31m[7m148[0m         this.chatsService.delete(chat).subscribe({[39m[22m
+[1m[31m[7m   [0m [91m                                 ~~~~[0m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[0m[91mError: [39m[31m[0m[96mapps/app/src/app/workspaces/ai-employees/ai-employee-settings/tools/tools.component.ts[0m:[93m156[0m:[93m5[0m - [91merror[0m[90m TS2552: [0mCannot find name 'testMessage'. Did you mean 'postMessage'?[39m[22m
+[1m[31m[39m[22m
+[1m[31m[7m156[0m     testMessage(tool: any) {[39m[22m
+[1m[31m[7m   [0m [91m    ~~~~~~~~~~~[0m[39m[22m
+[1m[31m[39m[22m
+[1m[31m  [96mnode_modules/typescript/lib/lib.dom.d.ts[0m:[93m27395[0m:[93m18[0m[39m[22m
+[1m[31m    [7m27395[0m declare function postMessage(message: any, targetOrigin: string, transfer?: Transferable[]): void;[39m[22m
+[1m[31m    [7m     [0m [96m                 ~~~~~~~~~~~[0m[39m[22m
+[1m[31m    'postMessage' is declared here.[39m[22m
+[1m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[0m[91mError: [39m[31m[0m[96mapps/app/src/app/workspaces/ai-employees/ai-employee-settings/tools/tools.component.ts[0m:[93m156[0m:[93m17[0m - [91merror[0m[90m TS2304: [0mCannot find name 'tool'.[39m[22m
+[1m[31m[39m[22m
+[1m[31m[7m156[0m     testMessage(tool: any) {[39m[22m
+[1m[31m[7m   [0m [91m                ~~~~[0m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[0m[91mError: [39m[31m[0m[96mapps/app/src/app/workspaces/ai-employees/ai-employee-settings/tools/tools.component.ts[0m:[93m156[0m:[93m21[0m - [91merror[0m[90m TS1005: [0m',' expected.[39m[22m
+[1m[31m[39m[22m
+[1m[31m[7m156[0m     testMessage(tool: any) {[39m[22m
+[1m[31m[7m   [0m [91m                    ~[0m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[0m[91mError: [39m[31m[0m[96mapps/app/src/app/workspaces/ai-employees/ai-employee-settings/tools/tools.component.ts[0m:[93m156[0m:[93m23[0m - [91merror[0m[90m TS2693: [0m'any' only refers to a type, but is being used as a value here.[39m[22m
+[1m[31m[39m[22m
+[1m[31m[7m156[0m     testMessage(tool: any) {[39m[22m
+[1m[31m[7m   [0m [91m                      ~~~[0m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[0m[91mError: [39m[31m[0m[96mapps/app/src/app/workspaces/ai-employees/ai-employee-settings/tools/tools.component.ts[0m:[93m156[0m:[93m28[0m - [39m[22m[1m[31m[91merror[0m[90m TS1005: [0m';' expected.[39m[22m
+[1m[31m[39m[22m
+[1m[31m[7m156[0m     testMessage(tool: any) {[39m[22m
+[1m[31m[7m   [0m [91m                           ~[0m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[0m[91mError: [39m[31m[0m[96mapps/app/src/app/workspaces/ai-employees/ai-employee-settings/tools/tools.component.ts[0m:[93m168[0m:[93m27[0m - [91merror[0m[90m TS2304: [0mCannot find name 'tool'.[39m[22m
+[1m[31m[39m[22m
+[1m[31m[7m168[0m       return testMessages[tool.id] || '';[39m[22m
+[1m[31m[7m   [0m [91m                          ~~~~[0m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[0m[91mError: [39m[31m[0m[96mapps/app/src/app/workspaces/ai-employees/ai-employee-settings/tools/tools.component.ts[0m:[93m171[0m:[93m5[0m - [91merror[0m[90m TS2304: [0mCannot find name 'areToolSettingsFilled'.[39m[22m
+[1m[31m[39m[22m
+[1m[31m[7m171[0m     areToolSettingsFilled(index: number): boolean {[39m[22m
+[1m[31m[7m   [0m [91m    ~~~~~~~~~~~~~~~~~~~~~[0m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[0m[91mError: [39m[31m[0m[96mapps/app/src/app/workspaces/ai-employees/ai-employee-settings/tools/tools.component.ts[0m:[93m171[0m:[93m27[0m - [91merror[0m[90m TS2304: [0mCannot find name 'index'.[39m[22m
+[1m[31m[39m[22m
+[1m[31m[7m171[0m     areToolSettingsFilled(index: number): boolean {[39m[22m
+[1m[31m[7m   [0m [91m                          ~~~~~[0m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[0m[91mError: [39m[31m[0m[96mapps/app/src/app/workspaces/ai-employees/ai-employee-settings/tools/tools.component.ts[0m:[93m171[0m:[93m32[0m - [91merror[0m[90m TS1005: [0m',' expected.[39m[22m
+[1m[31m[39m[22m
+[1m[31m[7m171[0m     areToolSettingsFilled(index: number): boolean {[39m[22m
+[1m[31m[7m   [0m [91m                               ~[0m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[0m[91mError: [39m[31m[0m[96mapps/app/src/app/workspaces/ai-employees/ai-employee-settings/tools/tools.component.ts[0m:[93m171[0m:[93m34[0m - [91merror[0m[90m TS2693: [0m'number' only refers to a type, but is being used as a value here.[39m[22m
+[1m[31m[39m[22m
+[1m[31m[7m171[0m     areToolSettingsFilled(index: number): boolean {[39m[22m
+[1m[31m[7m   [0m [91m                                 ~~~~~~[0m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[0m[91mError: [39m[31m[0m[96mapps/app/src/app/workspaces/ai-employees/ai-employee-settings/tools/tools.component.ts[0m:[93m171[0m:[93m41[0m - [91merror[0m[90m TS1[39m[22m[1m[31m005: [0m';' expected.[39m[22m
+[1m[31m[39m[22m
+[1m[31m[7m171[0m     areToolSettingsFilled(index: number): boolean {[39m[22m
+[1m[31m[7m   [0m [91m                                        ~[0m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[0m[91mError: [39m[31m[0m[96mapps/app/src/app/workspaces/ai-employees/ai-employee-settings/tools/tools.component.ts[0m:[93m171[0m:[93m43[0m - [91merror[0m[90m TS1434: [0mUnexpected keyword or identifier.[39m[22m
+[1m[31m[39m[22m
+[1m[31m[7m171[0m     areToolSettingsFilled(index: number): boolean {[39m[22m
+[1m[31m[7m   [0m [91m                                          ~~~~~~~[0m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[0m[91mError: [39m[31m[0m[96mapps/app/src/app/workspaces/ai-employees/ai-employee-settings/tools/tools.component.ts[0m:[93m171[0m:[93m43[0m - [91merror[0m[90m TS2693: [0m'boolean' only refers to a type, but is being used as a value here.[39m[22m
+[1m[31m[39m[22m
+[1m[31m[7m171[0m     areToolSettingsFilled(index: number): boolean {[39m[22m
+[1m[31m[7m   [0m [91m                                          ~~~~~~~[0m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[0m[91mError: [39m[31m[0m[96mapps/app/src/app/workspaces/ai-employees/ai-employee-settings/tools/tools.component.ts[0m:[93m172[0m:[93m60[0m - [91merror[0m[90m TS2304: [0mCannot find name 'index'.[39m[22m
+[1m[31m[39m[22m
+[1m[31m[7m172[0m       const tool = this.aiEmployeeService.aiEmployee.tools[index][39m[22m
+[1m[31m[7m   [0m [91m                                                           ~~~~~[0m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[0m[91mError: [39m[31m[0m[96mapps/app/src/app/workspaces/ai-employees/ai-employee-settings/tools/tools.component.ts[0m:[93m181[0m:[93m5[0m - [91merror[0m[90m TS2304: [0mCannot find name 'onDelete'.[39m[22m
+[1m[31m[39m[22m
+[1m[31m[7m181[0m     onDelete(index: number) {[39m[22m
+[1m[31m[7m   [0m [91m    ~~~~~~~~[0m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[0m[91mError: [39m[31m[0m[96mapps/app/src/app/workspaces/ai-employees/ai-employee-settings/tools/tools.component.ts[0m:[93m181[0m:[93m14[0m - [91merror[0m[90m TS2304: [0mCannot find name 'index'.[39m[22m
+[1m[31m[39m[22m
+[1m[31m[7m181[0m     onDelete(index: number) {[39m[22m
+[1m[31m[7m   [0m [91m             ~~~~~[0m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[0m[91mError: [39m[31m[0m[96mapps/app/src/app/workspaces/ai-employees/ai-employee-settings/tools/tools.component.ts[0m:[93m181[0m:[39m[22m[1m[31m[93m19[0m - [91merror[0m[90m TS1005: [0m',' expected.[39m[22m
+[1m[31m[39m[22m
+[1m[31m[7m181[0m     onDelete(index: number) {[39m[22m
+[1m[31m[7m   [0m [91m                  ~[0m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[0m[91mError: [39m[31m[0m[96mapps/app/src/app/workspaces/ai-employees/ai-employee-settings/tools/tools.component.ts[0m:[93m181[0m:[93m21[0m - [91merror[0m[90m TS2693: [0m'number' only refers to a type, but is being used as a value here.[39m[22m
+[1m[31m[39m[22m
+[1m[31m[7m181[0m     onDelete(index: number) {[39m[22m
+[1m[31m[7m   [0m [91m                    ~~~~~~[0m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[0m[91mError: [39m[31m[0m[96mapps/app/src/app/workspaces/ai-employees/ai-employee-settings/tools/tools.component.ts[0m:[93m181[0m:[93m29[0m - [91merror[0m[90m TS1005: [0m';' expected.[39m[22m
+[1m[31m[39m[22m
+[1m[31m[7m181[0m     onDelete(index: number) {[39m[22m
+[1m[31m[7m   [0m [91m                            ~[0m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[0m[91mError: [39m[31m[0m[96mapps/app/src/app/workspaces/ai-employees/ai-employee-settings/tools/tools.component.ts[0m:[93m192[0m:[93m58[0m - [91merror[0m[90m TS2304: [0mCannot find name 'index'.[39m[22m
+[1m[31m[39m[22m
+[1m[31m[7m192[0m           this.aiEmployeeService.aiEmployee.tools.splice(index, 1);[39m[22m
+[1m[31m[7m   [0m [91m                                                         ~~~~~[0m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[0m[91mError: [39m[31m[0m[96mapps/app/src/app/workspaces/ai-employees/ai-employee-settings/tools/tools.component.ts[0m:[93m203[0m:[93m1[0m - [91merror[0m[90m TS1005: [0m'}' expected.[39m[22m
+[1m[31m[39m[22m
+[1m[31m[7m203[0m [39m[22m
+[1m[31m[7m   [0m [91m[0m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[39m[22m
+[37m[39m
+[37m[91m×[39m[37m Failed to compile.[39m
+[36m⠋[39m Generating browser application bundles...[2K[1G[36m⠙[39m Generating browser application bundles (phase: building)...[2K[1G[1A[2K[1G[36m⠹[39m Generating browser application bundles (phase: building)...[2K[1G[1A[2K[1G[36m⠸[39m Generating browser application bundles (phase: sealing)...[2K[1G[1A[2K[1G[32m✔[39m Browser application bundle generation complete.
+[37m[39m
+[37m[0m[1mInitial Chunk Files[22m[2m | [22m[1mNames[22m  [2m | [22m[1mRaw Size[22m[0m[39m
+[37m[0m[92mruntime.js[39m[37m         [2m | [22mruntime[2m | [22m[96m12.94 kB[39m[37m[2m | [22m[0m[39m
+[37m[0m[0m[39m
+[37m[0m13 unchanged chunks[0m[39m
+[37m[0m[0m[39m
+[37m[0mBuild at: [1m[37m2023-12-10T23:24:47.608Z[39m[37m[22m - Hash: [1m[37ma47e3543f85becef[39m[37m[22m - Time: [1m[37m606[39m[37m[22mms[0m[39m
+[1m[31m[39m[22m
+[1m[31m[0m[36m./apps/app/src/app/workspaces/ai-employees/ai-employee-settings/tools/tools.component.ts[39m[31m[0m - [0m[91mError: [39m[31m[0mModule build failed (from ./node_modules/@angular-devkit/build-angular/src/tools/babel/webpack-loader.js):[39m[22m
+[1m[31mSyntaxError: C:\dev\cognum\cognum\apps\app\src\app\workspaces\ai-employees\ai-employee-settings\tools\tools.component.ts: Unexpected reserved word 'await'. (124:28)[39m[22m
+[1m[31m[39m[22m
+[1m[31m[0m [90m 122 |[39m[31m                     [36mif[39m[31m ([33m![39m[31mtoolSettings[33m.[39m[31moptions[33m?[39m[31m[33m.[39m[31mtoken) {[0m[39m[22m
+[1m[31m[0m [90m 123 |[39m[31m                         [36mtry[39m[31m {[0m[39m[22m
+[1m[31m[0m[31m[1m>[22m[1m[39m[31m[90m 124 |[39m[31m                             [36mawait[39m[31m [36mnew[39m[31m [33mPromise[39m[31m([36masync[39m[31m (resolve[33m,[39m[31m reject) [33m=>[39m[31m {[0m[39m[22m
+[1m[31m[0m [90m     |[39m[31m                             [31m[1m^[22m[1m[39m[31m[0m[39m[22m
+[1m[31m[0m [90m 125 |[39m[31m                                 [36mtry[39m[31m {[0m[39m[22m
+[1m[31m[0m [90m 126 |[39m[31m                                     [36mconst[39m[31m accessToken [33m=[39m[31m [36mawait[39m[31m [36mthis[39m[31m[33m.[39m[31mtoolsService[33m.[39m[31mgoogleOAuth2(tool)[33m;[39m[31m[0m[39m[22m
+[1m[31m[0m [90m 127 |[39m[31m                                     [36mif[39m[31m ([33m![39m[31mtoolSettings[33m.[39m[31moptions)[0m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[0m[91mError: [39m[31m[0m[96mapps/app/src/app/workspaces/ai-employees/ai-employee-settings/tools/tools.component.html[0m:[93m8[0m:[93m18[0m - [91merror[0m[90m TS2339: [0mProperty 'addTool' does not exist on type 'AIEmployeeToolsComponent'.[39m[22m
+[1m[31m[39m[22m
+[1m[31m[7m8[0m         (click)="addTool()"[39m[22m
+[1m[31m[7m [0m [91m                 ~~~~~~~[0m[39m[22m
+[1m[31m[39m[22m
+[1m[31m  [96mapps/app/src/app/workspaces/ai-employees/ai-employee-settings/tools/tools.component.ts[0m:[93m20[0m:[93m16[0m[39m[22m
+[1m[31m    [7m20[0m   templateUrl: './tools.component.html',[39m[22m
+[1m[31m    [7m  [0m [96m               ~~~~~~~~~~~~~~~~~~~~~~~~[0m[39m[22m
+[1m[31m    Error occurs in the template of component AIEmployeeToolsComponent.[39m[22m
+[1m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[0m[91mError: [39m[31m[0m[96mapps/app/src/app/workspaces/ai-employees/ai-employee-setting[39m[22m[1m[31ms/tools/tools.component.html[0m:[93m21[0m:[93m20[0m - [91merror[0m[90m TS2339: [0mProperty 'onSelect' does not exist on type 'AIEmployeeToolsComponent'.[39m[22m
+[1m[31m[39m[22m
+[1m[31m[7m21[0m           (click)="onSelect(i)"[39m[22m
+[1m[31m[7m  [0m [91m                   ~~~~~~~~[0m[39m[22m
+[1m[31m[39m[22m
+[1m[31m  [96mapps/app/src/app/workspaces/ai-employees/ai-employee-settings/tools/tools.component.ts[0m:[93m20[0m:[93m16[0m[39m[22m
+[1m[31m    [7m20[0m   templateUrl: './tools.component.html',[39m[22m
+[1m[31m    [7m  [0m [96m               ~~~~~~~~~~~~~~~~~~~~~~~~[0m[39m[22m
+[1m[31m    Error occurs in the template of component AIEmployeeToolsComponent.[39m[22m
+[1m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[0m[91mError: [39m[31m[0m[96mapps/app/src/app/workspaces/ai-employees/ai-employee-settings/tools/tools.component.html[0m:[93m32[0m:[93m28[0m - [91merror[0m[90m TS2339: [0mProperty 'areToolSettingsFilled' does not exist on type 'AIEmployeeToolsComponent'.[39m[22m
+[1m[31m[39m[22m
+[1m[31m[7m32[0m             <button *ngIf="areToolSettingsFilled(i)" (click)="onTestTool(i)" mat-stroked-button>Test</button>[39m[22m
+[1m[31m[7m  [0m [91m                           ~~~~~~~~~~~~~~~~~~~~~[0m[39m[22m
+[1m[31m[39m[22m
+[1m[31m  [96mapps/app/src/app/workspaces/ai-employees/ai-employee-settings/tools/tools.component.ts[0m:[93m20[0m:[93m16[0m[39m[22m
+[1m[31m    [7m20[0m   templateUrl: './tools.component.html',[39m[22m
+[1m[31m    [7m  [0m [96m               ~~~~~~~~~~~~~~~~~~~~~~~~[0m[39m[22m
+[1m[31m    Error occurs in the template of component AIEmployeeToolsComponent.[39m[22m
+[1m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[0m[91mError: [39m[31m[0m[96mapps/app/src/app/workspaces/ai-employees/ai-employee-settings/tools/tools.component.html[0m:[93m32[0m:[93m63[0m - [91merror[0m[90m TS2339: [0mProperty 'onTestTool' does not exist on type 'AIEmployeeToolsComponent'.[39m[22m
+[1m[31m[39m[22m
+[1m[31m[7m32[0m             <button *ngIf="areToolSettingsFilled(i)" (click)="onTestTool(i)" mat-stroked-button>Test</button>[39m[22m
+[1m[31m[7m  [0m [91m                                                              ~~~~~~~~~~[0m[39m[22m
+[1m[31m[39m[22m
+[1m[31m  [96mapps/app/src/app/workspaces/ai-employees/ai-employee-settings/tools/tools.component.ts[0m:[93m20[0m:[93m16[0m[39m[22m
+[1m[31m    [7m20[0m   templateUrl: './tools.c[39m[22m[1m[31momponent.html',[39m[22m
+[1m[31m    [7m  [0m [96m               ~~~~~~~~~~~~~~~~~~~~~~~~[0m[39m[22m
+[1m[31m    Error occurs in the template of component AIEmployeeToolsComponent.[39m[22m
+[1m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[0m[91mError: [39m[31m[0m[96mapps/app/src/app/workspaces/ai-employees/ai-employee-settings/tools/tools.component.html[0m:[93m33[0m:[93m29[0m - [91merror[0m[90m TS2339: [0mProperty 'areToolSettingsFilled' does not exist on type 'AIEmployeeToolsComponent'.[39m[22m
+[1m[31m[39m[22m
+[1m[31m[7m33[0m             <button *ngIf="!areToolSettingsFilled(i)" mat-stroked-button>Settings</button>[39m[22m
+[1m[31m[7m  [0m [91m                            ~~~~~~~~~~~~~~~~~~~~~[0m[39m[22m
+[1m[31m[39m[22m
+[1m[31m  [96mapps/app/src/app/workspaces/ai-employees/ai-employee-settings/tools/tools.component.ts[0m:[93m20[0m:[93m16[0m[39m[22m
+[1m[31m    [7m20[0m   templateUrl: './tools.component.html',[39m[22m
+[1m[31m    [7m  [0m [96m               ~~~~~~~~~~~~~~~~~~~~~~~~[0m[39m[22m
+[1m[31m    Error occurs in the template of component AIEmployeeToolsComponent.[39m[22m
+[1m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[0m[91mError: [39m[31m[0m[96mapps/app/src/app/workspaces/ai-employees/ai-employee-settings/tools/tools.component.html[0m:[93m34[0m:[93m75[0m - [91merror[0m[90m TS2339: [0mProperty 'onDelete' does not exist on type 'AIEmployeeToolsComponent'.[39m[22m
+[1m[31m[39m[22m
+[1m[31m[7m34[0m             <mat-icon svgIcon="delete" (click)="$event.stopPropagation(); onDelete(i)"></mat-icon>[39m[22m
+[1m[31m[7m  [0m [91m                                                                          ~~~~~~~~[0m[39m[22m
+[1m[31m[39m[22m
+[1m[31m  [96mapps/app/src/app/workspaces/ai-employees/ai-employee-settings/tools/tools.component.ts[0m:[93m20[0m:[93m16[0m[39m[22m
+[1m[31m    [7m20[0m   templateUrl: './tools.component.html',[39m[22m
+[1m[31m    [7m  [0m [96m               ~~~~~~~~~~~~~~~~~~~~~~~~[0m[39m[22m
+[1m[31m    Error occurs in the template of component AIEmployeeToolsComponent.[39m[22m
+[1m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[0m[91mError: [39m[31m[0m[96mapps/app/src/app/workspaces/ai-employees/ai-employee-settings/tools/tools.component.ts[0m:[93m44[0m:[93m12[0m - [91merror[0m[90m TS2339: [0mProperty 'onSelect' does not exist on type 'AIEmployeeToolsComponent'.[39m[22m
+[1m[31m[39m[22m
+[1m[31m[7m44[0m       this.onSelect(ind[39m[22m[1m[31mex);[39m[22m
+[1m[31m[7m  [0m [91m           ~~~~~~~~[0m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[0m[91mError: [39m[31m[0m[96mapps/app/src/app/workspaces/ai-employees/ai-employee-settings/tools/tools.component.ts[0m:[93m49[0m:[93m5[0m - [91merror[0m[90m TS2304: [0mCannot find name 'addTool'.[39m[22m
+[1m[31m[39m[22m
+[1m[31m[7m49[0m     addTool() {[39m[22m
+[1m[31m[7m  [0m [91m    ~~~~~~~[0m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[0m[91mError: [39m[31m[0m[96mapps/app/src/app/workspaces/ai-employees/ai-employee-settings/tools/tools.component.ts[0m:[93m49[0m:[93m15[0m - [91merror[0m[90m TS1005: [0m';' expected.[39m[22m
+[1m[31m[39m[22m
+[1m[31m[7m49[0m     addTool() {[39m[22m
+[1m[31m[7m  [0m [91m              ~[0m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[0m[91mError: [39m[31m[0m[96mapps/app/src/app/workspaces/ai-employees/ai-employee-settings/tools/tools.component.ts[0m:[93m53[0m:[93m3[0m - [91merror[0m[90m TS1434: [0mUnexpected keyword or identifier.[39m[22m
+[1m[31m[39m[22m
+[1m[31m[7m53[0m   async onSelect(index: number) {[39m[22m
+[1m[31m[7m  [0m [91m  ~~~~~[0m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[0m[91mError: [39m[31m[0m[96mapps/app/src/app/workspaces/ai-employees/ai-employee-settings/tools/tools.component.ts[0m:[93m53[0m:[93m3[0m - [91merror[0m[90m TS2304: [0mCannot find name 'async'.[39m[22m
+[1m[31m[39m[22m
+[1m[31m[7m53[0m   async onSelect(index: number) {[39m[22m
+[1m[31m[7m  [0m [91m  ~~~~~[0m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[0m[91mError: [39m[31m[0m[96mapps/app/src/app/workspaces/ai-employees/ai-employee-settings/tools/tools.component.ts[0m:[93m53[0m:[93m9[0m - [91merror[0m[90m TS2552: [0mCannot find name 'onSelect'. Did you mean 'onselect'?[39m[22m
+[1m[31m[39m[22m
+[1m[31m[7m53[0m   async onSelect(index: number) {[39m[22m
+[1m[31m[7m  [0m [91m        ~~~~~~~~[0m[39m[22m
+[1m[31m[39m[22m
+[1m[31m  [96mnode_modules/typescript/lib/lib.dom.d.ts[0m:[93m27781[0m:[93m13[0m[39m[22m
+[1m[31m    [7m27781[0m declare var onselect: ((this: Window, ev: Event) => any) | null;[39m[22m
+[1m[31m    [7m     [0m [96m            ~~~~~~~~[0m[39m[22m
+[1m[31m    'onselect' is declared here.[39m[22m
+[1m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[0m[91mError: [39m[31m[0m[96mapps/app/src/app/workspaces/ai-employees/ai-employee-settings/tools/tools.component.ts[0m:[93m53[0m:[93m18[0m - [91merror[0m[90m TS2304: [0mCannot find name 'index'.[39m[22m
+[1m[31m[39m[22m
+[1m[31m[7m53[0m   async onSelect(index: number) {[39m[22m
+[1m[31m[7m  [0m [91m[39m[22m[1m[31m                 ~~~~~[0m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[0m[91mError: [39m[31m[0m[96mapps/app/src/app/workspaces/ai-employees/ai-employee-settings/tools/tools.component.ts[0m:[93m53[0m:[93m23[0m - [91merror[0m[90m TS1005: [0m',' expected.[39m[22m
+[1m[31m[39m[22m
+[1m[31m[7m53[0m   async onSelect(index: number) {[39m[22m
+[1m[31m[7m  [0m [91m                      ~[0m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[0m[91mError: [39m[31m[0m[96mapps/app/src/app/workspaces/ai-employees/ai-employee-settings/tools/tools.component.ts[0m:[93m53[0m:[93m25[0m - [91merror[0m[90m TS2693: [0m'number' only refers to a type, but is being used as a value here.[39m[22m
+[1m[31m[39m[22m
+[1m[31m[7m53[0m   async onSelect(index: number) {[39m[22m
+[1m[31m[7m  [0m [91m                        ~~~~~~[0m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[0m[91mError: [39m[31m[0m[96mapps/app/src/app/workspaces/ai-employees/ai-employee-settings/tools/tools.component.ts[0m:[93m53[0m:[93m33[0m - [91merror[0m[90m TS1005: [0m';' expected.[39m[22m
+[1m[31m[39m[22m
+[1m[31m[7m53[0m   async onSelect(index: number) {[39m[22m
+[1m[31m[7m  [0m [91m                                ~[0m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[0m[91mError: [39m[31m[0m[96mapps/app/src/app/workspaces/ai-employees/ai-employee-settings/tools/tools.component.ts[0m:[93m54[0m:[93m68[0m - [91merror[0m[90m TS2304: [0mCannot find name 'index'.[39m[22m
+[1m[31m[39m[22m
+[1m[31m[7m54[0m       const toolSettings = this.aiEmployeeService.aiEmployee.tools[index];[39m[22m
+[1m[31m[7m  [0m [91m                                                                   ~~~~~[0m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[0m[91mError: [39m[31m[0m[96mapps/app/src/app/workspaces/ai-employees/ai-employee-settings/tools/tools.component.ts[0m:[93m78[0m:[93m59[0m - [91merror[0m[90m TS2304: [0mCannot find name 'index'.[39m[22m
+[1m[31m[39m[22m
+[1m[31m[7m78[0m                   this.aiEmployeeService.aiEmployee.tools[index].options = toolSettings.options;[39m[22m
+[1m[31m[7m  [0m [91m                                                          ~~~~~[0m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[0m[91mError: [39m[31m[0m[96mapps/app/src/app/workspaces/ai-employees/ai-employee-settings/tools/tools.component.ts[0m:[93m98[0m:[93m53[0m - [91merror[0m[90m TS2304: [0mCannot find name 'index'.[39m[22m
+[1m[31m[39m[22m
+[1m[31m[7m98[0m             this.ai[39m[22m[1m[31mEmployeeService.aiEmployee.tools[index].options = data;[39m[22m
+[1m[31m[7m  [0m [91m                                                    ~~~~~[0m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[0m[91mError: [39m[31m[0m[96mapps/app/src/app/workspaces/ai-employees/ai-employee-settings/tools/tools.component.ts[0m:[93m110[0m:[93m5[0m - [91merror[0m[90m TS2304: [0mCannot find name 'onTestTool'.[39m[22m
+[1m[31m[39m[22m
+[1m[31m[7m110[0m     onTestTool(index: number) {[39m[22m
+[1m[31m[7m   [0m [91m    ~~~~~~~~~~[0m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[0m[91mError: [39m[31m[0m[96mapps/app/src/app/workspaces/ai-employees/ai-employee-settings/tools/tools.component.ts[0m:[93m110[0m:[93m16[0m - [91merror[0m[90m TS2304: [0mCannot find name 'index'.[39m[22m
+[1m[31m[39m[22m
+[1m[31m[7m110[0m     onTestTool(index: number) {[39m[22m
+[1m[31m[7m   [0m [91m               ~~~~~[0m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[0m[91mError: [39m[31m[0m[96mapps/app/src/app/workspaces/ai-employees/ai-employee-settings/tools/tools.component.ts[0m:[93m110[0m:[93m21[0m - [91merror[0m[90m TS1005: [0m',' expected.[39m[22m
+[1m[31m[39m[22m
+[1m[31m[7m110[0m     onTestTool(index: number) {[39m[22m
+[1m[31m[7m   [0m [91m                    ~[0m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[0m[91mError: [39m[31m[0m[96mapps/app/src/app/workspaces/ai-employees/ai-employee-settings/tools/tools.component.ts[0m:[93m110[0m:[93m23[0m - [91merror[0m[90m TS2693: [0m'number' only refers to a type, but is being used as a value here.[39m[22m
+[1m[31m[39m[22m
+[1m[31m[7m110[0m     onTestTool(index: number) {[39m[22m
+[1m[31m[7m   [0m [91m                      ~~~~~~[0m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[0m[91mError: [39m[31m[0m[96mapps/app/src/app/workspaces/ai-employees/ai-employee-settings/tools/tools.component.ts[0m:[93m110[0m:[93m31[0m - [91merror[0m[90m TS1005: [0m';' expected.[39m[22m
+[1m[31m[39m[22m
+[1m[31m[7m110[0m     onTestTool(index: number) {[39m[22m
+[1m[31m[7m   [0m [91m                              ~[0m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[0m[91mError: [39m[31m[0m[96mapps/app/src/app/workspaces/ai-employees/ai-employee-settings/tools/tools.component.ts[0m:[93m111[0m:[93m60[0m - [91merror[0m[90m TS2304: [0mCannot find name 'index'.[39m[22m
+[1m[31m[39m[22m
+[1m[31m[7m111[0m       const tool = this.aiEmployeeService.aiEmployee.tools[index];[39m[22m
+[1m[31m[7m   [0m [91m                          [39m[22m[1m[31m                                 ~~~~~[0m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[0m[91mError: [39m[31m[0m[96mapps/app/src/app/workspaces/ai-employees/ai-employee-settings/tools/tools.component.ts[0m:[93m115[0m:[93m32[0m - [91merror[0m[90m TS2339: [0mProperty 'testMessage' does not exist on type 'AIEmployeeToolsComponent'.[39m[22m
+[1m[31m[39m[22m
+[1m[31m[7m115[0m       const testMessage = this.testMessage(tool);[39m[22m
+[1m[31m[7m   [0m [91m                               ~~~~~~~~~~~[0m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[0m[91mError: [39m[31m[0m[96mapps/app/src/app/workspaces/ai-employees/ai-employee-settings/tools/tools.component.ts[0m:[93m119[0m:[93m16[0m - [91merror[0m[90m TS2339: [0mProperty 'openChatModal' does not exist on type 'AIEmployeeToolsComponent'.[39m[22m
+[1m[31m[39m[22m
+[1m[31m[7m119[0m           this.openChatModal(newChat, tool, testMessage);[39m[22m
+[1m[31m[7m   [0m [91m               ~~~~~~~~~~~~~[0m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[0m[91mError: [39m[31m[0m[96mapps/app/src/app/workspaces/ai-employees/ai-employee-settings/tools/tools.component.ts[0m:[93m124[0m:[93m5[0m - [91merror[0m[90m TS2304: [0mCannot find name 'openChatModal'.[39m[22m
+[1m[31m[39m[22m
+[1m[31m[7m124[0m     openChatModal(chat: IChatRoom, tool: any, testMessage: string) {[39m[22m
+[1m[31m[7m   [0m [91m    ~~~~~~~~~~~~~[0m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[0m[91mError: [39m[31m[0m[96mapps/app/src/app/workspaces/ai-employees/ai-employee-settings/tools/tools.component.ts[0m:[93m124[0m:[93m19[0m - [91merror[0m[90m TS2304: [0mCannot find name 'chat'.[39m[22m
+[1m[31m[39m[22m
+[1m[31m[7m124[0m     openChatModal(chat: IChatRoom, tool: any, testMessage: string) {[39m[22m
+[1m[31m[7m   [0m [91m                  ~~~~[0m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[0m[91mError: [39m[31m[0m[96mapps/app/src/app/workspaces/ai-employees/ai-employee-settings/tools/tools.component.ts[0m:[93m124[0m:[93m23[0m - [91merror[0m[90m TS1005: [0m',' expected.[39m[22m
+[1m[31m[39m[22m
+[1m[31m[7m124[0m     openChatModal(chat: IChatRoom, tool: any, testMessage: string) {[39m[22m
+[1m[31m[7m   [0m [91m                      ~[0m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[0m[91mError: [39m[31m[0m[96mapps/app/src/app/workspaces/ai-employees/ai-employee-settings/tools/tools.component.ts[0m:[93m124[0m:[93m25[0m - [91merror[0m[90m TS2693: [0m[39m[22m[1m[31m'IChatRoom' only refers to a type, but is being used as a value here.[39m[22m
+[1m[31m[39m[22m
+[1m[31m[7m124[0m     openChatModal(chat: IChatRoom, tool: any, testMessage: string) {[39m[22m
+[1m[31m[7m   [0m [91m                        ~~~~~~~~~[0m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[0m[91mError: [39m[31m[0m[96mapps/app/src/app/workspaces/ai-employees/ai-employee-settings/tools/tools.component.ts[0m:[93m124[0m:[93m36[0m - [91merror[0m[90m TS2304: [0mCannot find name 'tool'.[39m[22m
+[1m[31m[39m[22m
+[1m[31m[7m124[0m     openChatModal(chat: IChatRoom, tool: any, testMessage: string) {[39m[22m
+[1m[31m[7m   [0m [91m                                   ~~~~[0m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[0m[91mError: [39m[31m[0m[96mapps/app/src/app/workspaces/ai-employees/ai-employee-settings/tools/tools.component.ts[0m:[93m124[0m:[93m40[0m - [91merror[0m[90m TS1005: [0m',' expected.[39m[22m
+[1m[31m[39m[22m
+[1m[31m[7m124[0m     openChatModal(chat: IChatRoom, tool: any, testMessage: string) {[39m[22m
+[1m[31m[7m   [0m [91m                                       ~[0m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[0m[91mError: [39m[31m[0m[96mapps/app/src/app/workspaces/ai-employees/ai-employee-settings/tools/tools.component.ts[0m:[93m124[0m:[93m42[0m - [91merror[0m[90m TS2693: [0m'any' only refers to a type, but is being used as a value here.[39m[22m
+[1m[31m[39m[22m
+[1m[31m[7m124[0m     openChatModal(chat: IChatRoom, tool: any, testMessage: string) {[39m[22m
+[1m[31m[7m   [0m [91m                                         ~~~[0m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[0m[91mError: [39m[31m[0m[96mapps/app/src/app/workspaces/ai-employees/ai-employee-settings/tools/tools.component.ts[0m:[93m124[0m:[93m47[0m - [91merror[0m[90m TS2304: [0mCannot find name 'testMessage'.[39m[22m
+[1m[31m[39m[22m
+[1m[31m[7m124[0m     openChatModal(chat: IChatRoom, tool: any, testMessage: string) {[39m[22m
+[1m[31m[7m   [0m [91m                                              ~~~~~~~~~~~[0m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[0m[91mError: [39m[31m[0m[96mapps/app/src/app/workspaces/ai-employees/ai-employee-settings/tools/tools.component.ts[0m:[93m124[0m:[93m58[0m - [91merror[0m[90m TS1005: [0m',' expected.[39m[22m
+[1m[31m[39m[22m
+[1m[31m[7m124[0m     openChatModal(chat: IChatRoom, tool: any, testMessage: string) {[39m[22m
+[1m[31m[7m   [0m [91m                [39m[22m[1m[31m                                         ~[0m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[0m[91mError: [39m[31m[0m[96mapps/app/src/app/workspaces/ai-employees/ai-employee-settings/tools/tools.component.ts[0m:[93m124[0m:[93m60[0m - [91merror[0m[90m TS2693: [0m'string' only refers to a type, but is being used as a value here.[39m[22m
+[1m[31m[39m[22m
+[1m[31m[7m124[0m     openChatModal(chat: IChatRoom, tool: any, testMessage: string) {[39m[22m
+[1m[31m[7m   [0m [91m                                                           ~~~~~~[0m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[0m[91mError: [39m[31m[0m[96mapps/app/src/app/workspaces/ai-employees/ai-employee-settings/tools/tools.component.ts[0m:[93m124[0m:[93m68[0m - [91merror[0m[90m TS1005: [0m';' expected.[39m[22m
+[1m[31m[39m[22m
+[1m[31m[7m124[0m     openChatModal(chat: IChatRoom, tool: any, testMessage: string) {[39m[22m
+[1m[31m[7m   [0m [91m                                                                   ~[0m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[0m[91mError: [39m[31m[0m[96mapps/app/src/app/workspaces/ai-employees/ai-employee-settings/tools/tools.component.ts[0m:[93m125[0m:[93m22[0m - [91merror[0m[90m TS2304: [0mCannot find name 'chat'.[39m[22m
+[1m[31m[39m[22m
+[1m[31m[7m125[0m       const chatId = chat._id as string;[39m[22m
+[1m[31m[7m   [0m [91m                     ~~~~[0m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[0m[91mError: [39m[31m[0m[96mapps/app/src/app/workspaces/ai-employees/ai-employee-settings/tools/tools.component.ts[0m:[93m129[0m:[93m25[0m - [91merror[0m[90m TS18004: [0mNo value exists in scope for the shorthand property 'tool'. Either declare one or provide an initializer.[39m[22m
+[1m[31m[39m[22m
+[1m[31m[7m129[0m         data: { chatId, tool, testMessage },[39m[22m
+[1m[31m[7m   [0m [91m                        ~~~~[0m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[0m[91mError: [39m[31m[0m[96mapps/app/src/app/workspaces/ai-employees/ai-employee-settings/tools/tools.component.ts[0m:[93m129[0m:[93m31[0m - [91merror[0m[90m TS18004: [0mNo value exists in scope for the shorthand property 'testMessage'. Either declare one or provide an initializer.[39m[22m
+[1m[31m[39m[22m
+[1m[31m[7m129[0m         data: { chatId, tool, testMessage },[39m[22m
+[1m[31m[7m   [0m [91m                              ~~~~~~~~~~~[0m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[0m[91mError: [39m[31m[39m[22m[1m[31m[0m[96mapps/app/src/app/workspaces/ai-employees/ai-employee-settings/tools/tools.component.ts[0m:[93m137[0m:[93m34[0m - [91merror[0m[90m TS2304: [0mCannot find name 'chat'.[39m[22m
+[1m[31m[39m[22m
+[1m[31m[7m137[0m         this.chatsService.delete(chat).subscribe({[39m[22m
+[1m[31m[7m   [0m [91m                                 ~~~~[0m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[0m[91mError: [39m[31m[0m[96mapps/app/src/app/workspaces/ai-employees/ai-employee-settings/tools/tools.component.ts[0m:[93m145[0m:[93m5[0m - [91merror[0m[90m TS2552: [0mCannot find name 'testMessage'. Did you mean 'postMessage'?[39m[22m
+[1m[31m[39m[22m
+[1m[31m[7m145[0m     testMessage(tool: any) {[39m[22m
+[1m[31m[7m   [0m [91m    ~~~~~~~~~~~[0m[39m[22m
+[1m[31m[39m[22m
+[1m[31m  [96mnode_modules/typescript/lib/lib.dom.d.ts[0m:[93m27395[0m:[93m18[0m[39m[22m
+[1m[31m    [7m27395[0m declare function postMessage(message: any, targetOrigin: string, transfer?: Transferable[]): void;[39m[22m
+[1m[31m    [7m     [0m [96m                 ~~~~~~~~~~~[0m[39m[22m
+[1m[31m    'postMessage' is declared here.[39m[22m
+[1m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[0m[91mError: [39m[31m[0m[96mapps/app/src/app/workspaces/ai-employees/ai-employee-settings/tools/tools.component.ts[0m:[93m145[0m:[93m17[0m - [91merror[0m[90m TS2304: [0mCannot find name 'tool'.[39m[22m
+[1m[31m[39m[22m
+[1m[31m[7m145[0m     testMessage(tool: any) {[39m[22m
+[1m[31m[7m   [0m [91m                ~~~~[0m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[0m[91mError: [39m[31m[0m[96mapps/app/src/app/workspaces/ai-employees/ai-employee-settings/tools/tools.component.ts[0m:[93m145[0m:[93m21[0m - [91merror[0m[90m TS1005: [0m',' expected.[39m[22m
+[1m[31m[39m[22m
+[1m[31m[7m145[0m     testMessage(tool: any) {[39m[22m
+[1m[31m[7m   [0m [91m                    ~[0m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[0m[91mError: [39m[31m[0m[96mapps/app/src/app/workspaces/ai-employees/ai-employee-settings/tools/tools.component.ts[0m:[93m145[0m:[93m23[0m - [91merror[0m[90m TS2693: [0m'any' only refers to a type, but is being used as a value here.[39m[22m
+[1m[31m[39m[22m
+[1m[31m[7m145[0m     testMessage(tool: any) {[39m[22m
+[1m[31m[7m   [0m [91m                      ~~~[0m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[0m[91mError: [39m[31m[0m[96mapps/app/src/app/workspaces/ai-employees/ai-employee-settings/tools/tools.component.ts[0m:[93m145[0m:[93m28[0m - [9[39m[22m[1m[31m1merror[0m[90m TS1005: [0m';' expected.[39m[22m
+[1m[31m[39m[22m
+[1m[31m[7m145[0m     testMessage(tool: any) {[39m[22m
+[1m[31m[7m   [0m [91m                           ~[0m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[0m[91mError: [39m[31m[0m[96mapps/app/src/app/workspaces/ai-employees/ai-employee-settings/tools/tools.component.ts[0m:[93m157[0m:[93m27[0m - [91merror[0m[90m TS2304: [0mCannot find name 'tool'.[39m[22m
+[1m[31m[39m[22m
+[1m[31m[7m157[0m       return testMessages[tool.id] || '';[39m[22m
+[1m[31m[7m   [0m [91m                          ~~~~[0m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[0m[91mError: [39m[31m[0m[96mapps/app/src/app/workspaces/ai-employees/ai-employee-settings/tools/tools.component.ts[0m:[93m160[0m:[93m5[0m - [91merror[0m[90m TS2304: [0mCannot find name 'areToolSettingsFilled'.[39m[22m
+[1m[31m[39m[22m
+[1m[31m[7m160[0m     areToolSettingsFilled(index: number): boolean {[39m[22m
+[1m[31m[7m   [0m [91m    ~~~~~~~~~~~~~~~~~~~~~[0m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[0m[91mError: [39m[31m[0m[96mapps/app/src/app/workspaces/ai-employees/ai-employee-settings/tools/tools.component.ts[0m:[93m160[0m:[93m27[0m - [91merror[0m[90m TS2304: [0mCannot find name 'index'.[39m[22m
+[1m[31m[39m[22m
+[1m[31m[7m160[0m     areToolSettingsFilled(index: number): boolean {[39m[22m
+[1m[31m[7m   [0m [91m                          ~~~~~[0m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[0m[91mError: [39m[31m[0m[96mapps/app/src/app/workspaces/ai-employees/ai-employee-settings/tools/tools.component.ts[0m:[93m160[0m:[93m32[0m - [91merror[0m[90m TS1005: [0m',' expected.[39m[22m
+[1m[31m[39m[22m
+[1m[31m[7m160[0m     areToolSettingsFilled(index: number): boolean {[39m[22m
+[1m[31m[7m   [0m [91m                               ~[0m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[0m[91mError: [39m[31m[0m[96mapps/app/src/app/workspaces/ai-employees/ai-employee-settings/tools/tools.component.ts[0m:[93m160[0m:[93m34[0m - [91merror[0m[90m TS2693: [0m'number' only refers to a type, but is being used as a value here.[39m[22m
+[1m[31m[39m[22m
+[1m[31m[7m160[0m     areToolSettingsFilled(index: number): boolean {[39m[22m
+[1m[31m[7m   [0m [91m                                 ~~~~~~[0m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[0m[91mError: [39m[31m[0m[96mapps/app/src/app/workspaces/ai-employees/ai-employee-settings/tools/tools.component.ts[0m:[93m160[0m:[93m41[0m - [91merror[0m[90m TS1005[39m[22m[1m[31m: [0m';' expected.[39m[22m
+[1m[31m[39m[22m
+[1m[31m[7m160[0m     areToolSettingsFilled(index: number): boolean {[39m[22m
+[1m[31m[7m   [0m [91m                                        ~[0m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[0m[91mError: [39m[31m[0m[96mapps/app/src/app/workspaces/ai-employees/ai-employee-settings/tools/tools.component.ts[0m:[93m160[0m:[93m43[0m - [91merror[0m[90m TS1434: [0mUnexpected keyword or identifier.[39m[22m
+[1m[31m[39m[22m
+[1m[31m[7m160[0m     areToolSettingsFilled(index: number): boolean {[39m[22m
+[1m[31m[7m   [0m [91m                                          ~~~~~~~[0m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[0m[91mError: [39m[31m[0m[96mapps/app/src/app/workspaces/ai-employees/ai-employee-settings/tools/tools.component.ts[0m:[93m160[0m:[93m43[0m - [91merror[0m[90m TS2693: [0m'boolean' only refers to a type, but is being used as a value here.[39m[22m
+[1m[31m[39m[22m
+[1m[31m[7m160[0m     areToolSettingsFilled(index: number): boolean {[39m[22m
+[1m[31m[7m   [0m [91m                                          ~~~~~~~[0m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[0m[91mError: [39m[31m[0m[96mapps/app/src/app/workspaces/ai-employees/ai-employee-settings/tools/tools.component.ts[0m:[93m161[0m:[93m60[0m - [91merror[0m[90m TS2304: [0mCannot find name 'index'.[39m[22m
+[1m[31m[39m[22m
+[1m[31m[7m161[0m       const tool = this.aiEmployeeService.aiEmployee.tools[index][39m[22m
+[1m[31m[7m   [0m [91m                                                           ~~~~~[0m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[0m[91mError: [39m[31m[0m[96mapps/app/src/app/workspaces/ai-employees/ai-employee-settings/tools/tools.component.ts[0m:[93m170[0m:[93m5[0m - [91merror[0m[90m TS2304: [0mCannot find name 'onDelete'.[39m[22m
+[1m[31m[39m[22m
+[1m[31m[7m170[0m     onDelete(index: number) {[39m[22m
+[1m[31m[7m   [0m [91m    ~~~~~~~~[0m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[0m[91mError: [39m[31m[0m[96mapps/app/src/app/workspaces/ai-employees/ai-employee-settings/tools/tools.component.ts[0m:[93m170[0m:[93m14[0m - [91merror[0m[90m TS2304: [0mCannot find name 'index'.[39m[22m
+[1m[31m[39m[22m
+[1m[31m[7m170[0m     onDelete(index: number) {[39m[22m
+[1m[31m[7m   [0m [91m             ~~~~~[0m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[0m[91mError: [39m[31m[0m[96mapps/app/src/app/workspaces/ai-employees/ai-employee-settings/tools/tools.component.ts[0m:[93m170[0m:[9[39m[22m[1m[31m3m19[0m - [91merror[0m[90m TS1005: [0m',' expected.[39m[22m
+[1m[31m[39m[22m
+[1m[31m[7m170[0m     onDelete(index: number) {[39m[22m
+[1m[31m[7m   [0m [91m                  ~[0m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[0m[91mError: [39m[31m[0m[96mapps/app/src/app/workspaces/ai-employees/ai-employee-settings/tools/tools.component.ts[0m:[93m170[0m:[93m21[0m - [91merror[0m[90m TS2693: [0m'number' only refers to a type, but is being used as a value here.[39m[22m
+[1m[31m[39m[22m
+[1m[31m[7m170[0m     onDelete(index: number) {[39m[22m
+[1m[31m[7m   [0m [91m                    ~~~~~~[0m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[0m[91mError: [39m[31m[0m[96mapps/app/src/app/workspaces/ai-employees/ai-employee-settings/tools/tools.component.ts[0m:[93m170[0m:[93m29[0m - [91merror[0m[90m TS1005: [0m';' expected.[39m[22m
+[1m[31m[39m[22m
+[1m[31m[7m170[0m     onDelete(index: number) {[39m[22m
+[1m[31m[7m   [0m [91m                            ~[0m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[0m[91mError: [39m[31m[0m[96mapps/app/src/app/workspaces/ai-employees/ai-employee-settings/tools/tools.component.ts[0m:[93m181[0m:[93m58[0m - [91merror[0m[90m TS2304: [0mCannot find name 'index'.[39m[22m
+[1m[31m[39m[22m
+[1m[31m[7m181[0m           this.aiEmployeeService.aiEmployee.tools.splice(index, 1);[39m[22m
+[1m[31m[7m   [0m [91m                                                         ~~~~~[0m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[0m[91mError: [39m[31m[0m[96mapps/app/src/app/workspaces/ai-employees/ai-employee-settings/tools/tools.component.ts[0m:[93m192[0m:[93m1[0m - [91merror[0m[90m TS1005: [0m'}' expected.[39m[22m
+[1m[31m[39m[22m
+[1m[31m[7m192[0m [39m[22m
+[1m[31m[7m   [0m [91m[0m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[39m[22m
+[1m[31m[39m[22m
+[37m[39m
+[37m[91m×[39m[37m Failed to compile.[39m
+[36m⠋[39m Generating browser application bundles...[2K[1G[36m⠙[39m Generating browser application bundles (phase: building)...[2K[1G[1A[2K[1G[36m⠹[39m Generating browser application bundles (phase: building)...[2K[1G[1A[2K[1G[36m⠸[39m Generating browser application bundles (phase: emitting)...[2K[1G[1A[2K[1G[32m✔[39m Browser application bundle generation complete.
+[37m[39m
+[37m[0m[1mInitial Chunk Files[22m                                                      [2m | [22m[1mNames[22m                           [2m | [22m [1mRaw Size[22m[0m[39m
+[37m[0m[92mruntime.js[39m[37m                                                               [2m | [22mruntime                         [2m | [22m [96m12.94 kB[39m[37m[2m | [22m[0m[39m
+[37m[0m[0m[39m
+[37m[0m[1mLazy Chunk Files[22m                                                         [2m | [22m[1mNames[22m                           [2m | [22m [1mRaw Size[22m[0m[39m
+[37m[0m[92mapps_app_src_app_workspaces_ai-employees_ai-employees_module_ts.js[39m[37m       [2m | [22mai-employees-ai-employees-module[2m | [22m[96m333.31 kB[39m[37m[2m | [22m[0m[39m
+[37m[0m[92mdefault-apps_app_src_app_workspaces_ai-employees_chats_chats_module_ts.js[39m[37m[2m | [22mchats-chats-module              [2m | [22m [96m40.27 kB[39m[37m[2m | [22m[0m[39m
+[37m[0m[0m[39m
+[37m[0m11 unchanged chunks[0m[39m
+[37m[0m[0m[39m
+[37m[0mBuild at: [1m[37m2023-12-10T23:24:53.343Z[39m[37m[22m - Hash: [1m[37mfbebb903d8df52b8[39m[37m[22m - Time: [1m[37m728[39m[37m[22mms[0m[39m
+[37m[39m
+[37m[92m√[39m[37m Compiled successfully.[39m
+[36m⠋[39m Generating browser application bundles...[2K[1G[36m⠙[39m Generating browser application bundles (phase: building)...[2K[1G[1A[2K[1G[36m⠹[39m Generating browser application bundles (phase: building)...[2K[1G[1A[2K[1G[36m⠸[39m Generating browser application bundles (phase: building)...[2K[1G[1A[2K[1G[36m⠼[39m Generating browser application bundles (phase: sealing)...[2K[1G[1A[2K[1G[36m⠴[39m Generating browser application bundles (phase: emitting)...[2K[1G[1A[2K[1G[36m⠦[39m Generating browser application bundles (phase: emitting)...[2K[1G[1A[2K[1G[32m✔[39m Browser application bundle generation complete.
+[37m[39m
+[37m[0m[1mInitial Chunk Files[22m                                               [2m | [22m[1mNames[22m                           [2m | [22m [1mRaw Size[22m[0m[39m
+[37m[0m[92mruntime.js[39m[37m                                                        [2m | [22mruntime                         [2m | [22m [96m12.94 kB[39m[37m[2m | [22m[0m[39m
+[37m[0m[0m[39m
+[37m[0m[1mLazy Chunk Files[22m                                                  [2m | [22m[1mNames[22m                           [2m | [22m [1mRaw Size[22m[0m[39m
+[37m[0m[92mapps_app_src_app_workspaces_ai-employees_ai-employees_module_ts.js[39m[37m[2m | [22mai-employees-ai-employees-module[2m | [22m[96m333.32 kB[39m[37m[2m | [22m[0m[39m
+[37m[0m[0m[39m
+[37m[0m12 unchanged chunks[0m[39m
+[37m[0m[0m[39m
+[37m[0mBuild at: [1m[37m2023-12-10T23:27:34.067Z[39m[37m[22m - Hash: [1m[37m656d78a3562167e1[39m[37m[22m - Time: [1m[37m809[39m[37m[22mms[0m[39m
+[37m[39m
+[37m[92m√[39m[37m Compiled successfully.[39m

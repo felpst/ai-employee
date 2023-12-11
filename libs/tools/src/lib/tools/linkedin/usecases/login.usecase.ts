@@ -1,6 +1,6 @@
 import { By, Key, until } from 'selenium-webdriver';
-import { LinkedInDriver } from "../drivers/linkedin.driver";
 import { ILinkedInAuth } from "../linkedin.interfaces";
+import { WebBrowser } from '../../../web-browser/web-browser';
 
 export class LoginUseCase {
 
@@ -13,17 +13,15 @@ export class LoginUseCase {
   }
 
   constructor(
-    private linkedinDriver: LinkedInDriver
+    private webBrowser: WebBrowser
   ) { }
 
   async execute(auth: ILinkedInAuth) {
-    if (this.linkedinDriver.isAuthenticaded) return true;
-
     try {
       await this._goToLoginPage()
       await this._login(auth)
-      await this._checkIfLogged()
-      return this.linkedinDriver.isAuthenticaded;
+      const isAuthenticaded = await this._checkIfLogged()
+      return isAuthenticaded;
     } catch (error) {
       console.error(error.message)
       throw new Error(error.message);
@@ -31,25 +29,23 @@ export class LoginUseCase {
   }
 
   get driver() {
-    return this.linkedinDriver.driver;
+    return this.webBrowser.driver;
   }
 
   private async _goToLoginPage() {
     this._console('Logging in...');
-    const loginUrl = 'https://www.linkedin.com/login';
+    const loginUrl = 'https://www.linkedin.com/login?_l=en';
+    // const loginUrl = 'https://www.linkedin.com/?_l=en';
     await this.driver.get(loginUrl);
 
     let getCurrentUrl = await this.driver.getCurrentUrl()
     this._console('getCurrentUrl: ' + getCurrentUrl);
-    if (!getCurrentUrl.includes(loginUrl)) {
-      throw new Error(LoginUseCase.ERROR_MESSAGES.NO_PAGE_FOUND);
-    }
   }
 
   private async _login(auth: ILinkedInAuth) {
     // Set user
     this._console('[Login] Set user...');
-    const userInput = await this.driver.wait(until.elementLocated(By.id('username')), 5000);
+    const userInput = await this.driver.wait(until.elementLocated(By.id('username')), 10000);
     if (!userInput) {
       throw new Error(LoginUseCase.ERROR_MESSAGES.NO_USER_INPUT_FOUND);
     }
@@ -74,12 +70,11 @@ export class LoginUseCase {
     this._console('[_checkIfLogged] getCurrentUrl: ' + getCurrentUrl);
 
     if (getCurrentUrl.includes('https://www.linkedin.com/feed')) {
-      this.linkedinDriver.isAuthenticaded = true;
       return true;
     } else if (getCurrentUrl.includes('https://www.linkedin.com/login')) {
       throw new Error('Error on login: username or password incorrect');
     } else if (getCurrentUrl.includes('https://www.linkedin.com/checkpoint/challenge/verify')) {
-      const pageSource = await this.driver.wait(until.elementLocated(By.css('body')), this.linkedinDriver.timeoutMS).getAttribute('innerHTML');
+      const pageSource = await this.driver.wait(until.elementLocated(By.css('body')), this.webBrowser.timeoutMS).getAttribute('innerHTML');
       console.log('pageSource: ', pageSource);
       await this.driver.sleep(2000);
       throw new Error(LoginUseCase.ERROR_MESSAGES.NEED_TO_VERIFY_LOGIN);

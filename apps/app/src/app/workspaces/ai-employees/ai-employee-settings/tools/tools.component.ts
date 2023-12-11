@@ -25,7 +25,7 @@ export class AIEmployeeToolsComponent implements OnInit {
     private aiEmployeeService: AIEmployeesService,
     private toolsService: ToolsService,
     private chatsService: ChatsService,
-    private chatService: ChatService
+    private chatService: ChatService,
   ) { }
 
   get tools() {
@@ -59,7 +59,7 @@ export class AIEmployeeToolsComponent implements OnInit {
       case 'mail-sender':
         component = AIToolSettingsMailSenderComponent;
         break;
-      case 'linkedin-lead-scraper':
+      case 'linkedin':
         component = AIToolSettingsLinkedInLeadScraperComponent;
         break;
       case 'google-calendar':
@@ -148,7 +148,7 @@ export class AIEmployeeToolsComponent implements OnInit {
       'mail-sender': 'Send test email to: ',
       'python': 'What is the 5th element of the Fibonacci sequence?',
       'sql-connector': 'Connect to a SQL database',
-      'linkedin-lead-scraper': 'Find 5 leads on LinkedIn: Web Developers in Brazil',
+      'linkedin': 'Find 5 leads on LinkedIn: Web Developers in Brazil',
       'google-calendar': 'List my 5 next events',
     };
     return testMessages[tool.id] || '';

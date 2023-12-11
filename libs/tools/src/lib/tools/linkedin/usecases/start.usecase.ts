@@ -1,11 +1,11 @@
-import { LinkedInDriver } from "../drivers/linkedin.driver";
+import { BrowserType, WebBrowser } from "../../../web-browser/web-browser";
 
 export class StartUseCase {
 
-  async execute() {
-    const linkedinDriver = new LinkedInDriver();
-    await linkedinDriver.start()
-    return linkedinDriver;
+  async execute(browser: BrowserType) {
+    const webBrowser = new WebBrowser();
+    await webBrowser.start(browser)
+    return webBrowser;
   }
 
 }

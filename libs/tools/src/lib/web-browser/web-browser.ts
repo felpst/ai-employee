@@ -1,13 +1,13 @@
 import * as chromedriver from 'chromedriver';
+import ProxyPlugin from 'selenium-chrome-proxy-plugin';
 import { Browser, Builder, WebDriver } from 'selenium-webdriver';
 import { Options } from 'selenium-webdriver/chrome';
 
 export type BrowserType = 'chrome' | 'brightdata';
 
-export class LinkedInDriver {
+export class WebBrowser {
   driver: WebDriver
   timeoutMS = 60000;
-  isAuthenticaded = false;
 
   async start(browser: BrowserType) {
     await this[browser]();
@@ -20,25 +20,8 @@ export class LinkedInDriver {
       chromedriver.path; // Force chromedriver to be downloaded
 
       const chromeOptions = new Options();
-      chromeOptions.addArguments('--headless');
-      // chromeOptions.addArguments('--headless');
+      chromeOptions.addArguments('--headless=new');
       chromeOptions.addArguments('--window-size=1366,768');
-      chromeOptions.addArguments('--disable-gpu');
-      chromeOptions.addArguments('--no-sandbox');
-      // chromeOptions.addArguments('--no-proxy-server');
-
-      //https://brd-customer-hl_6ba6b478-zone-scraping_browser-country-us:yyw4lf2yvlyo@brd.superproxy.io:9515
-      // brd-customer-hl_6ba6b478-zone-isp eov6rhd8t0cr
-      // chromeOptions.addArguments('--proxy-server=https://brd-customer-hl_6ba6b478-zone-isp:eov6rhd8t0cr@brd.superproxy.io:22225')
-
-      // chromeOptions.addArguments('--disable-dev-shm-usage');
-      // chromeOptions.addArguments('--disable-extensions');
-      // chromeOptions.addArguments('--disable-infobars');
-      // chromeOptions.addArguments('--ignore-certificate-errors');
-      // chromeOptions.addArguments('--disable-features=WebRtcHideLocalIpsWithMdns');
-      // chromeOptions.addArguments('--use-fake-ui-for-media-stream');
-      // chromeOptions.addArguments('--use-fake-device-for-media-stream');
-
 
       const prefs = {
         'profile.default_content_setting_values.media_stream_camera': 1,
@@ -48,9 +31,22 @@ export class LinkedInDriver {
       };
       chromeOptions.setUserPreferences(prefs);
 
+      const proxyConfig = {
+        host: 'brd.superproxy.io',
+        port: '22225',
+        username: 'brd-customer-hl_6ba6b478-zone-isp',
+        password: 'eov6rhd8t0cr',
+        tempDir: '/tmp'
+      };
+
+      const plugin = await new ProxyPlugin({
+        proxyConfig,
+        chromeOptions
+      })
+
       this.driver = await new Builder()
         .forBrowser(Browser.CHROME)
-        .setChromeOptions(chromeOptions)
+        .setChromeOptions(plugin.chromeOptions)
         .build();
       console.log('Driver started...');
     } catch (error) {

@@ -1,9 +1,9 @@
-import { LinkedInDriver } from "../drivers/linkedin.driver";
+import { WebBrowser } from "../../../web-browser/web-browser";
 
 export class CloseUseCase {
 
   constructor(
-    private driver: LinkedInDriver
+    private driver: WebBrowser
   ) { }
 
   async execute() {

@@ -1,7 +1,7 @@
 import { By, WebElement, until } from "selenium-webdriver";
-import { LinkedInDriver } from "../drivers/linkedin.driver";
 import { SearchUseCase } from "./search.usecase";
 import { SelectFilterUseCase } from "./select-filter.usecase";
+import { WebBrowser } from "../../../web-browser/web-browser";
 
 export interface ILinkedInFindLeadsRequest {
   query: string;
@@ -17,16 +17,14 @@ export interface ILinkedInLead {
 
 export class FindLeadsUseCase {
 
-  constructor(private linkedinDriver: LinkedInDriver) {
-    this._validation();
-  }
+  constructor(private webBrowser: WebBrowser) {}
 
   async execute(settings: ILinkedInFindLeadsRequest): Promise<ILinkedInLead[]> {
     const leads: ILinkedInLead[] = [];
     const { query, quantity = 5 } = settings;
 
-    await new SearchUseCase(this.linkedinDriver).execute(query);
-    await new SelectFilterUseCase(this.linkedinDriver).execute('People');
+    await new SearchUseCase(this.webBrowser).execute(query);
+    await new SelectFilterUseCase(this.webBrowser).execute('People');
 
     while (leads.length < quantity) {
       try {
@@ -65,6 +63,7 @@ export class FindLeadsUseCase {
       }
     }
 
+    if (leads.length > quantity) leads.splice(quantity, leads.length - quantity);
     return leads;
   }
 
@@ -94,10 +93,6 @@ export class FindLeadsUseCase {
   }
 
   get driver() {
-    return this.linkedinDriver.driver;
-  }
-
-  private _validation() {
-    if (!this.linkedinDriver.isAuthenticaded) throw new Error('LinkedIn is not authenticated');
+    return this.webBrowser.driver;
   }
 }
