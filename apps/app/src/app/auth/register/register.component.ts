@@ -6,6 +6,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { Router } from '@angular/router';
+import * as moment from 'moment-timezone';
 import { debounceTime, distinctUntilChanged, filter, map } from 'rxjs';
 import { NotificationsService } from '../../services/notifications/notifications.service';
 import { UsersService } from '../../services/users/users.service';
@@ -112,7 +113,7 @@ export class RegisterComponent {
     const values = this.registerForm.value;
 
     // Process register
-    this.usersService.register({ ...values }).subscribe({
+    this.usersService.register({ ...values, timezone: moment.tz.guess() }).subscribe({
       next: (token) => {
         const { email, password } = values;
         // Process login
