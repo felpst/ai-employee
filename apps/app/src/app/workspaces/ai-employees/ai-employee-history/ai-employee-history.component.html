@@ -1,0 +1,23 @@
+<div class="main">
+    <div class="header">
+      <div class="title">
+        <h2>{{ aiEmployee.name }}'s History</h2>
+      </div>
+      <div class="filters">
+        <cognum-sort-buttons
+          [data]="chats"
+          [dateField]="'createdAt'"
+          (sortedData)="handleSortedData($event)">
+        </cognum-sort-buttons>
+  
+        <cognum-search-bar 
+          (searchUpdated)="onSearch($event)" 
+          (searchCleared)="clearSearch()">
+        </cognum-search-bar>
+      </div>
+    </div>
+  
+    <cognum-chat-history [chats]="chats" (chatDeleted)="loadChats()"></cognum-chat-history>
+</div>
+<router-outlet></router-outlet>
+  

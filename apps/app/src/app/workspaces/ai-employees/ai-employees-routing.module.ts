@@ -3,6 +3,8 @@ import { RouterModule, Routes } from '@angular/router';
 import { AdminComponent } from '../../layouts/admin/admin.component';
 import { WorkspaceComponent } from '../workspace/workspace.component';
 import { AdminAIEmployeeComponent } from './admin-ai-employee/admin-ai-employee.component';
+import { AIEmployeeHistoryComponent } from './ai-employee-history/ai-employee-history.component';
+import { AIEmployeeHistoryResolver } from './ai-employee-history/ai-employee-history.resolver';
 import { AIEmployeeMemoryComponent } from './ai-employee-memory/ai-employee-memory.component';
 import { AIEmployeeMemoryResolver } from './ai-employee-memory/ai-employee-memory.resolver';
 import { AIEmployeeResolver } from './ai-employee.resolver';
@@ -48,6 +50,11 @@ const routes: Routes = [
         path: 'memory',
         resolve: [AIEmployeeMemoryResolver],
         component: AIEmployeeMemoryComponent
+      },
+      {
+        path: 'history',
+        resolve: [AIEmployeeHistoryResolver],
+        component: AIEmployeeHistoryComponent
       },
       {
         path: 'settings',
