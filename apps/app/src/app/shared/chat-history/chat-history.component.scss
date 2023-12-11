@@ -76,3 +76,13 @@ p {
   top: 15px;
   right: 10px;
 }
+
+
+.no-chat-message {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  width: 100%;
+}
+

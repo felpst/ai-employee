@@ -10,7 +10,7 @@ import { SessionCreate } from '../usecases/websocket/session-create.usecase';
 
 class WebSocketService {
   private app = express();
-  private port = process.env.PORT_CHAT || 8080;
+  private port = process.env.PORT_CHAT || 8081;
 
   private httpServer: HTTPServer;
   private webSocketServer: WebSocketServer;

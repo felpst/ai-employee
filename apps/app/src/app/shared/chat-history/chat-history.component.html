@@ -1,5 +1,5 @@
 <div class="content">
-  <div class="list">
+  <div class="list" *ngIf="history && history.length > 0; else noChat">
     <div class="white-content" *ngFor="let chat of history">
         <div class="chats">
           <cognum-users-avatar [users]="chat.users"></cognum-users-avatar>
@@ -30,4 +30,9 @@
         </div>
       </div>
   </div>
+  <ng-template #noChat>
+    <div class="no-chat-message">
+      <p>No chat created yet</p>
+    </div>
+  </ng-template>
 </div>
