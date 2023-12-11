@@ -1,11 +1,11 @@
 import { DynamicStructuredTool } from 'langchain/tools';
 import { z } from 'zod';
-import { MailSenderSettings } from './mail-sender.interfaces';
-import { MailSenderService } from './mail-sender.service';
+import { MailReaderSettings, MailSenderSettings } from './mail.interfaces';
+import { MailService } from './mail.service';
 
 export class MailSenderTool extends DynamicStructuredTool {
 
-  constructor(settings: MailSenderSettings) {
+  constructor(settingsSender: MailSenderSettings, settingsReader: MailReaderSettings) {
     super({
       name: 'Send Email',
       description: 'Use to send email.',
@@ -19,8 +19,8 @@ export class MailSenderTool extends DynamicStructuredTool {
       metadata: { id: "mail-sender" },
       func: async ({ to, cc, bcc, subject, message }) => {
         try {
-          const mailSenderService = new MailSenderService(settings);
-          return await mailSenderService.send(to, cc, bcc, subject, message);
+          const mailService = new MailService(settingsSender, settingsReader);
+          return await mailService.send(to, cc, bcc, subject, message);
         } catch (error) {
           console.error(error);
           return error.message;
