@@ -12,6 +12,7 @@ const aiEmployeeCallSchema: Schema = new Schema<IAIEmployeeCall>(
     status: { type: String, enum: ['not_started', 'running', 'done'], default: 'not_started' },
     startAt: { type: Schema.Types.Date },
     endAt: { type: Schema.Types.Date },
+    context: { type: Schema.Types.Mixed, default: {} },
     aiEmployee: { type: Schema.Types.ObjectId, ref: 'AIEmployee', required: true },
     ...defaultSchemaProps,
   },

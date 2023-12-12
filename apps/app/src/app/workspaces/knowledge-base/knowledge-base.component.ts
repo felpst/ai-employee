@@ -3,10 +3,11 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 
 import { ActivatedRoute } from '@angular/router';
-import { IKnowledge, IWorkspace } from '@cognum/interfaces';
+import { IKnowledge, IWorkspace, KnowledgeTypeEnum } from '@cognum/interfaces';
 import { AuthService } from '../../auth/auth.service';
 import { NotificationsService } from '../../services/notifications/notifications.service';
 import { WorkspacesService } from '../workspaces.service';
+import { KnowledgeAskComponent } from './knowledge-ask/knowledge-ask.component';
 import { KnowledgeBaseService } from './knowledge-base.service';
 import { KnowledgeChooseFormDialogComponent } from './knowledge-choose-form-dialog/knowledge-choose-form-dialog.component';
 import { KnowledgeFormComponent } from './knowledge-form/knowledge-form.component';
@@ -45,13 +46,36 @@ export class KnowledgeBaseComponent implements OnInit {
     });
   }
 
+  public get types() {
+    return KnowledgeTypeEnum;
+  }
+
+  onAsk(knowledge?: IKnowledge) {
+    this.dialog.open(KnowledgeAskComponent, {
+      width: '540px',
+      maxHeight: '600px',
+      position: {
+        top: '100px'
+      },
+      data: {
+        workspaceId: this.workspace._id,
+        knowledgeId: knowledge?._id
+      }
+    });
+  }
+
   onForm(knowledge?: IKnowledge) {
     const chooseFormDialog = this.dialog.open(KnowledgeChooseFormDialogComponent);
+    const formWidth: Record<KnowledgeTypeEnum, string> = {
+      doc: '640px',
+      file: '420px',
+      html: '500px'
+    };
 
-    chooseFormDialog.afterClosed().subscribe((pick: 'file' | 'document') => {
+    chooseFormDialog.afterClosed().subscribe((pick: KnowledgeTypeEnum) => {
       if (pick) {
         const dialogRef = this.dialog.open(KnowledgeFormComponent, {
-          width: pick === 'document' ? '640px' : '420px',
+          width: formWidth[pick],
           data: { knowledge, workspace: this.workspace, inputType: pick },
         });
 
@@ -66,7 +90,6 @@ export class KnowledgeBaseComponent implements OnInit {
     });
   }
 
-
   onSearch(event: any) {
     const searchText = event.trim().toLowerCase();
 
@@ -77,7 +100,7 @@ export class KnowledgeBaseComponent implements OnInit {
 
     this.searchText = searchText;
     this.knowledgeBases = this.knowledgeBases.filter(knowledge =>
-      knowledge.data.toLowerCase().includes(searchText)
+      knowledge.data?.toLowerCase().includes(searchText)
     );
   }
 

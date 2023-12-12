@@ -1,5 +1,5 @@
 import { Component, Input, OnChanges, OnInit } from '@angular/core';
-import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
+import { ActivatedRoute, NavigationEnd, Router, Scroll } from '@angular/router';
 import { filter, map, mergeMap } from 'rxjs';
 import { Step } from '../stepper/stepper.component';
 
@@ -43,7 +43,7 @@ export class TabNavigatorComponent implements OnInit, OnChanges {
 
   subscribeToSelectByRoute() {
     this.router.events.pipe(
-      filter(event => event instanceof NavigationEnd),
+      filter(event => event instanceof NavigationEnd || event instanceof Scroll),
       map(() => this.activatedRoute),
       map(route => {
         while (route.firstChild) route = route.firstChild;
@@ -52,12 +52,8 @@ export class TabNavigatorComponent implements OnInit, OnChanges {
       filter(route => route.outlet === 'primary'),
       mergeMap(route => route.data)
     ).subscribe((data) => {
-      const selectedTab = this.navs.findIndex(nav => nav.routerLink === data['nav'].select);
-      if (selectedTab !== -1) {
-        this.select(selectedTab);
-        if (data['nav']?.select) {
-          this.select(data['nav'].select)
-        }
+      if (data['nav']?.select >= 0) {
+        this.select(data['nav'].select)
       }
     });
   }

@@ -2,21 +2,33 @@
 <mat-dialog-content>
   <form [formGroup]="formGroup" (ngSubmit)="onSubmit()">
     <h3>LinkedIn User Login</h3>
-    <mat-form-field>
-      <mat-label>Email</mat-label>
-      <input formControlName="user" matInput />
-    </mat-form-field>
-    <mat-form-field>
-      <mat-label>Password</mat-label>
-      <input
-        formControlName="password"
-        matInput
-        [type]="hide ? 'password' : 'text'"
-      />
-      <mat-icon class="cursor-pointer" matSuffix (click)="hide = !hide">{{
-        hide ? 'visibility_off' : 'visibility'
-      }}</mat-icon>
-    </mat-form-field>
+    <div formGroupName="auth">
+      <mat-form-field>
+        <mat-label>Email</mat-label>
+        <input formControlName="user" matInput />
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Password</mat-label>
+        <input
+          formControlName="password"
+          matInput
+          [type]="hide ? 'password' : 'text'"
+        />
+        <mat-icon class="cursor-pointer" matSuffix (click)="hide = !hide">{{
+          hide ? 'visibility_off' : 'visibility'
+        }}</mat-icon>
+      </mat-form-field>
+    </div>
+
+    <h3>Tools</h3>
+    <div formGroupName="tools">
+      <div>
+        <mat-checkbox color="primary" formControlName="findLeads">
+          Find Leads
+        </mat-checkbox>
+        <button type="button" mat-button (click)="onTest()">Test</button>
+      </div>
+    </div>
   </form>
 </mat-dialog-content>
 <mat-dialog-actions align="end">

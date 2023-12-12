@@ -7,6 +7,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatToolbarModule } from '@angular/material/toolbar';
 
 import { MatIconModule } from '@angular/material/icon';
+import { MatSelectModule } from '@angular/material/select';
 import { LayoutsModule } from '../layouts/layouts.module';
 import { SharedModule } from '../shared/shared.module';
 import { SettingsRoutingModule } from './account-routing.module';
@@ -25,6 +26,7 @@ import { OnboardingComponent } from './onboarding/onboarding.component';
     MatCheckboxModule,
     MatFormFieldModule,
     MatToolbarModule,
+    MatSelectModule,
     LayoutsModule,
     SharedModule,
   ],

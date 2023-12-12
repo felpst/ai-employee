@@ -27,6 +27,7 @@
       "configurations": {
         "development": {},
         "production": {
+          "generateLockfile": true,
           "esbuildOptions": {
             "sourcemap": false,
             "outExtension": {
@@ -74,7 +75,7 @@
     },
     "docker-build": {
       "dependsOn": ["build"],
-      "command": "docker build -f apps/chat/Dockerfile . -t chat"
+      "command": "docker build -f apps/chat/Dockerfile . -t server"
     }
   },
   "tags": []

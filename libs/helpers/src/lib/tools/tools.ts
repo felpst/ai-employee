@@ -56,10 +56,19 @@ const tools = [
     show: true
   },
   {
-    "id": "linkedin-lead-scraper",
-    "name": "LinkedIn Lead Extractor",
+    "id": "linkedin",
+    "name": "LinkedIn Tools",
     "description": "Find leads on LinkedIn",
     "icon": "https://storage.googleapis.com/factory-assets/tools/linkedin-lead-scraper-tool.png",
+    intentions: ['Task Execution'],
+    show: true
+  },
+  {
+    "id": "google-calendar",
+    "name": "Google Calendar",
+    "description": "Manage your Google Calendar",
+    "icon": "https://storage.googleapis.com/factory-assets/tools/google-calendar.png",
+    scope: 'https://www.googleapis.com/auth/calendar',
     intentions: ['Task Execution'],
     show: true
   },

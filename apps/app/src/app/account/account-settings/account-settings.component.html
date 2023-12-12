@@ -33,7 +33,6 @@
                   type="name"
                   placeholder="Your full name"
                   [value]="user.name"
-                  (change)="onSubmit()"
                 />
                 <mat-error
                   *ngIf="hasInputError('name', 'required')"
@@ -63,11 +62,23 @@
             ></cognum-upload-image>
           </div>
         </div>
+        <div class="row">
+          <mat-form-field>
+            <mat-label>Timezone</mat-label>
+            <mat-select formControlName="timezone">
+              @for (timezone of timezones; track timezone) {
+                <mat-option [value]="timezone.value">
+                  {{ timezone.name }}
+                </mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+        </div>
       </form>
       <div class="footer">
         <div>
           <span class="cognum-headline-4">Delete your account</span>
-          <button class="button" (click)="onDeleteUser()">delete it</button>
+          <button class="button" (click)="onDeleteUser()">Delete</button>
         </div>
         <span
           >Are you sure you want to permanently delete your account? This action

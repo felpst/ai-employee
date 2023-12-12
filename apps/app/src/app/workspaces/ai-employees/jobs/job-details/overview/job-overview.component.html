@@ -1,0 +1,20 @@
+<div class="row" align="right">
+  <button
+    mat-raised-button
+    color="primary"
+    (click)="onExecute()"
+    [disabled]="loading"
+  >
+    {{ loading ? 'Executing...' : 'Execute' }}
+  </button>
+</div>
+<div class="row">
+  <div class="job-data">
+    <span class="cognum-heading-4">Instructions</span>
+    <p class="information">{{ job.instructions }}</p>
+    <span class="cognum-heading-4">Frequency</span>
+    <p class="information">{{ job.frequency }}</p>
+    <span class="cognum-heading-4">Status</span>
+    <p class="information">{{ job.status }}</p>
+  </div>
+</div>

@@ -31,6 +31,7 @@ class ModelController<T extends Model<any>> {
       const data = await this._repository.find(req.query);
       res.json(data);
     } catch (error) {
+      console.error(error)
       next(error);
     }
   }

@@ -68,4 +68,18 @@ export class KnowledgeBaseService {
     }
     return false;
   }
+
+  askByWorkspace(question: string, workspaceId: string) {
+    return this.coreApiService.get(
+      `${this.route}/workspaces/${workspaceId}/ask`, {
+      params: { question }
+    }) as Observable<{ text: string; }>;
+  }
+
+  askByKnowledge(question: string, knowledgeId: string) {
+    return this.coreApiService.get(
+      `${this.route}/${knowledgeId}/ask`, {
+      params: { question }
+    }) as Observable<{ text: string; }>;
+  }
 }

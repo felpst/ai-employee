@@ -6,4 +6,5 @@ export interface IUser extends DefaultModel {
   password: string;
   active: boolean;
   photo?: string;
+  timezone?: string;
 }

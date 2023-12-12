@@ -23,7 +23,17 @@ export class ChatMessageReceive {
     // Send to AI Employee
     const call = await aiEmployee.call({
       input: message.content,
-      user: conn.session.user._id,
+      createdBy: conn.session.user._id,
+      updatedBy: conn.session.user._id,
+      context: {
+        chatRoom: conn.session.chatRoom._id,
+        chatMessages: conn.session.chatMessages.map(m => ({
+          _id: m._id,
+          content: m.content,
+          role: m.role,
+          sender: m.sender
+        })),
+      }
     });
     // console.log(answer);
 

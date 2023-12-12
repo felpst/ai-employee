@@ -10,12 +10,8 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { RouterModule } from '@angular/router';
 import { SharedModule } from '../shared/shared.module';
-import { AdminEmployeeComponent } from './admin-employee/admin-employee.component';
 import { AdminComponent } from './admin/admin.component';
 import { LoadingComponent } from './loading/loading.component';
-import { MenuEmployeeItemsComponent } from './menu-employee/menu-employee-items/menu-employee-items.component';
-import { EmployeeProfileComponent } from './menu-employee/menu-employee-profile/menu-employee-profile.component';
-import { MenuEmployeeComponent } from './menu-employee/menu-employee.component';
 import { MenuItemsComponent } from './menu/menu-items/menu-items.component';
 import { WorkspaceProfileComponent } from './menu/menu-workspace-profile/menu-workspace-profile.component';
 import { WorkspaceUsageComponent } from './menu/menu-workspace-usage/menu-workspace-usage.component';
@@ -23,15 +19,11 @@ import { MenuComponent } from './menu/menu.component';
 
 const declarations: any[] = [
   AdminComponent,
-  AdminEmployeeComponent,
   LoadingComponent,
   MenuComponent,
-  MenuEmployeeComponent,
   WorkspaceUsageComponent,
   MenuItemsComponent,
   WorkspaceProfileComponent,
-  MenuEmployeeItemsComponent,
-  EmployeeProfileComponent
 ];
 
 const MaterialModules: any[] = [

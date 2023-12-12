@@ -8,6 +8,7 @@ import { ChatComponent } from '../../chats/chat/chat.component';
 import { ChatService } from '../../chats/chat/chat.service';
 import { ChatsService } from '../../chats/chats.service';
 import { AIToolAddComponent } from './tool-add/tool-add.component';
+import { AIToolSettingsGoogleCalendarComponent } from './tool-settings/google-calendar/tool-settings-google-calendar.component';
 import { AIToolSettingsLinkedInLeadScraperComponent } from './tool-settings/linkedin-lead-scraper/tool-settings-linkedin-lead-scraper.component';
 import { AIToolSettingsMailSenderComponent } from './tool-settings/mail-sender/tool-settings-mail-sender.component';
 import { AIToolSettingsSQLConnectorComponent } from './tool-settings/sql-connector/tool-settings-sql-connector.component';
@@ -24,7 +25,7 @@ export class AIEmployeeToolsComponent implements OnInit {
     private aiEmployeeService: AIEmployeesService,
     private toolsService: ToolsService,
     private chatsService: ChatsService,
-    private chatService: ChatService
+    private chatService: ChatService,
   ) { }
 
   get tools() {
@@ -37,8 +38,7 @@ export class AIEmployeeToolsComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.toolsService.toolSelected.subscribe(tool => {
-      const index = this.tools.findIndex(t => t.id === tool.id);
+    this.toolsService.toolSelected.subscribe(({ tool, index }) => {
       this.onSelect(index);
     });
   }
@@ -47,24 +47,49 @@ export class AIEmployeeToolsComponent implements OnInit {
     this.dialog.open(AIToolAddComponent, { width: '400px' });
   }
 
-  onSelect(index: number) {
-    const tool = this.aiEmployeeService.aiEmployee.tools[index];
+  async onSelect(index: number) {
+    const toolSettings = this.aiEmployeeService.aiEmployee.tools[index];
+    const tool = ToolsHelper.get(toolSettings.id);
     let component: any;
 
-    switch (tool.id) {
+    switch (toolSettings.id) {
       case 'sql-connector':
         component = AIToolSettingsSQLConnectorComponent;
         break;
       case 'mail-sender':
         component = AIToolSettingsMailSenderComponent;
         break;
-      case 'linkedin-lead-scraper':
+      case 'linkedin':
         component = AIToolSettingsLinkedInLeadScraperComponent;
+        break;
+      case 'google-calendar':
+        if (!toolSettings.options?.token) {
+          try {
+            await new Promise(async (resolve, reject) => {
+              try {
+                const accessToken = await this.toolsService.googleOAuth2(tool)
+
+                if (!toolSettings.options) toolSettings.options = {};
+                toolSettings.options.tools = { list: true, create: true, update: true, delete: true };
+                toolSettings.options.token = accessToken;
+                this.aiEmployeeService.aiEmployee.tools[index].options = toolSettings.options;
+                this.aiEmployeeService.update({
+                  _id: this.aiEmployeeService.aiEmployee._id,
+                  tools: this.aiEmployeeService.aiEmployee.tools
+                }).subscribe(updatedEmployee => {
+                  this.aiEmployeeService.aiEmployee = updatedEmployee;
+                  resolve(updatedEmployee)
+                });
+              } catch (error) { return reject(); }
+            });
+          } catch (error) { return; }
+        }
+        component = AIToolSettingsGoogleCalendarComponent;
         break;
     }
 
     if (component) {
-      const dialogRef = this.dialog.open(component, { width: '400px', data: { tool } });
+      const dialogRef = this.dialog.open(component, { width: '400px', data: { tool: toolSettings } });
       dialogRef.afterClosed().subscribe((data) => {
         if (data) {
           this.aiEmployeeService.aiEmployee.tools[index].options = data;
@@ -123,7 +148,8 @@ export class AIEmployeeToolsComponent implements OnInit {
       'mail-sender': 'Send test email to: ',
       'python': 'What is the 5th element of the Fibonacci sequence?',
       'sql-connector': 'Connect to a SQL database',
-      'linkedin-lead-scraper': 'Find 5 leads on LinkedIn: Web Developers in Brazil',
+      'linkedin': 'Find 5 leads on LinkedIn: Web Developers in Brazil',
+      'google-calendar': 'List my 5 next events',
     };
     return testMessages[tool.id] || '';
   }

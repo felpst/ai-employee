@@ -1,11 +1,13 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import {
   FormBuilder,
+  FormGroup,
   Validators
 } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { IUser } from '@cognum/interfaces';
+import * as moment from 'moment-timezone';
 import { CookieService } from 'ngx-cookie-service';
 import { AuthService } from '../../auth/auth.service';
 import { NotificationsService } from '../../services/notifications/notifications.service';
@@ -17,32 +19,46 @@ import { Step } from '../../shared/stepper/stepper.component';
   templateUrl: './account-settings.component.html',
   styleUrls: ['./account-settings.component.scss'],
 })
-export class AccountSettingsComponent implements OnInit {
+export class AccountSettingsComponent {
   navs: Step[] = [
     { title: 'General', routerLink: './' }
   ]
-  updateForm = this.formBuilder.group({
-    name: ['', [Validators.required, Validators.minLength(6)]],
-  });
+  updateForm: FormGroup;
+
+  timezones: {
+    name: string;
+    value: string;
+  }[] = []
+  selectedTimezone: { name: string; value: string; };
 
   constructor(
     private authService: AuthService,
     private formBuilder: FormBuilder,
     private notificationsService: NotificationsService,
     private usersService: UsersService,
-    private route: ActivatedRoute,
     private dialog: MatDialog,
     private router: Router,
     private cookieService: CookieService
-  ) { }
-
-  ngOnInit() {
-    const resolvedData = this.route.snapshot.data;
-    if (resolvedData && resolvedData[0]) {
-      this.updateForm.patchValue({
-        name: resolvedData[0].name,
+  ) {
+    moment.tz.names().forEach((name) => {
+      this.timezones.push({
+        name: `(GMT${moment.tz(name).format('Z')}) ${name}`,
+        value: name,
       });
-    }
+    });
+    this.timezones.sort((a, b) => a.name.localeCompare(b.name));
+    this.selectedTimezone = this.timezones.find(({ value }) => value === this.usersService.user.timezone || moment.tz.guess()) || this.timezones[0];
+
+    this.updateForm = this.formBuilder.group({
+      name: [this.usersService.user.name, [Validators.required, Validators.minLength(6)]],
+      timezone: [this.usersService.user.timezone, [Validators.required]],
+    });
+
+    this.updateForm.valueChanges.subscribe((data) => {
+      if (this.updateForm.valid) {
+        this.onSubmit()
+      }
+    });
   }
 
   updatePhoto(url: string) {
@@ -60,8 +76,8 @@ export class AccountSettingsComponent implements OnInit {
 
   async onSubmit() {
     if (!this.updateForm.valid) return;
-    const { name } = this.updateForm.value;
-    return this.updateData({ name: name || '' });
+    const data = this.updateForm.value;
+    return this.updateData(data);
   }
 
   onDeleteUser() {
@@ -83,7 +99,7 @@ export class AccountSettingsComponent implements OnInit {
   }
 
   private updateData(data: Partial<IUser>) {
-    this.usersService.update(this.user._id, { ...this.user, ...data }).subscribe({
+    this.usersService.update(this.user._id, data).subscribe({
       next: (user) => {
         this.authService.user = user;
         this.notificationsService.show('Successfully changed data!');
@@ -99,9 +115,9 @@ export class AccountSettingsComponent implements OnInit {
     this.usersService.delete(this.user._id).subscribe({
       next: () => {
         this.authService.logout();
-        this.cookieService.delete('token')
+        this.cookieService.delete('token');
         this.notificationsService.show('Operation carried out successfully!');
-        this.router.navigate(['/']);
+        this.router.navigate(['/auth/login']);
       },
       error: (error) => {
         console.log('An error occurred while deleting information', { error });
