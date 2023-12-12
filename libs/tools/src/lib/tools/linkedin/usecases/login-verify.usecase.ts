@@ -1,4 +1,4 @@
-import { WebBrowser } from "../../../web-browser/web-browser";
+import { WebBrowser } from "../../web-browser/web-browser";
 
 export class LoginVerifyUseCase {
 

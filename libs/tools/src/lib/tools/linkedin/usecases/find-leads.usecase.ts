@@ -1,7 +1,7 @@
 import { By, WebElement, until } from "selenium-webdriver";
+import { WebBrowser } from "../../web-browser/web-browser";
 import { SearchUseCase } from "./search.usecase";
 import { SelectFilterUseCase } from "./select-filter.usecase";
-import { WebBrowser } from "../../../web-browser/web-browser";
 
 export interface ILinkedInFindLeadsRequest {
   query: string;
@@ -17,7 +17,7 @@ export interface ILinkedInLead {
 
 export class FindLeadsUseCase {
 
-  constructor(private webBrowser: WebBrowser) {}
+  constructor(private webBrowser: WebBrowser) { }
 
   async execute(settings: ILinkedInFindLeadsRequest): Promise<ILinkedInLead[]> {
     const leads: ILinkedInLead[] = [];

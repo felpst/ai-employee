@@ -1,8 +1,9 @@
 import { ToolsHelper } from "@cognum/helpers";
 import { IAIEmployee, IToolSettings } from "@cognum/interfaces";
-import { GoogleCalendarCreateEventTool, GoogleCalendarDeleteEventTool, GoogleCalendarListEventsTool, GoogleCalendarUpdateEventTool, KnowledgeRetrieverTool, LinkedInFindLeadsTool, MailSenderTool, PythonTool, RandomNumberTool, SQLConnectorTool, WebBrowserTool } from "@cognum/tools";
+import { GoogleCalendarCreateEventTool, GoogleCalendarDeleteEventTool, GoogleCalendarListEventsTool, GoogleCalendarUpdateEventTool, KnowledgeRetrieverTool, LinkedInFindLeadsTool, MailSenderTool, PythonTool, RandomNumberTool, SQLConnectorTool, WebBrowserToolkit } from "@cognum/tools";
 import { DynamicStructuredTool, SerpAPI, Tool } from "langchain/tools";
 import { Calculator } from "langchain/tools/calculator";
+import { INTENTIONS } from "../utils/intent-classifier/intent-classifier.util";
 
 export class AIEmployeeTools {
 
@@ -28,6 +29,13 @@ export class AIEmployeeTools {
     })
     const toolsSettings = [...commonTools, ...filteredToolsSettings]
     const tools = AIEmployeeTools.get(toolsSettings);
+
+    // Resource: Web browser
+    if (intentions.includes(INTENTIONS.TASK_EXECUTION)) {
+      const toolkit = WebBrowserToolkit({ webBrowser: aiEmployee.resources.browser }) as Tool[];
+      tools.push(...toolkit)
+    }
+
     return tools;
   }
 
@@ -51,8 +59,8 @@ export class AIEmployeeTools {
           id: 'google-search',
         }
         return [tool];
-      case 'web-browser':
-        return [new WebBrowserTool()];
+      // case 'web-browser':
+      //   return [new WebBrowserTool()];
       case 'random-number':
         return [new RandomNumberTool()];
       case 'mail-sender':
@@ -80,7 +88,6 @@ export class AIEmployeeTools {
           tools.push(new GoogleCalendarDeleteEventTool(toolSettings.options.token))
         }
         return tools;
-
     }
   }
 }

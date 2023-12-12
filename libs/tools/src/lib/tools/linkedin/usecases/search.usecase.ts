@@ -1,9 +1,9 @@
 import { By, Key, until } from "selenium-webdriver";
-import { WebBrowser } from "../../../web-browser/web-browser";
+import { WebBrowser } from "../../web-browser/web-browser";
 
 export class SearchUseCase {
 
-  constructor(private webBrowser: WebBrowser) {}
+  constructor(private webBrowser: WebBrowser) { }
 
   async execute(query: string) {
     console.log('Searching...');
