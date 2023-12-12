@@ -1,0 +1,8 @@
+<div class="sorting-buttons">
+    <button *ngFor="let button of ['new', 'old', 'acess']" mat-stroked-button [ngClass]="{
+        'active-button': activeButton === button,
+        'inactive-button': activeButton !== button
+      }" (click)="onButtonClick(button)">
+      {{ button.charAt(0).toUpperCase() + button.slice(1) }}
+    </button>
+</div>

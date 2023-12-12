@@ -14,6 +14,7 @@ import { AdminAIEmployeeComponent } from './admin-ai-employee/admin-ai-employee.
 import { MenuAIEmployeeItemsComponent } from './admin-ai-employee/menu-ai-employee/menu-ai-employee-items/menu-ai-employee-items.component';
 import { MenuAIEmployeeProfileComponent } from './admin-ai-employee/menu-ai-employee/menu-ai-employee-profile/menu-ai-employee-profile.component';
 import { MenuAIEmployeeComponent } from './admin-ai-employee/menu-ai-employee/menu-ai-employee.component';
+import { AIEmployeeHistoryComponent } from './ai-employee-history/ai-employee-history.component';
 import { AIEmployeeMemoryFormComponent } from './ai-employee-memory/ai-employee-memory-form/ai-employee-memory-form.component';
 import { AIEmployeeMemoryComponent } from './ai-employee-memory/ai-employee-memory.component';
 import { AIEmployeeSettingsModule } from './ai-employee-settings/ai-employee-settings.module';
@@ -30,7 +31,8 @@ import { WhiteAiEmployeeComponent } from './white-ai-employee/white-ai-employee.
     MenuAIEmployeeItemsComponent,
     MenuAIEmployeeProfileComponent,
     AIEmployeeMemoryComponent,
-    AIEmployeeMemoryFormComponent
+    AIEmployeeMemoryFormComponent,
+    AIEmployeeHistoryComponent
   ],
   imports: [
     CommonModule,

@@ -1,35 +1,39 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { IChatRoom, IUser, IWorkspace } from '@cognum/interfaces';
-import { AIEmployeesService } from '../ai-employees/ai-employees.service';
-import { WorkspacesService } from '../workspaces.service';
+import { IAIEmployee, IChatRoom, IUser, IWorkspace } from '@cognum/interfaces';
+import { WorkspacesService } from '../../workspaces.service';
+import { AIEmployeesService } from '../ai-employees.service';
 
 @Component({
-  selector: 'cognum-workspace-history',
-  templateUrl: './workspace-history.component.html',
-  styleUrls: ['./workspace-history.component.scss'],
+  selector: 'cognum-ai-employee-history',
+  templateUrl: './ai-employee-history.component.html',
+  styleUrls: ['./ai-employee-history.component.scss'],
 })
-
-export class WorkspaceHistoryComponent implements OnInit {
-
+export class AIEmployeeHistoryComponent {
   @Output() sortedData = new EventEmitter<any[]>();
 
   chats: IChatRoom[] = [];
   searchText = '';
   createdByUser: IUser | null = null;
   workspace!: IWorkspace;
+  aiEmployee!: IAIEmployee;
 
   constructor(
     private route: ActivatedRoute,
     private aiEmployeesService: AIEmployeesService,
     private workspaceService: WorkspacesService,
-  ) { }
+  ) {
+
+  }
 
   ngOnInit() {
     this.workspace = this.workspaceService.selectedWorkspace;
+    this.aiEmployee = this.aiEmployeesService.aiEmployee;
     this.route.data.subscribe(data => {
       const aiEmployeesWithChats = data['0'];
-      this.chats = aiEmployeesWithChats.flatMap((aiEmployee: { chats: IChatRoom; }) => aiEmployee.chats);
+      this.chats = aiEmployeesWithChats
+        .flatMap((aiEmployee: { chats: IChatRoom; }) => aiEmployee.chats)
+        .filter((chat: { aiEmployee: { _id: string }; }) => chat.aiEmployee._id === this.aiEmployee._id)
     });
   }
 
@@ -58,5 +62,4 @@ export class WorkspaceHistoryComponent implements OnInit {
     this.searchText = '';
     this.loadChats();
   }
-
 }

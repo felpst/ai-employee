@@ -1,0 +1,38 @@
+<div class="content">
+  <div class="list" *ngIf="history && history.length > 0; else noChat">
+    <div class="white-content" *ngFor="let chat of history">
+        <div class="chats">
+          <cognum-users-avatar [users]="chat.users"></cognum-users-avatar>
+          <div class="description">
+            <p>{{ chat.historyTitle }}</p>
+            <p>{{ formatChatDate(chat.date) }}</p>
+          </div>
+        </div>
+      
+        <button class="subject"  (click)="onChat(chat.users[1]._id, chat)">
+          {{ chat.name }}
+        </button>
+      
+        <p class="conversation" *ngIf="chat && chat.summary">
+          {{ chat.summary.slice(0, 300) }}{{ chat.summary.length > 300 ? '...' : '' }}
+        </p>
+      
+        <div class="menu">
+          <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
+            <mat-icon>more_horizon</mat-icon>
+          </button>
+          <mat-menu #menu="matMenu">
+            <button (click)="deleteChat(chat)" mat-menu-item>
+              <mat-icon>delete_outline</mat-icon>
+              <span>delete</span>
+            </button>
+          </mat-menu>
+        </div>
+      </div>
+  </div>
+  <ng-template #noChat>
+    <div class="no-chat-message">
+      <p>No chat created yet</p>
+    </div>
+  </ng-template>
+</div>
