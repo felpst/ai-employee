@@ -1,4 +1,22 @@
+import { By, until } from 'selenium-webdriver';
 import { WebBrowser } from "./web-browser";
+
+export interface IElementFindOptions {
+  fieldSelector: string,
+  selectorType: keyof typeof ElementSelector,
+  findTimeout?: number;
+}
+
+export enum ElementSelector {
+  'id',
+  'className',
+  'name',
+  'xpath',
+  'css',
+  'js',
+  'linkText',
+  'partialLinkText'
+}
 
 export class WebBrowserService {
   constructor(
@@ -40,4 +58,16 @@ export class WebBrowserService {
     }
   }
 
+  async inputText(text: string, options: IElementFindOptions): Promise<boolean> {
+    const userInput =
+      await this.webBrowser.driver.wait(
+        until.elementLocated(By[options.selectorType](options.fieldSelector)),
+        options.findTimeout
+      );
+
+    if (!userInput) return false;
+    await userInput.sendKeys(text);
+
+    return true;
+  }
 }
