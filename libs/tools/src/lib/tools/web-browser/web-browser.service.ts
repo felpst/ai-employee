@@ -74,11 +74,7 @@ export class WebBrowserService {
   }
 
   async inputText(text: string, options: IElementFindOptions): Promise<boolean> {
-    const userInput =
-      await this.webBrowser.driver.wait(
-        until.elementLocated(By[options.selectorType](options.fieldSelector)),
-        options.findTimeout
-      );
+    const userInput = await this._findElement(options);
 
     if (!userInput) return false;
     await userInput.sendKeys(text);
@@ -86,9 +82,18 @@ export class WebBrowserService {
     return true;
   }
 
+  async clickButton(options: IElementFindOptions): Promise<boolean> {
+    const button = await this._findElement(options);
+
+    if (!button) return false;
+    await button.click();
+
+    return true;
+  }
+
   async findElementByContext(context: string): Promise<any> {
-    const element = await new FindElementUseCase(this.webBrowser).execute(context)
-    return element
+    const element = await new FindElementUseCase(this.webBrowser).execute(context);
+    return element;
   }
 
   async scrollPage(location: number): Promise<boolean> {
@@ -105,5 +110,12 @@ export class WebBrowserService {
       await this.webBrowser.driver.sleep(3000);
     }
     return false;
+  }
+
+  private async _findElement(findOptions: IElementFindOptions) {
+    return this.webBrowser.driver.wait(
+      until.elementLocated(By[findOptions.selectorType](findOptions.fieldSelector)),
+      findOptions.findTimeout
+    );
   }
 }
