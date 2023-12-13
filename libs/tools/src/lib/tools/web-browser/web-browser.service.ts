@@ -90,4 +90,20 @@ export class WebBrowserService {
     const element = await new FindElementUseCase(this.webBrowser).execute(context)
     return element
   }
+
+  async scrollPage(location: number): Promise<boolean> {
+    this.webBrowser.driver.executeScript("window.scrollTo(0," + location + ")");
+    await this.webBrowser.driver.sleep(500);
+    for (let i = 0; i < 5; i++) {
+      console.log(`Waiting for page scroll to: ${location}`);
+      const currentLocation: number = await this.webBrowser.driver.executeScript("return window.scrollY");
+
+      if (currentLocation >= location) {
+        return true;
+      }
+
+      await this.webBrowser.driver.sleep(3000);
+    }
+    return false;
+  }
 }
