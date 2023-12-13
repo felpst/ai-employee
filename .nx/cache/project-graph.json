@@ -18751,6 +18751,11 @@
       },
       {
         "source": "interfaces",
+        "target": "tools",
+        "type": "static"
+      },
+      {
+        "source": "interfaces",
         "target": "npm:mongoose",
         "type": "static"
       }
@@ -19181,17 +19186,17 @@
       },
       {
         "source": "app",
+        "target": "npm:mongoose",
+        "type": "static"
+      },
+      {
+        "source": "app",
         "target": "npm:ngx-scrollbar",
         "type": "static"
       },
       {
         "source": "app",
         "target": "helpers",
-        "type": "static"
-      },
-      {
-        "source": "app",
-        "target": "npm:mongoose",
         "type": "static"
       },
       {
