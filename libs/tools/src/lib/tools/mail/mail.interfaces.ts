@@ -22,9 +22,10 @@ export interface MailToolSettings {
 
 export interface MailFilters {
   qt?: number,
-  since?: string
+  since?: string | Date
   from?: string
   subject?: string
+  status?: 'ALL' | 'NEW' | 'UNSEEN' | 'SEEN' | 'FLAGGED' | 'UNFLAGGED' | 'RECENT' | 'OLD' | 'ANSWERED' | 'UNANSWERED' | 'DELETED' | 'UNDELETED' | 'DRAFT' | 'UNDRAFT'
 }
 
 export interface MailData {
@@ -38,25 +39,13 @@ export interface MailData {
   date?: string;
 }
 
-export class Email implements MailData {
-  date: string;
-  subject: string;
-  from: string;
-  to: string;
-  cc?: string;
-  bcc?: string;
-  text?: string;
-  html?: string;
-
-  constructor(params: MailData) {
-    this.date = params.date;
-    this.subject = params.subject;
-    this.from = params.from;
-    this.to = params.to;
-    this.cc = params.cc;
-    this.bcc = params.bcc;
-    this.text = params.text;
-    this.html = params.html;
-  }
+export interface Email {
+  subject: string
+  from: string
+  id: string
+  date: string
+  text: string
+  // html: string
+  attachments: string
+  references: string
 }
-

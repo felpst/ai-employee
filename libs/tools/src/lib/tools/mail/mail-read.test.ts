@@ -48,8 +48,18 @@ describe('Get Emails', () => {
   it('should find emails by subject successfully', async () => {
     const mailService = new MailService(settings)
     const emails = await mailService.find({
-      subject: 'Teste'
+      subject: 'Teste',
+      status: 'ALL'
     })
+    expect(emails.length).toBeGreaterThan(0)
+  })
+
+  it('should find unseen emails', async () => {
+    const mailService = new MailService(settings)
+    const emails = await mailService.find({
+      status: 'UNSEEN'
+    })
+    console.log(emails.map(e => e.date));
     expect(emails.length).toBeGreaterThan(0)
   })
 })
