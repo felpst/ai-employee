@@ -1,26 +1,44 @@
-export interface MailSenderSettings {
-  host: string,
-  port: number,
-  secure: boolean,
+export interface MailToolSettings {
   auth: {
     user: string,
     pass: string
+    timeout?: number
+  },
+  smtp?: {
+    host: string,
+    port: number,
+    tls: boolean,
+  },
+  imap?: {
+    host: string
+    port: number
+    tls: boolean
+  },
+  tools: {
+    send: boolean,
+    read: boolean,
   }
 }
 
-export interface MailReaderSettings {
-  user: string
-  password: string
-  host: string
-  port: number
-  tls: boolean
-  tlsOptions: {
-    servername: string
-  }
-  authTimeout: 60000
+export interface MailFilters {
+  qt?: number,
+  since?: string
+  from?: string
+  subject?: string
 }
 
-export interface EmailData {
+export interface MailData {
+  from: string;
+  to: string;
+  cc?: string;
+  bcc?: string;
+  subject: string;
+  text?: string;
+  html?: string;
+  date?: string;
+}
+
+export class Email implements MailData {
   date: string;
   subject: string;
   from: string;
@@ -29,19 +47,8 @@ export interface EmailData {
   bcc?: string;
   text?: string;
   html?: string;
-}
 
-export class Email implements EmailData {
-  date: string;
-  subject: string;
-  from: string;
-  to: string;
-  cc?: string;
-  bcc?: string;
-  text?: string;
-  html?: string;
-
-  constructor(params: EmailData) {
+  constructor(params: MailData) {
     this.date = params.date;
     this.subject = params.subject;
     this.from = params.from;

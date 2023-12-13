@@ -1,11 +1,11 @@
 import { DynamicStructuredTool } from 'langchain/tools';
 import { z } from 'zod';
-import { MailReaderSettings, MailSenderSettings } from './mail.interfaces';
+import { MailToolSettings } from './mail.interfaces';
 import { MailService } from './mail.service';
 
-export class MailReaderTool extends DynamicStructuredTool {
+export class MailReadTool extends DynamicStructuredTool {
 
-  constructor(settingsSender: MailSenderSettings, settingsReader: MailReaderSettings) {
+  constructor(settings: MailToolSettings) {
     super({
       name: 'Read Email',
       description: 'Use to get and read email.',
@@ -15,11 +15,12 @@ export class MailReaderTool extends DynamicStructuredTool {
         from: z.string().describe('sender of the email.').optional(),
         subject: z.string().describe('subject of the email.').optional(),
       }),
-      metadata: { id: "mail-reader" },
+      metadata: { id: "mail", tool: "read" },
       func: async ({ qt, date, from, subject }) => {
         try {
-          const mailService = new MailService(settingsSender, settingsReader);
-          return await mailService.getEmails(qt, date, from, subject);
+          const mailService = new MailService(settings);
+          const filters = { qt, date, from, subject };
+          return await mailService.find(filters);
         } catch (error) {
           console.error(error);
           return error.message;
