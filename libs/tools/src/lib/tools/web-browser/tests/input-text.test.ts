@@ -9,10 +9,10 @@ describe('Input Text tool test', () => {
 
   beforeAll(async () => {
     await webBrowser.start({ headless: false });
-    await service.loadPage('https://www.google.com');
   });
 
   it('Google search input', async () => {
+    await service.loadPage('https://www.google.com');
     const result = await service.inputText('Quem é a namorada de Neymar?', {
       selectorType: 'id',
       fieldSelector: 'APjFqb',
@@ -21,8 +21,18 @@ describe('Input Text tool test', () => {
     expect(result).toBe(true);
   });
 
+  it('Google search input 2', async () => {
+    await service.loadPage('https://duckduckgo.com/');
+    const result = await service.inputText('Quem é a namorada de Neymar?', {
+      selectorType: 'className',
+      fieldSelector: 'header_searchbox__5Ei30',
+    });
+
+    expect(result).toBe(true);
+  });
+
   afterAll(async () => {
-    await webBrowser.driver.close();
+    // await webBrowser.driver.close();
   });
 
 });

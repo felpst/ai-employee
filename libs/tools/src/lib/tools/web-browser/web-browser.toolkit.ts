@@ -2,7 +2,7 @@ import { DynamicStructuredTool, Tool } from "langchain/tools";
 import { KeyPressTool } from './keyup-emiter/Keyup-press.tool';
 import { KeyTypeMessageTool } from './keyup-emiter/keyup-type-message.tool';
 import { WebBrowser } from "./web-browser";
-import { WebBrowserFindElementTool } from "./web-browser-find-components.tool";
+import { WebBrowserFindElementTool } from "./web-browser-find-element.tool";
 import { WebBrowserLoadPageTool } from "./web-browser-load-page.tool";
 
 export interface WebBrowserToolSettings {

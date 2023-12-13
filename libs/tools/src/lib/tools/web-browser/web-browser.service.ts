@@ -1,4 +1,5 @@
 import { By, until } from 'selenium-webdriver';
+import { FindElementUseCase } from './usecases/find-element.usecase';
 import { WebBrowser } from "./web-browser";
 
 export interface IElementFindOptions {
@@ -37,6 +38,20 @@ export class WebBrowserService {
     return false;
   }
 
+  async click(options: IElementFindOptions) {
+    const element =
+      await this.webBrowser.driver.wait(
+        until.elementLocated(By[options.selectorType](options.fieldSelector)),
+        options.findTimeout
+      );
+
+    if (!element) return false;
+    await element.click();
+
+    return true;
+  }
+
+
   async inspectElement(idOrClass: string): Promise<any> {
     try {
       let element;
@@ -69,5 +84,10 @@ export class WebBrowserService {
     await userInput.sendKeys(text);
 
     return true;
+  }
+
+  async findElementByContext(context: string): Promise<any> {
+    const element = await new FindElementUseCase(this.webBrowser).execute(context)
+    return element
   }
 }

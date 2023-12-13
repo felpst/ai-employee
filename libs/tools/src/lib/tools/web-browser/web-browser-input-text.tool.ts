@@ -10,10 +10,10 @@ export class WebBrowserInputTextTool extends DynamicStructuredTool {
       metadata: { id: "web-browser", tool: 'inputText' },
       description: 'Use this tool to input a text to an element on web browser.',
       schema: z.object({
-        textValue: z.string().describe("the text that will be input"),
-        fieldSelector: z.string().describe("the selector of the html field element"),
-        selectorType: z.nativeEnum(ElementSelector).describe("type of the selector"),
-        findTimeout: z.number().optional().default(10000).describe("timeout to find the input element in ms")
+        textValue: z.string().describe("the text that will be input."),
+        fieldSelector: z.string().describe("the selector of the html field element."),
+        selectorType: z.nativeEnum(ElementSelector).describe("type of the selector."),
+        findTimeout: z.number().optional().default(10000).describe("timeout to find the input element in ms.")
       }),
       func: async ({ textValue, ...params }: IElementFindOptions & { textValue: string; }) => {
         try {
