@@ -130,6 +130,32 @@ export class WebBrowserService {
     return new ExtractDataUseCase(this.webBrowser).execute(findOptions);
   }
 
+  async keyupEmiter(key: string, combination?: string[]): Promise<string> {
+    if (combination) {
+      combination.map(async k => await this.webBrowser.driver.actions().keyDown(k).perform());
+      return await this.webBrowser.driver.actions().keyDown(key).perform().then(
+        async () => {
+          await this.webBrowser.driver.actions().keyUp(key).perform();
+          combination.map(async k => await this.webBrowser.driver.actions().keyUp(k).perform());
+          return `Keys ${key}, ${combination.join(',')} pressed`;
+        },
+        (error) => {
+          return error.message;
+        }
+      );
+    } else {
+      return await this.webBrowser.driver.actions().keyDown(key).perform().then(
+        async () => {
+          await this.webBrowser.driver.actions().keyUp(key).perform();
+          return `Key ${key} pressed`;
+        },
+        (error) => {
+          return error.message;
+        }
+      );
+    }
+  }
+
   private async _findElement(findOptions: IElementFindOptions) {
     return this.webBrowser.driver.wait(
       until.elementLocated(By[findOptions.selectorType](findOptions.fieldSelector)),

@@ -1,13 +1,14 @@
 import { DynamicStructuredTool } from 'langchain/tools';
 import { z } from 'zod';
-import { Key } from './keyup-emiter.interface';
-import { KeyUpService } from './keyup-emiter.service';
+import { Key } from './keyup-emiter/keyup-emiter.interface';
+import { WebBrowserService } from './web-browser.service';
+import { WebBrowserToolSettings } from './web-browser.toolkit';
 
 export class KeyPressTool extends DynamicStructuredTool {
-  constructor() {
+  constructor(settings: WebBrowserToolSettings) {
     super({
       name: 'Key Up Press',
-      metadata: { id: "keyup-emiter", tool: 'emitKey' },
+      metadata: { id: "web-browser", tool: 'Key-emiter' },
       description: 'Use this tool to press a key on web browser.',
       schema: z.object({
         key: z.nativeEnum(Key).describe("a key to be pressed on web browser"),
@@ -15,8 +16,8 @@ export class KeyPressTool extends DynamicStructuredTool {
       }),
       func: async ({ key, combination }) => {
         try {
-          const keyUpService = new KeyUpService();
-          return await keyUpService.press(key, combination);
+          const browserService = new WebBrowserService(settings.webBrowser);
+          return await browserService.keyupEmiter(key, combination);
         } catch (error) {
           return error.message;
         }
