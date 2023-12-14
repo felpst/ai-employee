@@ -96,18 +96,31 @@ export class WebBrowserService {
     return element;
   }
 
-  async scrollPage(location: number): Promise<boolean> {
-    this.webBrowser.driver.executeScript("window.scrollTo(0," + location + ")");
+  async scrollPage(location?: number, options?: IElementFindOptions): Promise<boolean> {
+    let _location = location;
+    if (!_location) {
+      const input = await this._findElement(options);
+
+      if (!input) return false;
+      _location = Number(await input.getAttribute('offsetTop')); //scrollHeight
+
+    }
+    let currentLocation = 0;
+    let offset = _location - currentLocation || 0;
+    this.webBrowser.driver.executeScript("window.scrollTo(" + currentLocation + "," + offset + ")");
     await this.webBrowser.driver.sleep(500);
     for (let i = 0; i < 5; i++) {
-      console.log(`Waiting for page scroll to: ${location}`);
-      const currentLocation: number = await this.webBrowser.driver.executeScript("return window.scrollY");
+      console.log(`Waiting for page scroll from ${currentLocation} to ${_location}`);
+      currentLocation += offset;
 
-      if (currentLocation >= location) {
+      if (currentLocation >= _location) {
         return true;
+      } else {
+        await this.webBrowser.driver.sleep(3000);
+        offset = _location - currentLocation;
+        this.webBrowser.driver.executeScript("window.scrollTo(" + currentLocation + "," + offset + ")");
       }
 
-      await this.webBrowser.driver.sleep(3000);
     }
     return false;
   }
