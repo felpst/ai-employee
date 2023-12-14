@@ -95,9 +95,30 @@ describe('Find Element tool test', () => {
     expect(result).toBe(true);
   });
 
+  it('Find La Liga Table', async () => {
+    await service.loadPage('https://www.skysports.com/la-liga-table');
+
+    const context = 'La Liga table';
+    const element = await service.findElementByContext(context);
+
+
+    expect(element.selector).toContain("#widgetLite-8");
+  });
+
+  it('find news Tibia div', async () => {
+    await service.loadPage('https://www.tibia.com/news/');
+
+    const context = 'news Ticker';
+    const element = await service.findElementByContext(context);
+
+
+    expect(element.selector).toBe("#NewsTicker");
+    expect(element.selectorType).toBe("css");
+  });
+
 
   afterAll(async () => {
-    // await webBrowser.driver.close()
+    await webBrowser.driver.close()
   });
 
 });
