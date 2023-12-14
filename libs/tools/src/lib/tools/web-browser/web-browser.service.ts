@@ -1,4 +1,5 @@
 import { By, until } from 'selenium-webdriver';
+import { ExtractDataUseCase } from './usecases/extract-data.usecase';
 import { FindElementUseCase } from './usecases/find-element.usecase';
 import { WebBrowser } from "./web-browser";
 
@@ -123,6 +124,10 @@ export class WebBrowserService {
 
     }
     return false;
+  }
+
+  async extractData(findOptions: IElementFindOptions) {
+    return new ExtractDataUseCase(this.webBrowser).execute(findOptions);
   }
 
   private async _findElement(findOptions: IElementFindOptions) {
