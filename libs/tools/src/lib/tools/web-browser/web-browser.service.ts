@@ -83,11 +83,11 @@ export class WebBrowserService {
     return true;
   }
 
-  async clickButton(options: IElementFindOptions): Promise<boolean> {
-    const button = await this._findElement(options);
+  async clickElement(options: IElementFindOptions): Promise<boolean> {
+    const element = await this._findElement(options);
 
-    if (!button) return false;
-    await button.click();
+    if (!element) return false;
+    await element.click();
 
     return true;
   }
