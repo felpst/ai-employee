@@ -17,7 +17,7 @@ describe('Extract Data tool test', () => {
 
     const res = await service.extractData({
       selectorType: 'css',
-      fieldSelector: '#__next > div.styled__BorderContainer-sc-1sq1srj-8.ksxJIT > div > div > div > table',
+      elementSelector: '#__next > div.styled__BorderContainer-sc-1sq1srj-8.ksxJIT > div > div > div > table',
     });
 
     expect(Array.isArray(res)).toBe(true);
@@ -28,7 +28,7 @@ describe('Extract Data tool test', () => {
     await service.loadPage('https://www.w3schools.com/html/html_tables.asp');
     const res = await service.extractData({
       selectorType: 'id',
-      fieldSelector: 'customers',
+      elementSelector: 'customers',
     });
 
     expect(Array.isArray(res)).toBe(true);
@@ -39,7 +39,7 @@ describe('Extract Data tool test', () => {
     await service.loadPage('https://redeglobo.globo.com/sao-paulo/programacao/');
     const res = service.extractData({
       selectorType: 'xpath',
-      fieldSelector: '//*[@id="grade-pagina"]',
+      elementSelector: '//*[@id="grade-pagina"]',
     });
 
     await expect(res).rejects.toThrow('Error trying to get data from HTML.');

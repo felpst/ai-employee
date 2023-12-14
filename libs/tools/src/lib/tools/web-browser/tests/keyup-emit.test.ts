@@ -15,7 +15,7 @@ describe('Input Text tool test', () => {
     await service.loadPage('https://www.google.com');
     await service.inputText('Quem é a namorada de Neymar?', {
       selectorType: 'id',
-      fieldSelector: 'APjFqb',
+      elementSelector: 'APjFqb',
     });
 
     const result = await service.keyupEmiter('\uE007');
@@ -27,7 +27,7 @@ describe('Input Text tool test', () => {
     await service.loadPage('https://www.google.com');
     await service.inputText('Quem é a namorada de Neymar?', {
       selectorType: 'id',
-      fieldSelector: 'APjFqb',
+      elementSelector: 'APjFqb',
     });
 
     const result = await service.keyupEmiter('a', ['\uE008']);

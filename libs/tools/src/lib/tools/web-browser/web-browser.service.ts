@@ -4,7 +4,7 @@ import { FindElementUseCase } from './usecases/find-element.usecase';
 import { WebBrowser } from "./web-browser";
 
 export interface IElementFindOptions {
-  fieldSelector: string,
+  elementSelector: string,
   selectorType: keyof typeof ElementSelector,
   findTimeout?: number;
 }
@@ -42,7 +42,7 @@ export class WebBrowserService {
   async click(options: IElementFindOptions) {
     const element =
       await this.webBrowser.driver.wait(
-        until.elementLocated(By[options.selectorType](options.fieldSelector)),
+        until.elementLocated(By[options.selectorType](options.elementSelector)),
         options.findTimeout
       );
 
@@ -158,7 +158,7 @@ export class WebBrowserService {
 
   private async _findElement(findOptions: IElementFindOptions) {
     return this.webBrowser.driver.wait(
-      until.elementLocated(By[findOptions.selectorType](findOptions.fieldSelector)),
+      until.elementLocated(By[findOptions.selectorType](findOptions.elementSelector)),
       findOptions.findTimeout
     );
   }

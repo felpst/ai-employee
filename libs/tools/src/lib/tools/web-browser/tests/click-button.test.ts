@@ -15,7 +15,7 @@ describe('Click Button tool test', () => {
     await service.loadPage('https://wikipedia.org');
     const result = await service.clickButton({
       selectorType: 'css',
-      fieldSelector: 'button.pure-button',
+      elementSelector: 'button.pure-button',
     });
 
     expect(result).toBe(true);

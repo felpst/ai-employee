@@ -17,10 +17,10 @@ export class ExtractDataUseCase extends WebBrowserUtils {
 
   async execute(findOptions: IElementFindOptions) {
     await this.webBrowser.driver.wait(
-      until.elementLocated(By[findOptions.selectorType](findOptions.fieldSelector)),
+      until.elementLocated(By[findOptions.selectorType](findOptions.elementSelector)),
       findOptions.findTimeout
     );
-    const htmlContent = await this.getHtmlFromElement(findOptions.fieldSelector, findOptions.selectorType);
+    const htmlContent = await this.getHtmlFromElement(findOptions.elementSelector, findOptions.selectorType);
 
     const data = await this.getDataFromHTML(htmlContent);
     return data;
