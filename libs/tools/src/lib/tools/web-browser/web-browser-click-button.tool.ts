@@ -23,7 +23,7 @@ export class WebBrowserInputTextTool extends DynamicStructuredTool {
           const browserService = new WebBrowserService(settings.webBrowser);
 
           const success = await browserService.clickButton({
-            fieldSelector: buttonSelector,
+            elementSelector: buttonSelector,
             selectorType,
             findTimeout
           });
