@@ -5,7 +5,7 @@ type SelectorType = keyof typeof ElementSelector;
 export default class WebBrowserUtils {
   constructor(protected webBrowser: WebBrowser) { }
 
-  async getHtmlFromElement(selector: string, selectorType: SelectorType): Promise<string> {
+  async getHtmlFromElement(selector: string, selectorType?: SelectorType): Promise<string> {
     switch (selectorType) {
       case 'id':
         selector = `#${selector}`;
@@ -17,6 +17,8 @@ export default class WebBrowserUtils {
         break;
       default: break;
     }
+
+    // TODO ideas: tirar atributos inuteis (eventos, name), remover elementos improvaveis
 
     return this.webBrowser.driver.executeScript((selector: string) => {
       var element = (document as any).querySelector(`${selector}`).cloneNode(true);
