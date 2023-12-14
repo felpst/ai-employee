@@ -1,11 +1,9 @@
 import { WebBrowser } from '.';
-import { ElementSelector } from './web-browser.service';
-type SelectorType = keyof typeof ElementSelector;
-
+import { ElementSelector } from './common/element-schema';
 export default class WebBrowserUtils {
   constructor(protected webBrowser: WebBrowser) { }
 
-  async getHtmlFromElement(selector: string, selectorType?: SelectorType): Promise<string> {
+  async getHtmlFromElement(selector: string, selectorType?: ElementSelector): Promise<string> {
     switch (selectorType) {
       case 'id':
         selector = `#${selector}`;

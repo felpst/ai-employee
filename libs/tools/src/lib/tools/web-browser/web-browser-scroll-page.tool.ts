@@ -1,6 +1,7 @@
 import { DynamicStructuredTool } from 'langchain/tools';
 import { z } from 'zod';
-import { ElementSelector, IElementFindOptions, WebBrowserService } from './web-browser.service';
+import { IElementFindOptions, elementSchema } from './common/element-schema';
+import { WebBrowserService } from './web-browser.service';
 import { WebBrowserToolSettings } from './web-browser.toolkit';
 
 export class WebBrowserScrollPageTool extends DynamicStructuredTool {
@@ -9,11 +10,8 @@ export class WebBrowserScrollPageTool extends DynamicStructuredTool {
       name: 'Web Browser Scroll Page',
       metadata: { id: "web-browser", tool: 'scrollPage' },
       description: 'Use this tool to scroll page vertically.',
-      schema: z.object({
+      schema: elementSchema.extend({
         location: z.number().optional().describe("the location where the page will be scrolled"),
-        fieldSelector: z.string().optional().describe("the selector of the html field element"),
-        selectorType: z.nativeEnum(ElementSelector).optional().describe("type of the selector"),
-        findTimeout: z.number().optional().default(10000).describe("timeout to find the input element in ms")
       }),
       func: async ({ location, ...params }: IElementFindOptions & { location: number; }) => {
         try {
