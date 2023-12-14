@@ -1,0 +1,17 @@
+@import '../../../styles/cognum.variables.scss';
+
+.sorting-buttons {
+    margin-right: 1.5em;
+
+    button {
+      max-width: 3.75em;
+      font-size: 0.875em;
+      border-radius: 2px 0px 0px 2px;
+      border: 1px solid #d9d9d9;
+      padding: 5px 16px;
+    }
+    .active-button {
+      color: $cognum-color-primary !important;
+      border-color: $cognum-color-primary !important;
+    }
+}

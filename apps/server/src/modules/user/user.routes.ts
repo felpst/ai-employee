@@ -3,16 +3,14 @@ import YupValidatorMiddleware from '../../middlewares/yup.validator';
 import { authMiddleware } from '../auth/auth.middleware';
 import userController from './user.controller';
 import {
-  addUserSchema,
   recoveryPasswordSchema,
-  recoveryRequestSchema,
+  recoveryRequestSchema
 } from './user.schemas';
 
 const router: Router = express.Router();
 
 router.post(
   '/register',
-  YupValidatorMiddleware(addUserSchema),
   userController.sendEmail,
   userController.create
 );

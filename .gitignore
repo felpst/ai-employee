@@ -5,9 +5,10 @@ dist
 tmp
 /out-tsc
 data
+
 # dependencies
 node_modules
-.nx
+.nx/*
 
 # IDEs and editors
 /.idea

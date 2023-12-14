@@ -37,11 +37,11 @@ export class MenuAIEmployeeItemsComponent {
       text: 'Memory',
       icon: 'cognum-unordered-list',
     },
-    // {
-    //   path: 'history',
-    //   text: 'History',
-    //   icon: 'cognum-clock',
-    // },
+    {
+      path: 'history',
+      text: 'History',
+      icon: 'cognum-clock',
+    },
     {
       path: 'settings',
       text: 'Settings',
