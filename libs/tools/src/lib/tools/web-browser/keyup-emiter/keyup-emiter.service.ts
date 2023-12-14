@@ -1,5 +1,5 @@
 import * as ks from 'node-key-sender';
-import { accentsMap, Key } from './keyup-emiter.interface';
+import { accentsMap } from './keyup-emiter.interface';
 
 export class KeyUpService {
   constructor() {
@@ -7,9 +7,20 @@ export class KeyUpService {
     ks.aggregateKeyboardLayout(accentsMap);
   }
 
-  async press(key: string): Promise<string> {
-    const keyCode = Key[key];
-    return ks.sendKey(keyCode).then(
+  async press(key: string, combination?: string[]): Promise<string> {
+    if (combination) {
+      combination.push(key);
+      return ks.sendKeys(combination).then(
+        () => {
+          return `Keys ${combination} pressed`;
+        },
+        (error) => {
+          return error.message;
+        }
+      );
+    }
+
+    return ks.sendKey(key).then(
       () => {
         return `Key ${key} pressed`;
       },
