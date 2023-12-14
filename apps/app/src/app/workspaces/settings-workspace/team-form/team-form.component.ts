@@ -104,19 +104,24 @@ export class SettingsTeamFormComponent {
     if (this.teamForm.valid) {
       const email = this.teamForm.value.email as string;
       if (email) {
-        this.workspacesService.sendEmailToMembers(this.workspace._id, email).subscribe({
-          next: () => {
-            this.notificationsService.show('Email sent successfully!');
-            this.addUserMember();
-          },
-          error: (error) => {
-            console.error('Error sending email:', error);
-            this.notificationsService.show('Failed to send email. Please try again.');
-          },
-        });
+        const userInWorkspace = this.users.find((user) => user.email === email);
+        if (userInWorkspace) {
+          this.notificationsService.show('User is already in the workspace.');
+        } else {
+          this.workspacesService.sendEmailToMembers(this.workspace._id, email).subscribe({
+            next: () => {
+              this.notificationsService.show('Email sent successfully!');
+              this.addUserMember();
+            },
+            error: (error) => {
+              console.error('Error sending email:', error);
+              this.notificationsService.show('Failed to send email. Please try again.');
+            },
+          });
+        }
       } 
     }
-  }
+  }  
 
   addUserMember(){
     const { email, permission } = this.teamForm.value;
