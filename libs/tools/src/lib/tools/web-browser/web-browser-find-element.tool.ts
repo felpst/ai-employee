@@ -14,12 +14,9 @@ export class WebBrowserFindElementTool extends DynamicStructuredTool {
       }),
       func: async ({ idOrClass }) => {
         try {
-
-
-
-
           const browserService = new WebBrowserService(settings.webBrowser);
           const loaded = await browserService.inspectElement(idOrClass);
+
           if (!loaded) throw new Error(`element not found on web browser: ${idOrClass}`);
           return `html: ${loaded.html} \n attributes: ${loaded.attributes}`;
         } catch (error) {

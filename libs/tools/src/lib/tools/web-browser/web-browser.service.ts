@@ -1,24 +1,8 @@
 import { By, until } from 'selenium-webdriver';
+import { IElementFindOptions } from './common/element-schema';
 import { ExtractDataUseCase } from './usecases/extract-data.usecase';
 import { FindElementUseCase } from './usecases/find-element.usecase';
 import { WebBrowser } from "./web-browser";
-
-export interface IElementFindOptions {
-  elementSelector: string,
-  selectorType: keyof typeof ElementSelector,
-  findTimeout?: number;
-}
-
-export enum ElementSelector {
-  'id',
-  'className',
-  'name',
-  'xpath',
-  'css',
-  'js',
-  'linkText',
-  'partialLinkText'
-}
 
 export class WebBrowserService {
   constructor(
