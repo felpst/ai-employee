@@ -59,6 +59,9 @@ export class MailController extends ModelController<typeof Job> {
 
       return res.status(200).json({ message: 'Emails are checked' });
     } catch (error) {
+      if (error.message === 'Nothing to fetch') {
+        return res.status(200).json({ message: 'Emails are checked' });
+      }
       console.error(error);
       next(error)
     }

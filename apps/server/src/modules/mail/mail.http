@@ -1,4 +1,5 @@
 @baseUrl=http://localhost:3000
 
-POST {{baseUrl}}/mail/check
+# POST {{baseUrl}}/mail/check
+POST https://cognum.uc.r.appspot.com/mail/check
 Content-Type: application/json
