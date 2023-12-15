@@ -25,7 +25,7 @@ describe('Find Element Tool test', () => {
         executor = await agentTest(tools);
     });
 
-    it('should find element selectorType and selector', async () => {
+    it('should find element selectorType and selector of table', async () => {
         await service.loadPage('https://www.skysports.com/la-liga-table');
         const inputText = 'return selectorType and selector of la ligas table';
         const result = await executor.call({ input: inputText });
