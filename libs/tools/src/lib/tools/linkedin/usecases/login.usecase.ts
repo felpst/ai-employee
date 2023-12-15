@@ -1,6 +1,6 @@
 import { By, Key, until } from 'selenium-webdriver';
+import { WebBrowser } from '../../web-browser/web-browser';
 import { ILinkedInAuth } from "../linkedin.interfaces";
-import { WebBrowser } from '../../../web-browser/web-browser';
 
 export class LoginUseCase {
 

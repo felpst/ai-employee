@@ -1,4 +1,4 @@
-import { WebBrowser } from "../../web-browser/web-browser";
+import { WebBrowser } from "../web-browser/web-browser";
 import { BrowserType } from "./drivers/linkedin.driver";
 import { ILinkedInAuth } from "./linkedin.interfaces";
 import { CloseUseCase } from "./usecases/close.usecase";

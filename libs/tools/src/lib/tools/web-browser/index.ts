@@ -1,2 +1,3 @@
-export * from './web-browser.tool';
+export * from './web-browser';
+export * from './web-browser.toolkit';
 

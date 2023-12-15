@@ -33,7 +33,6 @@ export interface IAIEmployeeCallStep {
 
 export interface IAIEmployeeCallData {
   input: string;
-  createdBy: string | ObjectId;
-  updatedBy: string | ObjectId;
+  user: string | ObjectId;
   context?: any;
 }

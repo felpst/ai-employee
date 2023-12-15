@@ -5,12 +5,21 @@ import { Options } from 'selenium-webdriver/chrome';
 
 export type BrowserType = 'chrome' | 'brightdata';
 
+export interface IWebBrowserOptions {
+  browser?: BrowserType;
+  proxy?: boolean;
+  headless?: boolean;
+}
+
 export class WebBrowser {
+  options: IWebBrowserOptions = { proxy: false, browser: 'chrome', headless: true }
   driver: WebDriver
   timeoutMS = 60000;
 
-  async start(browser: BrowserType) {
-    await this[browser]();
+  async start(options: IWebBrowserOptions = {}) {
+    this.options = { ...this.options, ...options };
+    await this[this.options.browser]();
+    return this;
   }
 
   async chrome() {
@@ -19,8 +28,8 @@ export class WebBrowser {
 
       chromedriver.path; // Force chromedriver to be downloaded
 
-      const chromeOptions = new Options();
-      chromeOptions.addArguments('--headless=new');
+      let chromeOptions = new Options();
+      if (this.options.headless) chromeOptions.addArguments('--headless=new');
       chromeOptions.addArguments('--window-size=1366,768');
 
       const prefs = {
@@ -39,14 +48,17 @@ export class WebBrowser {
         tempDir: '/tmp'
       };
 
-      const plugin = await new ProxyPlugin({
-        proxyConfig,
-        chromeOptions
-      })
+      // Proxy options
+      if (this.options.proxy) {
+        chromeOptions = await new ProxyPlugin({
+          proxyConfig,
+          chromeOptions
+        })
+      }
 
       this.driver = await new Builder()
         .forBrowser(Browser.CHROME)
-        .setChromeOptions(plugin.chromeOptions)
+        .setChromeOptions(chromeOptions)
         .build();
       console.log('Driver started...');
     } catch (error) {

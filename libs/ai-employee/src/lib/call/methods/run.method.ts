@@ -1,5 +1,6 @@
 import { IAIEmployee, IAIEmployeeCall, IAIEmployeeCallStep, IAgentCall } from "@cognum/interfaces";
 import { ChatModel } from "@cognum/llm";
+import { WebBrowser } from "@cognum/tools";
 import { StructuredOutputParser } from "langchain/output_parsers";
 import { PromptTemplate } from "langchain/prompts";
 import { RunnableSequence } from "langchain/schema/runnable";
@@ -22,9 +23,11 @@ export function run(): Observable<IAIEmployeeCall> {
   const runnableSequence = [
     async () => { $call.next(call) },
     startRun,
+    startResources,
     stepIntentClassification,
     stepIntentExecution,
     stepFinalAnswer,
+    endResources,
     endRun
   ]
 
@@ -50,6 +53,18 @@ export function run(): Observable<IAIEmployeeCall> {
     call.startAt = new Date();
     await call.save()
     $call.next(call)
+  }
+
+  async function startResources(input?: StepInput) {
+    // Start resources
+    (call.aiEmployee as IAIEmployee).resources = {
+      browser: await new WebBrowser().start({ headless: false })
+    }
+  }
+
+  async function endResources(input?: StepInput) {
+    // Start resources
+    (call.aiEmployee as IAIEmployee).resources.browser.close();
   }
 
   async function stepIntentClassification(input?: StepInput) {
