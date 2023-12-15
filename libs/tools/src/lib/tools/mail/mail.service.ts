@@ -50,7 +50,7 @@ export class MailService {
       tlsOptions: {
         servername: this.settings.imap.host
       },
-      authTimeout: this.settings.auth.timeout || 3000
+      authTimeout: this.settings.auth.timeout || 30000
     }
   }
 

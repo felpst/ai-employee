@@ -28,7 +28,10 @@ export class MailController extends ModelController<typeof Job> {
 
         let aiEmployee: IAIEmployee;
         if (!aiEmployees.has(aiEmployeeId)) {
-          aiEmployee = await new AIEmployeeRepository().getById(aiEmployeeId)
+          console.log(aiEmployeeId);
+          try {
+            aiEmployee = await new AIEmployeeRepository().getById(aiEmployeeId)
+          } catch (error) { console.error(error.message); continue; }
           aiEmployees.set(aiEmployeeId, aiEmployee)
         } else {
           aiEmployee = aiEmployees.get(aiEmployeeId)
