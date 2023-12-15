@@ -1,5 +1,6 @@
-import { DatabaseHelper } from '@cognum/helpers';
+import { DatabaseHelper, RepositoryHelper } from '@cognum/helpers';
 import { IAIEmployee } from '@cognum/interfaces';
+import { User } from '@cognum/models';
 import { MailService } from '@cognum/tools';
 import 'dotenv/config';
 import mongoose from 'mongoose';
@@ -44,7 +45,6 @@ describe('InformationRetrievalAgent', () => {
         }
       ],
     }) as IAIEmployee
-    console.log(aiEmployee)
 
     agent = await new GeneralAgent(aiEmployee).init();
   });
@@ -131,6 +131,24 @@ describe('InformationRetrievalAgent', () => {
     console.log(res);
     expect(res.output).toContain('sent')
   });
+
+  // Jobs
+  it('should create a job with correct instructions', async () => {
+    const aiEmployee = await aiEmployeeRepo.getById('6567a42c5c556abf1a8b9058')
+    const agent = await new GeneralAgent(aiEmployee).init();
+
+    try {
+      const user = await new RepositoryHelper(User).getById(process.env.USER_ID)
+      agent.context.user = user;
+    } catch (error) {
+      throw new Error('User not found');
+    }
+
+    // const result = await executor.call({ input: 'Send sales report for me every day at 7am' });
+    const result = await agent.call('Send sales report to linecker@cognum.ai every minute');
+    console.log(result.output);
+    expect(result.output).toContain('55');
+  })
 
   afterAll(async () => {
     // console.log('MEMORY', JSON.stringify(aiEmployee.memory));

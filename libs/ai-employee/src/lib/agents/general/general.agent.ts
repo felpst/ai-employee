@@ -1,8 +1,10 @@
 import { IAIEmployee, IAgentCall } from "@cognum/interfaces";
 import { ChatModel } from "@cognum/llm";
+import { JobService } from "@cognum/tools";
 import { initializeAgentExecutorWithOptions } from "langchain/agents";
 import { BufferMemory } from "langchain/memory";
 import { MessagesPlaceholder } from "langchain/prompts";
+import { Tool } from "langchain/tools";
 import { AIEmployeeTools } from "../../tools/ai-employee-tools";
 import { Agent } from "../agent";
 
@@ -21,6 +23,12 @@ export class GeneralAgent extends Agent {
       aiEmployee: this.aiEmployee,
       intentions
     })
+
+    // Resource: Job
+    if (this.context.user) {
+      const jobService = new JobService({ aiEmployee: this.aiEmployee, user: this.context.user });
+      tools.push(...jobService.toolkit() as Tool[]);
+    }
 
     this._executor = await initializeAgentExecutorWithOptions(tools, model, {
       agentType: "structured-chat-zero-shot-react-description",

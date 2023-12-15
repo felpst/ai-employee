@@ -9,7 +9,7 @@ import { AgentAIEmployeeHandlers } from "./agent-ai-employee/agent-ai-employee-h
 export class Agent {
   agent = 'Agent';
   // memory: AIEmployeeMemory = new AIEmployeeMemory();
-  context: string[] = [];
+  context: any = {};
 
   _executor: AgentExecutor;
   handlers = new AgentAIEmployeeHandlers();

@@ -57,8 +57,12 @@ export function run(): Observable<IAIEmployeeCall> {
 
   async function startResources(input?: StepInput) {
     // Start resources
-    (call.aiEmployee as IAIEmployee).resources = {
-      browser: await new WebBrowser().start({ headless: false })
+    // Browser
+    try {
+      const headless = !process.env.SERVER_URL.includes('localhost') ? true : false;
+      (call.aiEmployee as IAIEmployee).resources.browser = await new WebBrowser().start({ headless })
+    } catch (error) {
+      console.error('Error starting browser', error.message)
     }
   }
 

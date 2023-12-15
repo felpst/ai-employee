@@ -1,11 +1,10 @@
 import { CloudSchedulerClient } from '@google-cloud/scheduler';
 import { google } from '@google-cloud/scheduler/build/protos/protos';
 
-
-
-export default class SchedulerService {
+export class SchedulerService {
   private _client: CloudSchedulerClient;
   private _parent = 'projects/cognum/locations/us-central1';
+
   constructor() {
     this._client = new CloudSchedulerClient({
       keyFilename: process.env.PROD === 'true' ? undefined : 'cognum.secrets.json',

@@ -1,11 +1,10 @@
 import { AIEmployee } from '@cognum/ai-employee';
 import { IAIEmployee, IJob, IUser } from '@cognum/interfaces';
 import { Job, User } from '@cognum/models';
+import { CronService, SchedulerService } from '@cognum/tools';
 import { NextFunction, Request, Response } from 'express';
 import { ObjectId } from 'mongodb';
 import ModelController from '../../controllers/model.controller';
-import { textToCron } from '../../helpers/cron.helper';
-import SchedulerService from '../../services/scheduler.service';
 
 export class JobController extends ModelController<typeof Job> {
   constructor() {
@@ -46,7 +45,7 @@ export class JobController extends ModelController<typeof Job> {
       if (!job.cron?.name) {
         job.cron = {
           name: `job-execute-${job._id}`,
-          schedule: await textToCron(job.frequency),
+          schedule: await CronService.fromText(job.frequency),
           timeZone: user.timezone || 'America/Sao_Paulo',
           httpTarget: {
             httpMethod: 'POST',
@@ -55,7 +54,7 @@ export class JobController extends ModelController<typeof Job> {
         };
         await new SchedulerService().createJob(job.cron);
       } else {
-        job.cron.schedule = await textToCron(job.frequency);
+        job.cron.schedule = await CronService.fromText(job.frequency);
         job.cron.timeZone = user.timezone || 'America/Sao_Paulo';
         await new SchedulerService().updateJob(job.cron);
       }
@@ -91,6 +90,7 @@ export class JobController extends ModelController<typeof Job> {
       }
 
       // Execute
+      console.log('Executing job', { id: job._id.toString(), name: job.name });
       const call = await aiEmployee.call({
         input: job.instructions,
         context: {

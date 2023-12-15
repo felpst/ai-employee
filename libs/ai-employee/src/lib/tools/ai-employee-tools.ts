@@ -38,10 +38,15 @@ export class AIEmployeeTools {
     }
 
     // Resource: AI Employee Email
-    // if (intentions.includes(INTENTIONS.TASK_EXECUTION)) {
-    const mailToolkit = MailToolkit(AIEmployeeTools.MailToolkitSettings) as Tool[];
-    tools.push(...mailToolkit)
-    // }
+    if (!aiEmployee.tools.find(tool => tool.id === 'mail')) {
+      const mailToolkit = MailToolkit(AIEmployeeTools.MailToolkitSettings) as Tool[];
+      tools.push(...mailToolkit)
+    }
+
+    // Resource: Jobs Toolkit
+    // const jobService = new JobService({ aiEmployee });
+    // const toolkit = jobService.toolkit() as Tool[];
+    // tools.push(...toolkit)
 
     return tools;
   }
