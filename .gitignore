@@ -5,9 +5,10 @@ dist
 tmp
 /out-tsc
 data
+
 # dependencies
 node_modules
-.nx
+.nx/*
 
 # IDEs and editors
 /.idea
@@ -55,5 +56,5 @@ __pycache__/
 
 #json keys
 oauth2.keys.json
-
+.nx
 
