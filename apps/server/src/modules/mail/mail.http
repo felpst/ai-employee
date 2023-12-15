@@ -1,0 +1,4 @@
+@baseUrl=http://localhost:3000
+
+POST {{baseUrl}}/mail/check
+Content-Type: application/json

@@ -1,12 +1,12 @@
+import { IWebBrowser } from '@cognum/interfaces';
 import { By, until } from 'selenium-webdriver';
 import { IElementFindOptions } from './common/element-schema';
 import { ExtractDataUseCase } from './usecases/extract-data.usecase';
 import { FindElementUseCase } from './usecases/find-element.usecase';
-import { WebBrowser } from "./web-browser";
 
 export class WebBrowserService {
   constructor(
-    private webBrowser: WebBrowser
+    private webBrowser: IWebBrowser
   ) { }
 
   async loadPage(url: string): Promise<boolean> {

@@ -1,3 +1,4 @@
+import { IWebBrowser } from '@cognum/interfaces';
 import { ChatModel } from '@cognum/llm';
 import { StructuredOutputParser } from 'langchain/output_parsers';
 import { PromptTemplate } from "langchain/prompts";
@@ -5,12 +6,11 @@ import { RunnableSequence } from 'langchain/schema/runnable';
 import { By, until } from 'selenium-webdriver';
 import { z } from 'zod';
 import { IElementFindOptions } from '../common/element-schema';
-import { WebBrowser } from "../web-browser";
 import WebBrowserUtils from '../web-browser-utils';
 
 export class ExtractDataUseCase extends WebBrowserUtils {
   constructor(
-    protected webBrowser: WebBrowser
+    protected webBrowser: IWebBrowser
   ) {
     super(webBrowser);
   }

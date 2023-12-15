@@ -1,8 +1,8 @@
-import * as Imap from 'imap';
 import { simpleParser } from 'mailparser';
-import * as moment from 'moment';
 import * as nodemailer from 'nodemailer';
-import { Email, MailData, MailFilters, MailToolSettings } from './mail.interfaces';
+import { Email, MailFilters, MailToolSettings, SendMailData } from './mail.interfaces';
+const Imap = require('imap');
+const moment = require('moment');
 
 export class MailService {
 
@@ -10,11 +10,12 @@ export class MailService {
     private settings: MailToolSettings
   ) { }
 
-  send(emailData: MailData): Promise<void> {
+  send(emailData: SendMailData): Promise<void> {
     return new Promise((resolve, reject) => {
       const mailOptions = {
         from: emailData.from,
         to: emailData.to,
+        replyTo: emailData.replyTo,
         cc: emailData.cc,
         bcc: emailData.bcc,
         subject: emailData.subject,
@@ -39,7 +40,7 @@ export class MailService {
     });
   }
 
-  get imapConfig(): Imap.Config {
+  get imapConfig() {
     return {
       user: this.settings.auth.user,
       password: this.settings.auth.pass,
@@ -96,12 +97,12 @@ export class MailService {
 
         await openInbox(async function (err, box) {
           console.log('openBox');
-          if (err) reject(err)
+          if (err) imap.end()
 
           imap.search(filter, async (err, results) => {
             console.log('searching...');
 
-            if (err) reject(err)
+            if (err) return imap.end()
 
             const f = await imap.fetch(results, {
               bodies: '',
@@ -121,7 +122,7 @@ export class MailService {
 
               msg.once('attributes', (attrs) => {
                 simpleParser(mailContent, (err, mail) => {
-                  if (err) reject(err)
+                  if (err) imap.end()
                   mailResults.push({
                     uid: attrs.uid,
                     ...mail
@@ -137,6 +138,7 @@ export class MailService {
 
             f.once('error', (err) => {
               console.log('Fetch error: ' + err);
+              imap.end()
             });
 
             f.once('end', () => {
@@ -148,8 +150,7 @@ export class MailService {
         });
 
         imap.once('error', (err) => {
-          // console.error(err);
-          reject(err);
+          imap.end();
         });
 
         imap.once('end', () => {
@@ -184,7 +185,7 @@ export class MailService {
   async markAsRead(uid: string): Promise<void> {
     return new Promise((resolve, reject) => {
       // Timeout 10s to reject
-      setTimeout(() => { imap.end(); reject('Timeout'); }, 10000);
+      setTimeout(() => { imap.end(); reject('Timeout'); }, 30000);
 
       const imap = new Imap(this.imapConfig)
 

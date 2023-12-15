@@ -107,8 +107,7 @@ export class JobController extends ModelController<typeof Job> {
             instructions: job.instructions
           }
         },
-        createdBy: user._id.toString(),
-        updatedBy: user._id.toString()
+        user: user._id.toString()
       })
       const callResult = await new Promise((resolve, reject) => {
         try {

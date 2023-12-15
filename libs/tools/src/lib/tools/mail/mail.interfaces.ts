@@ -29,9 +29,20 @@ export interface MailFilters {
   status?: 'ALL' | 'NEW' | 'UNSEEN' | 'SEEN' | 'FLAGGED' | 'UNFLAGGED' | 'RECENT' | 'OLD' | 'ANSWERED' | 'UNANSWERED' | 'DELETED' | 'UNDELETED' | 'DRAFT' | 'UNDRAFT'
 }
 
+export interface SendMailData {
+  from: string;
+  to: string;
+  replyTo?: string;
+  cc?: string;
+  bcc?: string;
+  subject: string;
+  text?: string;
+  html?: string;
+}
 export interface MailData {
   from: string;
   to: string;
+  replyTo?: string;
   cc?: string;
   bcc?: string;
   subject: string;
