@@ -18,7 +18,8 @@ export class MailService {
         cc: emailData.cc,
         bcc: emailData.bcc,
         subject: emailData.subject,
-        html: emailData.html,
+        text: emailData.text ? emailData.text : emailData.html,
+        html: emailData.html ? emailData.html : emailData.text,
       };
 
       const transport = {
@@ -38,6 +39,19 @@ export class MailService {
     });
   }
 
+  get imapConfig(): Imap.Config {
+    return {
+      user: this.settings.auth.user,
+      password: this.settings.auth.pass,
+      host: this.settings.imap.host,
+      port: this.settings.imap.port,
+      tls: this.settings.imap.tls,
+      tlsOptions: {
+        servername: this.settings.imap.host
+      },
+      authTimeout: this.settings.auth.timeout || 3000
+    }
+  }
 
   // TODO Criar uma interface
   async find(filters: MailFilters = {
@@ -47,7 +61,7 @@ export class MailService {
     subject: undefined
   }): Promise<Email[]> {
     return new Promise((resolve, reject) => {
-      const emails: Email[] = []
+      let emails: Email[] = []
 
       // Filters
       if (!filters.qt) filters.qt = 5;
@@ -62,21 +76,8 @@ export class MailService {
       if (filters.status) filter.push(filters.status)
       console.log(filter);
 
-
-      // Config
-      const config: Imap.Config = {
-        user: this.settings.auth.user,
-        password: this.settings.auth.pass,
-        host: this.settings.imap.host,
-        port: this.settings.imap.port,
-        tls: this.settings.imap.tls,
-        tlsOptions: {
-          servername: this.settings.imap.host
-        },
-        authTimeout: this.settings.auth.timeout || 3000
-      }
-      const imap = new Imap(config)
-
+      // Imap
+      const imap = new Imap(this.imapConfig)
 
       if (imap.state !== 'authenticated') {
         imap.connect()
@@ -121,7 +122,10 @@ export class MailService {
               msg.once('attributes', (attrs) => {
                 simpleParser(mailContent, (err, mail) => {
                   if (err) reject(err)
-                  mailResults.push(mail)
+                  mailResults.push({
+                    uid: attrs.uid,
+                    ...mail
+                  })
                   // console.log(`Email ${seqno}: ${mail.messageId}`);
                 })
               });
@@ -152,9 +156,11 @@ export class MailService {
           // console.log('Connection ended');
           for (const mail of mailResults) {
             const email = {
+              id: mail.messageId,
+              uid: mail.uid,
               subject: mail.subject,
               from: mail.from.text,
-              id: mail.messageId,
+              to: mail.to.text,
               date: mail.date,
               text: mail.text,
               // html: mail.html,
@@ -163,12 +169,47 @@ export class MailService {
             }
             emails.push(email)
           }
+
+          // Filter by to
+          if (filters.to) emails = emails.filter(email => email.to === filters.to);
+
           resolve(emails)
         });
 
       });
     })
 
+  }
+
+  async markAsRead(uid: string): Promise<void> {
+    return new Promise((resolve, reject) => {
+      // Timeout 10s to reject
+      setTimeout(() => { imap.end(); reject('Timeout'); }, 10000);
+
+      const imap = new Imap(this.imapConfig)
+
+      if (imap.state !== 'authenticated') {
+        imap.connect()
+      }
+
+      imap.once('error', (error: Error) => {
+        imap.end();
+        reject(error);
+      });
+
+      imap.once('ready', async () => {
+        console.log('ready');
+        imap.openBox('INBOX', false, (error, box) => {
+          if (error) { imap.end(); return reject(error); }
+
+          imap.addFlags(uid, ['SEEN'], (error) => {
+            imap.end();
+            if (error) { return reject(error); }
+            resolve()
+          })
+        });
+      });
+    });
   }
 }
 

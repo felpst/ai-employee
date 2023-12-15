@@ -22,4 +22,5 @@ export interface IAIEmployee extends DefaultModel {
   memorySearch(question: string, context?: string[]): Promise<IMemorySearchResult>
   memoryInstruction(instruction: string, context?: string[]): Promise<IMemoryInstructionResult>
   checkValidAnswer(input: string, answer: string, context?: string[]): Promise<boolean>
+  getEmail(): string
 }

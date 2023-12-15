@@ -1,14 +1,15 @@
 import { ToolsHelper } from "@cognum/helpers";
 import { IAIEmployee, IToolSettings } from "@cognum/interfaces";
-import { GoogleCalendarCreateEventTool, GoogleCalendarDeleteEventTool, GoogleCalendarListEventsTool, GoogleCalendarUpdateEventTool, KnowledgeRetrieverTool, LinkedInFindLeadsTool, MailSenderTool, PythonTool, RandomNumberTool, SQLConnectorTool, WebBrowserToolkit } from "@cognum/tools";
+import { GoogleCalendarCreateEventTool, GoogleCalendarDeleteEventTool, GoogleCalendarListEventsTool, GoogleCalendarUpdateEventTool, KnowledgeRetrieverTool, LinkedInFindLeadsTool, MailToolSettings, MailToolkit, PythonTool, RandomNumberTool, SQLConnectorTool, WebBrowserToolkit } from "@cognum/tools";
 import { DynamicStructuredTool, SerpAPI, Tool } from "langchain/tools";
 import { Calculator } from "langchain/tools/calculator";
 import { INTENTIONS } from "../utils/intent-classifier/intent-classifier.util";
 
 export class AIEmployeeTools {
 
-  static intetionTools(options: { aiEmployee: IAIEmployee; intentions: string[]; }) {
-    const { intentions, aiEmployee } = options;
+  static intetionTools(options: { aiEmployee: IAIEmployee; intentions?: string[]; }) {
+    let { intentions, aiEmployee } = options;
+    if (!intentions) intentions = [];
 
     const commonTools = ToolsHelper.tools
       .filter(tool => !tool.show)
@@ -31,12 +32,41 @@ export class AIEmployeeTools {
     const tools = AIEmployeeTools.get(toolsSettings);
 
     // Resource: Web browser
-    if (intentions.includes(INTENTIONS.TASK_EXECUTION)) {
+    if (aiEmployee.resources?.browser && intentions.includes(INTENTIONS.TASK_EXECUTION)) {
       const toolkit = WebBrowserToolkit({ webBrowser: aiEmployee.resources.browser }) as Tool[];
       tools.push(...toolkit)
     }
 
+    // Resource: AI Employee Email
+    // if (intentions.includes(INTENTIONS.TASK_EXECUTION)) {
+    const mailToolkit = MailToolkit(AIEmployeeTools.MailToolkitSettings) as Tool[];
+    tools.push(...mailToolkit)
+    // }
+
     return tools;
+  }
+
+  static get MailToolkitSettings(): MailToolSettings {
+    return {
+      auth: {
+        user: process.env.AI_EMPLOYEE_EMAIL_USER,
+        pass: process.env.AI_EMPLOYEE_EMAIL_PASSWORD,
+      },
+      smtp: {
+        host: 'smtp.gmail.com',
+        port: 465,
+        tls: true,
+      },
+      imap: {
+        host: 'imap.gmail.com',
+        port: 993,
+        tls: true,
+      },
+      tools: {
+        send: true,
+        read: true,
+      }
+    }
   }
 
   static get(toolsSettings: IToolSettings[] = []): Tool[] {
@@ -63,8 +93,8 @@ export class AIEmployeeTools {
       //   return [new WebBrowserTool()];
       case 'random-number':
         return [new RandomNumberTool()];
-      case 'mail-sender':
-        return [new MailSenderTool(toolSettings.options)];
+      case 'mail':
+        return MailToolkit(toolSettings.options);
       case 'python':
         return [new PythonTool()];
       case 'sql-connector':

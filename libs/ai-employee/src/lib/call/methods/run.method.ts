@@ -134,7 +134,7 @@ export function run(): Observable<IAIEmployeeCall> {
       //   break;
       default:
         const generalAgent = await new GeneralAgent(call.aiEmployee as IAIEmployee).init()
-        agentCall = await generalAgent.call(stepIntentClassification.inputs.text, '')
+        agentCall = await generalAgent.call(stepIntentClassification.inputs.text, [])
         break;
     }
 

@@ -24,6 +24,7 @@ export interface MailFilters {
   qt?: number,
   since?: string | Date
   from?: string
+  to?: string
   subject?: string
   status?: 'ALL' | 'NEW' | 'UNSEEN' | 'SEEN' | 'FLAGGED' | 'UNFLAGGED' | 'RECENT' | 'OLD' | 'ANSWERED' | 'UNANSWERED' | 'DELETED' | 'UNDELETED' | 'DRAFT' | 'UNDRAFT'
 }
@@ -40,9 +41,11 @@ export interface MailData {
 }
 
 export interface Email {
+  id: string
+  uid: string
   subject: string
   from: string
-  id: string
+  to?: string
   date: string
   text: string
   // html: string
