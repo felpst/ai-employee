@@ -12,13 +12,13 @@ export class WebBrowserFindElementTool extends DynamicStructuredTool {
       schema: z.object({
         context: z.string().describe("context of the element to find"),
       }),
-      func: async ({ idOrClass }) => {
+      func: async ({ context }) => {
         try {
           const browserService = new WebBrowserService(settings.webBrowser);
-          const loaded = await browserService.inspectElement(idOrClass);
+          const element = await browserService.findElementByContext(context)
 
-          if (!loaded) throw new Error(`element not found on web browser: ${idOrClass}`);
-          return `html: ${loaded.html} \n attributes: ${loaded.attributes}`;
+          if (!element) throw new Error(`element not found on web browser: ${context}`);
+          return `selector: ${element.selector} \n selectorType: ${element.selectorType}`;
         } catch (error) {
           return error.message;
         }
