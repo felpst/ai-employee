@@ -9,7 +9,7 @@ const schema = new Schema<IUser>({
   password: { type: String, required: true },
   active: { type: Boolean, required: true, default: false },
   photo: { type: String, required: false },
-  timezone: { type: String, default: '+00:00' },
+  timezone: { type: String, default: 'America/Sao_Paulo' },
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now },
 });
