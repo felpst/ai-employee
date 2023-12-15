@@ -4,7 +4,6 @@ const validSelectors: Array<'id' | 'className' | 'name' | 'xpath' | 'css' | 'js'
   ['id', 'className', 'name', 'xpath', 'css', 'js', 'linkText', 'partialLinkText'];
 
 export const elementSchema = z.object({
-  context: z.string().describe("the context of the element."),
   elementSelector: z.string().describe("the selector of the html element."),
   selectorType: z.enum(validSelectors as any).describe("type of the selector."),
   findTimeout: z.number().optional().default(10000).describe("timeout to find the element in ms.")
