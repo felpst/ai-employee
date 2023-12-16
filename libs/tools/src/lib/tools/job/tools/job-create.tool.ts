@@ -12,16 +12,26 @@ export class JobCreateTool extends DynamicStructuredTool {
       schema: z.object({
         name: z.string().describe('name of job or task to execute.'),
         frequency: z.string().describe('frequency to execute the job or task (examples: every 5 minutes, every 1 hour, every day at 7pm).'),
-        instructions: z.string().describe('instructions to execute the job or task, break down the instructions into a detailed step-by-step guide, always aligned with your capabilities.'),
+        instructions: z.string().describe('instructions to execute the job or task, break down the instructions into a detailed step-by-step guide with all the details necessary for that task to be performed, always aligned with your capabilities.'),
+        context: z.object({
+          user: z.object({
+            _id: z.string().describe('id of user.').optional(),
+            name: z.string().describe('name of user.').optional(),
+            email: z.string().describe('mail of user.').optional(),
+          }).optional(),
+        }).optional(),
       }),
       metadata: { id: "job", tool: "create" },
-      func: async ({ name, frequency, instructions }) => {
+      func: async ({ name, frequency, instructions, context }) => {
         try {
+          console.log('Creating job...', { name, frequency, instructions, context });
+
           const jobService = new JobService(settings);
           const job = await jobService.create({
             name,
             frequency,
             instructions,
+            context
           })
           return 'Job create successfully: ```json\n' + JSON.stringify(job, null, 2) + '\n```';
         } catch (error) {

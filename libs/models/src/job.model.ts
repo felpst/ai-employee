@@ -18,6 +18,7 @@ const schema = new Schema<IJob>({
   name: { type: String, required: true },
   instructions: { type: String, required: true },
   frequency: { type: String, required: true },
+  context: { type: Schema.Types.Mixed, required: false, default: {} },
   cron: { type: cronSchema, required: false },
   status: { type: String, required: false, enum: ['running', 'stopped'], default: 'running' },
   aiEmployee: { type: Schema.Types.ObjectId, ref: 'AIEmployee', required: true },

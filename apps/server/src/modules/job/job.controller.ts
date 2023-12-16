@@ -93,11 +93,13 @@ export class JobController extends ModelController<typeof Job> {
       console.log('Executing job', { id: job._id.toString(), name: job.name });
       const call = await aiEmployee.call({
         input: job.instructions,
+        user,
         context: {
           job: {
             _id: job._id.toString(),
             name: job.name,
             frequency: job.frequency,
+            context: job.context,
             status: job.status,
             cron: {
               name: job.cron?.name,
@@ -107,7 +109,6 @@ export class JobController extends ModelController<typeof Job> {
             instructions: job.instructions
           }
         },
-        user: user._id.toString()
       })
       const callResult = await new Promise((resolve, reject) => {
         try {

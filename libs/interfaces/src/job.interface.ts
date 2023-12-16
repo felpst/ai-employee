@@ -18,6 +18,7 @@ export interface IJob extends DefaultModel {
   name: string;
   instructions: string;
   frequency: string;
+  context?: any;
   cron?: ICronJob;
   status: 'running' | 'stopped';
   aiEmployee: Schema.Types.ObjectId | IAIEmployee;

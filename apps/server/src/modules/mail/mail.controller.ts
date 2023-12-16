@@ -38,18 +38,23 @@ export class MailController extends ModelController<typeof Job> {
           aiEmployee = aiEmployees.get(aiEmployeeId)
         }
         if (!aiEmployee) continue;
+        console.log(aiEmployee);
 
         // Get user
-        const user = (await new RepositoryHelper(User).find({ filter: { email: mail.from } }))[0]
+        const emailFrom = mail.from.includes('<') ? mail.from.split('<')[1]?.split('>')[0] : mail.from
+        console.log(emailFrom);
+
+        const user = (await new RepositoryHelper(User).find({ filter: { email: emailFrom } }))[0]
+        console.log(user);
         if (!user) continue;
 
         // Check user has access ai employee workspace
-        if ((aiEmployee.workspace as IWorkspace).users.find(u => u.user === user._id) === undefined) continue;
+        if ((aiEmployee.workspace as IWorkspace).users.find(u => u.user.toString() === user._id.toString()) === undefined) continue;
 
         // Execute call
         const call = await aiEmployee.call({
           input: mail.text,
-          user: user
+          user
         })
         const callResult: IAIEmployeeCall = await new Promise((resolve, reject) => {
           try {
