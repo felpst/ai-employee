@@ -18,7 +18,17 @@ describe('InformationRetrievalaiEmployee', () => {
       role: 'Software Engineer',
       tools: [
         {
-          id: 'calculator',
+          id: 'sql-connector',
+          options: {
+            database: 'postgresql',
+            host: '34.67.95.96',
+            name: 'postgres',
+            port: '5432',
+            auth: {
+              user: process.env.DB_USER,
+              pass: process.env.DB_PASS,
+            }
+          }
         }
       ],
       memory: [
@@ -31,7 +41,8 @@ describe('InformationRetrievalaiEmployee', () => {
 
   it('should answer question correctly about email', async () => {
     const call = await aiEmployee.call({
-      input: `What is Linecker's email?`,
+      input: `Send sales report to linecker@cognum.ai every minute`,
+      // input: `Get today's sales report and send to linecker@cognum.ai`,
       user: process.env.USER_ID,
     })
 
@@ -88,7 +99,7 @@ describe('InformationRetrievalaiEmployee', () => {
   afterAll(async () => {
     console.log('MEMORY', JSON.stringify(aiEmployee.memory));
 
-    await aiEmployeeRepo.delete(aiEmployee._id);
+    // await aiEmployeeRepo.delete(aiEmployee._id);
     await mongoose.connection.close();
   });
 

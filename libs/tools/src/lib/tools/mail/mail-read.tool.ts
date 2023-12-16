@@ -20,7 +20,8 @@ export class MailReadTool extends DynamicStructuredTool {
         try {
           const mailService = new MailService(settings);
           const filters = { qt, date, from, subject };
-          return await mailService.find(filters);
+          const mails = await mailService.find(filters);
+          return 'List of emails: ```json\n' + JSON.stringify(mails, null, 2) + '\n```';
         } catch (error) {
           console.error(error);
           return error.message;

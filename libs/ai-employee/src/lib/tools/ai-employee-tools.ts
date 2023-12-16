@@ -38,21 +38,18 @@ export class AIEmployeeTools {
     }
 
     // Resource: AI Employee Email
-    if (!aiEmployee.tools.find(tool => tool.id === 'mail')) {
-      const mailToolkit = MailToolkit(AIEmployeeTools.MailToolkitSettings) as Tool[];
+    if (!tools.find(tool => tool.metadata.id === 'mail')) {
+      const mailToolkit = MailToolkit(AIEmployeeTools.MailToolkitSettings(aiEmployee)) as Tool[];
       tools.push(...mailToolkit)
     }
-
-    // Resource: Jobs Toolkit
-    // const jobService = new JobService({ aiEmployee });
-    // const toolkit = jobService.toolkit() as Tool[];
-    // tools.push(...toolkit)
 
     return tools;
   }
 
-  static get MailToolkitSettings(): MailToolSettings {
+  static MailToolkitSettings(aiEmployee?: IAIEmployee): MailToolSettings {
     return {
+      from: aiEmployee ? `${aiEmployee.name} - Cognum AI Employee <${aiEmployee.getEmail()}>` : undefined,
+      replyTo: aiEmployee ? `${aiEmployee.name} - Cognum AI Employee <${aiEmployee.getEmail()}>` : undefined,
       auth: {
         user: process.env.AI_EMPLOYEE_EMAIL_USER,
         pass: process.env.AI_EMPLOYEE_EMAIL_PASSWORD,

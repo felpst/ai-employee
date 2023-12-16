@@ -13,9 +13,9 @@ export class MailService {
   send(emailData: SendMailData): Promise<void> {
     return new Promise((resolve, reject) => {
       const mailOptions = {
-        from: emailData.from,
+        from: this.settings.from || emailData.from,
         to: emailData.to,
-        replyTo: emailData.replyTo,
+        replyTo: this.settings.replyTo || emailData.replyTo,
         cc: emailData.cc,
         bcc: emailData.bcc,
         subject: emailData.subject,
@@ -104,47 +104,47 @@ export class MailService {
 
             if (err) return imap.end()
 
-            const f = await imap.fetch(results, {
-              bodies: '',
-              struct: true
-            })
-
-            f.on('message', (msg, seqno) => {
-              let mailContent = ''
-              console.log('Message #%d', seqno);
-              // const prefix = '(#' + seqno + ') ';
-
-              msg.on('body', (stream) => {
-                stream.on('data', (chunk) => {
-                  mailContent += chunk.toString('utf8')
-                })
+            try {
+              const f = await imap.fetch(results, {
+                bodies: '',
+                struct: true
               })
 
-              msg.once('attributes', (attrs) => {
-                simpleParser(mailContent, (err, mail) => {
-                  if (err) imap.end()
-                  mailResults.push({
-                    uid: attrs.uid,
-                    ...mail
+              f.on('message', (msg, seqno) => {
+                let mailContent = ''
+                // console.log('Message #%d', seqno);
+                // const prefix = '(#' + seqno + ') ';
+
+                msg.on('body', (stream) => {
+                  stream.on('data', (chunk) => {
+                    mailContent += chunk.toString('utf8')
                   })
-                  // console.log(`Email ${seqno}: ${mail.messageId}`);
                 })
+
+                msg.once('attributes', (attrs) => {
+                  simpleParser(mailContent, (err, mail) => {
+                    if (err) imap.end()
+                    mailResults.push({
+                      uid: attrs.uid,
+                      ...mail
+                    })
+                    // console.log(`Email ${seqno}: ${mail.messageId}`);
+                  })
+                });
               });
 
-              // msg.once('end', () => {
-              //   console.log(prefix + 'Finished');
-              // });
-            });
+              f.once('error', (err) => {
+                // console.log('Fetch error: ' + err);
+              });
 
-            f.once('error', (err) => {
-              console.log('Fetch error: ' + err);
-              imap.end()
-            });
-
-            f.once('end', () => {
-              // console.log('Done fetching all messages!');
+              f.once('end', () => {
+                // console.log('Done fetching all messages!');
+                imap.end();
+              });
+            } catch (error) {
+              console.log(error.message);
               imap.end();
-            });
+            }
 
           });
         });

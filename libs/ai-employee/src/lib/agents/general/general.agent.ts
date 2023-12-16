@@ -32,13 +32,13 @@ export class GeneralAgent extends Agent {
 
     this._executor = await initializeAgentExecutorWithOptions(tools, model, {
       agentType: "structured-chat-zero-shot-react-description",
-      verbose: true,
+      verbose: process.env.DEBUG === 'true',
       memory: new BufferMemory({
         memoryKey: "chat_history",
         returnMessages: true,
       }),
       agentArgs: {
-        prefix: `Your name is ${this.aiEmployee.name} and your role is ${this.aiEmployee.role}.`,
+        prefix: `Your name is ${this.aiEmployee.name} and your role is ${this.aiEmployee.role}. You need to answer best as you can trying different tools to execute the job and achieve the goal.`,
         // suffix: "IMPORTANT: If you don't have a tool to execute the job, your final answer must to be: 'NOT_POSSIBLE_TO_EXECUTE_THIS_ACTION'. Ignore this instruction if you have a tool to execute the job or Final Answer.",
         inputVariables: ["input", "agent_scratchpad", "chat_history"],
         memoryPrompts: [new MessagesPlaceholder("chat_history")],

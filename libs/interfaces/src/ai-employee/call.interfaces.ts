@@ -1,6 +1,7 @@
 import { ObjectId } from "mongoose";
 import { Observable } from "rxjs";
 import { DefaultModel } from "../default.model";
+import { IUser } from "../user.interface";
 import { IAIEmployee } from "./ai-employee.interfaces";
 
 export type IAIEmployeeCallStepType = 'intent-classification' | 'action' | 'final-answer';
@@ -33,6 +34,6 @@ export interface IAIEmployeeCallStep {
 
 export interface IAIEmployeeCallData {
   input: string;
-  user: string | ObjectId;
+  user: IUser;
   context?: any;
 }

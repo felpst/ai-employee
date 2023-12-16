@@ -1,6 +1,7 @@
-import { AIEmployeeRepository, AIEmployeeTools, GeneralAgent, INTENTIONS } from '@cognum/ai-employee';
-import { IAIEmployee } from '@cognum/interfaces';
-import { Job } from '@cognum/models';
+import { AIEmployeeRepository, AIEmployeeTools } from '@cognum/ai-employee';
+import { RepositoryHelper } from '@cognum/helpers';
+import { IAIEmployee, IAIEmployeeCall, IWorkspace } from '@cognum/interfaces';
+import { Job, User } from '@cognum/models';
 import { MailService } from '@cognum/tools';
 import { NextFunction, Request, Response } from 'express';
 import ModelController from '../../controllers/model.controller';
@@ -13,7 +14,7 @@ export class MailController extends ModelController<typeof Job> {
   public async execute(req: Request, res: Response, next: NextFunction) {
     try {
       // Find unseen emails
-      const mailService = new MailService(AIEmployeeTools.MailToolkitSettings)
+      const mailService = new MailService(AIEmployeeTools.MailToolkitSettings())
       const mails = await mailService.find({
         status: 'UNSEEN',
       })
@@ -30,20 +31,35 @@ export class MailController extends ModelController<typeof Job> {
         if (!aiEmployees.has(aiEmployeeId)) {
           console.log(aiEmployeeId);
           try {
-            aiEmployee = await new AIEmployeeRepository().getById(aiEmployeeId)
-          } catch (error) { console.error(error.message); continue; }
+            aiEmployee = await new AIEmployeeRepository().getById(aiEmployeeId, { populate: [{ path: 'workspace' }] })
+          } catch (error) { continue; }
           aiEmployees.set(aiEmployeeId, aiEmployee)
         } else {
           aiEmployee = aiEmployees.get(aiEmployeeId)
         }
         if (!aiEmployee) continue;
 
-        // Create agent
-        const agent = await new GeneralAgent(aiEmployee).init();
+        // Get user
+        const user = (await new RepositoryHelper(User).find({ filter: { email: mail.from } }))[0]
+        if (!user) continue;
+
+        // Check user has access ai employee workspace
+        if ((aiEmployee.workspace as IWorkspace).users.find(u => u.user === user._id) === undefined) continue;
 
         // Execute call
-        const res = await agent.call(mail.text, [INTENTIONS.TASK_EXECUTION, INTENTIONS.INFORMATION_RETRIEVAL])
-        console.log(res);
+        const call = await aiEmployee.call({
+          input: mail.text,
+          user: user
+        })
+        const callResult: IAIEmployeeCall = await new Promise((resolve, reject) => {
+          try {
+            call.run().subscribe(call => {
+              if (call.status === 'done') { resolve(call); }
+            })
+          } catch (error) {
+            reject(error);
+          }
+        });
 
         // Answer email
         await mailService.send({
@@ -51,7 +67,7 @@ export class MailController extends ModelController<typeof Job> {
           replyTo: `${aiEmployee.name} - Cognum AI Employee <${aiEmployee.getEmail()}>`,
           to: mail.from,
           subject: 'Re: ' + mail.subject,
-          text: res.output,
+          html: callResult.output,
         })
         console.log('Email sent');
 
@@ -62,11 +78,8 @@ export class MailController extends ModelController<typeof Job> {
 
       return res.status(200).json({ message: 'Emails are checked' });
     } catch (error) {
-      if (error.message === 'Nothing to fetch') {
-        return res.status(200).json({ message: 'Emails are checked' });
-      }
-      console.error(error);
-      next(error)
+      console.error(`Check emails error: ${error.message}`);
+      return res.status(200).json({ message: 'Emails are checked' });
     }
   }
 }

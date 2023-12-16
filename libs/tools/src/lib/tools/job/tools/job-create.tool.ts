@@ -12,7 +12,7 @@ export class JobCreateTool extends DynamicStructuredTool {
       schema: z.object({
         name: z.string().describe('name of job or task to execute.'),
         frequency: z.string().describe('frequency to execute the job or task (examples: every 5 minutes, every 1 hour, every day at 7pm).'),
-        instructions: z.string().describe('instructions to execute the job or task.'),
+        instructions: z.string().describe('instructions to execute the job or task, break down the instructions into a detailed step-by-step guide, always aligned with your capabilities.'),
       }),
       metadata: { id: "job", tool: "create" },
       func: async ({ name, frequency, instructions }) => {

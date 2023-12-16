@@ -1,4 +1,6 @@
 export interface MailToolSettings {
+  from?: string,
+  replyTo?: string,
   auth: {
     user: string,
     pass: string
