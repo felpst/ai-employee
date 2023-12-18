@@ -41,6 +41,7 @@ export class ChatModel extends LangchainChatOpenAI {
       azureOpenAIApiDeploymentName,
       temperature: 0,
       ...(fields && fields),
+      verbose: false,
       streaming: true,
       callbacks,
     });

@@ -19,20 +19,22 @@
       </mat-error>
     </div>
 
-    <div class="cognum-form-row-4">
-      <span class="cognum-heading-4 title">Frequency</span>
-      <input
-        formControlName="frequency"
-        title="Describe how frequently your work should be performed"
-        type="text"
-        placeholder="Example: Run weekly once, on Wednesdays at 5 pm"
-      />
-      <mat-error
-        *ngIf="hasInputError('frequency', 'required')"
-        class="cognum-text-12 warning-message"
-      >
-        Frequency field is required
-      </mat-error>
+    <div formGroupName="scheduler">
+      <div class="cognum-form-row-4">
+        <span class="cognum-heading-4 title">Frequency</span>
+        <input
+          formControlName="frequency"
+          title="Describe how frequently your work should be performed"
+          type="text"
+          placeholder="Example: Run weekly once, on Wednesdays at 5 pm"
+        />
+        <mat-error
+          *ngIf="hasInputError('frequency', 'required')"
+          class="cognum-text-12 warning-message"
+        >
+          Frequency field is required
+        </mat-error>
+      </div>
     </div>
 
     <div class="cognum-form-row-4" *ngIf="!!job">
@@ -42,9 +44,8 @@
         aria-label="Status"
         formControlName="status"
       >
-        <option *ngFor="let status of statuses" [value]="status">
-          {{ status }}
-        </option>
+        <option value="running">Run</option>
+        <option value="stopped">Stop</option>
       </select>
       <mat-error
         *ngIf="hasInputError('status', 'inList')"

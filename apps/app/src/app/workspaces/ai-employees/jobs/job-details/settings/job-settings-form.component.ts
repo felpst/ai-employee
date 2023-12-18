@@ -7,7 +7,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { IJob } from '@cognum/interfaces';
 import { NotificationsService } from 'apps/app/src/app/services/notifications/notifications.service';
 import { DialogComponent } from 'apps/app/src/app/shared/dialog/dialog.component';
-import { inListValidator } from 'apps/app/src/app/shared/validations';
 import { AIEmployeesService } from '../../../ai-employees.service';
 import { JobsService } from '../../jobs.service';
 
@@ -22,10 +21,6 @@ export class JobSettingsFormComponent {
     showPreviewPanel: false,
   };
   isLoading = false;
-  statusOptions = [
-    { value: 'running', label: 'Run' },
-    { value: 'stopped', label: 'Stop' },
-  ]
 
   constructor(
     private formBuilder: FormBuilder,
@@ -37,29 +32,20 @@ export class JobSettingsFormComponent {
     private route: ActivatedRoute,
   ) {
     this.form = this.formBuilder.group({
-      name: ['', [Validators.required]],
-      instructions: ['', Validators.required],
-      frequency: ['', Validators.required],
-      status: ['Running', [Validators.required, inListValidator(this.statusOptions.map(({ value }) => value))]],
+      name: [this.job.name || '', [Validators.required]],
+      instructions: [this.job.instructions || '', Validators.required],
+      status: [this.job.status || 'running', [Validators.required]],
+      scheduler: this.formBuilder.group({
+        frequency: [this.job?.scheduler?.frequency || '', Validators.required],
+      }),
     });
-
-    this.initializeForm();
-  }
-
-  initializeForm(): void {
-    const { name, instructions, frequency, status } = this.job
-    this.form.get('name')?.patchValue(name);
-    this.form.get('instructions')?.patchValue(instructions);
-    this.form.get('frequency')?.patchValue(frequency);
-    this.form.get('status')?.patchValue(status);
   }
 
   async onSave() {
     this.isLoading = true;
-    const { status, ...rest } = this.form.value
-    const _status = status.toLowerCase();
-    const data = { ...this.job, ...rest, status: _status, aiEmployee: this.aiEmployee._id }
-    return this.jobsService.update(data).subscribe({
+    const job: Partial<IJob> = this.form.value
+    job.aiEmployee = this.aiEmployee._id
+    return this.jobsService.update({ _id: this.job._id, ...job }).subscribe({
       next: (res) => this.handleSuccess('Successfully updated job', res),
       error: (error) => this.handleError('Error updating job. Please try again.', error)
     });

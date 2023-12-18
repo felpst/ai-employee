@@ -1,11 +1,11 @@
 import { By } from "selenium-webdriver";
-import { WebBrowser } from "../../../web-browser/web-browser";
+import { WebBrowser } from "../../web-browser/web-browser";
 
 export class SelectFilterUseCase {
 
   constructor(
     private webBrowser: WebBrowser
-  ) {}
+  ) { }
 
   async execute(filterButton: 'Jobs' | 'People' | 'Services' | 'Posts' | 'Groups' | 'Companies') {
     console.log(`Clicking "${filterButton}" filter button...`);
