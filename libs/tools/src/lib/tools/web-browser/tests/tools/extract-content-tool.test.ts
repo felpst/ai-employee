@@ -30,7 +30,17 @@ describe('Extract Content Tool test', () => {
         const inputText = 'extract data of ten first teams of the La liga Table';
         const result = await executor.call({ input: inputText });
         console.log(result.output);
-        expect(result.output).toContain('Girona')
+        expect(result.output).toContain('Girona');
+        expect(result.output).toContain('Real Madrid');
+        expect(result.output).toContain('Barcelona');
+    })
+
+    it('should find element selectorType and selector of div', async () => {
+        await service.loadPage('https://www.tibia.com/news/?subtopic=latestnews');
+        const inputText = 'extract data of news ticker of tibia';
+        const result = await executor.call({ input: inputText });
+        console.log(result.output);
+        expect(result.output).toContain('Winter Update 2023');
     })
 
 });

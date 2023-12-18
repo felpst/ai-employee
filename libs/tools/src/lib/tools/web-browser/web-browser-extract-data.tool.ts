@@ -26,7 +26,6 @@ export class WebBrowserExtractDataTool extends DynamicStructuredTool {
             findTimeout
           });
           const json = JSON.stringify(extractData);
-          console.log(json);
           return json;
         } catch (error) {
           return error.message;

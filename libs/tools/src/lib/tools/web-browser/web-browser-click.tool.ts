@@ -1,5 +1,5 @@
 import { DynamicStructuredTool } from 'langchain/tools';
-import { IElementFindOptions, elementSchema } from './common/element-schema';
+import { z } from 'zod';
 import { WebBrowserService } from './web-browser.service';
 import { WebBrowserToolSettings } from './web-browser.toolkit';
 
@@ -9,18 +9,22 @@ export class WebBrowserClickTool extends DynamicStructuredTool {
       name: 'Web Browser Click',
       metadata: { id: "web-browser", tool: 'click' },
       description: 'Use this tool to click an element on an web browser page.',
-      schema: elementSchema,
+      schema: z.object({
+        context: z.string().describe("context of the element to click."),
+        findTimeout: z.number().optional().default(10000).describe("timeout to find the element in ms."),
+      }),
       func: async ({
-        elementSelector,
-        selectorType,
+        context,
         findTimeout
-      }: IElementFindOptions) => {
+      }) => {
         try {
           const browserService = new WebBrowserService(settings.webBrowser);
+          const element = await browserService.findElementByContext(context)
+
 
           const success = await browserService.clickElement({
-            elementSelector,
-            selectorType,
+            elementSelector: element.selector,
+            selectorType: element.selectorType,
             findTimeout
           });
           if (!success) throw new Error("It was'nt possible to click the element");
