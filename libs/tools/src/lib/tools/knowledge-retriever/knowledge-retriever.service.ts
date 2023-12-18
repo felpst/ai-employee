@@ -35,7 +35,10 @@ export class KnowledgeRetrieverService {
     const run = await this._client.beta.threads.runs.create(thread.id, {
       assistant_id: assistantId,
       instructions: `You are a smart assistant that retrieves information using your knowledge. Your answer to the questions must be as objective as possible.`,
-      tools: [{ type: 'retrieval' }],
+      tools: [
+        { type: 'retrieval' },
+        { type: 'code_interpreter' }
+      ],
       model: "gpt-4-1106-preview"
     });
 
