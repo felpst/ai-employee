@@ -1,12 +1,10 @@
+import { Knowledge, Workspace } from '@cognum/models';
+import { KnowledgeRetrieverService } from '@cognum/tools';
 import { DynamicTool } from 'langchain/tools';
-import OpenAI from 'openai';
 import { KnowledgeRetrieverToolSettings } from './knowledge-retriever.interfaces';
-import { KnowledgeRetrieverService } from './knowledge-retriever.service';
 
 export class KnowledgeRetrieverTool extends DynamicTool {
   constructor(settings: KnowledgeRetrieverToolSettings) {
-    const openai = new OpenAI();
-
     super({
       name: 'Knowledge Retriever',
       metadata: { id: "knowledge-retriever" },
@@ -14,7 +12,14 @@ export class KnowledgeRetrieverTool extends DynamicTool {
       func: async (input: string) => {
         try {
           console.log('Knowledge Retriever', { input, settings });
-          return await new KnowledgeRetrieverService(settings).question(input)
+
+          const { openaiAssistantId } = await Workspace.findById(settings.workspaceId).lean();
+          const knowledges = (await Knowledge.find({ workspace: settings.workspaceId }).select('openaiFileId').lean());
+
+          const fileIds = knowledges.map(({ openaiFileId }) => openaiFileId);
+
+          return await new KnowledgeRetrieverService()
+            .askToAssistant(input, openaiAssistantId, fileIds);
         } catch (error) {
           console.error(error);
           return error.message;

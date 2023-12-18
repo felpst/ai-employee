@@ -1,4 +1,5 @@
 import { IAIEmployee, IAIEmployeeCall, IAIEmployeeCallStep } from "@cognum/interfaces";
+import { Knowledge, Workspace } from '@cognum/models';
 import { KnowledgeRetrieverService } from "@cognum/tools";
 import { BehaviorSubject } from "rxjs";
 import { INTENTIONS } from "../../utils/intent-classifier/intent-classifier.util";
@@ -38,15 +39,15 @@ export class InformationRetrievalAgent {
         result = await this.searchOnKnowledgeBase(options);
         if (result.accuracy) { saveAnswer = false; }
       } catch (error) {
-        console.error('knowledgeBaseResult', error.message)
+        console.error('knowledgeBaseResult', error.message);
       }
 
       // Search using tools
       if (!result.accuracy) {
         try {
-          result = await this.searchOnTools(options)
+          result = await this.searchOnTools(options);
         } catch (error) {
-          console.error('Search using tools', error.message)
+          console.error('Search using tools', error.message);
         }
       }
 
@@ -68,7 +69,7 @@ export class InformationRetrievalAgent {
 
     if (result.accuracy && saveAnswer) {
       // Salvar Resposta
-      await this.updateMemory(options, result)
+      await this.updateMemory(options, result);
     }
 
     // Retornar a resposta
@@ -91,10 +92,10 @@ export class InformationRetrievalAgent {
       status: 'running',
       startAt: new Date(),
       endAt: null
-    }
+    };
     const index = call.steps.push(step);
-    await call.save()
-    $call.next(call)
+    await call.save();
+    $call.next(call);
 
     // Memory Search
     const memorySearchResult = await aiEmployee.memorySearch(options.question);
@@ -108,9 +109,9 @@ export class InformationRetrievalAgent {
     step.endAt = new Date();
 
     // Update call
-    call.steps[index - 1] = step
-    await call.save()
-    $call.next(call)
+    call.steps[index - 1] = step;
+    await call.save();
+    $call.next(call);
 
     return step.outputs;
   }
@@ -131,15 +132,23 @@ export class InformationRetrievalAgent {
       status: 'running',
       startAt: new Date(),
       endAt: null
-    }
+    };
     const index = call.steps.push(step);
-    await call.save()
-    $call.next(call)
+    await call.save();
+    $call.next(call);
 
     // Knowledge Base Search
-    const knowledgeRetrieverService = new KnowledgeRetrieverService({ workspaceId: aiEmployee.workspace.toString() })
-    const knowledgeBaseResponse = await knowledgeRetrieverService.question(question)
-    const accuracy = await aiEmployee.checkValidAnswer(question, knowledgeBaseResponse)
+    const knowledgeRetrieverService = new KnowledgeRetrieverService();
+
+    const { openaiAssistantId } = await Workspace.findById(aiEmployee.workspace.toString()).lean();
+    const knowledges =
+      (await Knowledge.find({ workspace: aiEmployee.workspace.toString() })
+        .select('openaiFileId').lean());
+    const fileIds = knowledges.map(({ openaiFileId }) => openaiFileId);
+
+    const knowledgeBaseResponse = await knowledgeRetrieverService
+      .askToAssistant(question, openaiAssistantId, fileIds);
+    const accuracy = await aiEmployee.checkValidAnswer(question, knowledgeBaseResponse);
 
     // TODO token usage
     step.outputs = {
@@ -150,9 +159,9 @@ export class InformationRetrievalAgent {
     step.endAt = new Date();
 
     // Update call
-    call.steps[index - 1] = step
-    await call.save()
-    $call.next(call)
+    call.steps[index - 1] = step;
+    await call.save();
+    $call.next(call);
 
     return {
       text: knowledgeBaseResponse,
@@ -166,7 +175,7 @@ export class InformationRetrievalAgent {
     // Search using tools
     const searchOnToolsResult: IInformationRetrievalAgentOutput = await new Promise(async resolve => {
       console.log('Searching using tools');
-      const agentTools = new AgentTools()
+      const agentTools = new AgentTools();
       const output = await agentTools.call({
         $call,
         aiEmployee,
@@ -176,11 +185,11 @@ export class InformationRetrievalAgent {
       });
       if (output === 'NOT_POSSIBLE_TO_EXECUTE_THIS_ACTION') {
         console.log('Search on tools not possible');
-        resolve({ text: "I don't know", accuracy: false })
+        resolve({ text: "I don't know", accuracy: false });
       }
-      const accuracy = await aiEmployee.checkValidAnswer(question, output)
-      resolve({ text: output, accuracy })
-    })
+      const accuracy = await aiEmployee.checkValidAnswer(question, output);
+      resolve({ text: output, accuracy });
+    });
 
     return searchOnToolsResult;
   }
@@ -201,14 +210,14 @@ export class InformationRetrievalAgent {
       status: 'running',
       startAt: new Date(),
       endAt: null
-    }
+    };
     const index = call.steps.push(step);
-    await call.save()
-    $call.next(call)
+    await call.save();
+    $call.next(call);
 
     // Update AIEmployee Memory
-    const instruction = `Check if there is any relevant information in this information to add to the database:` + JSON.stringify({ question, answer: result.text })
-    const memoryInstructionResult = await aiEmployee.memoryInstruction(instruction, context)
+    const instruction = `Check if there is any relevant information in this information to add to the database:` + JSON.stringify({ question, answer: result.text });
+    const memoryInstructionResult = await aiEmployee.memoryInstruction(instruction, context);
     console.log('memoryInstructionResult', JSON.stringify(memoryInstructionResult));
 
     // TODO token usage
@@ -220,9 +229,9 @@ export class InformationRetrievalAgent {
     step.endAt = new Date();
 
     // Update call
-    call.steps[index - 1] = step
-    await call.save()
-    $call.next(call)
+    call.steps[index - 1] = step;
+    await call.save();
+    $call.next(call);
 
     return result;
   }
