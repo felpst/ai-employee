@@ -1,4 +1,5 @@
-import { BrowserType, WebBrowser } from "../../web-browser/web-browser";
+import { BrowserType } from "@cognum/interfaces";
+import { WebBrowser } from "../../web-browser";
 
 export class StartUseCase {
 

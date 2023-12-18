@@ -12,7 +12,7 @@ export class SQLConnectorTool extends DynamicTool {
         id: "sql-connector"
       },
       description:
-        'Use this tool to search new information on the database. Input should be a question to database.',
+        'Use this tool to search information or specific data on the database. Input should be a question to database.',
       func: async (input: string) => {
         try {
           const { data } = await axios.post(`${process.env.PYTHON_SERVICE_URL}/sql-connector`, {

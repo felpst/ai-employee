@@ -84,7 +84,7 @@ export class RepositoryHelper<T extends any | any[]> {
     if (!query.filter) { query.filter = {}; }
     query.filter._id = _id;
     const list = await this.find(query)
-    if (!list.length) { throw new Error('Document not found'); }
+    if (!list.length) { throw new Error(`Document not found: ${_id}`); }
     return list[0];
   }
 

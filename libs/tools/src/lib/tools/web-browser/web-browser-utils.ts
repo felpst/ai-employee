@@ -1,7 +1,7 @@
-import { WebBrowser } from '.';
+import { IWebBrowser } from '@cognum/interfaces';
 import { ElementSelector } from './common/element-schema';
 export default class WebBrowserUtils {
-  constructor(protected webBrowser: WebBrowser) { }
+  constructor(protected webBrowser: IWebBrowser) { }
 
   async getHtmlFromElement(selector: string, selectorType?: ElementSelector): Promise<string> {
     switch (selectorType) {

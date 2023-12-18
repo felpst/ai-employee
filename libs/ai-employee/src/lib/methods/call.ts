@@ -12,9 +12,12 @@ export async function aiEmployeeCall(data: IAIEmployeeCallData): Promise<IAIEmpl
   const call = await repository.create({
     input: data.input,
     aiEmployee: this._id,
-    createdBy: data.user,
-    updatedBy: data.user,
-    context: data.context || {},
+    createdBy: data.user._id.toString(),
+    updatedBy: data.user._id.toString(),
+    context: {
+      user: data.user,
+      ...data.context
+    },
   }) as IAIEmployeeCall;
   await call.populate('aiEmployee');
   return call;
