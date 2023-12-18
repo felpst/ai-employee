@@ -9,7 +9,6 @@ import {
 import { IJob, IUser } from '@cognum/interfaces';
 import { NotificationsService } from 'apps/app/src/app/services/notifications/notifications.service';
 import { DialogComponent } from 'apps/app/src/app/shared/dialog/dialog.component';
-import { inListValidator } from 'apps/app/src/app/shared/validations';
 import { AIEmployeesService } from '../../ai-employees.service';
 import { JobsService } from '../jobs.service';
 
@@ -19,7 +18,6 @@ import { JobsService } from '../jobs.service';
   styleUrls: ['./job-form.component.scss'],
 })
 export class JobFormComponent {
-  job: IJob | undefined;
   members: IUser[] = [];
   fileName: string | undefined;
   form!: FormGroup;
@@ -28,7 +26,6 @@ export class JobFormComponent {
   };
   isLoading = false;
   creatorId: string | undefined;
-  statuses = ['Running', 'Done']
 
   constructor(
     private formBuilder: FormBuilder,
@@ -37,45 +34,33 @@ export class JobFormComponent {
     private dialogRef: MatDialogRef<JobFormComponent>,
     private notificationsService: NotificationsService,
     private employeesService: AIEmployeesService,
-    @Inject(MAT_DIALOG_DATA)
-    private data: {
-      job: IJob;
-    }
+    @Inject(MAT_DIALOG_DATA) private data: { job: IJob; }
   ) {
-    this.job = this.data.job;
     this.form = this.formBuilder.group({
-      name: ['', [Validators.required]],
-      instructions: ['', Validators.required],
-      frequency: ['', Validators.required],
-      status: ['Running', [Validators.required, inListValidator(this.statuses)]]
+      name: [data.job?.name || '', [Validators.required]],
+      status: [data.job?.status || 'running', [Validators.required]],
+      instructions: [data.job?.instructions || '', Validators.required],
+      scheduler: this.formBuilder.group({
+        frequency: [data.job?.scheduler?.frequency || '', Validators.required],
+      }),
     });
-
-    this.initializeForm();
   }
 
-  initializeForm(): void {
-    const { job } = this.data
-    if (job) {
-      const { name, instructions, frequency, status } = job
-      this.form.get('name')?.patchValue(name);
-      this.form.get('instructions')?.patchValue(instructions);
-      this.form.get('frequency')?.patchValue(frequency);
-      this.form.get('status')?.patchValue(status);
-    }
+  get job() {
+    return this.data.job;
   }
 
   async onSave() {
     this.isLoading = true;
-    const { status, ...rest } = this.form.value
-    const _status = status.toLowerCase();
-    const data = { ...this.job, ...rest, status: _status, aiEmployee: this.aiEmployee._id }
-    if (this.job) {
-      return this.jobsService.update(data).subscribe({
+    const job: Partial<IJob> = this.form.value
+    job.aiEmployee = this.aiEmployee._id
+
+    if (this.data.job) {
+      return this.jobsService.update(job).subscribe({
         next: (res) => this.handleSuccess('Successfully updated job', res),
-        error: (error) => this.handleError('Error updating job. Please try again.', error)
+        error: (error) => this.handleError('Error updating job. Please try again.', error),
       });
-    }
-    else return this.jobsService.create(data).subscribe({
+    } else return this.jobsService.create(job).subscribe({
       next: (res) => this.handleSuccess('Successfully created job', res),
       error: (error) => this.handleError('Error creating job. Please try again.', error)
     });
@@ -103,8 +88,8 @@ export class JobFormComponent {
     });
 
     dialogRef.afterClosed().subscribe((result) => {
-      if (result && this.job) {
-        this.jobsService.delete(this.job).subscribe({
+      if (result && this.data.job) {
+        this.jobsService.delete(this.data.job).subscribe({
           next: (res) => {
             this.notificationsService.show('Successfully deleted job');
             this.dialogRef.close(res);

@@ -2,11 +2,15 @@ import { Schema } from 'mongoose';
 import { IAIEmployee } from './ai-employee';
 import { DefaultModel } from './default.model';
 
-export interface ICronJob {
+export interface IJobScheduler {
   name?: string;
   description?: string;
   schedule?: string;
   timeZone?: string;
+  runOnce?: boolean;
+  frequency?: string;
+  startAt?: Date;
+  endAt?: Date;
   httpTarget?: {
     httpMethod: 'POST' | 'GET' | 'PUT' | 'DELETE' | 'PATCH';
     uri: string;
@@ -17,9 +21,8 @@ export interface IJob extends DefaultModel {
   _id?: string;
   name: string;
   instructions: string;
-  frequency: string;
   context?: any;
-  cron?: ICronJob;
+  scheduler?: IJobScheduler;
   status: 'running' | 'stopped';
   aiEmployee: Schema.Types.ObjectId | IAIEmployee;
 }

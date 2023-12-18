@@ -1,5 +1,5 @@
 import { RepositoryHelper } from "@cognum/helpers";
-import { IAIEmployee, IAgentCall } from "@cognum/interfaces";
+import { IAIEmployee, IAIEmployeeCallDataContext, IAgentCall } from "@cognum/interfaces";
 import { AgentCall } from "@cognum/models";
 import { AgentExecutor } from "langchain/agents";
 import * as _ from 'lodash';
@@ -9,7 +9,7 @@ import { AgentAIEmployeeHandlers } from "./agent-ai-employee/agent-ai-employee-h
 export class Agent {
   agent = 'Agent';
   // memory: AIEmployeeMemory = new AIEmployeeMemory();
-  context: any = {};
+  context: IAIEmployeeCallDataContext;
 
   _executor: AgentExecutor;
   handlers = new AgentAIEmployeeHandlers();

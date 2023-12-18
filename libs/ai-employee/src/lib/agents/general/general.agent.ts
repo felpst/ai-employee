@@ -1,4 +1,4 @@
-import { IAIEmployee, IAgentCall } from "@cognum/interfaces";
+import { IAIEmployee, IAgentCall, IUser } from "@cognum/interfaces";
 import { ChatModel } from "@cognum/llm";
 import { JobService } from "@cognum/tools";
 import { initializeAgentExecutorWithOptions } from "langchain/agents";
@@ -20,39 +20,28 @@ export class GeneralAgent extends Agent {
     const agentCall = await this._initCall(input, intentions.join(','));
     const model = new ChatModel();
 
+    // Tools
     const tools = AIEmployeeTools.intetionTools({
       aiEmployee: this.aiEmployee,
       intentions
     })
-
-    // Resource: Job
+    // Jobs Toolkit
     if (this.context.user) {
+      console.log('Create job tool added')
       const jobService = new JobService({ aiEmployee: this.aiEmployee, user: this.context.user });
       tools.push(...jobService.toolkit() as Tool[]);
     }
+    const filteredTools = await AIEmployeeTools.filterByContext(tools, input)
 
     let prefix = `Your name is ${this.aiEmployee.name} and your role is ${this.aiEmployee.role}. `
-    const user = this.context.user ? this.context.user.name : 'User'
-    if (user) {
-      prefix += `You are talking with ${user.name} <${user.mail}>.`
-    }
+    prefix += `You are talking with ${this.context.user.name} <${this.context.user.email}>.`
     prefix += `You need to answer best as you can trying different tools to execute the job and achieve the goal.`
 
-    // Context
-    if (this.context) {
-      const treeObj = treeify.asTree(this.context, true)
-      console.log(treeObj);
+    const formattedContext = this.formatContext();
+    if (formattedContext) prefix += `\n\n${formattedContext}`
 
-      prefix += `\nBelow you have access to the context of your interaction with the user, take the context into account when making your decisions.
-      Context:
-      \`\`\`objectTree
-      ${treeObj}
-      \`\`\``
-    }
-
-    this._executor = await initializeAgentExecutorWithOptions(tools, model, {
+    this._executor = await initializeAgentExecutorWithOptions(filteredTools, model, {
       agentType: "structured-chat-zero-shot-react-description",
-      verbose: process.env.DEBUG === 'true',
       memory: new BufferMemory({
         memoryKey: "chat_history",
         returnMessages: true,
@@ -72,5 +61,31 @@ export class GeneralAgent extends Agent {
 
     await this._afterCall(agentCall, chainValues.output);
     return agentCall;
+  }
+
+  formatContext() {
+    // Context
+    if (this.context) {
+      // Date time
+      this.context.dateNow = new Date().toISOString()
+
+      if (this.context.user) {
+        const user: Partial<IUser> = this.context.user
+        this.context.user = {
+          _id: user._id,
+          name: user.name,
+          email: user.email,
+        }
+      }
+
+      const treeObj = treeify.asTree(this.context, true)
+      const formattedContext = `\nBelow you have access to the context of your interaction with the user, take the context into account when making your decisions.
+      Context:
+      \`\`\`objectTree
+      ${treeObj}
+      \`\`\`\n\n`
+      return formattedContext;
+    }
+    return ''
   }
 }

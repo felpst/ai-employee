@@ -1,8 +1,13 @@
 import { ToolsHelper } from "@cognum/helpers";
 import { IAIEmployee, IToolSettings } from "@cognum/interfaces";
+import { ChatModel, EmbeddingsModel } from "@cognum/llm";
 import { GoogleCalendarCreateEventTool, GoogleCalendarDeleteEventTool, GoogleCalendarListEventsTool, GoogleCalendarUpdateEventTool, KnowledgeRetrieverTool, LinkedInFindLeadsTool, MailToolSettings, MailToolkit, PythonTool, RandomNumberTool, SQLConnectorTool, WebBrowserToolkit } from "@cognum/tools";
+import { Document } from "langchain/document";
+import { ContextualCompressionRetriever } from "langchain/retrievers/contextual_compression";
+import { LLMChainExtractor } from "langchain/retrievers/document_compressors/chain_extract";
 import { DynamicStructuredTool, SerpAPI, Tool } from "langchain/tools";
 import { Calculator } from "langchain/tools/calculator";
+import { HNSWLib } from "langchain/vectorstores/hnswlib";
 import { INTENTIONS } from "../utils/intent-classifier/intent-classifier.util";
 
 export class AIEmployeeTools {
@@ -121,5 +126,50 @@ export class AIEmployeeTools {
         }
         return tools;
     }
+  }
+
+  static async filterByContext(tools: (Tool[] | DynamicStructuredTool[]), input: string) {
+    const model = new ChatModel();
+    const baseCompressor = LLMChainExtractor.fromLLM(model);
+
+    const docs = tools.map((tool: any) => {
+      return new Document({
+        pageContent: `Tool ${tool.name}: ${tool.description}`,
+        metadata: {
+          id: tool.metadata.id || tool.id,
+          tool: tool.metadata.tool || undefined,
+          schema: JSON.stringify(tool.schema || {}),
+        }
+      })
+    })
+
+    // Create a vector store from the documents.
+    const vectorStore = await HNSWLib.fromDocuments(docs, new EmbeddingsModel());
+
+    const retriever = new ContextualCompressionRetriever({
+      baseCompressor,
+      baseRetriever: vectorStore.asRetriever(3),
+    });
+
+    const retrievedDocs = await retriever.getRelevantDocuments(
+      `Task: ${input}\n\nWhich tools are relevant to execute this task?`
+    );
+
+    console.log({ retrievedDocs });
+
+    const filteredTools = [];
+    for (const tool of tools) {
+      if (retrievedDocs.find(doc => doc.metadata.id === tool.metadata.id)) {
+        if (tool.metadata.tool) {
+          if (retrievedDocs.find(doc => doc.metadata.tool === tool.metadata.tool)) {
+            filteredTools.push(tool)
+          }
+        } else {
+          filteredTools.push(tool)
+        }
+      }
+    }
+
+    return filteredTools;
   }
 }

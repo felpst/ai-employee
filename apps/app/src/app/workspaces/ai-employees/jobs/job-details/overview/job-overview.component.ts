@@ -23,13 +23,14 @@ export class JobOverviewComponent {
     console.log('onExecute');
     this.loading = true;
     this.jobsService.execute(this.job).subscribe({
-      next: (result) => {
-        console.log(result);
-        this.notificationsService.show('Job executed successfully: ' + result.callResult.output)
+      next: (response) => {
+        console.log(response);
+        this.notificationsService.show('Job executed successfully: ' + response.result.output)
       },
       error: (error) => {
         console.error(error);
-        this.notificationsService.show('Error executing job: ' + error.message)
+        this.notificationsService.show('Error executing job: ' + error.error.message)
+        this.loading = false;
       },
       complete: () => {
         this.loading = false;

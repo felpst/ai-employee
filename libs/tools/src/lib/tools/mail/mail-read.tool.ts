@@ -8,7 +8,7 @@ export class MailReadTool extends DynamicStructuredTool {
   constructor(settings: MailToolSettings) {
     super({
       name: 'Read Email',
-      description: 'Use to get and read email.',
+      description: 'Use to read emails from inbox, you can filter by date, sender and subject.',
       schema: z.object({
         qt: z.number().default(10).describe('number of emails to be read.'),
         date: z.string().describe('date of the email.').optional(),

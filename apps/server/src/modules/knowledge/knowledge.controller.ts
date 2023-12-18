@@ -230,9 +230,10 @@ export class KnowledgeController extends ModelController<typeof Knowledge> {
 
           if (knowledge.htmlUpdateFrequency) {
             const cron = await CronService.fromText(knowledge.htmlUpdateFrequency);
+            knowledge.htmlUpdateFrequency = cron.formattedInput;
             await new SchedulerService().createJob({
               name: `knowledge-${knowledgeId}-content-update`,
-              schedule: cron,
+              schedule: cron.formattedCron,
               httpTarget: {
                 uri: `${process.env.SERVER_URL}/knowledges/${knowledgeId}/scheduled-update`,
                 httpMethod: 'PATCH',

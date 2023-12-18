@@ -1,6 +1,8 @@
 import { ObjectId } from "mongoose";
 import { Observable } from "rxjs";
+import { IChatMessage, IChatRoom } from "../chats";
 import { DefaultModel } from "../default.model";
+import { IJob } from "../job.interface";
 import { IUser } from "../user.interface";
 import { IAIEmployee } from "./ai-employee.interfaces";
 
@@ -31,9 +33,17 @@ export interface IAIEmployeeCallStep {
   endAt: Date;
 }
 
+export interface IAIEmployeeCallDataContext {
+  input?: string;
+  user?: Partial<IUser>;
+  job?: Partial<IJob>;
+  chatRoom?: Partial<IChatRoom>
+  chatMessages?: Partial<IChatMessage>[];
+  dateNow?: string;
+}
 
 export interface IAIEmployeeCallData {
   input: string;
-  user: IUser;
-  context?: any;
+  user: Partial<IUser>;
+  context?: IAIEmployeeCallDataContext;
 }
