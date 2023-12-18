@@ -1,13 +1,32 @@
 import { IWebBrowser } from '@cognum/interfaces';
+import { ChatModel, EmbeddingsModel } from '@cognum/llm';
 import { By, until } from 'selenium-webdriver';
 import { IElementFindOptions } from './common/element-schema';
 import { ExtractDataUseCase } from './usecases/extract-data.usecase';
 import { FindElementUseCase } from './usecases/find-element.usecase';
 
+
+import { ContextualCompressionRetriever } from "langchain/retrievers/contextual_compression";
+import { LLMChainExtractor } from "langchain/retrievers/document_compressors/chain_extract";
+import { RecursiveCharacterTextSplitter } from "langchain/text_splitter";
+import { HNSWLib } from "langchain/vectorstores/hnswlib";
+import WebBrowserUtils from './web-browser-utils';
+
 export class WebBrowserService {
+  currentURL: string;
+  retriever: ContextualCompressionRetriever;
+
   constructor(
     private webBrowser: IWebBrowser
   ) { }
+
+  async checkCurrentURLUpdated() {
+    await this.webBrowser.driver.sleep(5000);
+    const currentURL = await this.webBrowser.driver.getCurrentUrl();
+    if (this.currentURL === currentURL) return;
+    this.currentURL = currentURL;
+    await this.prepareVectorBase();
+  }
 
   async loadPage(url: string): Promise<boolean> {
     this.webBrowser.driver.get(url);
@@ -16,9 +35,9 @@ export class WebBrowserService {
       console.log(`Waiting for page load: ${url}`);
       const currentUrl = await this.webBrowser.driver.getCurrentUrl();
       if (currentUrl.includes(url)) {
+        await this.checkCurrentURLUpdated()
         return true;
       }
-      await this.webBrowser.driver.sleep(5000);
     }
     return false;
   }
@@ -32,7 +51,7 @@ export class WebBrowserService {
 
     if (!element) return false;
     await element.click();
-
+    await this.checkCurrentURLUpdated()
     return true;
   }
 
@@ -77,6 +96,49 @@ export class WebBrowserService {
   }
 
   async findElementByContext(context: string): Promise<any> {
+    const useCase = new FindElementUseCase(this.webBrowser)
+    const relevantContext = await this.retrieveRelevantContext(context);
+    const result = await useCase.findElementByContext(context, relevantContext);
+    return result;
+  }
+
+  async prepareVectorBase() {
+    console.log('prepareVectorBase...');
+    const source = await this.getPageSource();
+
+    // fazer o loader para docs
+    const model = new ChatModel();
+    const baseCompressor = LLMChainExtractor.fromLLM(model);
+
+    const textSplitter = new RecursiveCharacterTextSplitter({ chunkSize: 2000 });
+    const docs = await textSplitter.createDocuments([source]);
+
+    // Create a vector store from the documents.
+    const vectorStore = await HNSWLib.fromDocuments(docs, new EmbeddingsModel());
+
+    this.retriever = new ContextualCompressionRetriever({
+      baseCompressor,
+      baseRetriever: vectorStore.asRetriever(),
+    });
+  }
+
+  async retrieveRelevantContext(context: string): Promise<any> {
+    const retrievedDocs = await this.retriever.getRelevantDocuments(
+      `Task: You need to identify the original element in the html page source code using the context.
+      Context: ${context}`
+    );
+
+    console.log({ retrievedDocs });
+    return retrievedDocs.map(doc => doc.pageContent).join('\n');
+  }
+
+  async getPageSource(): Promise<string> {
+    const webBrowserUtils = new WebBrowserUtils(this.webBrowser)
+    const source = await webBrowserUtils.getHtmlFromElement('body')
+    return source;
+  }
+
+  async findElementByContextBkp(context: string): Promise<any> {
     const element = await new FindElementUseCase(this.webBrowser).execute(context);
     return element;
   }
@@ -121,6 +183,7 @@ export class WebBrowserService {
         async () => {
           await this.webBrowser.driver.actions().keyUp(key).perform();
           combination.map(async k => await this.webBrowser.driver.actions().keyUp(k).perform());
+          await this.checkCurrentURLUpdated()
           return `Keys ${key}, ${combination.join(',')} pressed`;
         },
         (error) => {
@@ -131,6 +194,7 @@ export class WebBrowserService {
       return await this.webBrowser.driver.actions().keyDown(key).perform().then(
         async () => {
           await this.webBrowser.driver.actions().keyUp(key).perform();
+          await this.checkCurrentURLUpdated()
           return `Key ${key} pressed`;
         },
         (error) => {
