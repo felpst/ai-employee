@@ -3,7 +3,7 @@ import * as nodemailer from 'nodemailer';
 import { Email, MailFilters, MailToolSettings, SendMailData } from './mail.interfaces';
 const Imap = require('imap');
 const moment = require('moment');
-
+var markdown = require('nodemailer-markdown').markdown;
 export class MailService {
 
   constructor(
@@ -16,6 +16,7 @@ export class MailService {
         from: this.settings.from || emailData.from,
         to: emailData.to,
         replyTo: this.settings.replyTo || emailData.replyTo,
+        inReplyTo: emailData.inReplyTo || undefined,
         cc: emailData.cc,
         bcc: emailData.bcc,
         subject: emailData.subject,
@@ -33,6 +34,37 @@ export class MailService {
         },
       };
       const transporter = nodemailer.createTransport(transport);
+
+      transporter.sendMail(mailOptions, (error) => {
+        return error ? reject(error) : resolve();
+      });
+    });
+  }
+
+  sendMarkdown(emailData: SendMailData): Promise<void> {
+    return new Promise((resolve, reject) => {
+      const mailOptions = {
+        from: this.settings.from || emailData.from,
+        to: emailData.to,
+        replyTo: this.settings.replyTo || emailData.replyTo,
+        inReplyTo: emailData.inReplyTo || undefined,
+        cc: emailData.cc,
+        bcc: emailData.bcc,
+        subject: emailData.subject,
+        markdown: emailData.text ? emailData.text : emailData.html
+      };
+
+      const transport = {
+        host: this.settings.smtp.host,
+        port: this.settings.smtp.port,
+        secure: this.settings.smtp.tls,
+        auth: {
+          user: this.settings.auth.user,
+          pass: this.settings.auth.pass,
+        },
+      };
+      const transporter = nodemailer.createTransport(transport);
+      transporter.use('compile', markdown())
 
       transporter.sendMail(mailOptions, (error) => {
         return error ? reject(error) : resolve();

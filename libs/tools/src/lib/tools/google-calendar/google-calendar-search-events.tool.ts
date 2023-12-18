@@ -5,25 +5,29 @@ import { GoogleCalendarToolkitSettings } from './google-calendar.interfaces';
 import { GoogleCalendarService } from './google-calendar.service';
 
 
-export class GoogleCalendarListEventsTool extends DynamicStructuredTool {
+export class GoogleCalendarSeachEventsTool extends DynamicStructuredTool {
   constructor(settings: GoogleCalendarToolkitSettings) {
     super({
-      name: 'Google Calendar List Events',
-      metadata: { id: "google-calendar", tool: 'list' },
-      description: 'Use this tool to search the calendar for upcoming meetings or events.',
+      name: 'Google Calendar Search',
+      metadata: { id: "google-calendar", tool: 'search' },
+      description: 'Use this tool to search for upcoming meetings or events.',
       schema: z.object({
+        q: z.string().describe('text to search').optional().default(''),
         maxResults: z.number().describe('quantity of events to list').optional().default(100),
-        orderBy: z.enum(['startTime', 'updated']).describe('order of events just startTime or updated are allowed').optional().default('startTime'),
       }),
-      func: async ({ maxResults, orderBy }) => {
+      func: async ({ q, maxResults }) => {
         try {
+          console.log({ q, maxResults });
+          console.log({ settings });
+
           const googleCalendarService = new GoogleCalendarService(settings.token);
           const options: calendar_v3.Params$Resource$Events$List = {
+            q,
             calendarId: 'primary',
             timeMin: new Date().toISOString(),
             singleEvents: true,
             maxResults,
-            orderBy,
+            orderBy: 'startTime',
             timeZone: settings.user.timezone
           }
           const eventList = await googleCalendarService.listEvents(options);

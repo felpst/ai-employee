@@ -16,7 +16,7 @@ export interface IAIEmployeeCall extends DefaultModel {
   status: 'not_started' | 'running' | 'done';
   startAt: Date;
   endAt: Date;
-  context: any;
+  context: IAIEmployeeCallDataContext;
   aiEmployee: string | ObjectId | IAIEmployee;
 
   run(): Observable<IAIEmployeeCall>;
@@ -34,12 +34,12 @@ export interface IAIEmployeeCallStep {
 }
 
 export interface IAIEmployeeCallDataContext {
-  input?: string;
   user?: Partial<IUser>;
   job?: Partial<IJob>;
   chatRoom?: Partial<IChatRoom>
   chatMessages?: Partial<IChatMessage>[];
   dateNow?: string;
+  chatChannel?: 'chat' | 'email' | 'sms' | 'whatsapp' | 'scheduled_task';
 }
 
 export interface IAIEmployeeCallData {

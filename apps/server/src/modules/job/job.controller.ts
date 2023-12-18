@@ -55,6 +55,7 @@ export class JobController extends ModelController<typeof Job> {
   public async execute(req: Request, res: Response, next: NextFunction) {
     try {
       const id = req.params.id;
+      const force = req.query.force === 'true';
 
       // Job
       const job = await Job.findById(id);
@@ -69,7 +70,7 @@ export class JobController extends ModelController<typeof Job> {
       if (!aiEmployee) { throw new Error('AI Employee not found'); }
 
       // Execute
-      const result = await new JobService({ user, aiEmployee }).execute(job);
+      const result = await new JobService({ user, aiEmployee }).execute(job, force);
 
       return res.status(200).json({ message: 'Job executed', result });
     } catch (error) {

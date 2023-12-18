@@ -35,6 +35,7 @@ export interface SendMailData {
   from: string;
   to: string;
   replyTo?: string;
+  inReplyTo?: string;
   cc?: string;
   bcc?: string;
   subject: string;

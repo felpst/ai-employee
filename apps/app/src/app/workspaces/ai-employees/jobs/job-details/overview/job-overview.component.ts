@@ -22,7 +22,7 @@ export class JobOverviewComponent {
   onExecute() {
     console.log('onExecute');
     this.loading = true;
-    this.jobsService.execute(this.job).subscribe({
+    this.jobsService.execute(this.job, true).subscribe({
       next: (response) => {
         console.log(response);
         this.notificationsService.show('Job executed successfully: ' + response.result.output)

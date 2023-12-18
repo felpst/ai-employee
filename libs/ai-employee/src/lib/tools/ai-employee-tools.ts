@@ -1,7 +1,7 @@
 import { ToolsHelper } from "@cognum/helpers";
-import { IAIEmployee, IToolSettings } from "@cognum/interfaces";
+import { IAIEmployee, IToolSettings, IUser } from "@cognum/interfaces";
 import { ChatModel, EmbeddingsModel } from "@cognum/llm";
-import { GoogleCalendarCreateEventTool, GoogleCalendarDeleteEventTool, GoogleCalendarListEventsTool, GoogleCalendarUpdateEventTool, KnowledgeRetrieverTool, LinkedInFindLeadsTool, MailToolSettings, MailToolkit, PythonTool, RandomNumberTool, SQLConnectorTool, WebBrowserToolkit } from "@cognum/tools";
+import { GoogleCalendarToolkit, KnowledgeRetrieverTool, LinkedInFindLeadsTool, MailToolSettings, MailToolkit, PythonTool, RandomNumberTool, SQLConnectorTool, WebBrowserToolkit } from "@cognum/tools";
 import { Document } from "langchain/document";
 import { ContextualCompressionRetriever } from "langchain/retrievers/contextual_compression";
 import { LLMChainExtractor } from "langchain/retrievers/document_compressors/chain_extract";
@@ -12,7 +12,7 @@ import { INTENTIONS } from "../utils/intent-classifier/intent-classifier.util";
 
 export class AIEmployeeTools {
 
-  static intetionTools(options: { aiEmployee: IAIEmployee; intentions?: string[]; }) {
+  static intetionTools(options: { aiEmployee: IAIEmployee; intentions?: string[]; user: Partial<IUser> }) {
     let { intentions, aiEmployee } = options;
     if (!intentions) intentions = [];
 
@@ -27,6 +27,7 @@ export class AIEmployeeTools {
       .map(tool => ({ id: tool.id, }))
 
     const filteredToolsSettings = aiEmployee.tools.filter(toolSettings => {
+      if (options.user) toolSettings.options.user = options.user;
       const tool = ToolsHelper.get(toolSettings.id);
       for (const intetion of tool.intentions || []) {
         if (intentions.includes(intetion)) return true;
@@ -111,24 +112,11 @@ export class AIEmployeeTools {
       case 'linkedin-lead-scraper':
         return [new LinkedInFindLeadsTool(toolSettings.options)]
       case 'google-calendar':
-        const tools = []
-        if (toolSettings.options.tools.list) {
-          tools.push(new GoogleCalendarListEventsTool(toolSettings.options.token))
-        }
-        if (toolSettings.options.tools.create) {
-          tools.push(new GoogleCalendarCreateEventTool(toolSettings.options.token))
-        }
-        if (toolSettings.options.tools.update) {
-          tools.push(new GoogleCalendarUpdateEventTool(toolSettings.options.token))
-        }
-        if (toolSettings.options.tools.delete) {
-          tools.push(new GoogleCalendarDeleteEventTool(toolSettings.options.token))
-        }
-        return tools;
+        return GoogleCalendarToolkit(toolSettings.options);
     }
   }
 
-  static async filterByContext(tools: (Tool[] | DynamicStructuredTool[]), input: string) {
+  static async filterByContext(tools: (Tool[] | DynamicStructuredTool[]), input: string, formattedToolsContext: string) {
     const model = new ChatModel();
     const baseCompressor = LLMChainExtractor.fromLLM(model);
 
@@ -142,21 +130,31 @@ export class AIEmployeeTools {
         }
       })
     })
+    console.log({ docs: docs.map(doc => doc.pageContent) })
 
     // Create a vector store from the documents.
     const vectorStore = await HNSWLib.fromDocuments(docs, new EmbeddingsModel());
-
     const retriever = new ContextualCompressionRetriever({
       baseCompressor,
       baseRetriever: vectorStore.asRetriever(3),
     });
 
-    const retrievedDocs = await retriever.getRelevantDocuments(
-      `Task: ${input}\n\nWhich tools are relevant to execute this task?`
-    );
+    const formattedInput = `Goal: Which tools are relevant to execute this task?\nTask: ${input}\n\nUse context below to help you to choose the best tool:\n${formattedToolsContext}`
+    console.log({ formattedInput });
 
-    console.log({ retrievedDocs });
 
+    let retrievedDocs = await retriever.getRelevantDocuments(formattedInput);
+    // const retrievedDocs = await vectorStore.similaritySearch(formattedInput, 3)
+    console.log({ toolsFounded: retrievedDocs });
+
+    if (!retrievedDocs.length) {
+      // TODO add basic tools
+      retrievedDocs = [
+        { pageContent: '', metadata: { id: 'mail', tool: 'send' } },
+      ]
+    }
+
+    // Filter tools by retrieved docs
     const filteredTools = [];
     for (const tool of tools) {
       if (retrievedDocs.find(doc => doc.metadata.id === tool.metadata.id)) {
@@ -172,4 +170,5 @@ export class AIEmployeeTools {
 
     return filteredTools;
   }
+
 }
