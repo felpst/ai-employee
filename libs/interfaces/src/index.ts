@@ -9,6 +9,7 @@ export * from './knowledge.interface';
 export * from './openAILogs.interface';
 export * from './token.interface';
 export * from './tool.interface';
+export * from './tools/web-browser.interfaces';
 export * from './user.interface';
 export * from './workspace.interface';
 

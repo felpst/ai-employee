@@ -12,8 +12,31 @@
   <div class="job-data">
     <span class="cognum-heading-4">Instructions</span>
     <p class="information">{{ job.instructions }}</p>
-    <span class="cognum-heading-4">Frequency</span>
-    <p class="information">{{ job.frequency }}</p>
+
+    <ng-container *ngIf="job.scheduler?.frequency">
+      <span class="cognum-heading-4">Frequency</span>
+      <p class="information">{{ job.scheduler?.frequency }}</p>
+    </ng-container>
+
+    <ng-container *ngIf="job.scheduler?.runOnce">
+      <span class="cognum-heading-4">Run once</span>
+      <p class="information">true</p>
+    </ng-container>
+
+    <ng-container *ngIf="job.scheduler?.startAt">
+      <span class="cognum-heading-4">Start at</span>
+      <p class="information">
+        {{ job.scheduler?.startAt | date : 'dd-MM-YYYY HH:mm' }}
+      </p>
+    </ng-container>
+
+    <ng-container *ngIf="job.scheduler?.endAt">
+      <span class="cognum-heading-4">End at</span>
+      <p class="information">
+        {{ job.scheduler?.endAt | date : 'dd-MM-YYYY HH:mm' }}
+      </p>
+    </ng-container>
+
     <span class="cognum-heading-4">Status</span>
     <p class="information">{{ job.status }}</p>
   </div>

@@ -2,16 +2,14 @@ import { IKnowledge, KnowledgeTypeEnum } from '@cognum/interfaces';
 import KnowledgeBase, { KnowledgeMetadata } from '@cognum/knowledge-base';
 import { ChatModel } from '@cognum/llm';
 import { Knowledge } from '@cognum/models';
-import { KnowledgeRetrieverService } from '@cognum/tools';
+import { CronService, KnowledgeRetrieverService, SchedulerService } from '@cognum/tools';
 import { NextFunction, Request, Response } from 'express';
 import { LLMChain } from 'langchain/chains';
 import { Document } from 'langchain/document';
 import { PromptTemplate } from 'langchain/prompts';
 import mongoose from 'mongoose';
 import ModelController from '../../controllers/model.controller';
-import { textToCron } from '../../helpers/cron.helper';
 import OpenAIFileService from '../../services/openai-file.service';
-import SchedulerService from '../../services/scheduler.service';
 
 export class KnowledgeController extends ModelController<typeof Knowledge> {
   constructor() {
@@ -231,10 +229,11 @@ export class KnowledgeController extends ModelController<typeof Knowledge> {
             .then(response => response.text());
 
           if (knowledge.htmlUpdateFrequency) {
-            const cron = await textToCron(knowledge.htmlUpdateFrequency);
+            const cron = await CronService.fromText(knowledge.htmlUpdateFrequency);
+            knowledge.htmlUpdateFrequency = cron.formattedInput;
             await new SchedulerService().createJob({
               name: `knowledge-${knowledgeId}-content-update`,
-              schedule: cron,
+              schedule: cron.formattedCron,
               httpTarget: {
                 uri: `${process.env.SERVER_URL}/knowledges/${knowledgeId}/scheduled-update`,
                 httpMethod: 'PATCH',

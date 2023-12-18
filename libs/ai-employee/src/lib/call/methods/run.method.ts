@@ -24,9 +24,10 @@ export function run(): Observable<IAIEmployeeCall> {
     async () => { $call.next(call) },
     startRun,
     startResources,
-    stepIntentClassification,
-    stepIntentExecution,
-    stepFinalAnswer,
+    stepAgent,
+    // stepIntentClassification,
+    // stepIntentExecution,
+    // stepFinalAnswer,
     endResources,
     endRun
   ]
@@ -58,13 +59,40 @@ export function run(): Observable<IAIEmployeeCall> {
   async function startResources(input?: StepInput) {
     // Start resources
     (call.aiEmployee as IAIEmployee).resources = {
-      browser: await new WebBrowser().start({ headless: false })
+      browser: null
+    }
+
+    // Browser
+    try {
+      const headless = process.env.SERVER_URL.includes('localhost') ? false : true;
+      (call.aiEmployee as IAIEmployee).resources.browser = await new WebBrowser().start({ headless })
+    } catch (error) {
+      console.error('Error starting browser', error.message)
     }
   }
 
   async function endResources(input?: StepInput) {
     // Start resources
-    (call.aiEmployee as IAIEmployee).resources.browser.close();
+    if ((call.aiEmployee as IAIEmployee).resources.browser) {
+      try {
+        (call.aiEmployee as IAIEmployee).resources.browser.close();
+      } catch (error) { }
+    }
+  }
+
+  async function stepAgent(input?: StepInput) {
+    const aiEmployee = call.aiEmployee as IAIEmployee;
+    const agent = await new GeneralAgent(aiEmployee).init();
+    agent.context = call.context || {};
+
+    const result = await agent.call(call.input, [INTENTIONS.INFORMATION_RETRIEVAL, INTENTIONS.TASK_EXECUTION]);
+
+    // Final answer
+    call.output = result.output;
+
+    // Update call
+    await call.save()
+    $call.next(call)
   }
 
   async function stepIntentClassification(input?: StepInput) {
@@ -134,7 +162,7 @@ export function run(): Observable<IAIEmployeeCall> {
       //   break;
       default:
         const generalAgent = await new GeneralAgent(call.aiEmployee as IAIEmployee).init()
-        agentCall = await generalAgent.call(stepIntentClassification.inputs.text, '')
+        agentCall = await generalAgent.call(stepIntentClassification.inputs.text, [])
         break;
     }
 

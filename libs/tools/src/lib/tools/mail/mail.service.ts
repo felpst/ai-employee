@@ -1,8 +1,8 @@
-import * as Imap from 'imap';
 import { simpleParser } from 'mailparser';
-import * as moment from 'moment';
 import * as nodemailer from 'nodemailer';
-import { Email, MailData, MailFilters, MailToolSettings } from './mail.interfaces';
+import { Email, MailFilters, MailToolSettings, SendMailData } from './mail.interfaces';
+const Imap = require('imap');
+const moment = require('moment');
 
 export class MailService {
 
@@ -10,15 +10,17 @@ export class MailService {
     private settings: MailToolSettings
   ) { }
 
-  send(emailData: MailData): Promise<void> {
+  send(emailData: SendMailData): Promise<void> {
     return new Promise((resolve, reject) => {
       const mailOptions = {
-        from: emailData.from,
+        from: this.settings.from || emailData.from,
         to: emailData.to,
+        replyTo: this.settings.replyTo || emailData.replyTo,
         cc: emailData.cc,
         bcc: emailData.bcc,
         subject: emailData.subject,
-        html: emailData.html,
+        text: emailData.text ? emailData.text : emailData.html,
+        html: emailData.html ? emailData.html : emailData.text,
       };
 
       const transport = {
@@ -38,6 +40,19 @@ export class MailService {
     });
   }
 
+  get imapConfig() {
+    return {
+      user: this.settings.auth.user,
+      password: this.settings.auth.pass,
+      host: this.settings.imap.host,
+      port: this.settings.imap.port,
+      tls: this.settings.imap.tls,
+      tlsOptions: {
+        servername: this.settings.imap.host
+      },
+      authTimeout: this.settings.auth.timeout || 30000
+    }
+  }
 
   // TODO Criar uma interface
   async find(filters: MailFilters = {
@@ -47,7 +62,7 @@ export class MailService {
     subject: undefined
   }): Promise<Email[]> {
     return new Promise((resolve, reject) => {
-      const emails: Email[] = []
+      let emails: Email[] = []
 
       // Filters
       if (!filters.qt) filters.qt = 5;
@@ -62,21 +77,8 @@ export class MailService {
       if (filters.status) filter.push(filters.status)
       console.log(filter);
 
-
-      // Config
-      const config: Imap.Config = {
-        user: this.settings.auth.user,
-        password: this.settings.auth.pass,
-        host: this.settings.imap.host,
-        port: this.settings.imap.port,
-        tls: this.settings.imap.tls,
-        tlsOptions: {
-          servername: this.settings.imap.host
-        },
-        authTimeout: this.settings.auth.timeout || 3000
-      }
-      const imap = new Imap(config)
-
+      // Imap
+      const imap = new Imap(this.imapConfig)
 
       if (imap.state !== 'authenticated') {
         imap.connect()
@@ -95,66 +97,71 @@ export class MailService {
 
         await openInbox(async function (err, box) {
           console.log('openBox');
-          if (err) reject(err)
+          if (err) imap.end()
 
           imap.search(filter, async (err, results) => {
             console.log('searching...');
 
-            if (err) reject(err)
+            if (err) return imap.end()
 
-            const f = await imap.fetch(results, {
-              bodies: '',
-              struct: true
-            })
-
-            f.on('message', (msg, seqno) => {
-              let mailContent = ''
-              console.log('Message #%d', seqno);
-              // const prefix = '(#' + seqno + ') ';
-
-              msg.on('body', (stream) => {
-                stream.on('data', (chunk) => {
-                  mailContent += chunk.toString('utf8')
-                })
+            try {
+              const f = await imap.fetch(results, {
+                bodies: '',
+                struct: true
               })
 
-              msg.once('attributes', (attrs) => {
-                simpleParser(mailContent, (err, mail) => {
-                  if (err) reject(err)
-                  mailResults.push(mail)
-                  // console.log(`Email ${seqno}: ${mail.messageId}`);
+              f.on('message', (msg, seqno) => {
+                let mailContent = ''
+                // console.log('Message #%d', seqno);
+                // const prefix = '(#' + seqno + ') ';
+
+                msg.on('body', (stream) => {
+                  stream.on('data', (chunk) => {
+                    mailContent += chunk.toString('utf8')
+                  })
                 })
+
+                msg.once('attributes', (attrs) => {
+                  simpleParser(mailContent, (err, mail) => {
+                    if (err) imap.end()
+                    mailResults.push({
+                      uid: attrs.uid,
+                      ...mail
+                    })
+                    // console.log(`Email ${seqno}: ${mail.messageId}`);
+                  })
+                });
               });
 
-              // msg.once('end', () => {
-              //   console.log(prefix + 'Finished');
-              // });
-            });
+              f.once('error', (err) => {
+                // console.log('Fetch error: ' + err);
+              });
 
-            f.once('error', (err) => {
-              console.log('Fetch error: ' + err);
-            });
-
-            f.once('end', () => {
-              // console.log('Done fetching all messages!');
+              f.once('end', () => {
+                // console.log('Done fetching all messages!');
+                imap.end();
+              });
+            } catch (error) {
+              console.log(error.message);
               imap.end();
-            });
+            }
 
           });
         });
 
         imap.once('error', (err) => {
-          // console.error(err);
-          reject(err);
+          imap.end();
         });
 
         imap.once('end', () => {
           // console.log('Connection ended');
           for (const mail of mailResults) {
             const email = {
+              id: mail.messageId,
+              uid: mail.uid,
               subject: mail.subject,
               from: mail.from.text,
-              id: mail.messageId,
+              to: mail.to.text,
               date: mail.date,
               text: mail.text,
               // html: mail.html,
@@ -163,12 +170,47 @@ export class MailService {
             }
             emails.push(email)
           }
+
+          // Filter by to
+          if (filters.to) emails = emails.filter(email => email.to === filters.to);
+
           resolve(emails)
         });
 
       });
     })
 
+  }
+
+  async markAsRead(uid: string): Promise<void> {
+    return new Promise((resolve, reject) => {
+      // Timeout 10s to reject
+      setTimeout(() => { imap.end(); reject('Timeout'); }, 30000);
+
+      const imap = new Imap(this.imapConfig)
+
+      if (imap.state !== 'authenticated') {
+        imap.connect()
+      }
+
+      imap.once('error', (error: Error) => {
+        imap.end();
+        reject(error);
+      });
+
+      imap.once('ready', async () => {
+        console.log('ready');
+        imap.openBox('INBOX', false, (error, box) => {
+          if (error) { imap.end(); return reject(error); }
+
+          imap.addFlags(uid, ['SEEN'], (error) => {
+            imap.end();
+            if (error) { return reject(error); }
+            resolve()
+          })
+        });
+      });
+    });
   }
 }
 

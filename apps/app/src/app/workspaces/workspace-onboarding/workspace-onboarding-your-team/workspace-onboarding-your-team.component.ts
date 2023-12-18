@@ -4,6 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { IUser } from '@cognum/interfaces';
 import { AuthService } from '../../../auth/auth.service';
 import { WorkspacesService } from '../../workspaces.service';
+import { NotificationsService } from '../../../services/notifications/notifications.service';
 
 @Component({
   selector: 'cognum-workspace-onboarding-your-team',
@@ -18,6 +19,7 @@ export class WorkspaceOnboardingYourTeamComponent implements OnInit {
     private formBuilder: FormBuilder,
     private authService: AuthService,
     private workspacesService: WorkspacesService,
+    private notificationsService: NotificationsService,
     private router: Router,
     private activatedRoute: ActivatedRoute
   ) {
@@ -60,29 +62,44 @@ export class WorkspaceOnboardingYourTeamComponent implements OnInit {
     );
   }
 
-  onSubmit() {
-    const { emails } = this.teamForm.value;
-    const _emails = emails
-      .split(',')
-      .map((email: string) => email.trim())
-      .filter((value: string) => !!value)
-      .map((email: string) => ({ user: email, permission: 'Employee' }));
+onSubmit() {
+  const { emails } = this.teamForm.value;
+  const _emails = emails
+    .split(',')
+    .map((email: string) => email.trim())
+    .filter((value: string) => !!value)
+    .map((email: string) => ({ user: email, permission: 'Employee' }));
 
-    if (_emails.length) {
-      return this.workspacesService
-        .update({ ...this.workspace, users: _emails })
-        .subscribe((workspace) => {
-          this.workspacesService.selectedWorkspace = workspace;
-          this.router.navigate(['../ai-employee'], {
-            relativeTo: this.activatedRoute,
-          });
+  if (_emails.length) {
+    return this.workspacesService
+      .update({ ...this.workspace, users: _emails })
+      .subscribe((workspace) => {
+        this.workspacesService.selectedWorkspace = workspace;
+        _emails.forEach(({ user: email }: { user: string, permission: string }) => {
+          const userInWorkspace = this.users.find((user) => user.email === email);
+          if (!userInWorkspace) {
+            this.workspacesService.sendEmailToMembers(this.workspace._id, email).subscribe({
+              next: () => {
+                this.notificationsService.show(`Email sent successfully to ${email}!`);
+              },
+              error: (error) => {
+                console.error(`Error sending email to ${email}:`, error);
+                this.notificationsService.show(`Failed to send email to ${email}. Please try again.`);
+              },
+            });
+          }
         });
-    } else {
-      return this.router.navigate(['../ai-employee'], {
-        relativeTo: this.activatedRoute,
+
+        this.router.navigate(['../ai-employee'], {
+          relativeTo: this.activatedRoute,
+        });
       });
-    }
+  } else {
+    return this.router.navigate(['../ai-employee'], {
+      relativeTo: this.activatedRoute,
+    });
   }
+}
 
   get workspace() {
     return this.workspacesService.selectedWorkspace;

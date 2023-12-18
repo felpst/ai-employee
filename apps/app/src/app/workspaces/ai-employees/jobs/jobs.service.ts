@@ -74,7 +74,7 @@ export class JobsService {
     });
   }
 
-  update(item: IJob): Observable<IJob> {
+  update(item: Partial<IJob>): Observable<IJob> {
     const id = item instanceof FormData ? item.get('_id') : item._id;
 
     return this.coreApiService.put(

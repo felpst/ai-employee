@@ -1,17 +1,10 @@
+import { IWebBrowser, IWebBrowserOptions } from '@cognum/interfaces';
 import * as chromedriver from 'chromedriver';
 import ProxyPlugin from 'selenium-chrome-proxy-plugin';
 import { Browser, Builder, WebDriver } from 'selenium-webdriver';
 import { Options } from 'selenium-webdriver/chrome';
 
-export type BrowserType = 'chrome' | 'brightdata';
-
-export interface IWebBrowserOptions {
-  browser?: BrowserType;
-  proxy?: boolean;
-  headless?: boolean;
-}
-
-export class WebBrowser {
+export class WebBrowser implements IWebBrowser {
   options: IWebBrowserOptions = { proxy: false, browser: 'chrome', headless: true }
   driver: WebDriver
   timeoutMS = 60000;

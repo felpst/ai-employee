@@ -62,4 +62,10 @@ export class WorkspacesService {
       `${this.route}/${workspacesId}`
     ) as Observable<IWorkspace>;
   }
+
+  sendEmailToMembers(workspaceId: string, email: string): Observable<any> {
+    return this.coreApiService.post(`${this.route}/${workspaceId}/send-email`, {
+      email,
+    }) as Observable<any>;
+  }
 }

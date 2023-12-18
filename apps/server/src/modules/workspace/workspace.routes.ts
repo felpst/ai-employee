@@ -10,6 +10,11 @@ router.post('/', authMiddleware,
   workspaceController.createOpenAIAssistant,
   workspaceController.create
 );
+router.post(
+  '/:id/send-email',
+  authMiddleware,
+  workspaceController.sendEmailToMembers
+);
 router.get(
   '/',
   authMiddleware,

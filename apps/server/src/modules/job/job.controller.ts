@@ -1,11 +1,10 @@
 import { AIEmployee } from '@cognum/ai-employee';
+import { RepositoryHelper } from '@cognum/helpers';
 import { IAIEmployee, IJob, IUser } from '@cognum/interfaces';
 import { Job, User } from '@cognum/models';
+import { JobService } from '@cognum/tools';
 import { NextFunction, Request, Response } from 'express';
-import { ObjectId } from 'mongodb';
 import ModelController from '../../controllers/model.controller';
-import { textToCron } from '../../helpers/cron.helper';
-import SchedulerService from '../../services/scheduler.service';
 
 export class JobController extends ModelController<typeof Job> {
   constructor() {
@@ -17,49 +16,35 @@ export class JobController extends ModelController<typeof Job> {
       const jobId = req.params.id;
       const job: Partial<IJob> = req.body as Partial<IJob>;
 
-      // Stop cron
+      // Stop scheduler on Delete
       if (req.method === 'DELETE') {
-        try {
-          const doc = await Job.findById(jobId);
-          await new SchedulerService().deleteJob(doc.cron.name);
-        } catch (error) { }
-        next(); return;
-      }
-      if ((job.status === 'stopped' || !job.frequency) && job.cron?.name) {
-        try {
-          await new SchedulerService().deleteJob(job.cron.name);
-        } catch (error) { }
-        job.cron = undefined;
-        req.body = job;
-        next(); return;
+        const doc = await Job.findById(jobId);
+        await JobService.schedulerStop(doc);
+        return next();
       }
 
+      // Check User
       const user: IUser = (req as any).user;
-      if (!user) next({ error: 'Invalid user' });
+      if (!user) return next({ error: 'Invalid user' });
 
-      if (!job.frequency) { next(); return; }
-      if (!job._id) {
-        job._id = new ObjectId().toHexString();
+      // Check AI Employee
+      const aiEmployeeId = req.body.aiEmployee;
+      if (!aiEmployeeId) return next({ error: 'Invalid AI Employee ID' });
+      const aiEmployee: IAIEmployee = await new RepositoryHelper(AIEmployee, user._id).getById(aiEmployeeId) as IAIEmployee;
+      if (!aiEmployee) return next({ error: 'Invalid AI Employee' });
+
+      // Service
+      const jobService = new JobService({ user, aiEmployee });
+
+      // Stop scheduler on Pause
+      if (job.status === 'stopped') {
+        const doc = await Job.findById(jobId);
+        await JobService.schedulerStop(doc);
+        req.body = job;
+        return next();
       }
 
-      // Create or Update
-      if (!job.cron?.name) {
-        job.cron = {
-          name: `job-execute-${job._id}`,
-          schedule: await textToCron(job.frequency),
-          timeZone: user.timezone || 'America/Sao_Paulo',
-          httpTarget: {
-            httpMethod: 'POST',
-            uri: `${process.env.SERVER_URL}/jobs/${job._id}/execute`,
-          },
-        };
-        await new SchedulerService().createJob(job.cron);
-      } else {
-        job.cron.schedule = await textToCron(job.frequency);
-        job.cron.timeZone = user.timezone || 'America/Sao_Paulo';
-        await new SchedulerService().updateJob(job.cron);
-      }
-
+      await jobService.schedulerRun(job);
       req.body = job;
       next();
     } catch (error) {
@@ -74,57 +59,21 @@ export class JobController extends ModelController<typeof Job> {
       // Job
       const job = await Job.findById(id);
       if (!job) { throw new Error('Job not found'); }
-      if (job.status !== 'running') {
-        return res.status(200).json({ message: 'Job is not running' });
-      }
 
       // User
-      const user: IUser = await User.findById(job.createdBy.toString()) as IUser;
-      if (!user) {
-        return res.status(404).json({ error: 'User not found' });
-      }
+      const user: IUser = await User.findById(job.createdBy) as IUser;
+      if (!user) { throw new Error('User not found'); }
 
       // AI Employee
-      const aiEmployee = await AIEmployee.findById(job.aiEmployee) as IAIEmployee;
-      if (!aiEmployee) {
-        return res.status(404).json({ error: 'AIEmployee not found' });
-      }
+      const aiEmployee: IAIEmployee = await AIEmployee.findById(job.aiEmployee) as IAIEmployee;
+      if (!aiEmployee) { throw new Error('AI Employee not found'); }
 
       // Execute
-      const call = await aiEmployee.call({
-        input: job.instructions,
-        context: {
-          job: {
-            _id: job._id.toString(),
-            name: job.name,
-            frequency: job.frequency,
-            status: job.status,
-            cron: {
-              name: job.cron?.name,
-              schedule: job.cron?.schedule,
-              timeZone: job.cron?.timeZone,
-            },
-            instructions: job.instructions
-          }
-        },
-        createdBy: user._id.toString(),
-        updatedBy: user._id.toString()
-      })
-      const callResult = await new Promise((resolve, reject) => {
-        try {
-          call.run().subscribe(call => {
-            if (call.status === 'done') {
-              resolve(call);
-            }
-          })
-        } catch (error) {
-          reject(error);
-        }
-      });
-      return res.status(200).json({ message: 'Job executed', callResult });
+      const result = await new JobService({ user, aiEmployee }).execute(job);
+
+      return res.status(200).json({ message: 'Job executed', result });
     } catch (error) {
-      console.error(error);
-      next(error)
+      return res.status(400).json({ message: error.message });
     }
   }
 }
