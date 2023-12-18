@@ -96,6 +96,17 @@ services:
       - 'etcd'
       - 'minio'
 
+  python-tools:
+    container_name: python-tools
+    build:
+      context: ./apps/python_api
+      dockerfile: Dockerfile-python
+    image: python:3.11
+    command: flask --app app run --host 0.0.0.0 --port 3005
+    env_file:
+      - ./apps/python_api/.env
+    ports:
+      - '3005:3005'
 
 networks:
   default:

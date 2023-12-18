@@ -5,6 +5,9 @@ import { NextFunction, Request, Response } from 'express';
 import mongoose from 'mongoose';
 import OpenAI from 'openai';
 import ModelController from '../../controllers/model.controller';
+import { EmailService } from '../../services/email.service';
+import { registerEmailTemplate } from '../../utils/templates/register'; 
+
 
 export class WorkspaceController extends ModelController<typeof Workspace> {
   constructor() {
@@ -124,6 +127,27 @@ export class WorkspaceController extends ModelController<typeof Workspace> {
       next(error);
     }
   }
+
+  public async sendEmailToMembers(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
+    req.body.email = req.body.email.toLowerCase();
+    req.body.active = true;
+
+    try {
+      await EmailService.send({
+        to: req.body.email,
+        subject: 'Welcome to Cognum!',
+        html: registerEmailTemplate,
+      })
+    } catch (error) {
+      next(error)
+    }
+    next();
+  }
+  
 }
 
 export default new WorkspaceController();
