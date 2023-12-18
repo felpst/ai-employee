@@ -66,6 +66,9 @@ export class FindElementUseCase extends WebBrowserUtils {
       format_instructions: parser.getFormatInstructions(),
     });
 
+    if (response.selectorType === 'css' && response.selector.startsWith('#')) {
+      response.selectorType = 'id';
+    }
     if (response.selectorType === 'id') {
       response.selector = response.selector.replace('#', '');
     }

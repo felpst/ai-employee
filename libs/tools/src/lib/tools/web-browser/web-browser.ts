@@ -1,6 +1,6 @@
 import { IWebBrowser, IWebBrowserOptions } from '@cognum/interfaces';
 import * as chromedriver from 'chromedriver';
-import ProxyPlugin from 'selenium-chrome-proxy-plugin';
+import { ProxyPlugin } from 'selenium-chrome-proxy-plugin';
 import { Browser, Builder, WebDriver } from 'selenium-webdriver';
 import { Options } from 'selenium-webdriver/chrome';
 
