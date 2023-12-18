@@ -26,12 +26,12 @@ describe('Extract Content Tool test', () => {
         executor = await agentTest(tools);
     });
 
-    it('click on microsoft login button', async () => {
+    it('input text on xandr page', async () => {
         await service.loadPage('https://invest.xandr.com/login');
-        const inputText = "put on username input 'linecker@cognum.ai'";
+        const inputText = "put on username input 'linecker@cognum.ai' on xandr login page";
         const result = await executor.call({ input: inputText });
         console.log(result.output);
-        expect(result.output).toContain('has been clicked');
+        expect(result.output).toContain('has been successfully');
     })
 
 });
