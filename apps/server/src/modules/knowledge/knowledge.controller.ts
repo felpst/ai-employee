@@ -9,7 +9,6 @@ import { Document } from 'langchain/document';
 import { PromptTemplate } from 'langchain/prompts';
 import mongoose from 'mongoose';
 import ModelController from '../../controllers/model.controller';
-import OpenAIFileService from '../../services/openai-file.service';
 
 export class KnowledgeController extends ModelController<typeof Knowledge> {
   constructor() {
@@ -206,7 +205,7 @@ export class KnowledgeController extends ModelController<typeof Knowledge> {
     next: NextFunction
   ): Promise<void> {
     try {
-      const openaiFileSvc = new OpenAIFileService();
+      const knowledgeRetrieverSvc = new KnowledgeRetrieverService();
 
       const knowledges: Partial<IKnowledge & { timeZone?: string; }>[] =
         Array.isArray(req.body) ? [...req.body] : [req.body];
@@ -262,7 +261,7 @@ export class KnowledgeController extends ModelController<typeof Knowledge> {
           fileName = this._textToFilename(knowledge.title, 'txt');
         }
 
-        const createdFile = await openaiFileSvc.create(fileName, fileContent);
+        const createdFile = await knowledgeRetrieverSvc.createFile(fileName, fileContent);
 
         knowledge.openaiFileId = createdFile.id;
         newBody.push(knowledge);
@@ -291,7 +290,7 @@ export class KnowledgeController extends ModelController<typeof Knowledge> {
       } catch (error) { }
 
       try {
-        await new OpenAIFileService().delete(openaiFileId);
+        await new KnowledgeRetrieverService().deleteFile(openaiFileId);
       } catch (error) { }
 
       next();
@@ -326,8 +325,11 @@ export class KnowledgeController extends ModelController<typeof Knowledge> {
       if (!question?.trim())
         throw new Error('Invalid question. Question must be a non-empty string.');
 
-      const retrieverService = new KnowledgeRetrieverService({ workspaceId });
-      const text = await retrieverService.question(question);
+      const knowledges = (await Knowledge.find({ workspace: workspaceId }).select('openaiFileId').lean());
+      const fileIds = knowledges.map(({ openaiFileId }) => openaiFileId);
+
+      const text = await new KnowledgeRetrieverService()
+        .askToAssistant(question, fileIds);
 
       res.json({ text });
     } catch (error) {
@@ -342,10 +344,10 @@ export class KnowledgeController extends ModelController<typeof Knowledge> {
       if (!question?.trim())
         throw new Error('Invalid question. Question must be a non-empty string.');
 
-      const { workspace, openaiFileId } = await Knowledge.findById(id);
+      const { openaiFileId } = await Knowledge.findById(id).select('openaiFileId');
 
-      const retrieverService = new KnowledgeRetrieverService({ workspaceId: `${workspace}` });
-      const text = await retrieverService.askByFileIds(question, [openaiFileId]);
+      const retrieverService = new KnowledgeRetrieverService();
+      const text = await retrieverService.askToAssistant(question, [openaiFileId]);
 
       res.json({ text });
     } catch (error) {
@@ -364,9 +366,9 @@ export class KnowledgeController extends ModelController<typeof Knowledge> {
       const content = await fetch(contentUrl)
         .then(response => response.text());
 
-      const openaiFileSvc = new OpenAIFileService();
-      await openaiFileSvc.delete(openaiFileId);
-      const newFile = await openaiFileSvc.create(fileName, content);
+      const openaiSvc = new KnowledgeRetrieverService();
+      await openaiSvc.deleteFile(openaiFileId);
+      const newFile = await openaiSvc.createFile(fileName, content);
 
       const result = await Knowledge.findByIdAndUpdate(id, {
         $set: {
