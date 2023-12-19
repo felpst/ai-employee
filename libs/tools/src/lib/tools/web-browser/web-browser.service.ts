@@ -11,6 +11,7 @@ import { LLMChainExtractor } from "langchain/retrievers/document_compressors/cha
 import { RecursiveCharacterTextSplitter } from "langchain/text_splitter";
 import { HNSWLib } from "langchain/vectorstores/hnswlib";
 import WebBrowserUtils from './web-browser-utils';
+import { Document } from 'langchain/document';
 
 export class WebBrowserService {
   currentURL: string;
@@ -110,9 +111,15 @@ export class WebBrowserService {
     const model = new ChatModel();
     const baseCompressor = LLMChainExtractor.fromLLM(model);
 
-    const textSplitter = new RecursiveCharacterTextSplitter({ chunkSize: 2000 });
-    const docs = await textSplitter.createDocuments([source]);
+    // const textSplitter = new RecursiveCharacterTextSplitter({ chunkSize: 2000 });
+    // const docs = await textSplitter.createDocuments([source]);
+    const splitter = RecursiveCharacterTextSplitter.fromLanguage("html", {
+      chunkSize: 175,
+      chunkOverlap: 20,
+    });
+    const docs = await splitter.createDocuments([source]);
 
+    // const docs = [new Document({ pageContent: source })]
     // Create a vector store from the documents.
     const vectorStore = await HNSWLib.fromDocuments(docs, new EmbeddingsModel());
 

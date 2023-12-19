@@ -174,168 +174,168 @@
   "fileMap": {
     "nonProjectFiles": [
       {
-        "file": "apps/python_api/routes.py",
-        "hash": "15229753304732848352"
-      },
-      {
-        "file": "apps/python_api/agent.example.py",
-        "hash": "4293974359812472561"
-      },
-      {
-        "file": "apps/query/vendas.csv",
-        "hash": "9112342718846263396"
-      },
-      {
-        "file": ".dockerignore",
-        "hash": "16654955481183508992"
-      },
-      {
-        "file": ".eslintignore",
-        "hash": "7663861978715868291"
-      },
-      {
-        "file": "apps/query/query.ipynb",
-        "hash": "3244421341483603138"
-      },
-      {
-        "file": "apps/query/produtos.csv",
-        "hash": "1931437881581514827"
+        "file": ".eslintrc.json",
+        "hash": "10855573377132781698"
       },
       {
         "file": "package-lock.json",
         "hash": "14455044870245701286"
       },
       {
-        "file": "apps/query/clientes.csv",
-        "hash": "7627213879675256442"
-      },
-      {
-        "file": ".firebaserc",
-        "hash": "9179346000041080838"
-      },
-      {
-        "file": "apps/python_api/tools/__init__.py",
-        "hash": "3244421341483603138"
-      },
-      {
-        "file": "apps/python_api/model/__init__.py",
-        "hash": "3244421341483603138"
-      },
-      {
         "file": ".editorconfig",
         "hash": "5443105041930014821"
-      },
-      {
-        "file": ".prettierignore",
-        "hash": "7848693104264504795"
-      },
-      {
-        "file": ".gcloudignore",
-        "hash": "3244421341483603138"
-      },
-      {
-        "file": "README.md",
-        "hash": "8862511390474802420"
-      },
-      {
-        "file": "apps/query/query-sql.ipynb",
-        "hash": "11020635846087608703"
       },
       {
         "file": "apps/python_api/tools/python_tool.py",
         "hash": "6843088558288228735"
       },
       {
-        "file": "apps/python_api/requirements.txt",
-        "hash": "4014917780927198187"
-      },
-      {
-        "file": "apps/python_api/tools/sql_tool.py",
-        "hash": "10185192756642763499"
-      },
-      {
-        "file": "docker-compose.base.yml",
-        "hash": "14127396594292688867"
-      },
-      {
-        "file": ".eslintrc.json",
-        "hash": "10855573377132781698"
-      },
-      {
-        "file": "nx.json",
-        "hash": "2470193027310300764"
-      },
-      {
-        "file": "firebase.json",
-        "hash": "12374212563746271841"
-      },
-      {
-        "file": "apps/python_api/__init__.py",
-        "hash": "15838007249701053614"
-      },
-      {
-        "file": "apps/python_api/model/azure_model.py",
-        "hash": "4340357973103820737"
-      },
-      {
-        "file": "apps/query/query-csv.ipynb",
-        "hash": "11060545093150508770"
-      },
-      {
-        "file": "apps/.gitkeep",
-        "hash": "3244421341483603138"
-      },
-      {
-        "file": "package.json",
-        "hash": "10309959401024655726"
-      },
-      {
-        "file": "jest.preset.js",
-        "hash": "9430166341120122740"
-      },
-      {
-        "file": "apps/python_api/app.py",
-        "hash": "8134787338546782693"
-      },
-      {
-        "file": "jest.config.ts",
-        "hash": "12333515226966617182"
-      },
-      {
-        "file": "docker-compose.yml",
-        "hash": "621550834428621377"
-      },
-      {
-        "file": ".gitignore",
-        "hash": "12786692232848921558"
-      },
-      {
         "file": "apps/query/query-csv-tool.ipynb",
         "hash": "9086562079225988014"
-      },
-      {
-        "file": "tsconfig.base.json",
-        "hash": "2309259216658353047"
       },
       {
         "file": "apps/python_api/.gcloudignore",
         "hash": "12854412659787483991"
       },
       {
-        "file": ".prettierrc",
-        "hash": "16267754514737964994"
+        "file": "apps/query/query-sql.ipynb",
+        "hash": "11020635846087608703"
       },
       {
-        "file": "libs/.gitkeep",
+        "file": ".gitignore",
+        "hash": "12786692232848921558"
+      },
+      {
+        "file": ".prettierignore",
+        "hash": "7848693104264504795"
+      },
+      {
+        "file": "apps/python_api/model/azure_model.py",
+        "hash": "4340357973103820737"
+      },
+      {
+        "file": ".dockerignore",
+        "hash": "16654955481183508992"
+      },
+      {
+        "file": "Dockerfile",
+        "hash": "8488381807870971314"
+      },
+      {
+        "file": "jest.config.ts",
+        "hash": "12333515226966617182"
+      },
+      {
+        "file": "apps/query/vendas.csv",
+        "hash": "9112342718846263396"
+      },
+      {
+        "file": "apps/python_api/model/__init__.py",
         "hash": "3244421341483603138"
+      },
+      {
+        "file": "nx.json",
+        "hash": "2470193027310300764"
+      },
+      {
+        "file": "docker-compose.base.yml",
+        "hash": "14127396594292688867"
+      },
+      {
+        "file": "apps/.gitkeep",
+        "hash": "3244421341483603138"
+      },
+      {
+        "file": "apps/python_api/__init__.py",
+        "hash": "15838007249701053614"
       },
       {
         "file": "apps/python_api/Dockerfile-python",
         "hash": "7256213079431044000"
       },
       {
-        "file": "Dockerfile",
-        "hash": "8488381807870971314"
+        "file": "README.md",
+        "hash": "8862511390474802420"
+      },
+      {
+        "file": ".firebaserc",
+        "hash": "9179346000041080838"
+      },
+      {
+        "file": "apps/python_api/requirements.txt",
+        "hash": "4014917780927198187"
+      },
+      {
+        "file": "docker-compose.yml",
+        "hash": "621550834428621377"
+      },
+      {
+        "file": ".gcloudignore",
+        "hash": "3244421341483603138"
+      },
+      {
+        "file": "apps/query/clientes.csv",
+        "hash": "7627213879675256442"
+      },
+      {
+        "file": "apps/query/produtos.csv",
+        "hash": "1931437881581514827"
+      },
+      {
+        "file": "apps/python_api/agent.example.py",
+        "hash": "4293974359812472561"
+      },
+      {
+        "file": "firebase.json",
+        "hash": "12374212563746271841"
+      },
+      {
+        "file": "apps/query/query-csv.ipynb",
+        "hash": "11060545093150508770"
+      },
+      {
+        "file": "apps/python_api/tools/__init__.py",
+        "hash": "3244421341483603138"
+      },
+      {
+        "file": "libs/.gitkeep",
+        "hash": "3244421341483603138"
+      },
+      {
+        "file": "apps/python_api/tools/sql_tool.py",
+        "hash": "10185192756642763499"
+      },
+      {
+        "file": "tsconfig.base.json",
+        "hash": "2309259216658353047"
+      },
+      {
+        "file": "jest.preset.js",
+        "hash": "9430166341120122740"
+      },
+      {
+        "file": ".prettierrc",
+        "hash": "16267754514737964994"
+      },
+      {
+        "file": "apps/python_api/routes.py",
+        "hash": "15229753304732848352"
+      },
+      {
+        "file": "package.json",
+        "hash": "10309959401024655726"
+      },
+      {
+        "file": "apps/python_api/app.py",
+        "hash": "8134787338546782693"
+      },
+      {
+        "file": "apps/query/query.ipynb",
+        "hash": "3244421341483603138"
+      },
+      {
+        "file": ".eslintignore",
+        "hash": "7663861978715868291"
       }
     ],
     "projectFileMap": {
@@ -2112,15 +2112,12 @@
         },
         {
           "file": "libs/tools/src/lib/tools/web-browser/web-browser.service.ts",
-          "hash": "17953159487696616386",
+          "hash": "15895558744572046782",
           "deps": [
             "interfaces",
             "llm",
             "npm:selenium-webdriver",
-            "npm:langchain/retrievers/contextual_compression",
-            "npm:langchain/retrievers/document_compressors/chain_extract",
-            "npm:langchain/text_splitter",
-            "npm:langchain/vectorstores/hnswlib"
+            "npm:langchain"
           ]
         },
         {
