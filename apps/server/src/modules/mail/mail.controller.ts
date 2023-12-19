@@ -13,14 +13,14 @@ export class MailController extends ModelController<typeof Job> {
 
   public async execute(req: Request, res: Response, next: NextFunction) {
     try {
+      const aiEmployees = new Map<string, IAIEmployee>()
+
       // Find unseen emails
       const mailService = new MailService(AIEmployeeTools.MailToolkitSettings())
       const mails = await mailService.find({
         status: 'UNSEEN',
       })
       console.log(mails);
-
-      const aiEmployees = new Map<string, IAIEmployee>()
 
       for (const mail of mails) {
         // Get AI Employee
@@ -29,7 +29,7 @@ export class MailController extends ModelController<typeof Job> {
 
         let aiEmployee: IAIEmployee;
         if (!aiEmployees.has(aiEmployeeId)) {
-          console.log(aiEmployeeId);
+          // console.log(aiEmployeeId);
           try {
             aiEmployee = await new AIEmployeeRepository().getById(aiEmployeeId, { populate: [{ path: 'workspace' }] })
           } catch (error) { continue; }
@@ -38,14 +38,14 @@ export class MailController extends ModelController<typeof Job> {
           aiEmployee = aiEmployees.get(aiEmployeeId)
         }
         if (!aiEmployee) continue;
-        console.log(aiEmployee);
+        // console.log(aiEmployee);
 
         // Get user
         const emailFrom = mail.from.includes('<') ? mail.from.split('<')[1]?.split('>')[0] : mail.from
-        console.log(emailFrom);
+        // console.log(emailFrom);
 
         const user = (await new RepositoryHelper(User).find({ filter: { email: emailFrom } }))[0]
-        console.log(user);
+        // console.log(user);
         if (!user) continue;
 
         // Check user has access ai employee workspace
@@ -56,6 +56,7 @@ export class MailController extends ModelController<typeof Job> {
           input: mail.text,
           user
         })
+        call.context.chatChannel = 'email';
         const callResult: IAIEmployeeCall = await new Promise((resolve, reject) => {
           try {
             call.run().subscribe(call => {
@@ -70,15 +71,16 @@ export class MailController extends ModelController<typeof Job> {
         await mailService.send({
           from: `${aiEmployee.name} - Cognum AI Employee <${aiEmployee.getEmail()}>`,
           replyTo: `${aiEmployee.name} - Cognum AI Employee <${aiEmployee.getEmail()}>`,
+          inReplyTo: mail.id,
           to: mail.from,
           subject: 'Re: ' + mail.subject,
           html: callResult.output,
         })
-        console.log('Email sent');
+        console.log('Email sent: ', callResult.output,);
 
         // Marcar email como lido
         // console.log('Marking email as read');
-        await mailService.markAsRead(mail.uid);
+        // await mailService.markAsRead(mail.uid);
       }
 
       return res.status(200).json({ message: 'Emails are checked' });

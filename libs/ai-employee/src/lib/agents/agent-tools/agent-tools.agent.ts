@@ -25,7 +25,8 @@ export class AgentTools {
 
     const intetionTools = AIEmployeeTools.intetionTools({
       aiEmployee,
-      intentions
+      intentions,
+      user: options.context?.user
     });
 
     this._executor = await initializeAgentExecutorWithOptions(intetionTools, model, {

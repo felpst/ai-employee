@@ -13,14 +13,15 @@ export class JobRunOnceTool extends DynamicStructuredTool {
       metadata: { id: "job", tool: "runOnce" },
       schema: z.object({
         name: z.string().describe('name of job or task to execute.'),
-        instructions: z.string().describe('instructions to execute the job or task, break down the instructions into a detailed step-by-step guide with all the details necessary for that task to be performed and without frequency, always aligned with your capabilities. Avoid placing instructions for scheduling tasks or frequecy in tasks to avoid loops. Remove all instructions of date or time execution, frequency or schedule'),
+        instructions: z.string().describe('instructions to execute the job or task, break down the instructions into a detailed step-by-step guide with all the details necessary for that task to be performed and without frequency, always aligned with your capabilities. Avoid placing instructions for scheduling tasks or frequecy in tasks to avoid loops. Remove all instructions of date or time execution, frequency or schedule. If you need send a message to user, use a chat channel context to send message to user.'),
         context: z.object({
           user: z.object({
-            _id: z.string().describe('_id of user.').optional(),
-            name: z.string().describe('name of user.').optional(),
-            email: z.string().describe('mail of user.').optional(),
-          }).optional(),
-        }).optional(),
+            _id: z.string().describe('_id of user.'),
+            name: z.string().describe('name of user.'),
+            email: z.string().describe('mail of user.'),
+          }),
+          chatChannel: z.string().optional().describe('chat channel if need send message to user.'),
+        }),
         scheduler: z.object({
           startAt: z.string().describe('date to execute task.'),
         })

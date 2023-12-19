@@ -2,7 +2,6 @@ import { DynamicStructuredTool } from 'langchain/tools';
 import { z } from 'zod';
 import { MailData, MailToolSettings } from './mail.interfaces';
 import { MailService } from './mail.service';
-
 export class MailSendTool extends DynamicStructuredTool {
 
   constructor(settings: MailToolSettings) {
@@ -20,7 +19,7 @@ export class MailSendTool extends DynamicStructuredTool {
           z.string().email().describe('a valid email recipient address to be sent as a blind carbon copy.'),
         ).optional(),
         subject: z.string().describe('subject of the email to be sent.'),
-        message: z.string().describe('message of the email to be sent.'),
+        message: z.string().describe('message of the email to be sent in markdown format.'),
       }),
       metadata: { id: "mail", tool: "send" },
       func: async ({ to, cc, bcc, subject, message }) => {
@@ -33,9 +32,8 @@ export class MailSendTool extends DynamicStructuredTool {
             cc: cc?.join(', '),
             bcc: bcc?.join(', '),
             text: message,
-            html: message,
           }
-          await mailService.send(emailData);
+          await mailService.sendMarkdown(emailData);
           return 'Email sent successfully.';
         } catch (error) {
           console.error(error);

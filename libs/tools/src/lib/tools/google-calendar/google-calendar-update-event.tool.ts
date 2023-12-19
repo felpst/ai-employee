@@ -1,11 +1,12 @@
 import { calendar_v3 } from 'googleapis';
 import { DynamicStructuredTool } from 'langchain/tools';
 import { z } from 'zod';
+import { GoogleCalendarToolkitSettings } from './google-calendar.interfaces';
 import { GoogleCalendarService } from './google-calendar.service';
 
 
 export class GoogleCalendarUpdateEventTool extends DynamicStructuredTool {
-  constructor(token: string) {
+  constructor(settings: GoogleCalendarToolkitSettings) {
     super({
       name: 'Google Calendar Update Events',
       metadata: { id: "google-calendar", tool: 'update' },
@@ -18,9 +19,7 @@ export class GoogleCalendarUpdateEventTool extends DynamicStructuredTool {
         summary: z.string().optional().describe('Summary of event'),
         location: z.string().optional().describe('Location of event'),
         description: z.string().optional().describe('Description of event'),
-        timeZone: z.string().optional().describe('Time zone of event, format: "America/Los_Angeles"'),
         attendees: z.array(z.object({ email: z.string() })).optional().describe('Event participants represented by an array of objects, where each object contains an email key associated with an email address'),
-
       }),
       func: async ({
         eventId,
@@ -29,22 +28,21 @@ export class GoogleCalendarUpdateEventTool extends DynamicStructuredTool {
         summary,
         location,
         description,
-        timeZone,
         attendees,
       }) => {
         try {
-          const googleCalendarService = new GoogleCalendarService(token);
+          const googleCalendarService = new GoogleCalendarService(settings.token);
           const options: calendar_v3.Schema$Event = {
             summary,
             location,
             description,
             start: {
               dateTime: startTime,
-              timeZone,
+              timeZone: settings.user.timezone
             },
             end: {
               dateTime: endTime,
-              timeZone,
+              timeZone: settings.user.timezone
             },
             attendees,
           }

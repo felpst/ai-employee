@@ -52,6 +52,7 @@
     "ngx-skeleton-loader": "^8.1.0",
     "node-imap": "^0.9.6",
     "nodemailer": "^6.9.7",
+    "nodemailer-markdown": "^1.0.3",
     "openai": "^4.19.0",
     "pdf-parse": "^1.1.1",
     "peggy": "^3.0.2",
@@ -238,11 +239,11 @@
         "hash": "3691743180706062318"
       },
       {
-        "file": ".prettierignore",
-        "hash": "7848693104264504795"
+        "file": "apps/query/query-csv-tool.ipynb",
+        "hash": "3528501936629356063"
       },
       {
-        "file": "apps/.gitkeep",
+        "file": "apps/query/query.ipynb",
         "hash": "3244421341483603138"
       },
       {
@@ -1573,23 +1574,20 @@
           ]
         },
         {
-          "file": "apps/server/src/helpers/openai.helper.ts",
-          "hash": "1272255475032309481",
-          "deps": [
-            "npm:axios"
-          ]
+          "file": "libs/chat/src/lib/repositories/InMemoryMessageRepository.ts",
+          "hash": "1570003864114697045"
         },
         {
-          "file": "apps/server/src/helpers/unstructured.helper.ts",
-          "hash": "3792852933692867213",
+          "file": "libs/chat/src/lib/repositories/chat-message.repository.ts",
+          "hash": "12934224345677166055",
           "deps": [
             "llm",
             "npm:langchain"
           ]
         },
         {
-          "file": "apps/server/src/main.ts",
-          "hash": "4021228309891000775",
+          "file": "libs/chat/src/lib/repositories/chat-room.repository.ts",
+          "hash": "16893417752223403916",
           "deps": [
             "helpers",
             "npm:cookie-parser",
@@ -1599,204 +1597,191 @@
           ]
         },
         {
-          "file": "apps/server/src/middlewares/error.handler.ts",
-          "hash": "18321943400482293033",
+          "file": "libs/chat/src/lib/repositories/index.ts",
+          "hash": "18212630596562848321"
+        },
+        {
+          "file": "libs/chat/src/lib/tests/createChatRoom.test.ts",
+          "hash": "12707707507267409403"
+        },
+        {
+          "file": "libs/chat/src/lib/tests/deleteChatRoom.test.ts",
+          "hash": "8479201679913977469"
+        },
+        {
+          "file": "libs/chat/src/lib/tests/deleteMessage.test.ts",
+          "hash": "12823159845454902582"
+        },
+        {
+          "file": "libs/chat/src/lib/tests/findChatRoom.test.ts",
+          "hash": "1920170776706899337"
+        },
+        {
+          "file": "libs/chat/src/lib/tests/findMessage.test.ts",
+          "hash": "13028455097784898630"
+        },
+        {
+          "file": "libs/chat/src/lib/tests/sendMessage.test.ts",
+          "hash": "6241049920662287630"
+        },
+        {
+          "file": "libs/chat/src/lib/tests/updateChatRoom.test.ts",
+          "hash": "13847726881439657347"
+        },
+        {
+          "file": "libs/chat/src/lib/tests/updateMessage.test.ts",
+          "hash": "10027723926623174914"
+        },
+        {
+          "file": "libs/chat/src/lib/usecases/chat-message-create.ts",
+          "hash": "9820526414580486642",
           "deps": [
-            "npm:express"
+            "interfaces"
           ]
         },
         {
-          "file": "apps/server/src/middlewares/jsonParserMiddleware.ts",
-          "hash": "7258654463316940337",
+          "file": "libs/chat/src/lib/usecases/chat-message-delete.ts",
+          "hash": "654548903147903145"
+        },
+        {
+          "file": "libs/chat/src/lib/usecases/chat-message-find.ts",
+          "hash": "14032451119038796728",
           "deps": [
-            "npm:express"
+            "helpers"
           ]
         },
         {
-          "file": "apps/server/src/middlewares/multerConfig.ts",
-          "hash": "9871102531299568587",
+          "file": "libs/chat/src/lib/usecases/chat-message-update.ts",
+          "hash": "15362338694707328838",
           "deps": [
-            "npm:crypto",
-            "npm:express",
-            "npm:fs",
-            "npm:multer",
-            "npm:os",
-            "npm:path"
+            "interfaces"
           ]
         },
         {
-          "file": "apps/server/src/middlewares/permissions.validator.ts",
-          "hash": "7117010647959070336",
+          "file": "libs/chat/src/lib/usecases/chat-room-create.ts",
+          "hash": "3741689242909116797",
           "deps": [
-            "models"
+            "interfaces"
           ]
         },
         {
-          "file": "apps/server/src/middlewares/yup.validator.ts",
-          "hash": "6865082754855552628",
+          "file": "libs/chat/src/lib/usecases/chat-room-delete.ts",
+          "hash": "611854151951995651"
+        },
+        {
+          "file": "libs/chat/src/lib/usecases/chat-room-find.ts",
+          "hash": "15668531864975275293",
           "deps": [
-            "npm:express",
-            "npm:yup"
+            "helpers"
           ]
         },
         {
-          "file": "apps/server/src/modules/ai-employee/ai-employee.controller.ts",
-          "hash": "15310480506545300611",
+          "file": "libs/chat/src/lib/usecases/chat-room-update.ts",
+          "hash": "1858929275980459040",
           "deps": [
-            "ai-employee"
+            "interfaces"
           ]
         },
         {
-          "file": "apps/server/src/modules/ai-employee/ai-employee.http",
-          "hash": "10897493729328411563"
+          "file": "libs/chat/src/lib/usecases/index.ts",
+          "hash": "16360279148211308370"
         },
         {
-          "file": "apps/server/src/modules/ai-employee/ai-employee.routes.ts",
-          "hash": "15432554919792333063",
+          "file": "libs/chat/tsconfig.json",
+          "hash": "11201535905583862240"
+        },
+        {
+          "file": "libs/chat/tsconfig.lib.json",
+          "hash": "581445119521935503"
+        },
+        {
+          "file": "libs/chat/tsconfig.spec.json",
+          "hash": "11194536110028348959"
+        }
+      ],
+      "helpers": [
+        {
+          "file": "libs/helpers/.eslintrc.json",
+          "hash": "13800677001662881425"
+        },
+        {
+          "file": "libs/helpers/README.md",
+          "hash": "7988955941586324043"
+        },
+        {
+          "file": "libs/helpers/jest.config.ts",
+          "hash": "14617463090352336091"
+        },
+        {
+          "file": "libs/helpers/project.json",
+          "hash": "13643114109360757975"
+        },
+        {
+          "file": "libs/helpers/src/index.ts",
+          "hash": "4580472836239073359"
+        },
+        {
+          "file": "libs/helpers/src/lib/database.helper.ts",
+          "hash": "12169915560647660372",
           "deps": [
-            "npm:express"
+            "npm:mongoose"
           ]
         },
         {
-          "file": "apps/server/src/modules/ai-employee/ai-employee.schemas.ts",
-          "hash": "18408351683680247764",
+          "file": "libs/helpers/src/lib/repository.helper.ts",
+          "hash": "8638450028223587869",
           "deps": [
-            "npm:yup"
+            "npm:mongoose"
           ]
         },
         {
-          "file": "apps/server/src/modules/ai-employee/calls/ai-employee-calls.controller.ts",
-          "hash": "2726161047631606287",
+          "file": "libs/helpers/src/lib/tools/tools.helper.ts",
+          "hash": "13360689996676462317",
           "deps": [
-            "ai-employee"
+            "interfaces"
           ]
         },
         {
-          "file": "apps/server/src/modules/ai-employee/calls/ai-employee-calls.routes.ts",
-          "hash": "10901203571747130424",
-          "deps": [
-            "npm:express"
-          ]
+          "file": "libs/helpers/src/lib/tools/tools.ts",
+          "hash": "4973962103157128058"
         },
         {
-          "file": "apps/server/src/modules/auth/auth.controller.ts",
-          "hash": "10662955259801570798",
-          "deps": [
-            "models",
-            "npm:bcrypt",
-            "npm:express",
-            "npm:jsonwebtoken"
-          ]
+          "file": "libs/helpers/tsconfig.json",
+          "hash": "2840670722752396445"
         },
         {
-          "file": "apps/server/src/modules/auth/auth.middleware.ts",
-          "hash": "10077854212691778875",
-          "deps": [
-            "npm:express",
-            "npm:jsonwebtoken"
-          ]
+          "file": "libs/helpers/tsconfig.lib.json",
+          "hash": "8188472110264778699"
         },
         {
-          "file": "apps/server/src/modules/auth/auth.routes.ts",
-          "hash": "10975174946597293826",
-          "deps": [
-            "npm:express"
-          ]
+          "file": "libs/helpers/tsconfig.spec.json",
+          "hash": "11550347367511341917"
+        }
+      ],
+      "logs": [
+        {
+          "file": "libs/logs/.eslintrc.json",
+          "hash": "14921153827776288937"
         },
         {
-          "file": "apps/server/src/modules/auth/login.http",
-          "hash": "16715477507492163050"
+          "file": "libs/logs/README.md",
+          "hash": "15065597255699630931"
         },
         {
-          "file": "apps/server/src/modules/chat/chat.controller.ts",
-          "hash": "6151404863989917815",
-          "deps": [
-            "chat"
-          ]
+          "file": "libs/logs/jest.config.ts",
+          "hash": "15262726311818279337"
         },
         {
-          "file": "apps/server/src/modules/chat/chat.http",
-          "hash": "15052989754606246768"
+          "file": "libs/logs/project.json",
+          "hash": "5900612403346689813"
         },
         {
-          "file": "apps/server/src/modules/chat/chat.routes.ts",
-          "hash": "8450573301512269344",
-          "deps": [
-            "npm:express"
-          ]
+          "file": "libs/logs/src/index.ts",
+          "hash": "16983344567081108634"
         },
         {
-          "file": "apps/server/src/modules/data-sources/data-sources.controller.ts",
-          "hash": "1056301859714590209",
-          "deps": [
-            "data-connection",
-            "interfaces",
-            "models",
-            "npm:@google-cloud/storage",
-            "npm:crypto",
-            "npm:express",
-            "npm:fs"
-          ]
-        },
-        {
-          "file": "apps/server/src/modules/data-sources/data-sources.http",
-          "hash": "9073708482807521903"
-        },
-        {
-          "file": "apps/server/src/modules/data-sources/data-sources.routes.ts",
-          "hash": "11671528607411356073",
-          "deps": [
-            "npm:express",
-            "npm:multer"
-          ]
-        },
-        {
-          "file": "apps/server/src/modules/job/calls/jobs-calls.controller.ts",
-          "hash": "9222547091453066975",
-          "deps": [
-            "ai-employee"
-          ]
-        },
-        {
-          "file": "apps/server/src/modules/job/calls/jobs-calls.routes.ts",
-          "hash": "2969706489825499014",
-          "deps": [
-            "npm:express"
-          ]
-        },
-        {
-          "file": "apps/server/src/modules/job/job.controller.ts",
-          "hash": "13409588868188915259",
-          "deps": [
-            "ai-employee",
-            "helpers",
-            "interfaces",
-            "models",
-            "tools",
-            "npm:express"
-          ]
-        },
-        {
-          "file": "apps/server/src/modules/job/job.http",
-          "hash": "10262743942584984885"
-        },
-        {
-          "file": "apps/server/src/modules/job/job.routes.ts",
-          "hash": "6887546034367413650",
-          "deps": [
-            "npm:express"
-          ]
-        },
-        {
-          "file": "apps/server/src/modules/job/job.schemas.ts",
-          "hash": "7929945301459244018",
-          "deps": [
-            "npm:yup"
-          ]
-        },
-        {
-          "file": "apps/server/src/modules/knowledge/knowledge.controller.ts",
-          "hash": "9229960280108438782",
+          "file": "libs/logs/src/lib/entities/OpenAILogs.ts",
+          "hash": "11719765176605752263",
           "deps": [
             "interfaces",
             "knowledge-base",
@@ -1809,261 +1794,205 @@
           ]
         },
         {
-          "file": "apps/server/src/modules/knowledge/knowledge.http",
-          "hash": "6031793404334574152"
+          "file": "libs/logs/src/lib/repositories/InMemoryOpenAILogsRepository.ts",
+          "hash": "14861960998185691413"
         },
         {
-          "file": "apps/server/src/modules/knowledge/knowledge.routes.ts",
-          "hash": "9155669075037418470",
-          "deps": [
-            "npm:express",
-            "npm:multer"
-          ]
-        },
-        {
-          "file": "apps/server/src/modules/knowledge/knowledge.schemas.ts",
-          "hash": "10450007227583643089",
+          "file": "libs/logs/src/lib/repositories/OpenAILogsRepository.ts",
+          "hash": "10488840591268871662",
           "deps": [
             "interfaces",
-            "npm:yup"
-          ]
-        },
-        {
-          "file": "apps/server/src/modules/mail/mail.controller.ts",
-          "hash": "6657981389952790323",
-          "deps": [
-            "ai-employee",
-            "helpers",
-            "interfaces",
-            "models",
-            "tools",
-            "npm:express"
-          ]
-        },
-        {
-          "file": "apps/server/src/modules/mail/mail.http",
-          "hash": "13956112702573237163"
-        },
-        {
-          "file": "apps/server/src/modules/mail/mail.routes.ts",
-          "hash": "4226686486499933845",
-          "deps": [
-            "npm:express"
-          ]
-        },
-        {
-          "file": "apps/server/src/modules/oAuth2/oAuth2.controller.ts",
-          "hash": "15661584580461435914",
-          "deps": [
-            "npm:express"
-          ]
-        },
-        {
-          "file": "apps/server/src/modules/oAuth2/oAuth2.http",
-          "hash": "5286543590235645123"
-        },
-        {
-          "file": "apps/server/src/modules/oAuth2/oAuth2.routes.ts",
-          "hash": "3074050378058475922",
-          "deps": [
-            "npm:express"
-          ]
-        },
-        {
-          "file": "apps/server/src/modules/oAuth2/oAuth2.service.ts",
-          "hash": "3928561704998692413",
-          "deps": [
-            "npm:googleapis"
-          ]
-        },
-        {
-          "file": "apps/server/src/modules/tests/tests.controller.ts",
-          "hash": "16032697245797225639",
-          "deps": [
-            "tools",
-            "npm:express"
-          ]
-        },
-        {
-          "file": "apps/server/src/modules/tests/tests.routes.ts",
-          "hash": "14667963059484537351",
-          "deps": [
-            "npm:express"
-          ]
-        },
-        {
-          "file": "apps/server/src/modules/uploads/uploads.controller.ts",
-          "hash": "4165424324428458150",
-          "deps": [
-            "npm:express",
             "npm:mongoose"
           ]
         },
         {
-          "file": "apps/server/src/modules/uploads/uploads.routes.ts",
-          "hash": "16941252860443390442",
+          "file": "libs/logs/src/lib/services/OpenAILogsService.ts",
+          "hash": "9883845046409527019",
           "deps": [
-            "npm:express",
-            "npm:multer"
+            "interfaces"
           ]
         },
         {
-          "file": "apps/server/src/modules/uploads/uploads.schemas.ts",
-          "hash": "17052923528836270826",
-          "deps": [
-            "npm:yup"
-          ]
+          "file": "libs/logs/src/lib/tests/createOpenAILogs.test.ts",
+          "hash": "3971677997015440488"
         },
         {
-          "file": "apps/server/src/modules/user/user.controller.ts",
-          "hash": "3876505577881470898",
+          "file": "libs/logs/src/lib/tests/findeOpenAILogs.test.ts",
+          "hash": "6352662294775979876"
+        },
+        {
+          "file": "libs/logs/src/lib/useCases/createOpenAILogs.ts",
+          "hash": "17093730153143082900"
+        },
+        {
+          "file": "libs/logs/src/lib/useCases/findOpenAILogs.ts",
+          "hash": "3578798078809554062"
+        },
+        {
+          "file": "libs/logs/src/lib/utils/extractPath.ts",
+          "hash": "16377655788281167285"
+        },
+        {
+          "file": "libs/logs/src/lib/utils/splitOpenAIKey.ts",
+          "hash": "10132449013747085491"
+        },
+        {
+          "file": "libs/logs/tsconfig.json",
+          "hash": "11201535905583862240"
+        },
+        {
+          "file": "libs/logs/tsconfig.lib.json",
+          "hash": "10301039223163520596"
+        },
+        {
+          "file": "libs/logs/tsconfig.spec.json",
+          "hash": "11194536110028348959"
+        }
+      ],
+      "test-env": [
+        {
+          "file": "apps/test-env/.eslintrc.json",
+          "hash": "14921153827776288937"
+        },
+        {
+          "file": "apps/test-env/jest.config.ts",
+          "hash": "12638953484027997237"
+        },
+        {
+          "file": "apps/test-env/project.json",
+          "hash": "4304430647397443982"
+        },
+        {
+          "file": "apps/test-env/src/assets/.gitkeep",
+          "hash": "3244421341483603138"
+        },
+        {
+          "file": "apps/test-env/src/main.ts",
+          "hash": "1216477986838332603",
           "deps": [
-            "models",
-            "npm:bcrypt",
+            "npm:dotenv",
             "npm:express"
           ]
         },
         {
-          "file": "apps/server/src/modules/user/user.middleware.ts",
-          "hash": "13060005677731702421",
+          "file": "apps/test-env/src/tests/web-browser/find-element/index.ts",
+          "hash": "14640898580457563679",
           "deps": [
-            "helpers",
-            "models",
-            "npm:express"
+            "tools"
           ]
         },
         {
-          "file": "apps/server/src/modules/user/user.routes.ts",
-          "hash": "2891789889953987549",
+          "file": "apps/test-env/src/tests/web-browser/linkedin/index.ts",
+          "hash": "14911087789882941162",
           "deps": [
-            "npm:express"
+            "tools"
           ]
         },
         {
-          "file": "apps/server/src/modules/user/user.schemas.ts",
-          "hash": "6133840924741501438",
+          "file": "apps/test-env/tsconfig.app.json",
+          "hash": "6761865598368362404"
+        },
+        {
+          "file": "apps/test-env/tsconfig.json",
+          "hash": "7462419380158041776"
+        },
+        {
+          "file": "apps/test-env/tsconfig.spec.json",
+          "hash": "11194536110028348959"
+        }
+      ],
+      "knowledge-base": [
+        {
+          "file": "libs/knowledge-base/.eslintrc.json",
+          "hash": "14921153827776288937"
+        },
+        {
+          "file": "libs/knowledge-base/README.md",
+          "hash": "3302864283960120102"
+        },
+        {
+          "file": "libs/knowledge-base/jest.config.ts",
+          "hash": "12685650274461144244"
+        },
+        {
+          "file": "libs/knowledge-base/project.json",
+          "hash": "17479534594053987507"
+        },
+        {
+          "file": "libs/knowledge-base/setup-tests.ts",
+          "hash": "11915439091300329800",
           "deps": [
-            "npm:yup"
+            "npm:dotenv"
           ]
         },
         {
-          "file": "apps/server/src/modules/user/users.http",
-          "hash": "8983741337614005623"
-        },
-        {
-          "file": "apps/server/src/modules/workspace/workspace.controller.ts",
-          "hash": "2857005753882124490",
+          "file": "libs/knowledge-base/src/config/database-index.config.ts",
+          "hash": "10030070499829538619",
           "deps": [
-            "interfaces",
-            "knowledge-base",
-            "models",
-            "npm:express",
-            "npm:mongoose",
-            "npm:openai"
+            "npm:@zilliz/milvus2-sdk-node",
+            "npm:langchain/vectorstores/milvus"
           ]
         },
         {
-          "file": "apps/server/src/modules/workspace/workspace.http",
-          "hash": "16590676373230783914"
-        },
-        {
-          "file": "apps/server/src/modules/workspace/workspace.routes.ts",
-          "hash": "8589687135625229931",
+          "file": "libs/knowledge-base/src/helpers/document.helper.spec.ts",
+          "hash": "10921354083175563267",
           "deps": [
-            "npm:express"
+            "npm:mongodb"
           ]
         },
         {
-          "file": "apps/server/src/modules/workspace/workspace.schemas.ts",
-          "hash": "5986365148028925678",
+          "file": "libs/knowledge-base/src/helpers/document.helper.ts",
+          "hash": "14231969601550951661",
           "deps": [
-            "npm:yup"
+            "npm:langchain/document",
+            "npm:mongodb"
           ]
         },
         {
-          "file": "apps/server/src/routes/index.ts",
-          "hash": "17663547602467247846",
+          "file": "libs/knowledge-base/src/helpers/index.ts",
+          "hash": "4764849028309739194"
+        },
+        {
+          "file": "libs/knowledge-base/src/index.ts",
+          "hash": "10011056993370822802"
+        },
+        {
+          "file": "libs/knowledge-base/src/knowledge-base.spec.ts",
+          "hash": "10351167739079559750"
+        },
+        {
+          "file": "libs/knowledge-base/src/knowledge-base.ts",
+          "hash": "15580747758583328364",
           "deps": [
-            "npm:express"
+            "llm",
+            "npm:@zilliz/milvus2-sdk-node",
+            "npm:langchain/document",
+            "npm:langchain/vectorstores/milvus"
           ]
         },
         {
-          "file": "apps/server/src/services/email.service.ts",
-          "hash": "18248813896340013407",
+          "file": "libs/knowledge-base/src/splitters/contextual-splitter.ts",
+          "hash": "9565731347184789205",
           "deps": [
-            "npm:nodemailer"
+            "llm",
+            "npm:langchain/document",
+            "npm:langchain/output_parsers",
+            "npm:langchain/prompts",
+            "npm:langchain/text_splitter",
+            "npm:zod"
           ]
         },
         {
-          "file": "apps/server/src/services/openai-file.service.ts",
-          "hash": "4559716809761367446",
-          "deps": [
-            "npm:fs",
-            "npm:openai"
-          ]
+          "file": "libs/knowledge-base/tsconfig.json",
+          "hash": "11201535905583862240"
         },
         {
-          "file": "apps/server/src/utils/aiEmployee.utils.ts",
-          "hash": "3685676648789665133"
+          "file": "libs/knowledge-base/tsconfig.lib.json",
+          "hash": "10301039223163520596"
         },
         {
-          "file": "apps/server/src/utils/email.utils.ts",
-          "hash": "2576702440181871992",
-          "deps": [
-            "npm:events",
-            "npm:nodemailer"
-          ]
-        },
-        {
-          "file": "apps/server/src/utils/file.utils.ts",
-          "hash": "15674668627657283828"
-        },
-        {
-          "file": "apps/server/src/utils/schema.utils.ts",
-          "hash": "2678163041123876194",
-          "deps": [
-            "npm:mongoose"
-          ]
-        },
-        {
-          "file": "apps/server/src/utils/templates/confirm-reset-password.ts",
-          "hash": "7169446166964501269"
-        },
-        {
-          "file": "apps/server/src/utils/templates/register.ts",
-          "hash": "16509098357717855188"
-        },
-        {
-          "file": "apps/server/src/utils/templates/reset-password.ts",
-          "hash": "9285597208494013403"
-        },
-        {
-          "file": "apps/server/src/utils/upload.utils.ts",
-          "hash": "14276285537440192158",
-          "deps": [
-            "npm:@google-cloud/storage",
-            "npm:crypto",
-            "npm:fs"
-          ]
-        },
-        {
-          "file": "apps/server/src/utils/xlsx.utils.ts",
-          "hash": "10489898205877177824",
-          "deps": [
-            "npm:xlsx"
-          ]
-        },
-        {
-          "file": "apps/server/tsconfig.app.json",
-          "hash": "4165376738384824694"
-        },
-        {
-          "file": "apps/server/tsconfig.json",
-          "hash": "5244506982674073679"
-        },
-        {
-          "file": "apps/server/tsconfig.spec.json",
-          "hash": "3031220043730143498"
+          "file": "libs/knowledge-base/tsconfig.spec.json",
+          "hash": "11194536110028348959"
         }
       ],
       "data-connection": [
@@ -5451,31 +5380,28 @@
           ]
         },
         {
-          "file": "libs/knowledge-base/src/helpers/document.helper.spec.ts",
-          "hash": "10921354083175563267",
-          "deps": [
-            "npm:mongodb"
-          ]
+          "file": "apps/app/src/index.html",
+          "hash": "6813618262568293173"
         },
         {
-          "file": "libs/knowledge-base/src/helpers/document.helper.ts",
-          "hash": "14231969601550951661",
+          "file": "apps/app/src/main.ts",
+          "hash": "12246588107753938993",
           "deps": [
             "npm:langchain",
             "npm:mongodb"
           ]
         },
         {
-          "file": "libs/knowledge-base/src/helpers/index.ts",
-          "hash": "4764849028309739194"
+          "file": "apps/app/src/styles.scss",
+          "hash": "11094480777268786258"
         },
         {
-          "file": "libs/knowledge-base/src/index.ts",
-          "hash": "10011056993370822802"
+          "file": "apps/app/src/styles/cognum.theme.scss",
+          "hash": "12602811962053521461"
         },
         {
-          "file": "libs/knowledge-base/src/knowledge-base.spec.ts",
-          "hash": "10351167739079559750"
+          "file": "apps/app/src/styles/cognum.variables.scss",
+          "hash": "3099682432467424742"
         },
         {
           "file": "libs/knowledge-base/src/knowledge-base.ts",
@@ -5496,16 +5422,16 @@
           ]
         },
         {
-          "file": "libs/knowledge-base/tsconfig.json",
-          "hash": "11201535905583862240"
+          "file": "apps/app/tsconfig.editor.json",
+          "hash": "9358062848557378915"
         },
         {
-          "file": "libs/knowledge-base/tsconfig.lib.json",
-          "hash": "10301039223163520596"
+          "file": "apps/app/tsconfig.json",
+          "hash": "12094030803572703611"
         },
         {
-          "file": "libs/knowledge-base/tsconfig.spec.json",
-          "hash": "11194536110028348959"
+          "file": "apps/app/tsconfig.spec.json",
+          "hash": "13057930404880976200"
         }
       ],
       "users": [

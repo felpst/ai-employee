@@ -1,0 +1,19 @@
+form {
+  width: 100%;
+
+  .formGroup {
+    margin-top: 1.5rem;
+
+    .cognum-heading-2 {
+      margin-bottom: 1rem;
+    }
+  }
+
+  mat-checkbox {
+    width: 100%;
+  }
+
+  mat-form-field {
+    width: 100%;
+  }
+}

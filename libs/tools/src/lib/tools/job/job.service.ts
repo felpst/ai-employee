@@ -73,30 +73,34 @@ export class JobService {
     }
   }
 
-  async execute(job: IJob) {
-    // Check status
-    if (job.status === 'stopped') {
-      await JobService.schedulerStop(job);
-      throw new Error('Job are stopped');
-    }
+  async execute(job: IJob, force = false) {
+    if (!force) {
+      // Check status
+      if (job.status === 'stopped') {
+        await JobService.schedulerStop(job);
+        throw new Error('Job are stopped');
+      }
 
-    // Check startAt
-    if (job.scheduler.startAt && new Date(job.scheduler.startAt) > new Date()) {
-      throw new Error('Job are not started');
-    }
+      // Check startAt
+      if (job.scheduler.startAt && new Date(job.scheduler.startAt) > new Date()) {
+        throw new Error('Job are not started');
+      }
 
-    // Check endAt
-    if (job.scheduler.endAt && new Date(job.scheduler.endAt) < new Date()) {
-      await JobService.schedulerStop(job);
-      throw new Error('Job are ended');
+      // Check endAt
+      if (job.scheduler.endAt && new Date(job.scheduler.endAt) < new Date()) {
+        await JobService.schedulerStop(job);
+        throw new Error('Job are ended');
+      }
     }
 
     // Execute
-    console.log('Executing job', { id: job._id.toString(), name: job.name });
+    // console.log('Executing job', { id: job._id.toString(), name: job.name, instructions: job.instructions });
+    console.log('Executing job', { job });
     const call = await this.settings.aiEmployee.call({
       input: job.instructions,
       user: this.settings.user,
       context: {
+        chatChannel: 'email',
         job: {
           _id: job._id.toString(),
           name: job.name,

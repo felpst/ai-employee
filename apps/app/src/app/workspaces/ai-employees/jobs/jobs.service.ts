@@ -51,8 +51,8 @@ export class JobsService {
     return this.list({ params });
   }
 
-  execute(job: IJob): Observable<any> {
-    return this.coreApiService.post(`${this.route}/${job._id}/execute`, {}) as Observable<IJob>;
+  execute(job: IJob, force = false): Observable<any> {
+    return this.coreApiService.post(`${this.route}/${job._id}/execute?force=${force}`, {}) as Observable<IJob>;
   }
 
   create(data: Partial<IJob>): Observable<IJob> {
