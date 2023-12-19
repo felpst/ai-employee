@@ -150,13 +150,13 @@ export class AIEmployeeTools {
 
 
     let retrievedDocs = await retriever.getRelevantDocuments(formattedInput);
-    // const retrievedDocs = await vectorStore.similaritySearch(formattedInput, 3)
     console.log({ toolsFounded: retrievedDocs });
 
     if (!retrievedDocs.length) {
       // TODO add basic tools
       retrievedDocs = [
         { pageContent: '', metadata: { id: 'mail', tool: 'send' } },
+        { pageContent: '', metadata: { id: 'knowledge-retriever' } },
       ]
     }
 
