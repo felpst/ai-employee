@@ -1,5 +1,5 @@
 import { IAIEmployee, IAIEmployeeCall, IAIEmployeeCallStep } from "@cognum/interfaces";
-import { Knowledge, Workspace } from '@cognum/models';
+import { Knowledge } from '@cognum/models';
 import { KnowledgeRetrieverService } from "@cognum/tools";
 import { BehaviorSubject } from "rxjs";
 import { INTENTIONS } from "../../utils/intent-classifier/intent-classifier.util";
@@ -140,14 +140,13 @@ export class InformationRetrievalAgent {
     // Knowledge Base Search
     const knowledgeRetrieverService = new KnowledgeRetrieverService();
 
-    const { openaiAssistantId } = await Workspace.findById(aiEmployee.workspace.toString()).lean();
     const knowledges =
       (await Knowledge.find({ workspace: aiEmployee.workspace.toString() })
         .select('openaiFileId').lean());
     const fileIds = knowledges.map(({ openaiFileId }) => openaiFileId);
 
     const knowledgeBaseResponse = await knowledgeRetrieverService
-      .askToAssistant(question, openaiAssistantId, fileIds);
+      .askToAssistant(question, fileIds);
     const accuracy = await aiEmployee.checkValidAnswer(question, knowledgeBaseResponse);
 
     // TODO token usage

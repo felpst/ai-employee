@@ -1,7 +1,7 @@
 import { IKnowledge, KnowledgeTypeEnum } from '@cognum/interfaces';
 import KnowledgeBase, { KnowledgeMetadata } from '@cognum/knowledge-base';
 import { ChatModel } from '@cognum/llm';
-import { Knowledge, Workspace } from '@cognum/models';
+import { Knowledge } from '@cognum/models';
 import { CronService, KnowledgeRetrieverService, SchedulerService } from '@cognum/tools';
 import { NextFunction, Request, Response } from 'express';
 import { LLMChain } from 'langchain/chains';
@@ -325,12 +325,11 @@ export class KnowledgeController extends ModelController<typeof Knowledge> {
       if (!question?.trim())
         throw new Error('Invalid question. Question must be a non-empty string.');
 
-      const { openaiAssistantId } = await Workspace.findById(workspaceId).lean();
       const knowledges = (await Knowledge.find({ workspace: workspaceId }).select('openaiFileId').lean());
       const fileIds = knowledges.map(({ openaiFileId }) => openaiFileId);
 
       const text = await new KnowledgeRetrieverService()
-        .askToAssistant(question, openaiAssistantId, fileIds);
+        .askToAssistant(question, fileIds);
 
       res.json({ text });
     } catch (error) {
@@ -345,11 +344,10 @@ export class KnowledgeController extends ModelController<typeof Knowledge> {
       if (!question?.trim())
         throw new Error('Invalid question. Question must be a non-empty string.');
 
-      const { workspace, openaiFileId } = await Knowledge.findById(id);
-      const { openaiAssistantId } = await Workspace.findById(workspace).lean();
+      const { openaiFileId } = await Knowledge.findById(id).select('openaiFileId');
 
       const retrieverService = new KnowledgeRetrieverService();
-      const text = await retrieverService.askToAssistant(question, openaiAssistantId, [openaiFileId]);
+      const text = await retrieverService.askToAssistant(question, [openaiFileId]);
 
       res.json({ text });
     } catch (error) {

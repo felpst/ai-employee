@@ -97,21 +97,6 @@ export class WorkspaceController extends ModelController<typeof Workspace> {
     }
   }
 
-  async createOpenAIAssistant(req: Request, _: Response, next: NextFunction) {
-    try {
-      const openai = new OpenAI();
-      const assistant = await openai.beta.assistants.create({ model: "gpt-4-1106-preview" });
-
-      req.body = {
-        ...req.body,
-        openaiAssistantId: assistant.id,
-      };
-      next();
-    } catch (error) {
-      next(error);
-    }
-  }
-
   async deleteOpenAIAssistant(req: Request, res: Response, next: NextFunction) {
     try {
       const openai = new OpenAI();

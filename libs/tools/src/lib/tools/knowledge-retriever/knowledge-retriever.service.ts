@@ -24,7 +24,7 @@ export class KnowledgeRetrieverService {
     return this._client.files.del(fileId);
   }
 
-  async askToAssistant(input: string, assistantId: string, fileIds: string[]) {
+  async askToAssistant(input: string, fileIds: string[]) {
     const thread = await this._client.beta.threads.create();
     await this._client.beta.threads.messages.create(thread.id, {
       role: "user",
@@ -33,7 +33,7 @@ export class KnowledgeRetrieverService {
     });
 
     const run = await this._client.beta.threads.runs.create(thread.id, {
-      assistant_id: assistantId,
+      assistant_id: process.env.OPENAI_ASSISTANT_ID,
       instructions: `You are a smart assistant that retrieves information using your knowledge. Your answer to the questions must be as objective as possible.`,
       tools: [
         { type: 'retrieval' },
