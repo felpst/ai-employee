@@ -9,10 +9,11 @@ import { DynamicStructuredTool, SerpAPI, Tool } from "langchain/tools";
 import { Calculator } from "langchain/tools/calculator";
 import { HNSWLib } from "langchain/vectorstores/hnswlib";
 import { INTENTIONS } from "../utils/intent-classifier/intent-classifier.util";
+import { Knowledge } from "@cognum/models";
 
 export class AIEmployeeTools {
 
-  static intetionTools(options: { aiEmployee: IAIEmployee; intentions?: string[]; user: Partial<IUser> }) {
+  static async intetionTools(options: { aiEmployee: IAIEmployee; intentions?: string[]; user: Partial<IUser> }) {
     let { intentions, aiEmployee } = options;
     if (!intentions) intentions = [];
 
@@ -35,7 +36,16 @@ export class AIEmployeeTools {
       return false;
     })
     const toolsSettings = [...commonTools, ...filteredToolsSettings]
-    const tools = AIEmployeeTools.get(toolsSettings);
+    const tools: any[] = AIEmployeeTools.get(toolsSettings);
+
+    // Resource: Knowledge Retriever
+    const knowledges = await Knowledge
+      .find({ workspace: aiEmployee.workspace })
+      .select('openaiFileId')
+      .lean();
+    const openaiFileIds = knowledges.map(({ openaiFileId }) => openaiFileId);
+    const toolkit = [new KnowledgeRetrieverTool({ openaiFileIds })]
+    tools.push(...toolkit)
 
     // Resource: Web browser
     if (aiEmployee.resources?.browser && intentions.includes(INTENTIONS.TASK_EXECUTION)) {
@@ -97,8 +107,6 @@ export class AIEmployeeTools {
           id: 'google-search',
         }
         return [tool];
-      // case 'web-browser':
-      //   return [new WebBrowserTool()];
       case 'random-number':
         return [new RandomNumberTool()];
       case 'mail':
@@ -107,8 +115,6 @@ export class AIEmployeeTools {
         return [new PythonTool()];
       case 'sql-connector':
         return [new SQLConnectorTool(toolSettings.options)];
-      case 'knowledge-retriever':
-        return [new KnowledgeRetrieverTool(toolSettings.options)]
       case 'linkedin-lead-scraper':
         return [new LinkedInFindLeadsTool(toolSettings.options)]
       case 'google-calendar':
