@@ -10,7 +10,7 @@ import { ChatsService } from '../../chats/chats.service';
 import { AIToolAddComponent } from './tool-add/tool-add.component';
 import { AIToolSettingsGoogleCalendarComponent } from './tool-settings/google-calendar/tool-settings-google-calendar.component';
 import { AIToolSettingsLinkedInLeadScraperComponent } from './tool-settings/linkedin-lead-scraper/tool-settings-linkedin-lead-scraper.component';
-import { AIToolSettingsMailSenderComponent } from './tool-settings/mail-sender/tool-settings-mail-sender.component';
+import { AIToolSettingsMailComponent } from './tool-settings/mail/tool-settings-mail.component';
 import { AIToolSettingsSQLConnectorComponent } from './tool-settings/sql-connector/tool-settings-sql-connector.component';
 import { ToolsService } from './tools.service';
 
@@ -56,8 +56,8 @@ export class AIEmployeeToolsComponent implements OnInit {
       case 'sql-connector':
         component = AIToolSettingsSQLConnectorComponent;
         break;
-      case 'mail-sender':
-        component = AIToolSettingsMailSenderComponent;
+      case 'mail':
+        component = AIToolSettingsMailComponent;
         break;
       case 'linkedin':
         component = AIToolSettingsLinkedInLeadScraperComponent;

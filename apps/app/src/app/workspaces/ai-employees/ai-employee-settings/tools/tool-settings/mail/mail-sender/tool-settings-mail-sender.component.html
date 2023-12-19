@@ -1,0 +1,34 @@
+<div class="cognum-heading-2">Settings: Send Email</div>
+<form [formGroup]="formGroup">
+  <div class="cognum-form-group">
+    <mat-form-field>
+      <mat-label>Host</mat-label>
+      <input matInput formControlName="host">
+    </mat-form-field>
+  </div>
+  <div class="cognum-form-group">
+    <mat-form-field>
+      <mat-label>Port</mat-label>
+      <input matInput formControlName="port">
+    </mat-form-field>
+  </div>
+  <div class="cognum-form-group">
+    <mat-label>Secure</mat-label>
+    <mat-checkbox color="primary" formControlName="secure"></mat-checkbox>
+  </div>
+  <div class="cognum-form-group" formGroupName="auth">
+    <mat-label>Auth</mat-label>
+    <div class="cognum-form-group">
+      <mat-form-field>
+        <mat-label>User</mat-label>
+        <input matInput formControlName="user">
+      </mat-form-field>
+    </div>
+    <div class="cognum-form-group">
+      <mat-form-field>
+        <mat-label>Pass</mat-label>
+        <input matInput formControlName="pass">
+      </mat-form-field>
+    </div>
+  </div>
+</form>
