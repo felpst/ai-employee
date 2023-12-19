@@ -11,6 +11,7 @@ export class GoogleCalendarService {
 
     async listEvents(options: calendar_v3.Params$Resource$Events$List = {}) {
 
+        // @ts-ignore
         const calendar = google.calendar({ version: 'v3', auth: this.oAuth2Client });
         const res = await calendar.events.list(options);
         const events = res.data.items;
@@ -29,6 +30,8 @@ export class GoogleCalendarService {
     }
 
     async createEvent(event: calendar_v3.Schema$Event) {
+
+        // @ts-ignore
         const calendar = google.calendar({ version: 'v3', auth: this.oAuth2Client });
         const res = await calendar.events.insert({
             calendarId: 'primary',
@@ -40,6 +43,7 @@ export class GoogleCalendarService {
     }
 
     async updateEvent(eventId: string, event: calendar_v3.Schema$Event) {
+        // @ts-ignore
         const calendar = google.calendar({ version: 'v3', auth: this.oAuth2Client });
         const res = await calendar.events.patch({
             calendarId: 'primary',
@@ -54,6 +58,7 @@ export class GoogleCalendarService {
     }
 
     async deleteEvent(eventId: string) {
+        // @ts-ignore
         const calendar = google.calendar({ version: 'v3', auth: this.oAuth2Client });
         const res = await calendar.events.delete({
             calendarId: 'primary',

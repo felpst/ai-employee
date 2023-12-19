@@ -38,8 +38,8 @@ export class AIEmployeeTools {
 
     // Resource: Web browser
     if (aiEmployee.resources?.browser && intentions.includes(INTENTIONS.TASK_EXECUTION)) {
-      const toolkit = WebBrowserToolkit({ webBrowser: aiEmployee.resources.browser }) as Tool[];
-      tools.push(...toolkit)
+      // const toolkit = WebBrowserToolkit({ webBrowser: aiEmployee.resources.browser }) as Tool[];
+      // tools.push(...toolkit)
     }
 
     // Resource: AI Employee Email
