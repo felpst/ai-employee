@@ -32,12 +32,24 @@ const tools = [
     show: false
   },
   {
-    "id": "mail-sender",
-    "name": "Send Email",
-    "description": "Send emails",
+    "id": "mail",
+    "name": "Email",
+    "description": "Send and read emails",
     "icon": "https://storage.googleapis.com/factory-assets/tools/email-tool.png",
-    intentions: ['Task Execution'],
-    show: true
+    "intentions": ['Task Execution'],
+    "show": true,
+    "subTools": [
+      {
+        "id": "mail-sender",
+        "name": "Send Email",
+        "description": "Send emails"
+      },
+      {
+        "id": "mail-reader",
+        "name": "Read Email",
+        "description": "Read emails"
+      }
+    ]
   },
   {
     "id": "python",

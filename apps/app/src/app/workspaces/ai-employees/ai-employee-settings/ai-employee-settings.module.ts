@@ -13,7 +13,9 @@ import { AIEmployeeGeneralComponent } from './general/general.component';
 import { AIToolAddComponent } from './tools/tool-add/tool-add.component';
 import { AIToolSettingsGoogleCalendarComponent } from './tools/tool-settings/google-calendar/tool-settings-google-calendar.component';
 import { AIToolSettingsLinkedInLeadScraperComponent } from './tools/tool-settings/linkedin-lead-scraper/tool-settings-linkedin-lead-scraper.component';
-import { AIToolSettingsMailSenderComponent } from './tools/tool-settings/mail-sender/tool-settings-mail-sender.component';
+import { AIToolSettingsMailReaderComponent } from './tools/tool-settings/mail/mail-reader/tool-settings-mail-reader.component';
+import { AIToolSettingsMailSenderComponent } from './tools/tool-settings/mail/mail-sender/tool-settings-mail-sender.component';
+import { AIToolSettingsMailComponent } from './tools/tool-settings/mail/tool-settings-mail.component';
 import { AIToolSettingsSQLConnectorComponent } from './tools/tool-settings/sql-connector/tool-settings-sql-connector.component';
 import { AIEmployeeToolsComponent } from './tools/tools.component';
 @NgModule({
@@ -22,7 +24,9 @@ import { AIEmployeeToolsComponent } from './tools/tools.component';
     AIEmployeeGeneralComponent,
     AIEmployeeToolsComponent,
     AIToolAddComponent,
+    AIToolSettingsMailComponent,
     AIToolSettingsMailSenderComponent,
+    AIToolSettingsMailReaderComponent,
     AIToolSettingsSQLConnectorComponent,
     AIToolSettingsLinkedInLeadScraperComponent,
     AIToolSettingsGoogleCalendarComponent
