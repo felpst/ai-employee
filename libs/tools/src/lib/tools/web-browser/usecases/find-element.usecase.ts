@@ -40,6 +40,7 @@ export class FindElementUseCase extends WebBrowserUtils {
       z.object({
         selector: z.string().describe("element selector found on source page for Selenium Web Driver."),
         selectorType: z.enum(['id', 'name', 'xpath', 'css', 'js', 'linkText', 'partialLinkText']).describe("type of the selector for Selenium Web Driver."),
+        found: z.boolean().describe("true if the element was found, false otherwise."),
       })
     );
 
@@ -66,9 +67,11 @@ export class FindElementUseCase extends WebBrowserUtils {
       format_instructions: parser.getFormatInstructions(),
     });
 
-    if (response.selectorType === 'css' && response.selector.startsWith('#')) {
-      response.selectorType = 'id';
-    }
+
+
+    // if (response.selector.startsWith('#') && response.selector.includes('.')) {
+    //   response.selectorType = 'css';
+    // }
     if (response.selectorType === 'id') {
       response.selector = response.selector.replace('#', '');
     }

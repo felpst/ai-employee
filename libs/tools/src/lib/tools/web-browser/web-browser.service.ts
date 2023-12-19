@@ -11,6 +11,8 @@ import { LLMChainExtractor } from "langchain/retrievers/document_compressors/cha
 import { RecursiveCharacterTextSplitter } from "langchain/text_splitter";
 import { HNSWLib } from "langchain/vectorstores/hnswlib";
 import WebBrowserUtils from './web-browser-utils';
+import { Document } from 'langchain/document';
+import { WebBrowserElement } from './models/web-browser-element.model';
 
 export class WebBrowserService {
   currentURL: string;
@@ -23,9 +25,10 @@ export class WebBrowserService {
   async checkCurrentURLUpdated() {
     await this.webBrowser.driver.sleep(5000);
     const currentURL = await this.webBrowser.driver.getCurrentUrl();
-    if (this.currentURL === currentURL) return;
+    if (this.currentURL === currentURL) return false;
     this.currentURL = currentURL;
-    await this.prepareVectorBase();
+    this.retriever = null;
+    return true;
   }
 
   async loadPage(url: string): Promise<boolean> {
@@ -96,29 +99,67 @@ export class WebBrowserService {
   }
 
   async findElementByContext(context: string): Promise<any> {
+    // Load
+    console.log({ pageURL: this.currentURL, context });
+
+    const element = await WebBrowserElement.findOne({ pageURL: this.currentURL, context }).exec();
+    console.log(element);
+
+    // TODO force
+    if (element) { return element }
+
+    await this.prepareVectorBase();
     const useCase = new FindElementUseCase(this.webBrowser)
     const relevantContext = await this.retrieveRelevantContext(context);
     const result = await useCase.findElementByContext(context, relevantContext);
+
+    if (!result.found) {
+      throw new Error(`Element not found for context: ${{ pageURL: this.currentURL, context}}`);
+    }
+
+    // Save element
+    await WebBrowserElement.deleteMany({ pageURL: this.currentURL, context }).exec();
+    if (result.found) {
+      const newElement = await WebBrowserElement.create({
+        pageURL: this.currentURL,
+        context,
+        selector: result.selector,
+        selectorType: result.selectorType,
+      });
+      console.log({ newElement });
+    }
+
     return result;
   }
 
   async prepareVectorBase() {
+    if (this.retriever) return;
     console.log('prepareVectorBase...');
+
     const source = await this.getPageSource();
+    // console.log(source);
+    if (!source) throw new Error('Error getting page source');
 
     // fazer o loader para docs
     const model = new ChatModel();
     const baseCompressor = LLMChainExtractor.fromLLM(model);
 
-    const textSplitter = new RecursiveCharacterTextSplitter({ chunkSize: 2000 });
-    const docs = await textSplitter.createDocuments([source]);
+    // const textSplitter = new RecursiveCharacterTextSplitter({ chunkSize: 2000 });
+    // const docs = await textSplitter.createDocuments([source]);
+    const splitter = RecursiveCharacterTextSplitter.fromLanguage("html", {
+      chunkSize: 2000,
+      chunkOverlap: 20,
+    });
+    const docs = await splitter.createDocuments([source]);
+    console.log('docs lenght:', docs.length);
 
     // Create a vector store from the documents.
     const vectorStore = await HNSWLib.fromDocuments(docs, new EmbeddingsModel());
+    console.log('vectorStory ready');
 
     this.retriever = new ContextualCompressionRetriever({
       baseCompressor,
-      baseRetriever: vectorStore.asRetriever(),
+      baseRetriever: vectorStore.asRetriever({searchType: 'similarity'}),
     });
   }
 
@@ -127,6 +168,8 @@ export class WebBrowserService {
       `Task: You need to identify the original element in the html page source code using the context.
       Context: ${context}`
     );
+
+    if (!retrievedDocs.length) throw new Error('Error retrieving relevant context');
 
     console.log({ retrievedDocs });
     return retrievedDocs.map(doc => doc.pageContent).join('\n');

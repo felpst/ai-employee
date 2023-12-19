@@ -1,22 +1,22 @@
 import { DynamicStructuredTool } from 'langchain/tools';
 import { z } from 'zod';
-import { WebBrowserService } from './web-browser.service';
-import { WebBrowserToolSettings } from './web-browser.toolkit';
+import { WebBrowserService } from '../web-browser.service';
+import { WebBrowserToolSettings } from '../web-browser.toolkit';
 
 export class WebBrowserLoadPageTool extends DynamicStructuredTool {
   constructor(settings: WebBrowserToolSettings) {
     super({
       name: 'Web Browser Load Page',
       metadata: { id: "web-browser", tool: 'loadPage' },
-      description: 'Use this tool load a page on web browser.',
+      description: 'Use this to load a page on web browser.',
       schema: z.object({
         url: z.string().describe("valid url to load page on web browser"),
       }),
       func: async ({ url }) => {
         try {
-          const browserService = new WebBrowserService(settings.webBrowser);
-          const loaded = await browserService.loadPage(url);
+          const loaded = await settings.webBrowserService.loadPage(url);
           if (!loaded) throw new Error(`Page not loaded on web browser: ${url}`);
+          console.log('Current page url: ', settings.webBrowserService.currentURL);
           return `Page loaded on web browser: ${url}`;
         } catch (error) {
           return error.message;

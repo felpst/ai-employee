@@ -1,14 +1,14 @@
 import { DynamicStructuredTool } from 'langchain/tools';
 import { z } from 'zod';
-import { WebBrowserService } from './web-browser.service';
-import { WebBrowserToolSettings } from './web-browser.toolkit';
+import { WebBrowserService } from '../web-browser.service';
+import { WebBrowserToolSettings } from '../web-browser.toolkit';
 
 export class WebBrowserClickTool extends DynamicStructuredTool {
   constructor(settings: WebBrowserToolSettings) {
     super({
       name: 'Web Browser Click',
       metadata: { id: "web-browser", tool: 'click' },
-      description: 'Use this tool to click an element on an web browser page.',
+      description: 'Use this to click an element on an web browser page.',
       schema: z.object({
         context: z.string().describe("context of the element to click."),
         findTimeout: z.number().optional().default(10000).describe("timeout to find the element in ms."),
@@ -18,11 +18,9 @@ export class WebBrowserClickTool extends DynamicStructuredTool {
         findTimeout
       }) => {
         try {
-          const browserService = new WebBrowserService(settings.webBrowser);
-          const element = await browserService.findElementByContext(context)
+          const element = await settings.webBrowserService.findElementByContext(context)
 
-
-          const success = await browserService.clickElement({
+          const success = await settings.webBrowserService.clickElement({
             elementSelector: element.selector,
             selectorType: element.selectorType,
             findTimeout
