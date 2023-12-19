@@ -18,7 +18,7 @@ export class LinkedinTest {
     const inputEmail = await this.service.inputText(process.env.LINKEDIN_USERNAME, {
       selectorType: emailElement.selectorType,
       elementSelector: emailElement.selector,
-    });
+    }); 
     console.log('inputEmail', inputEmail);
     if (!inputEmail) throw new Error('Error inputing email');
 
