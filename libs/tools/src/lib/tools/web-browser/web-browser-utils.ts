@@ -30,7 +30,23 @@ export default class WebBrowserUtils {
       var elements = element.querySelectorAll('[jsaction]');
       elements.forEach(element => element.removeAttribute('jsaction'));
 
-      return element.innerHTML;
+      var removeComments = (node: any) => {
+        if (!node) return;
+        node.childNodes.forEach((child: any) => {
+            if (child.nodeType === 8) { // Node.COMMENT_NODE
+                child.remove();
+            } else {
+                removeComments(child);
+            }
+        });
+      };
+      removeComments(element);
+
+      var html = element.innerHTML;
+      html = html.replace(/\n/g, '\n').trim();
+      html = html.replace(/\s+/g, ' ').trim();
+
+      return html;
     }, [selector]);
   }
 }

@@ -1,4 +1,5 @@
 export * from './lib/agents/general'
+export * from './lib/agents/browser/browser.agent'
 export * from './lib/ai-employee.model'
 export * from './lib/call'
 export * from './lib/repositories'

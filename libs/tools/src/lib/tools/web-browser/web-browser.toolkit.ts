@@ -1,16 +1,19 @@
 import { IWebBrowser } from "@cognum/interfaces";
 import { DynamicStructuredTool, Tool } from "langchain/tools";
-import { WebBrowser } from "./web-browser";
-import { KeyPressTool } from "./web-browser-key-up-emiter";
-import { WebBrowserLoadPageTool } from "./web-browser-load-page.tool";
+import { WebBrowserLoadPageTool } from "./tools/web-browser-load-page.tool";
+import { WebBrowserInputTextTool } from "./tools/web-browser-input-text.tool";
+import { WebBrowserClickTool } from "./tools/web-browser-click.tool";
+import { WebBrowserService } from "./web-browser.service";
 
 export interface WebBrowserToolSettings {
-  webBrowser: IWebBrowser;
+  webBrowserService: WebBrowserService;
 }
 
 export function WebBrowserToolkit(settings: WebBrowserToolSettings): DynamicStructuredTool[] | Tool[] {
   return [
     new WebBrowserLoadPageTool(settings),
+    new WebBrowserInputTextTool(settings),
+    new WebBrowserClickTool(settings),
     // new KeyPressTool(settings),
     // new WebBrowserFindElementTool(settings)
   ]
