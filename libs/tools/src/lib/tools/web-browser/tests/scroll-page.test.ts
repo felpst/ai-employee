@@ -26,6 +26,6 @@ describe('Scroll Page tool test', () => {
   });
 
   afterAll(async () => {
-    // await webBrowser.driver.close();
+    await webBrowser.driver.close();
   });
 });
