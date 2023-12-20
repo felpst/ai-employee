@@ -68,7 +68,7 @@ export class MailController extends ModelController<typeof Job> {
         });
 
         // Answer email
-        await mailService.send({
+        await mailService.sendMarkdown({
           from: `${aiEmployee.name} - Cognum AI Employee <${aiEmployee.getEmail()}>`,
           replyTo: `${aiEmployee.name} - Cognum AI Employee <${aiEmployee.getEmail()}>`,
           inReplyTo: mail.id,
