@@ -29,8 +29,8 @@ export class AIToolSettingsMailComponent implements AfterViewInit {
   initializeFormGroup() {
     this.formGroup = this.formBuilder.group({
       subTools: this.formBuilder.group({
-        mailSenderSelected: new FormControl(this.data.tool.options?.subTools?.mailSenderSelected !== undefined ? this.data.tool.options.subTools.mailSenderSelected : true),
-        mailReaderSelected: new FormControl(this.data.tool.options?.subTools?.mailReaderSelected !== undefined ? this.data.tool.options.subTools.mailReaderSelected : true),
+        mailSenderSelected: new FormControl(this.data.tool.options?.tools?.send !== undefined ? this.data.tool.options.tools.send : true),
+        mailReaderSelected: new FormControl(this.data.tool.options?.tools?.read !== undefined ? this.data.tool.options.tools.read : true),
         mailSender: this.formBuilder.group({}),
         mailReader: this.formBuilder.group({}),
       }),
@@ -73,7 +73,6 @@ export class AIToolSettingsMailComponent implements AfterViewInit {
     const { mailSenderSelected: send, mailReaderSelected: read, mailSender = {}, mailReader = {} } = formValue.subTools;
     const { auth = { user: '', pass: '' }, host = '', port = '', secure = false } = send ? mailSender : {};
     const { host: imapHost = '', port: imapPort = '', tls = false } = read ? mailReader : {};
-  
     return {
       from: auth.user,
       replyTo: auth.user,
