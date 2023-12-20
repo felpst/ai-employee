@@ -82,6 +82,7 @@
     "selenium-chrome-proxy-plugin": "^0.2.2",
     "selenium-node-webdriver": "^0.1.2",
     "selenium-webdriver": "^4.15.0",
+    "serpapi": "^2.0.0",
     "stack-trace": "^1.0.0-pre2",
     "treeify": "^1.1.0",
     "tslib": "^2.3.0",
