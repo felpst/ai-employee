@@ -4,6 +4,11 @@ import { IElementFindOptions, elementSchema } from './common/element-schema';
 import { WebBrowserService } from './web-browser.service';
 import { WebBrowserToolSettings } from './web-browser.toolkit';
 
+export type ScrollPageProps = {
+  direction: 'Vertical' | 'Horizontal';
+  scrollTo: number
+}
+
 export class WebBrowserScrollPageTool extends DynamicStructuredTool {
   constructor(settings: WebBrowserToolSettings) {
     super({
@@ -11,16 +16,21 @@ export class WebBrowserScrollPageTool extends DynamicStructuredTool {
       metadata: { id: "web-browser", tool: 'scrollPage' },
       description: 'Use this tool to scroll page vertically.',
       schema: elementSchema.extend({
-        location: z.number().optional().describe("the location where the page will be scrolled"),
+        scrollTo: z.number().optional().describe("the location where the page will be scrolled"),
+        direction: z.string().default('Vertical').describe("the direction in which the page will be scrolled"),
+        findTimeout: z.number().optional().default(10000).describe("timeout to find the element in ms."),
       }),
-      func: async ({ location, ...params }: IElementFindOptions & { location: number; }) => {
+      func: async ({ scrollTo, direction, ...params }: IElementFindOptions & ScrollPageProps) => {
         try {
+          const { elementSelector, selectorType } = params
+          const options = !!elementSelector && !!selectorType ? { ...params } : null
           const browserService = new WebBrowserService(settings.webBrowser);
 
-          const success = await browserService.scrollPage(location, params);
+
+          const success = await browserService.scrollPage(scrollTo, direction, options);
           if (!success) throw new Error(`Location scroll unsuccessful`);
 
-          return `Location scroll to ${location} was successfully done`;
+          return `Location scroll to ${scrollTo} was successfully done`;
         } catch (error) {
           return error.message;
         }
