@@ -46,20 +46,25 @@ export class LinkedinTest {
 
     await this.service.keyupEmiter('\uE007');
 
-    const peopleButtonContext = 'See all people button';
+
+    // await this.service.scrollPage(1800);
+
+    const peopleButtonContext = 'app-aware-link see all people results';
     const peopleButtonElement = await this.service.findElementByContext(peopleButtonContext);
     await this.service.click({
       selectorType: peopleButtonElement.selectorType,
       elementSelector: peopleButtonElement.selector,
     });
+    await this.service.scrollPage(1800);
 
-    const resultsContainer = 'Search results container';
+    const resultsContainer = 'Extract data of reusable-search__entity-result-list list-style-none';
     const resultsContainerElement = await this.service.findElementByContext(resultsContainer);
     const data = await this.service.extractData({
       selectorType: resultsContainerElement.selectorType,
       elementSelector: resultsContainerElement.selector,
     });
     console.log('data', data);
+
 
 
     const nextButtonContext = 'next Button in page';

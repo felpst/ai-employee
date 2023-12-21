@@ -1,8 +1,8 @@
 import { DynamicStructuredTool } from 'langchain/tools';
 import { z } from 'zod';
-import { Key } from './keyup-emiter/keyup-emiter.interface';
-import { WebBrowserService } from './web-browser.service';
-import { WebBrowserToolSettings } from './web-browser.toolkit';
+import { Key } from '../keyup-emiter/keyup-emiter.interface';
+import { WebBrowserService } from '../web-browser.service';
+import { WebBrowserToolSettings } from '../web-browser.toolkit';
 
 export class KeyPressTool extends DynamicStructuredTool {
   constructor(settings: WebBrowserToolSettings) {
@@ -16,8 +16,7 @@ export class KeyPressTool extends DynamicStructuredTool {
       }),
       func: async ({ key, combination }) => {
         try {
-          const browserService = new WebBrowserService(settings.webBrowser);
-          return await browserService.keyupEmiter(key, combination);
+          return await settings.webBrowserService.keyupEmiter(key, combination);
         } catch (error) {
           return error.message;
         }

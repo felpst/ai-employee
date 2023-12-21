@@ -5,7 +5,14 @@ export class AIELinkedIn {
 
   async execute() {
     // const instructions = 'Open LinkedIn page'
-    const instructions = `Login on LinkedIn with ${process.env.LINKEDIN_USERNAME} and ${process.env.LINKEDIN_PASSWORD}.`
+    const instructions = `
+    Do this steps:
+    1. Login on LinkedIn with ${process.env.LINKEDIN_USERNAME} and ${process.env.LINKEDIN_PASSWORD}.
+    2. In Global Search, Search for "Web Developer in Brazil" and press enter.
+    4. Filter by People only.
+    3. Click next page.
+    4. Extract data of the results.
+    `
 
     const browserAgent = new BrowserAgent()
     await browserAgent.init()

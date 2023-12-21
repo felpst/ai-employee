@@ -147,7 +147,7 @@ export class WebBrowserService {
     // const textSplitter = new RecursiveCharacterTextSplitter({ chunkSize: 2000 });
     // const docs = await textSplitter.createDocuments([source]);
     const splitter = RecursiveCharacterTextSplitter.fromLanguage("html", {
-      chunkSize: 2000,
+      chunkSize: 4000,
       chunkOverlap: 20,
     });
     const docs = await splitter.createDocuments([source]);
