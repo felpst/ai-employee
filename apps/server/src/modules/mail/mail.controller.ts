@@ -80,7 +80,7 @@ export class MailController extends ModelController<typeof Job> {
 
         // Marcar email como lido
         // console.log('Marking email as read');
-        // await mailService.markAsRead(mail.uid);
+        await mailService.markAsRead(mail.uid);
       }
 
       return res.status(200).json({ message: 'Emails are checked' });

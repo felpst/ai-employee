@@ -123,7 +123,7 @@ export class AIEmployeeTools {
   }
 
   static async filterByContext(tools: (Tool[] | DynamicStructuredTool[]), input: string, formattedToolsContext: string) {
-    const model = new ChatModel();
+    const model = new ChatModel({ temperature: 0.7 });
     const baseCompressor = LLMChainExtractor.fromLLM(model);
 
     const docs = tools.map((tool: any) => {
