@@ -10,8 +10,10 @@ def python_tool_route():
     try:
         input_data = request.get_json()
         input_text = input_data.get("input_text", "")
+        instructions = input_data.get("instructions", "")
+        file_urls = input_data.get("file_urls", [])
         logger.info(f"Input text: {input_text}")
-        result = python_tool.PythonTool().run(input_text)
+        result = python_tool.PythonTool(instructions, file_urls).run(input_text)
         logger.info(f"Result: {result}")
         return jsonify({"result": result}), 200
     except Exception as e:
