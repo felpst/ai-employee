@@ -55,5 +55,7 @@ class PythonTool:
 
     def cleanup_files(self):
         for file_path in self._downloaded_files:
-            os.remove(file_path)
-            self._downloaded_files.remove(file_path)
+            try: 
+                os.remove(file_path)
+            finally:
+                self._downloaded_files.remove(file_path)
