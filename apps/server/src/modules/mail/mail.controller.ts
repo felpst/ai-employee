@@ -20,7 +20,7 @@ export class MailController extends ModelController<typeof Job> {
       const mails = await mailService.find({
         status: 'UNSEEN',
       })
-      console.log(mails);
+      // console.log(mails);
 
       for (const mail of mails) {
         // Get AI Employee
@@ -40,6 +40,19 @@ export class MailController extends ModelController<typeof Job> {
         if (!aiEmployee) continue;
         // console.log(aiEmployee);
 
+        // Loading all messages
+        const allMails = await mailService.find({});
+        let relatedMessages = [];
+
+        if (mail.references) {
+          for (const ref of mail.references) {
+            const relatedMails = allMails.filter(m => 
+              m && m.references && m.references.includes(ref)
+            );
+            relatedMessages.push(...relatedMails);
+          }
+        }
+
         // Get user
         const emailFrom = mail.from.includes('<') ? mail.from.split('<')[1]?.split('>')[0] : mail.from
         // console.log(emailFrom);
@@ -54,7 +67,10 @@ export class MailController extends ModelController<typeof Job> {
         // Execute call
         const call = await aiEmployee.call({
           input: mail.text,
-          user
+          user,
+          context: {
+            chatMessages: relatedMessages
+          },
         })
         call.context.chatChannel = 'email';
         const callResult: IAIEmployeeCall = await new Promise((resolve, reject) => {
