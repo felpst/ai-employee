@@ -27,17 +27,19 @@ export default class WebBrowserUtils {
       Array.from(element.getElementsByTagName('svg')).forEach((el: any) => el.remove());
       Array.from(element.getElementsByTagName('hr')).forEach((el: any) => el.remove());
 
-      var elements = element.querySelectorAll('[jsaction]');
-      elements.forEach(element => element.removeAttribute('jsaction'));
+      element.querySelectorAll('*').forEach(el => {
+        el.removeAttribute('jsaction');
+        if (el.style.display === 'none') el.remove();
+      });
 
       var removeComments = (node: any) => {
         if (!node) return;
         node.childNodes.forEach((child: any) => {
-            if (child.nodeType === 8) { // Node.COMMENT_NODE
-                child.remove();
-            } else {
-                removeComments(child);
-            }
+          if (child.nodeType === 8) { // Node.COMMENT_NODE
+            child.remove();
+          } else {
+            removeComments(child);
+          }
         });
       };
       removeComments(element);
