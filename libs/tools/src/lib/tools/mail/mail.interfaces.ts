@@ -29,6 +29,7 @@ export interface MailFilters {
   to?: string
   subject?: string
   status?: 'ALL' | 'NEW' | 'UNSEEN' | 'SEEN' | 'FLAGGED' | 'UNFLAGGED' | 'RECENT' | 'OLD' | 'ANSWERED' | 'UNANSWERED' | 'DELETED' | 'UNDELETED' | 'DRAFT' | 'UNDRAFT'
+  references?: string[]
 }
 
 export interface SendMailData {
@@ -64,5 +65,5 @@ export interface Email {
   text: string
   // html: string
   attachments: string
-  references: string
+  references: string[]
 }

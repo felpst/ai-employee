@@ -40,19 +40,11 @@ export class MailController extends ModelController<typeof Job> {
         if (!aiEmployee) continue;
         // console.log(aiEmployee);
 
-        // Loading all messages
-        const allMails = await mailService.find({});
+        // Loading related messages
         let relatedMessages = [];
-
         if (mail.references) {
-          for (const ref of mail.references) {
-            const relatedMails = allMails.filter(m => 
-              m && m.references && m.references.includes(ref)
-            );
-            relatedMessages.push(...relatedMails);
-          }
+          relatedMessages = await mailService.find({ references: mail.references });
         }
-
         // Get user
         const emailFrom = mail.from.includes('<') ? mail.from.split('<')[1]?.split('>')[0] : mail.from
         // console.log(emailFrom);
@@ -69,7 +61,7 @@ export class MailController extends ModelController<typeof Job> {
           input: mail.text,
           user,
           context: {
-            chatMessages: relatedMessages
+            chatMessages: relatedMessages && relatedMessages.length > 0 ? relatedMessages : [],
           },
         })
         call.context.chatChannel = 'email';
