@@ -13,13 +13,11 @@ export class LinkedinTest {
 
     const emailContext = 'Email field';
     const emailElement = await this.service.findElementByContext(emailContext);
-    console.log('emailElement', emailElement);
 
     const inputEmail = await this.service.inputText(process.env.LINKEDIN_USERNAME, {
       selectorType: emailElement.selectorType,
       elementSelector: emailElement.selector,
     });
-    console.log('inputEmail', inputEmail);
     if (!inputEmail) throw new Error('Error inputing email');
 
     const passwordContext = 'Password field';
@@ -46,10 +44,7 @@ export class LinkedinTest {
 
     await this.service.keyupEmiter('\uE007');
 
-
-    // await this.service.scrollPage(1800);
-
-    const peopleButtonContext = 'app-aware-link see all people results';
+    const peopleButtonContext = 'See all people results';
     const peopleButtonElement = await this.service.findElementByContext(peopleButtonContext);
     await this.service.click({
       selectorType: peopleButtonElement.selectorType,
@@ -57,19 +52,9 @@ export class LinkedinTest {
     });
     await this.service.scrollPage(1800);
 
-    const resultsContainer = 'Extract data of reusable-search__entity-result-list list-style-none';
-    const resultsContainerElement = await this.service.findElementByContext(resultsContainer);
-    const data = await this.service.extractData({
-      selectorType: resultsContainerElement.selectorType,
-      elementSelector: resultsContainerElement.selector,
-    });
-    console.log('data', data);
-
-
-
-    const nextButtonContext = 'next Button in page';
+    const nextButtonContext = 'next page button';
     const nextButtonElement = await this.service.findElementByContext(nextButtonContext);
-    const nextButtonClick = await this.service.click({
+    await this.service.click({
       selectorType: nextButtonElement.selectorType,
       elementSelector: nextButtonElement.selector,
     });
