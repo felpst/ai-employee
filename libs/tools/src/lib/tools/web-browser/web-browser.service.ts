@@ -230,9 +230,6 @@ export class WebBrowserService {
     const result = await useCase.chooseLikelySelector(context, possibleSelectors);
     console.log({ llmSelectorChoice: result });
 
-    if (!result.found) {
-      throw new Error(`Element not found for context: ${{ pageURL: this.currentURL, context }}`);
-    }
     return result;
   }
 

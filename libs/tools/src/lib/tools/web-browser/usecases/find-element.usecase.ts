@@ -82,19 +82,23 @@ export class FindElementUseCase extends WebBrowserUtils {
   async chooseLikelySelector(context: string, selectors: string[]): Promise<any> {
     const parser = StructuredOutputParser.fromZodSchema(
       z.object({
-        selector: z.string().describe("choosen element selector for Selenium Web Driver."),
-        selectorType: z.enum(['xpath']).default('xpath').describe("type of the selector for Selenium Web Driver. Always 'xpath'."),
-        found: z.boolean().describe("true if the selector was found, false otherwise."),
+        selectorIndex: z.number().describe("choosen selector index from the list."),
+        found: z.boolean().describe("true if the selector is a valid selector on the page, false otherwise."),
       })
     );
 
+    const enumeratedSelectorsList = selectors
+      .sort()
+      .map((selector, index) => `${index + 1} - ${selector}`)
+      .join('\n');
+
     const chain = RunnableSequence.from([
       PromptTemplate.fromTemplate(
-        `Task: You need to identify the most probable xpath for an element in an html page source code using the context.
+        `Task: You need to identify the most likely xpath selector for an element in an html page source code using the context.
         Context: {context}
-        Possible selectors:
+        Possible selector options:
         \`\`\`txt
-        {selectors}
+        {list}
         \`\`\`
 
         {format_instructions}`
@@ -103,12 +107,19 @@ export class FindElementUseCase extends WebBrowserUtils {
       parser,
     ]);
 
-    const response = await chain.invoke({
+    const result = await chain.invoke({
       context,
-      selectors: selectors.join('\n'),
+      list: enumeratedSelectorsList,
       format_instructions: parser.getFormatInstructions(),
     });
 
-    return response;
+    if (!result.found) {
+      throw new Error(`Element not found for context: "${context}"`);
+    }
+
+    return {
+      selector: selectors.sort()[result.selectorIndex - 1],
+      selectorType: 'xpath',
+    };
   }
 }
