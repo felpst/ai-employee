@@ -51,4 +51,73 @@ export default class WebBrowserUtils {
       return html;
     }, [selector]);
   }
+
+  async getInteractiveElementsXPathSelectors(): Promise<string[]> {
+    const interactiveElements = ['button', 'input', 'a', 'textarea'];
+    const selectors = await this.webBrowser.driver.executeScript((validElements: string[]) => {
+      const interactiveElements = document.querySelectorAll(validElements.join(', '));
+
+      const elementSelectors = Array.from(interactiveElements).map(
+        (element) => {
+          const segments = [];
+          let currentElement = element;
+
+          while (currentElement) {
+            let segment = currentElement.tagName.toLowerCase();
+
+            if (currentElement.id) {
+              segment += `[@id='${currentElement.id}']`;
+            }
+            if (currentElement.classList.length > 0 && !currentElement.id) {
+              segment += `[contains(@class, '${Array.from(currentElement.classList)[0]}')]`;
+              // segment+=`[contains(@class, '${Array.from(currentElement.classList).join(' ')}')]`;
+            }
+            if (currentElement instanceof HTMLInputElement && currentElement.placeholder) {
+              segment += (`[contains(@placeholder, '${currentElement.placeholder}')]`);
+            }
+
+            segments.unshift(segment);
+            currentElement = currentElement.parentElement;
+          }
+
+          let path = `/${segments.join('/')}`;
+
+          let textContent = '';
+          if (element.childElementCount > 0) {
+            textContent = element.childNodes[0]?.textContent?.trim();
+          } else {
+            textContent = element.textContent;
+          }
+          if (textContent) {
+            path += `[text()[contains(.,'${sanitizeText(textContent)}')]]`;
+          }
+
+          const label = element.getAttribute('label');
+          const ariaLabel = element.getAttribute('aria-label');
+          if (label || ariaLabel) {
+            path += `[contains(@${label ? 'label' : 'aria-label'},'${label || ariaLabel}')]`;
+          }
+
+          const href = element.getAttribute('href');
+          if (href) {
+            path += `[contains(@href,'${href}')]`;
+          }
+
+          return path;
+        }
+      );
+
+      function sanitizeText(text) {
+        let trimmedStr = text.trim();
+        let result = trimmedStr.replace(/(?:^\n+|\n+$)/g, '');
+        result = result.trim();
+
+        return result;
+      }
+
+      return elementSelectors;
+    }, [interactiveElements]) as string[];
+
+    return selectors;
+  }
 }
