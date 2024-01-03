@@ -78,4 +78,37 @@ export class FindElementUseCase extends WebBrowserUtils {
 
     return response;
   }
+
+  async chooseLikelySelector(context: string, selectors: string[]): Promise<any> {
+    const parser = StructuredOutputParser.fromZodSchema(
+      z.object({
+        selector: z.string().describe("choosen element selector for Selenium Web Driver."),
+        selectorType: z.enum(['xpath']).default('xpath').describe("type of the selector for Selenium Web Driver. Always 'xpath'."),
+        found: z.boolean().describe("true if the selector was found, false otherwise."),
+      })
+    );
+
+    const chain = RunnableSequence.from([
+      PromptTemplate.fromTemplate(
+        `Task: You need to identify the most probable xpath for an element in an html page source code using the context.
+        Context: {context}
+        Possible selectors:
+        \`\`\`txt
+        {selectors}
+        \`\`\`
+
+        {format_instructions}`
+      ),
+      new ChatModel(),
+      parser,
+    ]);
+
+    const response = await chain.invoke({
+      context,
+      selectors: selectors.join('\n'),
+      format_instructions: parser.getFormatInstructions(),
+    });
+
+    return response;
+  }
 }

@@ -1,5 +1,5 @@
 import { IWebBrowser } from '@cognum/interfaces';
-import { ChatModel, EmbeddingsModel } from '@cognum/llm';
+import { EmbeddingsModel } from '@cognum/llm';
 import { By, until } from 'selenium-webdriver';
 import { IElementFindOptions } from './common/element-schema';
 import { ExtractDataUseCase } from './usecases/extract-data.usecase';
@@ -7,16 +7,14 @@ import { FindElementUseCase } from './usecases/find-element.usecase';
 
 
 import { ContextualCompressionRetriever } from "langchain/retrievers/contextual_compression";
-import { LLMChainExtractor } from "langchain/retrievers/document_compressors/chain_extract";
-import { RecursiveCharacterTextSplitter } from "langchain/text_splitter";
 import { HNSWLib } from "langchain/vectorstores/hnswlib";
 import WebBrowserUtils from './web-browser-utils';
-import { Document } from 'langchain/document';
 import { WebBrowserElement } from './models/web-browser-element.model';
+import { VectorStoreRetriever } from 'langchain/dist/vectorstores/base';
 
 export class WebBrowserService {
   currentURL: string;
-  retriever: ContextualCompressionRetriever;
+  retriever: ContextualCompressionRetriever | VectorStoreRetriever;
 
   constructor(
     private webBrowser: IWebBrowser
@@ -38,7 +36,7 @@ export class WebBrowserService {
       console.log(`Waiting for page load: ${url}`);
       const currentUrl = await this.webBrowser.driver.getCurrentUrl();
       if (currentUrl.includes(url)) {
-        await this.checkCurrentURLUpdated()
+        await this.checkCurrentURLUpdated();
         return true;
       }
     }
@@ -54,10 +52,9 @@ export class WebBrowserService {
 
     if (!element) return false;
     await element.click();
-    await this.checkCurrentURLUpdated()
+    await this.checkCurrentURLUpdated();
     return true;
   }
-
 
   async inspectElement(idOrClass: string): Promise<any> {
     try {
@@ -98,7 +95,7 @@ export class WebBrowserService {
     return true;
   }
 
-  async findElementByContext(context: string): Promise<any> {
+  async findElementByContextBkp(context: string): Promise<any> {
     // Load
     console.log({ pageURL: this.currentURL, context });
 
@@ -106,15 +103,15 @@ export class WebBrowserService {
     console.log(element);
 
     // TODO force
-    if (element) { return element }
+    if (element) { return element; }
 
     await this.prepareVectorBase();
-    const useCase = new FindElementUseCase(this.webBrowser)
+    const useCase = new FindElementUseCase(this.webBrowser);
     const relevantContext = await this.retrieveRelevantContext(context);
-    const result = await useCase.findElementByContext(context, relevantContext);
+    const result = await useCase.findElementByContext(context, relevantContext.join('\n'));
 
     if (!result.found) {
-      throw new Error(`Element not found for context: ${{ pageURL: this.currentURL, context}}`);
+      throw new Error(`Element not found for context: ${{ pageURL: this.currentURL, context }}`);
     }
 
     // Save element
@@ -136,54 +133,29 @@ export class WebBrowserService {
     if (this.retriever) return;
     console.log('prepareVectorBase...');
 
-    const source = await this.getPageSource();
-    // console.log(source);
-    if (!source) throw new Error('Error getting page source');
+    const docs = await new WebBrowserUtils(this.webBrowser)
+      .getInteractiveElementsXPathSelectors();
 
-    // fazer o loader para docs
-    const model = new ChatModel();
-    const baseCompressor = LLMChainExtractor.fromLLM(model);
-
-    // const textSplitter = new RecursiveCharacterTextSplitter({ chunkSize: 2000 });
-    // const docs = await textSplitter.createDocuments([source]);
-    const splitter = RecursiveCharacterTextSplitter.fromLanguage("html", {
-      chunkSize: 4000,
-      chunkOverlap: 20,
-    });
-    const docs = await splitter.createDocuments([source]);
     console.log('docs lenght:', docs.length);
 
-    // Create a vector store from the documents.
-    const vectorStore = await HNSWLib.fromDocuments(docs, new EmbeddingsModel());
-    console.log('vectorStory ready');
+    const vectorStore = await HNSWLib.fromTexts(docs, {}, new EmbeddingsModel());
+    console.log('vectorStore ready');
 
-    this.retriever = new ContextualCompressionRetriever({
-      baseCompressor,
-      baseRetriever: vectorStore.asRetriever({searchType: 'similarity'}),
-    });
+    this.retriever = vectorStore.asRetriever();
   }
 
-  async retrieveRelevantContext(context: string): Promise<any> {
-    const retrievedDocs = await this.retriever.getRelevantDocuments(
-      `Task: You need to identify the original element in the html page source code using the context.
-      Context: ${context}`
-    );
+  async retrieveRelevantContext(context: string): Promise<string[]> {
+    const retrievedDocs = await this.retriever.getRelevantDocuments(context);
 
     if (!retrievedDocs.length) throw new Error('Error retrieving relevant context');
 
-    console.log({ retrievedDocs });
-    return retrievedDocs.map(doc => doc.pageContent).join('\n');
+    return retrievedDocs.map(doc => doc.pageContent);
   }
 
   async getPageSource(): Promise<string> {
-    const webBrowserUtils = new WebBrowserUtils(this.webBrowser)
-    const source = await webBrowserUtils.getHtmlFromElement('body')
+    const webBrowserUtils = new WebBrowserUtils(this.webBrowser);
+    const source = await webBrowserUtils.getHtmlFromElement('body');
     return source;
-  }
-
-  async findElementByContextBkp(context: string): Promise<any> {
-    const element = await new FindElementUseCase(this.webBrowser).execute(context);
-    return element;
   }
 
   async scrollPage(location?: number, options?: IElementFindOptions): Promise<boolean> {
@@ -226,7 +198,7 @@ export class WebBrowserService {
         async () => {
           await this.webBrowser.driver.actions().keyUp(key).perform();
           combination.map(async k => await this.webBrowser.driver.actions().keyUp(k).perform());
-          await this.checkCurrentURLUpdated()
+          await this.checkCurrentURLUpdated();
           return `Keys ${key}, ${combination.join(',')} pressed`;
         },
         (error) => {
@@ -237,7 +209,7 @@ export class WebBrowserService {
       return await this.webBrowser.driver.actions().keyDown(key).perform().then(
         async () => {
           await this.webBrowser.driver.actions().keyUp(key).perform();
-          await this.checkCurrentURLUpdated()
+          await this.checkCurrentURLUpdated();
           return `Key ${key} pressed`;
         },
         (error) => {
@@ -245,6 +217,23 @@ export class WebBrowserService {
         }
       );
     }
+  }
+
+  async findElementByContext(context: string) {
+    console.log({ pageURL: this.currentURL, context });
+
+    await this.prepareVectorBase();
+    const useCase = new FindElementUseCase(this.webBrowser);
+    const possibleSelectors = await this.retrieveRelevantContext(context);
+    console.log({ possibleSelectors: possibleSelectors });
+
+    const result = await useCase.chooseLikelySelector(context, possibleSelectors);
+    console.log({ llmSelectorChoice: result });
+
+    if (!result.found) {
+      throw new Error(`Element not found for context: ${{ pageURL: this.currentURL, context }}`);
+    }
+    return result;
   }
 
   private async _findElement(findOptions: IElementFindOptions) {
