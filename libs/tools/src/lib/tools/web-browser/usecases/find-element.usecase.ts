@@ -83,7 +83,7 @@ export class FindElementUseCase extends WebBrowserUtils {
     const parser = StructuredOutputParser.fromZodSchema(
       z.object({
         selectorIndex: z.number().describe("choosen selector index from the list."),
-        found: z.boolean().describe("true if the selector is a valid selector on the page, false otherwise."),
+        found: z.boolean().describe("true if the selector matches the context, false otherwise."),
       })
     );
 
@@ -103,14 +103,14 @@ export class FindElementUseCase extends WebBrowserUtils {
 
         {format_instructions}`
       ),
-      new ChatModel(),
+      new ChatModel({ maxTokens: 50 }),
       parser,
     ]);
 
     const result = await chain.invoke({
       context,
       list: enumeratedSelectorsList,
-      format_instructions: parser.getFormatInstructions(),
+      format_instructions: parser.getFormatInstructions()
     });
 
     if (!result.found) {
