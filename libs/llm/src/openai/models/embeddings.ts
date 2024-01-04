@@ -1,5 +1,4 @@
 import { AzureOpenAIInput } from 'langchain/chat_models/openai';
-import { LegacyOpenAIInput } from 'langchain/dist/types/openai-types';
 import {
   OpenAIEmbeddings as LangchainOpenAIEmbeddings,
   OpenAIEmbeddingsParams,
@@ -13,7 +12,7 @@ export class EmbeddingsModel extends LangchainOpenAIEmbeddings {
         verbose?: boolean;
         openAIApiKey?: string;
       },
-    configuration?: ClientOptions & LegacyOpenAIInput
+    configuration?: ClientOptions
   ) {
     super(
       {
