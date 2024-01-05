@@ -10,7 +10,7 @@ export class WebBrowserClickTool extends DynamicStructuredTool {
       metadata: { id: "web-browser", tool: 'click' },
       description: 'Use this to click an element on an web browser page.',
       schema: z.object({
-        context: z.string().describe("context of the element to click."),
+        context: z.string().describe("context description of the element to click."),
         findTimeout: z.number().optional().default(10000).describe("timeout to find the element in ms."),
       }),
       func: async ({

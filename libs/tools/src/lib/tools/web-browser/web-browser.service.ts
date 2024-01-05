@@ -43,6 +43,10 @@ export class WebBrowserService {
     return false;
   }
 
+  async getCurrentUrl(): Promise<string> {
+    return this.webBrowser.driver.getCurrentUrl();
+  }
+
   async click(options: IElementFindOptions) {
     const element =
       await this.webBrowser.driver.wait(
@@ -239,4 +243,22 @@ export class WebBrowserService {
       findOptions.findTimeout
     );
   }
+
+  async mapPageElements(filterByTag?: string): Promise<Element[]> {
+    const elements = (await new WebBrowserUtils(this.webBrowser).getInteractiveElementsXPathSelectors()).map(e => ({
+      selector: e,
+      context: e.split('/').pop(),
+      tag: e.split('/').pop().split('[').shift()
+    }));
+    if (filterByTag) {
+      return elements.filter(e => e.tag === filterByTag);
+    }
+    return elements;
+  }
+}
+
+export interface Element {
+  selector: string;
+  context: string;
+  tag: string;
 }

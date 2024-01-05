@@ -13,7 +13,8 @@ export class AIELinkedIn {
     // 3. Click next page.
     // 4. Extract data of the results.
     // `
-    const instructions = `LinkedIn Credentials: ${process.env.LINKEDIN_USERNAME} ${process.env.LINKEDIN_PASSWORD}.\nGo to LinkedIn and Search Web Developers from Brazil`
+    // const instructions = `LinkedIn Credentials: '${process.env.LINKEDIN_USERNAME}' '${process.env.LINKEDIN_PASSWORD}'.\nGo to LinkedIn and Search Web Developers from Brazil`
+    const instructions = `Create you own account on Cognum: https://staging-cognum.web.app/`
 
     const browserAgent = new BrowserAgent()
     await browserAgent.init()

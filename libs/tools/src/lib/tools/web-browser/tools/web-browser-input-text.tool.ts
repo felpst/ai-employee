@@ -11,7 +11,7 @@ export class WebBrowserInputTextTool extends DynamicStructuredTool {
       description: 'Use this to input a text to an element on web browser.',
       schema: z.object({
         textValue: z.string().describe("the text that will be input."),
-        context: z.string().describe("context of the element to input data."),
+        context: z.string().describe("context description of the element to input data."),
       }),
       func: async ({ textValue, context }) => {
         try {
