@@ -32,8 +32,6 @@ export class AiEmployeeStorageController {
         return;
       }
 
-      console.log({ workspace: aiEmployee.workspace });
-
       const upload = await UploadUtils.uploadFile(
         aiEmployee._id,
         file,
