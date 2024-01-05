@@ -2,22 +2,22 @@ import { DynamicStructuredTool } from 'langchain/tools';
 import { z } from 'zod';
 import { FileManagerToolSettings } from '../file-manager.toolkit';
 
-export class FileManagerCreateTool extends DynamicStructuredTool {
+export class FileManagerReadTool extends DynamicStructuredTool {
   constructor(settings: FileManagerToolSettings) {
     super({
-      name: 'File Management Create',
-      metadata: { id: 'file-management', tool: 'create' },
+      name: 'File Management Read',
+      metadata: { id: 'file-management', tool: 'read' },
       description:
-        "Use this to create files on the employee's internal storage.",
+        'Use this tool to read files on AiEmployee internal storage.',
       schema: z.object({
         aiEmployeeId: z.string().describe('AiEmployee reference.'),
-        file: z.any().describe('file to be created in AiEmployee storage.'),
+        filename: z.any().describe('name of the file you want to read.'),
       }),
-      func: async ({ aiEmployeeId, file }) => {
+      func: async ({ aiEmployeeId, filename }) => {
         try {
-          return await settings.fileManagerService.create({
+          return await settings.fileManagerService.read({
             aiEmployeeId,
-            file,
+            filename,
           });
         } catch (error) {
           return error.message;

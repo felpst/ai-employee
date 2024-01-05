@@ -1,9 +1,11 @@
 import { File } from '@google-cloud/storage';
 import { FileManagerService } from './file-manager.service';
 import {
+  ICreateFileOptions,
   IFileManager,
   IFileManagerOptions,
   IReadOrDeleteFileOptions,
+  IUpdateFileOptions,
 } from './interfaces/file-manager.interfaces';
 
 export class FileManager implements IFileManager {
@@ -13,22 +15,20 @@ export class FileManager implements IFileManager {
     this._service = new FileManagerService();
   }
 
-  async create(
-    options: IFileManagerOptions & { filePath: string }
-  ): Promise<any> {
-    throw new Error('Method not implemented.');
+  async create(options: ICreateFileOptions) {
+    return this._service.create(options);
   }
 
   async read(options: IReadOrDeleteFileOptions): Promise<any> {
     return this._service.read(options);
   }
 
-  async update(options: IFileManagerOptions): Promise<any> {
-    throw new Error('Method not implemented.');
+  async update(options: IUpdateFileOptions) {
+    return this._service.update(options);
   }
 
-  async delete(): Promise<void> {
-    throw new Error('Method not implemented.');
+  async delete(options: IReadOrDeleteFileOptions): Promise<boolean> {
+    return this._service.delete(options);
   }
 
   async list(options: IFileManagerOptions): Promise<File[]> {

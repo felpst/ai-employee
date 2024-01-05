@@ -107,11 +107,31 @@ export class UploadUtils {
       return await this._bucket.file(filePrefix);
     } catch (error) {
       const { errors } = error;
-      console.log('An error occurred while listing files in the folder: ', {
+      console.log('An error occurred while retrieving the file', {
         error,
         errors,
       });
       return error;
+    }
+  }
+
+  /**
+   * Deletes the file, if it exists, in Google Cloud Storage.
+   *
+   * @param {string} filePrefix - The file prefix.
+   */
+  async deleteFile(filePrefix) {
+    try {
+      return await this._bucket
+        .file(filePrefix)
+        .delete({ ignoreNotFound: false });
+    } catch (error) {
+      const { errors } = error;
+      console.log('An error occurred while retrieving the file', {
+        error,
+        errors,
+      });
+      throw error;
     }
   }
 }

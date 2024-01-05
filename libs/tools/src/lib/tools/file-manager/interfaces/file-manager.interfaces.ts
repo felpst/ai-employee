@@ -1,4 +1,4 @@
-import { File } from '@google-cloud/storage';
+import { File as GoogleFile } from '@google-cloud/storage';
 import { Schema } from 'mongoose';
 
 export type IFileManagerOptions = {
@@ -10,18 +10,18 @@ export type IReadOrDeleteFileOptions = IFileManagerOptions & {
 };
 
 export type ICreateFileOptions = IFileManagerOptions & {
-  filePath: string;
+  file: File;
 };
 
 export type IUpdateFileOptions = IFileManagerOptions & {
   filename: string;
-  filePath: string;
+  file: File;
 };
 
 export interface IFileManager {
-  create(options: ICreateFileOptions): Promise<any>;
-  read(options: IReadOrDeleteFileOptions): Promise<any>;
-  update(options: IUpdateFileOptions): Promise<any>;
-  list(options: IFileManagerOptions): Promise<File[]>;
-  delete(options: IReadOrDeleteFileOptions): Promise<void>;
+  create(options: ICreateFileOptions): Promise<string>;
+  read(options: IReadOrDeleteFileOptions): Promise<GoogleFile>;
+  update(options: IUpdateFileOptions): Promise<string>;
+  list(options: IFileManagerOptions): Promise<GoogleFile[]>;
+  delete(options: IReadOrDeleteFileOptions): Promise<boolean>;
 }
