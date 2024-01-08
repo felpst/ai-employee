@@ -21,16 +21,16 @@ export class WebBrowserClickTool extends DynamicStructuredTool {
         findTimeout
       }) => {
         try {
-          let element: IElementFindOptions = {
-            selectorType: 'css',
-            elementSelector: await settings.webBrowserService.findElementByContent(elementTag, elementText),
-            findTimeout
-          };
+          const element = await settings.webBrowserService.findElementByContent(elementTag, elementText);
 
-          const success = await settings.webBrowserService.clickElement(element);
+          const success = await settings.webBrowserService.clickElement({
+            elementSelector: element.selector,
+            selectorType: 'css',
+            findTimeout
+          });
           if (!success) throw new Error("It was'nt possible to click the element");
 
-          return `The element "${element.elementSelector}" was clicked`;
+          return `The element "${element.selector}" was clicked`;
         } catch (error) {
           return error.message;
         }

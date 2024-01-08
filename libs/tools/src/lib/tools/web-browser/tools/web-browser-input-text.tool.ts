@@ -22,16 +22,17 @@ export class WebBrowserInputTextTool extends DynamicStructuredTool {
         findTimeout
       }) => {
         try {
-          let element: IElementFindOptions = {
-            selectorType: 'css',
-            elementSelector: await settings.webBrowserService.findElementByContent(elementTag, elementText),
-            findTimeout
-          };
+          const element = await settings.webBrowserService.findElementByContent(elementTag, elementText);
 
-          const success = await settings.webBrowserService.inputText(textValue, element);
+          const success = await settings.webBrowserService.inputText(textValue, {
+            elementSelector: element.selector,
+            selectorType: 'css',
+            findTimeout
+          });
+
           if (!success) throw new Error(`Input unsuccessful`);
 
-          return `Input ${textValue} was successfully done in element "${element.elementSelector}"`;
+          return `Input ${textValue} was successfully done in element "${element.selector}"`;
         } catch (error) {
           return error.message;
         }

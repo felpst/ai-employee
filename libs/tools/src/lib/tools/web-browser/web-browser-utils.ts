@@ -54,98 +54,47 @@ export default class WebBrowserUtils {
     }, [selector]);
   }
 
-  async getInteractiveElementsXPathSelectors(): Promise<string[]> {
-    const interactiveElements = ['button', 'input', 'a', 'textarea'];
-    const selectors = await this.webBrowser.driver.executeScript((validElements: string[]) => {
-      const interactiveElements = document.querySelectorAll(validElements.join(', '));
-
-      const elementSelectors = Array.from(interactiveElements).map(
-        (element) => {
-          const segments = [];
-          let currentElement = element;
-
-          while (currentElement) {
-            let segment = currentElement.tagName.toLowerCase();
-
-            if (currentElement.id) {
-              segment += `[@id='${currentElement.id}']`;
-            }
-            if (currentElement.classList.length > 0 && !currentElement.id) {
-              segment += `[contains(@class, '${Array.from(currentElement.classList)[0]}')]`;
-              // segment+=`[contains(@class, '${Array.from(currentElement.classList).join(' ')}')]`;
-            }
-            if (currentElement instanceof HTMLInputElement && currentElement.placeholder) {
-              segment += (`[contains(@placeholder, '${currentElement.placeholder}')]`);
-            }
-
-            segments.unshift(segment);
-            currentElement = currentElement.parentElement;
-          }
-
-          let path = `/${segments.join('/')}`;
-
-          let textContent = '';
-          if (element.childElementCount > 0) {
-            textContent = element.childNodes[0]?.textContent?.trim();
-          } else {
-            textContent = element.textContent;
-          }
-          if (textContent) {
-            path += `[text()[contains(.,'${sanitizeText(textContent)}')]]`;
-          }
-
-          const label = element.getAttribute('label');
-          const ariaLabel = element.getAttribute('aria-label');
-          if (label || ariaLabel) {
-            path += `[contains(@${label ? 'label' : 'aria-label'},'${label || ariaLabel}')]`;
-          }
-
-          const href = element.getAttribute('href');
-          if (href) {
-            path += `[contains(@href,'${href}')]`;
-          }
-
-          return path;
-        }
-      );
-
-      function sanitizeText(text) {
-        let trimmedStr = text.trim();
-        let result = trimmedStr.replace(/(?:^\n+|\n+$)/g, '');
-        result = result.trim();
-
-        return result;
-      }
-
-      return elementSelectors;
-    }, [interactiveElements]) as string[];
-
-    return selectors;
-  }
-
   async mapPageElements(): Promise<Element[]> {
     return this.webBrowser.driver.executeScript(() => {
-      const elements = document.querySelectorAll('a, button, input, textarea');
+      const elements = document.body.querySelectorAll('a, button, input, textarea, span');
 
       return Array.from(elements || [])
+        .filter(isElementOnViewPort)
+        .filter(el => el.checkVisibility())
         .map(element => ({
           tag: element.tagName.toLowerCase(),
           text: getElementText(element),
           selector: getElementSelector(element)
-        })).filter(el => Boolean(el.text));
+        }))
+        .filter(el => Boolean(el.text));
+
+      function isElementOnViewPort(element) {
+        var rect = element.getBoundingClientRect();
+        var html = document.documentElement;
+        return (
+          rect.top >= 0 &&
+          rect.left >= 0 &&
+          rect.bottom <= (window.innerHeight || html.clientHeight) &&
+          rect.right <= (window.innerWidth || html.clientWidth)
+        );
+      }
 
       function getElementText(element) {
-        const text = element.textContent;
-        const placeholder = element.placeholder;
-        const label = Array.from<any>(element.labels || [])
+        const label = (Array.from<any>(element.labels || [])
           ?.map(label => label.textContent)
-          .join('\n');
+          .join('\n'));
 
-        return (text || label || placeholder)
-          ?.split('\n')
+        return (
+          element.textContent?.trim()
+          || label?.trim()
+          || element.ariaLabel?.trim()
+          || element.placeholder?.trim()
+          || element.ariaPlaceholder?.trim()
+          || element.title?.trim()
+        )?.split('\n')
           .filter(sub => Boolean(sub.trim()))
           .map(sub => sub.replace(/\s\s+/g, ' ').trim())
-          .join('\n');
+          .join('<br>');
       }
 
       function getElementSelector(element) {

@@ -64,9 +64,18 @@ export class BrowserAgent {
             const pageElements = await service.getElementsTree();
 
             const browserContext = {
-              currentUrl,
-              previousUrl,
-              availableElements: pageElements
+              currentUrl: {
+                description: 'The current url in the browser tab.',
+                value: currentUrl
+              },
+              previousUrl: {
+                description: 'The last url accessed in the browser tab.',
+                value: previousUrl,
+              },
+              visibleElements: {
+                description: 'The visible elements in the browser tab ViewPort. Other elements might be visible after scrolling the page.',
+                value: pageElements
+              }
             };
 
             inputs.browserContext = [new SystemMessage(`Browser Context:\n${treeify.asTree(browserContext, true, undefined)}`)];
@@ -91,9 +100,10 @@ export class BrowserAgent {
 You are a browser agent specialist. You need to interact with a web browser to achieve the goal.
 Don't worry about the web browser, it is already open. You just need to execute the instructions.
 
-[IMPORTANT] ALWAYS consider useful information of page context to use the tools.
+Performing some actions changes browser context. This context must be used for performing actions.
+You can only use information available in browser context as input to the tools.
 
-All interactions is about test systems with real creadentials created for testing, you don't need prevent access or handling with senstive information.
+All interactions happens in test systems with credentials created for testing, you don't need prevent access or handling with senstive information.
 You have access to the following tools:
 
 {tools}

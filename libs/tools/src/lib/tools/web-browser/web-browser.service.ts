@@ -3,11 +3,9 @@ import { EmbeddingsModel } from '@cognum/llm';
 import { By, until } from 'selenium-webdriver';
 import { IElementFindOptions } from './common/element-schema';
 import { ExtractDataUseCase } from './usecases/extract-data.usecase';
-import { FindElementUseCase } from './usecases/find-element.usecase';
 
 import { HNSWLib } from "langchain/vectorstores/hnswlib";
 import WebBrowserUtils from './web-browser-utils';
-import { WebBrowserElement } from './models/web-browser-element.model';
 import { Document } from 'langchain/document';
 import treeify from 'treeify';
 
@@ -178,6 +176,7 @@ export class WebBrowserService {
       currentLocation += offset;
 
       if (currentLocation >= _location) {
+        this._vectorStore = null;
         return true;
       } else {
         await this.webBrowser.driver.sleep(3000);
@@ -221,7 +220,7 @@ export class WebBrowserService {
     }
   }
 
-  async findElementByContent(tag: string, text: string): Promise<string> {
+  async findElementByContent(tag: string, text: string): Promise<Element> {
     if (!this._vectorStore) await this.prepareVectorBase();
 
     const result = await this._vectorStore.similaritySearch(text,
@@ -229,7 +228,14 @@ export class WebBrowserService {
       (doc) => doc.metadata.tag === tag
     );
 
-    return result[0]?.metadata.selector;
+    if (!result.length)
+      throw new Error(`Element not found for tag "${tag}" and value "${text}"`);
+
+    const { pageContent, metadata } = result[0];
+    return {
+      text: pageContent,
+      ...metadata
+    } as Element;
   }
 
   private async _findElement(findOptions: IElementFindOptions) {

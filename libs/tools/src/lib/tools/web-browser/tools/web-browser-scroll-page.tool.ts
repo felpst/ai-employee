@@ -9,7 +9,7 @@ export class WebBrowserScrollPageTool extends DynamicStructuredTool {
     super({
       name: 'Web Browser Scroll Page',
       metadata: { id: "web-browser", tool: 'scrollPage' },
-      description: 'Use this tool to scroll page vertically.',
+      description: 'Use this tool to scroll page vertically and get access to elements outside ViewPort.',
       schema: elementSchema.extend({
         location: z.number().optional().describe("the location where the page will be scrolled"),
       }),
