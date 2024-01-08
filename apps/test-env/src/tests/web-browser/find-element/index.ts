@@ -14,8 +14,7 @@ export class FindElementTest {
 
     await this.service.loadPage('https://www.google.com');
 
-    const context = 'Campo de busca.';
-    const element = await this.service.findElementByContext(context);
+    const element = await this.service.findElementByContent('input', 'Search');
   }
 
 }
