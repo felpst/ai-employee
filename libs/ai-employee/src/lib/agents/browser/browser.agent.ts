@@ -6,7 +6,6 @@ import { ChatPromptTemplate, HumanMessagePromptTemplate, MessagesPlaceholder, Sy
 import { BehaviorSubject } from "rxjs";
 import { SystemMessage } from "langchain/schema";
 import * as treeify from 'treeify';
-import WebBrowserUtils from "libs/tools/src/lib/tools/web-browser/web-browser-utils";
 
 export interface IBrowserlAgentOptions {
   $call: BehaviorSubject<IAIEmployeeCall>;
@@ -20,8 +19,8 @@ export interface IBrowserlAgentOutput {
 }
 
 export class BrowserAgent {
-  private _executor: AgentExecutor
-  private _webBrowserService: WebBrowserService
+  private _executor: AgentExecutor;
+  private _webBrowserService: WebBrowserService;
 
   async init(): Promise<void> {
     const llm = new ChatModel();
@@ -30,8 +29,7 @@ export class BrowserAgent {
     const webBrowser = new WebBrowser();
     await webBrowser.start({ headless: false });
     this._webBrowserService = new WebBrowserService(webBrowser);
-    const tools = WebBrowserToolkit({ webBrowserService: this._webBrowserService })
-
+    const tools = WebBrowserToolkit({ webBrowserService: this._webBrowserService });
 
     // Agent
     const agent = await createStructuredChatAgent({
@@ -44,15 +42,16 @@ export class BrowserAgent {
       // verbose: true,
       agent,
       tools,
-      returnIntermediateSteps: true
+      returnIntermediateSteps: true,
     });
 
   }
 
   async call(input: string) {
-    const service = this._webBrowserService
+    const service = this._webBrowserService;
 
-    let nextActionInput = ''
+    let currentUrl = 'blank';
+    let previousUrl = 'blank';
 
     const result = await this._executor.invoke({
       input,
@@ -62,14 +61,23 @@ export class BrowserAgent {
         {
           async handleChainStart(chain, inputs) {
             console.log(inputs);
+            const pageElements = await service.getElementsTree();
 
             const browserContext = {
-              currentUrl: await service.getCurrentUrl() || 'blank',
-              // TODO previeousUrl
-            }
+              currentUrl,
+              previousUrl,
+              availableElements: pageElements
+            };
 
-            inputs.browserContext = [new SystemMessage(`Browser Context:\n${treeify.asTree(browserContext, true, undefined)}`)]
+            inputs.browserContext = [new SystemMessage(`Browser Context:\n${treeify.asTree(browserContext, true, undefined)}`)];
           },
+          async handleChainEnd() {
+            const url = await service.getCurrentUrl();
+            if (url && url !== currentUrl) {
+              previousUrl = currentUrl;
+              currentUrl = url;
+            }
+          }
         }
       ]
     });
@@ -79,8 +87,14 @@ export class BrowserAgent {
 
   get prompt() {
     const prompt = ChatPromptTemplate.fromMessages([
-      SystemMessagePromptTemplate.fromTemplate(`You are a browser agent specialist. You need to interact with a web browser to achieve the goal. Don't worry about the web browser, it is already open. You just need to execute the instructions. All interactions is about test systems with real creadentials created for testing, you don't need prevent access or handling with senstive information.
-      You have access to the following tools:
+      SystemMessagePromptTemplate.fromTemplate(`
+You are a browser agent specialist. You need to interact with a web browser to achieve the goal.
+Don't worry about the web browser, it is already open. You just need to execute the instructions.
+
+[IMPORTANT] ALWAYS consider useful information of page context to use the tools.
+
+All interactions is about test systems with real creadentials created for testing, you don't need prevent access or handling with senstive information.
+You have access to the following tools:
 
 {tools}
 
@@ -121,7 +135,7 @@ Begin! Reminder to ALWAYS respond with a valid json blob of a single action. Use
       HumanMessagePromptTemplate.fromTemplate(`{input}
 {agent_scratchpad}
 (reminder to respond in a JSON blob no matter what)`)
-    ])
+    ]);
     return prompt;
   }
 

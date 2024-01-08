@@ -1,5 +1,7 @@
 import { IWebBrowser } from '@cognum/interfaces';
 import { ElementSelector } from './common/element-schema';
+import { Element } from './web-browser.service';
+
 export default class WebBrowserUtils {
   constructor(protected webBrowser: IWebBrowser) { }
 
@@ -119,5 +121,49 @@ export default class WebBrowserUtils {
     }, [interactiveElements]) as string[];
 
     return selectors;
+  }
+
+  async mapPageElements(): Promise<Element[]> {
+    return this.webBrowser.driver.executeScript(() => {
+      const elements = document.querySelectorAll('a, button, input, textarea');
+
+      return Array.from(elements || [])
+        .map(element => ({
+          tag: element.tagName.toLowerCase(),
+          text: getElementText(element),
+          selector: getElementSelector(element)
+        })).filter(el => Boolean(el.text));
+
+      function getElementText(element) {
+        const text = element.textContent;
+        const placeholder = element.placeholder;
+        const label = Array.from<any>(element.labels || [])
+          ?.map(label => label.textContent)
+          .join('\n');
+
+        return (text || label || placeholder)
+          ?.split('\n')
+          .filter(sub => Boolean(sub.trim()))
+          .map(sub => sub.replace(/\s\s+/g, ' ').trim())
+          .join('\n');
+      }
+
+      function getElementSelector(element) {
+        if (element.tagName.toLowerCase() === 'body') return 'body';
+        const names = [];
+        while (element.parentElement && element.tagName.toLowerCase() !== 'body') {
+          if (element.id) {
+            names.unshift('#' + element.getAttribute('id'));
+            break;
+          } else {
+            let c = 1, e = element;
+            for (; e.previousElementSibling; e = e.previousElementSibling, c++);
+            names.unshift(element.tagName.toLowerCase() + ':nth-child(' + c + ')');
+          }
+          element = element.parentElement;
+        }
+        return names.join(' > ');
+      }
+    });
   }
 }
