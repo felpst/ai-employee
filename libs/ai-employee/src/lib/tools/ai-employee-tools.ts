@@ -1,3 +1,4 @@
+import { LlmTool } from './../../../../tools/src/lib/tools/llm/llm.tool';
 import { ToolsHelper } from "@cognum/helpers";
 import { IAIEmployee, IToolSettings, IUser } from "@cognum/interfaces";
 import { ChatModel, EmbeddingsModel } from "@cognum/llm";
@@ -119,6 +120,8 @@ export class AIEmployeeTools {
         return [new LinkedInFindLeadsTool(toolSettings.options)]
       case 'google-calendar':
         return GoogleCalendarToolkit(toolSettings.options);
+      case 'llm':
+        return [new LlmTool()];
     }
   }
 
