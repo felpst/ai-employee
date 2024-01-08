@@ -3,7 +3,7 @@ import * as nodemailer from 'nodemailer';
 import { Email, MailFilters, MailToolSettings, SendMailData } from './mail.interfaces';
 const Imap = require('imap');
 const moment = require('moment');
-
+var markdown = require('nodemailer-markdown').markdown;
 export class MailService {
 
   constructor(
@@ -16,6 +16,7 @@ export class MailService {
         from: this.settings.from || emailData.from,
         to: emailData.to,
         replyTo: this.settings.replyTo || emailData.replyTo,
+        inReplyTo: emailData.inReplyTo || undefined,
         cc: emailData.cc,
         bcc: emailData.bcc,
         subject: emailData.subject,
@@ -33,6 +34,37 @@ export class MailService {
         },
       };
       const transporter = nodemailer.createTransport(transport);
+
+      transporter.sendMail(mailOptions, (error) => {
+        return error ? reject(error) : resolve();
+      });
+    });
+  }
+
+  sendMarkdown(emailData: SendMailData): Promise<void> {
+    return new Promise((resolve, reject) => {
+      const mailOptions = {
+        from: this.settings.from || emailData.from,
+        to: emailData.to,
+        replyTo: this.settings.replyTo || emailData.replyTo,
+        inReplyTo: emailData.inReplyTo || undefined,
+        cc: emailData.cc,
+        bcc: emailData.bcc,
+        subject: emailData.subject,
+        markdown: emailData.text ? emailData.text : emailData.html
+      };
+
+      const transport = {
+        host: this.settings.smtp.host,
+        port: this.settings.smtp.port,
+        secure: this.settings.smtp.tls,
+        auth: {
+          user: this.settings.auth.user,
+          pass: this.settings.auth.pass,
+        },
+      };
+      const transporter = nodemailer.createTransport(transport);
+      transporter.use('compile', markdown())
 
       transporter.sendMail(mailOptions, (error) => {
         return error ? reject(error) : resolve();
@@ -59,7 +91,8 @@ export class MailService {
     qt: 5,
     since: undefined,
     from: undefined,
-    subject: undefined
+    subject: undefined,
+    references: undefined,
   }): Promise<Email[]> {
     return new Promise((resolve, reject) => {
       let emails: Email[] = []
@@ -174,6 +207,18 @@ export class MailService {
           // Filter by to
           if (filters.to) emails = emails.filter(email => email.to === filters.to);
 
+          // Filter by references
+          if (filters.references) {
+            emails = emails.reduce((filteredEmails, email) => {
+              if (Array.isArray(email.references) && email.references.some(ref => filters.references.includes(ref))) {
+                let previousEmails = this.findPreviousEmails(email, emails, this.findPreviousEmails);
+                filteredEmails.push(email, ...previousEmails);
+              }
+              return filteredEmails;
+            }, []);
+            console.log(emails)
+          }
+
           resolve(emails)
         });
 
@@ -210,6 +255,17 @@ export class MailService {
           })
         });
       });
+    });
+  }
+
+  findPreviousEmails(email, emails, callback) {
+    if (!Array.isArray(email.references)) {
+      return [];
+    }
+  
+    return email.references.flatMap(ref => {
+      const previousEmail = emails.find(e => e.id === ref);
+      return previousEmail ? [previousEmail, ...callback(previousEmail, emails, callback)] : [];
     });
   }
 }

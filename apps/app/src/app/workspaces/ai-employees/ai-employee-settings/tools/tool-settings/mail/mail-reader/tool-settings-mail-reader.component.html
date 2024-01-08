@@ -1,0 +1,37 @@
+<div class="cognum-heading-2">Settings: Read Email</div>
+<form [formGroup]="formGroup">
+  <div class="cognum-form-group">
+    <mat-form-field>
+      <mat-label>User</mat-label>
+      <input matInput formControlName="user">
+    </mat-form-field>
+  </div>
+  <div class="cognum-form-group">
+    <mat-form-field>
+      <mat-label>Password</mat-label>
+      <input matInput formControlName="password">
+    </mat-form-field>
+  </div>
+  <div class="cognum-form-group">
+    <mat-form-field>
+      <mat-label>Host</mat-label>
+      <input matInput formControlName="host">
+    </mat-form-field>
+  </div>
+  <div class="cognum-form-group">
+    <mat-form-field>
+      <mat-label>Port</mat-label>
+      <input matInput formControlName="port">
+    </mat-form-field>
+  </div>
+  <div class="cognum-form-group">
+    <mat-label>TLS</mat-label>
+    <mat-checkbox color="primary" formControlName="tls"></mat-checkbox>
+  </div>
+  <div class="cognum-form-group" formGroupName="tlsOptions">
+    <mat-form-field>
+      <mat-label>Server Name</mat-label>
+      <input matInput formControlName="servername">
+    </mat-form-field>
+  </div>
+</form>

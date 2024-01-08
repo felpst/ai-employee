@@ -21,10 +21,10 @@
           <mat-icon>{{ fileName ? 'insert_drive_file': 'upload_file'}}</mat-icon>
           <p class="inform-style">{{ fileName || 'Attach File' }}</p>
         </label>
-        <input class="input-style" type="file" id="knowledgeFileInput" name="knowledgeFile" accept=".pdf"
-          style="display: none" (change)="onFileSelected($event)" />
+        <input class="input-style" type="file" id="knowledgeFileInput" name="knowledgeFile"
+          accept="{{validFileExtensions}}" style="display: none" (change)="onFileSelected($event)" />
         <div class="cognum-text-12 warning-message attachment-message">
-          <span>Valid formats: .pdf</span>
+          <span>Valid formats: {{validFileExtensions.join(', ')}}</span>
           <span>Maximum size: 500MB</span>
         </div>
       </div>

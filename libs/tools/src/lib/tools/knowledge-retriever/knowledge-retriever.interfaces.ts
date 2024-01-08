@@ -1,3 +1,3 @@
 export interface KnowledgeRetrieverToolSettings {
-  workspaceId: string
+  openaiFileIds: string[];
 }

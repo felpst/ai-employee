@@ -5,7 +5,7 @@
     (click)="onExecute()"
     [disabled]="loading"
   >
-    {{ loading ? 'Executing...' : 'Execute' }}
+    {{ loading ? 'Running...' : 'Force Run' }}
   </button>
 </div>
 <div class="row">
@@ -13,7 +13,7 @@
     <span class="cognum-heading-4">Instructions</span>
     <p class="information">{{ job.instructions }}</p>
 
-    <ng-container *ngIf="job.scheduler?.frequency">
+    <ng-container *ngIf="job.scheduler?.frequency && !job.scheduler?.runOnce">
       <span class="cognum-heading-4">Frequency</span>
       <p class="information">{{ job.scheduler?.frequency }}</p>
     </ng-container>

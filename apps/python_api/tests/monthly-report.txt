@@ -1,0 +1,37 @@
+
+# Monthly Inventory Report
+
+## Description
+This report presents the monthly inventory status, including product name, product type, stock quantity, and stock value.
+
+## Results
+| Product Name | Product ID | Product Type | Stock Quantity | Stock Value |
+|--------------|------------|--------------|----------------|-------------|
+| Moisturizing Facial Cream | 1 | Product Type Placeholder | 1060 | $49,303.03 |
+| Anti-Aging Serum | 2 | Product Type Placeholder | 391 | $28,861.50 |
+| Volumizing Mascara | 4 | Product Type Placeholder | 221 | $16,716.00 |
+| Nourishing Hair Oil | 7 | Product Type Placeholder | 381 | $22,600.00 |
+| Long-lasting Liquid Lipstick | 11 | Product Type Placeholder | 465 | $16,240.00 |
+| Nail Strengthener | 13 | Product Type Placeholder | 581 | $6,547.50 |
+| Acne Treatment Gel | 14 | Product Type Placeholder | 126 | $21,890.00 |
+| Herbal Shampoo | 15 | Product Type Placeholder | 166 | $12,717.21 |
+| Organic Body Lotion | 19 | Product Type Placeholder | 840 | $23,808.09 |
+| Refreshing Facial Toner | 20 | Product Type Placeholder | 98 | $14,729.00 |
+| Deep Cleansing Facial Wash | 21 | Product Type Placeholder | 852 | $18,777.00 |
+| Gentle Exfoliating Face Wash | 24 | Product Type Placeholder | 130 | $5,764.23 |
+| Scented Bath Bombs | 25 | Product Type Placeholder | 514 | $22,739.36 |
+| Brightening Under Eye Patches | 28 | Product Type Placeholder | 17 | $19,080.00 |
+| Argan Oil Hair Mask | 29 | Product Type Placeholder | 110 | $14,688.00 |
+| Firming Neck Cream | 31 | Product Type Placeholder | 834 | $53,679.00 |
+| Mineral Sunscreen SPF 50 | 32 | Product Type Placeholder | 330 | $28,635.00 |
+| Anti-Frizz Hair Serum | 36 | Product Type Placeholder | 816 | $22,464.00 |
+| Clay Facial Mask | 37 | Product Type Placeholder | 153 | $12,765.00 |
+| Eyebrow Pencil | 38 | Product Type Placeholder | 283 | $11,133.00 |
+| Volumizing Hair Mousse | 40 | Product Type Placeholder | 431 | $16,870.00 |
+| Waterproof Mascara | 41 | Product Type Placeholder | 210 | $9,420.00 |
+| Gentle Eye Makeup Remover | 42 | Product Type Placeholder | 906 | $21,762.00 |
+| Skin Illuminating Primer | 43 | Product Type Placeholder | 1058 | $37,840.00 |
+| Cooling Foot Cream | 46 | Product Type Placeholder | 544 | $18,560.00 |
+| Lash Growth Serum | 48 | Product Type Placeholder | 260 | $53,305.00 |
+| Refreshing Body Mist | 49 | Product Type Placeholder | 540 | $24,660.00 |
+| Gentle Feminine Wash | 50 | Product Type Placeholder | 449 | $10,639.35 |

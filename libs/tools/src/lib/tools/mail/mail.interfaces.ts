@@ -29,12 +29,14 @@ export interface MailFilters {
   to?: string
   subject?: string
   status?: 'ALL' | 'NEW' | 'UNSEEN' | 'SEEN' | 'FLAGGED' | 'UNFLAGGED' | 'RECENT' | 'OLD' | 'ANSWERED' | 'UNANSWERED' | 'DELETED' | 'UNDELETED' | 'DRAFT' | 'UNDRAFT'
+  references?: string[]
 }
 
 export interface SendMailData {
   from: string;
   to: string;
   replyTo?: string;
+  inReplyTo?: string;
   cc?: string;
   bcc?: string;
   subject: string;
@@ -63,5 +65,5 @@ export interface Email {
   text: string
   // html: string
   attachments: string
-  references: string
+  references: string[]
 }

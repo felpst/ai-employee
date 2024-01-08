@@ -23,9 +23,10 @@ export class AgentTools {
     const { aiEmployee, intentions } = options;
     const model = new ChatModel();
 
-    const intetionTools = AIEmployeeTools.intetionTools({
+    const intetionTools = await AIEmployeeTools.intetionTools({
       aiEmployee,
-      intentions
+      intentions,
+      user: options.context?.user
     });
 
     this._executor = await initializeAgentExecutorWithOptions(intetionTools, model, {

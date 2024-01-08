@@ -1,0 +1,23 @@
+<h2 mat-dialog-title>Settings: {{ tool.name }}</h2>
+<mat-dialog-content>
+  <form [formGroup]="formGroup" (ngSubmit)="onSubmit()">
+    <div class="cognum-heading-2">Tools</div>
+    <div formGroupName="subTools">
+      <mat-checkbox color="primary" formControlName="mailSenderSelected">Send Email</mat-checkbox>
+      <mat-checkbox color="primary" formControlName="mailReaderSelected">Read Email</mat-checkbox>
+
+      <div *ngIf="formGroup.get('subTools.mailSenderSelected')?.value">
+        <cognum-ai-tool-settings-mail-sender [formGroup]="mailSenderFormGroup" [data]="data"></cognum-ai-tool-settings-mail-sender>
+      </div>
+      <div *ngIf="formGroup.get('subTools.mailReaderSelected')?.value">
+        <cognum-ai-tool-settings-mail-reader [formGroup]="mailReaderFormGroup" [data]="data"></cognum-ai-tool-settings-mail-reader>
+      </div>
+    </div>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Cancel</button>
+  <button mat-button (click)="onSubmit()" [disabled]="!formGroup.valid">
+    Save
+  </button>
+</mat-dialog-actions>

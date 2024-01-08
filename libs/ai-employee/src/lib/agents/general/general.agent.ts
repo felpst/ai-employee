@@ -20,10 +20,17 @@ export class GeneralAgent extends Agent {
     const agentCall = await this._initCall(input, intentions.join(','));
     const model = new ChatModel();
 
+    // Tools context
+    const formattedToolsContext = treeify.asTree({
+      dateNow: new Date().toISOString(),
+      chatChannel: this.context.chatChannel || undefined,
+    }, true)
+
     // Tools
-    const tools = AIEmployeeTools.intetionTools({
+    const tools = await AIEmployeeTools.intetionTools({
       aiEmployee: this.aiEmployee,
-      intentions
+      intentions,
+      user: this.context.user
     })
     // Jobs Toolkit
     if (this.context.user) {
@@ -31,17 +38,19 @@ export class GeneralAgent extends Agent {
       const jobService = new JobService({ aiEmployee: this.aiEmployee, user: this.context.user });
       tools.push(...jobService.toolkit() as Tool[]);
     }
-    const filteredTools = await AIEmployeeTools.filterByContext(tools, input)
+    const filteredTools = await AIEmployeeTools.filterByContext(tools, input, formattedToolsContext)
 
     let prefix = `Your name is ${this.aiEmployee.name} and your role is ${this.aiEmployee.role}. `
     prefix += `You are talking with ${this.context.user.name} <${this.context.user.email}>.`
     prefix += `You need to answer best as you can trying different tools to execute the job and achieve the goal.`
 
+    // Call Context
     const formattedContext = this.formatContext();
     if (formattedContext) prefix += `\n\n${formattedContext}`
 
     this._executor = await initializeAgentExecutorWithOptions(filteredTools, model, {
       agentType: "structured-chat-zero-shot-react-description",
+      // verbose: true,
       memory: new BufferMemory({
         memoryKey: "chat_history",
         returnMessages: true,

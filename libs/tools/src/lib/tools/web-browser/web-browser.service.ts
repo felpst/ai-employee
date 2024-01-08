@@ -5,22 +5,18 @@ import { IElementFindOptions } from './common/element-schema';
 import { ExtractDataUseCase } from './usecases/extract-data.usecase';
 import { FindElementUseCase } from './usecases/find-element.usecase';
 
-
-import { ContextualCompressionRetriever } from "langchain/retrievers/contextual_compression";
-import { LLMChainExtractor } from "langchain/retrievers/document_compressors/chain_extract";
-import { RecursiveCharacterTextSplitter } from "langchain/text_splitter";
-import { HNSWLib } from "langchain/vectorstores/hnswlib";
-import WebBrowserUtils from './web-browser-utils';
-import { Document } from 'langchain/document';
+import { ContextualCompressionRetriever } from 'langchain/retrievers/contextual_compression';
+import { LLMChainExtractor } from 'langchain/retrievers/document_compressors/chain_extract';
+import { RecursiveCharacterTextSplitter } from 'langchain/text_splitter';
+import { HNSWLib } from 'langchain/vectorstores/hnswlib';
 import { WebBrowserElement } from './models/web-browser-element.model';
+import WebBrowserUtils from './web-browser-utils';
 
 export class WebBrowserService {
   currentURL: string;
   retriever: ContextualCompressionRetriever;
 
-  constructor(
-    private webBrowser: IWebBrowser
-  ) { }
+  constructor(private webBrowser: IWebBrowser) {}
 
   async checkCurrentURLUpdated() {
     await this.webBrowser.driver.sleep(5000);
@@ -38,7 +34,7 @@ export class WebBrowserService {
       console.log(`Waiting for page load: ${url}`);
       const currentUrl = await this.webBrowser.driver.getCurrentUrl();
       if (currentUrl.includes(url)) {
-        await this.checkCurrentURLUpdated()
+        await this.checkCurrentURLUpdated();
         return true;
       }
     }
@@ -46,18 +42,16 @@ export class WebBrowserService {
   }
 
   async click(options: IElementFindOptions) {
-    const element =
-      await this.webBrowser.driver.wait(
-        until.elementLocated(By[options.selectorType](options.elementSelector)),
-        options.findTimeout
-      );
+    const element = await this.webBrowser.driver.wait(
+      until.elementLocated(By[options.selectorType](options.elementSelector)),
+      options.findTimeout
+    );
 
     if (!element) return false;
     await element.click();
-    await this.checkCurrentURLUpdated()
+    await this.checkCurrentURLUpdated();
     return true;
   }
-
 
   async inspectElement(idOrClass: string): Promise<any> {
     try {
@@ -68,8 +62,10 @@ export class WebBrowserService {
         element = await this.webBrowser.driver.findElement({ id: idOrClass });
       }
 
-      const attributes = await this.webBrowser.driver
-        .executeScript("let items = {}; for (index = 0; index < arguments[0].attributes.length; ++index) { items[arguments[0].attributes[index].name] = arguments[0].attributes[index].value }; return items;", element);
+      const attributes = await this.webBrowser.driver.executeScript(
+        'let items = {}; for (index = 0; index < arguments[0].attributes.length; ++index) { items[arguments[0].attributes[index].name] = arguments[0].attributes[index].value }; return items;',
+        element
+      );
 
       const html = await element.getAttribute('outerHTML');
 
@@ -80,7 +76,10 @@ export class WebBrowserService {
     }
   }
 
-  async inputText(text: string, options: IElementFindOptions): Promise<boolean> {
+  async inputText(
+    text: string,
+    options: IElementFindOptions
+  ): Promise<boolean> {
     const userInput = await this._findElement(options);
 
     if (!userInput) return false;
@@ -102,23 +101,36 @@ export class WebBrowserService {
     // Load
     console.log({ pageURL: this.currentURL, context });
 
-    const element = await WebBrowserElement.findOne({ pageURL: this.currentURL, context }).exec();
+    const element = await WebBrowserElement.findOne({
+      pageURL: this.currentURL,
+      context,
+    }).exec();
     console.log(element);
 
     // TODO force
-    if (element) { return element }
+    if (element) {
+      return element;
+    }
 
     await this.prepareVectorBase();
-    const useCase = new FindElementUseCase(this.webBrowser)
+    const useCase = new FindElementUseCase(this.webBrowser);
     const relevantContext = await this.retrieveRelevantContext(context);
     const result = await useCase.findElementByContext(context, relevantContext);
 
     if (!result.found) {
-      throw new Error(`Element not found for context: ${{ pageURL: this.currentURL, context}}`);
+      throw new Error(
+        `Element not found for context: ${{
+          pageURL: this.currentURL,
+          context,
+        }}`
+      );
     }
 
     // Save element
-    await WebBrowserElement.deleteMany({ pageURL: this.currentURL, context }).exec();
+    await WebBrowserElement.deleteMany({
+      pageURL: this.currentURL,
+      context,
+    }).exec();
     if (result.found) {
       const newElement = await WebBrowserElement.create({
         pageURL: this.currentURL,
@@ -146,7 +158,7 @@ export class WebBrowserService {
 
     // const textSplitter = new RecursiveCharacterTextSplitter({ chunkSize: 2000 });
     // const docs = await textSplitter.createDocuments([source]);
-    const splitter = RecursiveCharacterTextSplitter.fromLanguage("html", {
+    const splitter = RecursiveCharacterTextSplitter.fromLanguage('html', {
       chunkSize: 2000,
       chunkOverlap: 20,
     });
@@ -154,12 +166,15 @@ export class WebBrowserService {
     console.log('docs lenght:', docs.length);
 
     // Create a vector store from the documents.
-    const vectorStore = await HNSWLib.fromDocuments(docs, new EmbeddingsModel());
+    const vectorStore = await HNSWLib.fromDocuments(
+      docs,
+      new EmbeddingsModel()
+    );
     console.log('vectorStory ready');
 
     this.retriever = new ContextualCompressionRetriever({
       baseCompressor,
-      baseRetriever: vectorStore.asRetriever({searchType: 'similarity'}),
+      baseRetriever: vectorStore.asRetriever({ searchType: 'similarity' }),
     });
   }
 
@@ -172,12 +187,12 @@ export class WebBrowserService {
     if (!retrievedDocs.length) throw new Error('Error retrieving relevant context');
 
     console.log({ retrievedDocs });
-    return retrievedDocs.map(doc => doc.pageContent).join('\n');
+    return retrievedDocs.map((doc) => doc.pageContent).join('\n');
   }
 
   async getPageSource(): Promise<string> {
-    const webBrowserUtils = new WebBrowserUtils(this.webBrowser)
-    const source = await webBrowserUtils.getHtmlFromElement('body')
+    const webBrowserUtils = new WebBrowserUtils(this.webBrowser);
+    const source = await webBrowserUtils.getHtmlFromElement('body');
     return source;
   }
 
@@ -186,32 +201,59 @@ export class WebBrowserService {
     return element;
   }
 
-  async scrollPage(location?: number, options?: IElementFindOptions): Promise<boolean> {
-    let _location = location;
-    if (!_location) {
-      const input = await this._findElement(options);
+  async scrollPage(
+    scrollTo: number,
+    direction: 'Vertical' | 'Horizontal',
+    options: IElementFindOptions | null = null
+  ): Promise<boolean> {
+    const MAX_ITERATIONS = 5;
+    const TIME_BETWEEN_ITERATIONS = 1500;
 
-      if (!input) return false;
-      _location = Number(await input.getAttribute('offsetTop')); //scrollHeight
+    let elementReference = null;
+    let targetLocation = scrollTo;
 
+    // If options is provided, gets the element reference and relative position
+    if (options) {
+      elementReference = await this._findElement(options);
+      if (!elementReference) return false;
+      targetLocation = Number(await elementReference.getAttribute('offsetTop'));
     }
-    let currentLocation = 0;
-    let offset = _location - currentLocation || 0;
-    this.webBrowser.driver.executeScript("window.scrollTo(" + currentLocation + "," + offset + ")");
-    await this.webBrowser.driver.sleep(500);
-    for (let i = 0; i < 5; i++) {
-      console.log(`Waiting for page scroll from ${currentLocation} to ${_location}`);
-      currentLocation += offset;
+    const firstScroll = `window.scrollTo(0, ${targetLocation});`;
 
-      if (currentLocation >= _location) {
+    const { locationScript, updateScrollScript } = await this._getScrollScripts(
+      targetLocation,
+      direction,
+      elementReference
+    );
+
+    // Performs the first scroll to the desired position
+    await this.webBrowser.driver.executeScript(firstScroll);
+    await this.webBrowser.driver.sleep(500);
+
+    for (let i = 0; i < MAX_ITERATIONS; i++) {
+      // Gets the current position
+      const currentLocation = Number(
+        await this.webBrowser.driver.executeScript(
+          locationScript,
+          elementReference
+        )
+      );
+
+      // Checks whether the current position has reached or exceeded the desired position
+      if (currentLocation >= scrollTo) {
         return true;
-      } else {
-        await this.webBrowser.driver.sleep(3000);
-        offset = _location - currentLocation;
-        this.webBrowser.driver.executeScript("window.scrollTo(" + currentLocation + "," + offset + ")");
       }
 
+      // Scroll from the current position to the desired position
+      await this.webBrowser.driver.executeScript(
+        updateScrollScript,
+        elementReference
+      );
+
+      // Waits the specified time between iterations
+      await this.webBrowser.driver.sleep(TIME_BETWEEN_ITERATIONS);
     }
+
     return false;
   }
 
@@ -223,27 +265,27 @@ export class WebBrowserService {
     if (combination) {
       combination.map(async k => await this.webBrowser.driver.actions().keyDown(k).perform());
       return await this.webBrowser.driver.actions().keyDown(key).perform().then(
-        async () => {
-          await this.webBrowser.driver.actions().keyUp(key).perform();
-          combination.map(async k => await this.webBrowser.driver.actions().keyUp(k).perform());
-          await this.checkCurrentURLUpdated()
-          return `Keys ${key}, ${combination.join(',')} pressed`;
-        },
-        (error) => {
-          return error.message;
-        }
-      );
+          async () => {
+            await this.webBrowser.driver.actions().keyUp(key).perform();
+            combination.map(async k => await this.webBrowser.driver.actions().keyUp(k).perform());
+            await this.checkCurrentURLUpdated()
+            return `Keys ${key}, ${combination.join(',')} pressed`;
+          },
+          (error) => {
+            return error.message;
+          }
+        );
     } else {
       return await this.webBrowser.driver.actions().keyDown(key).perform().then(
-        async () => {
-          await this.webBrowser.driver.actions().keyUp(key).perform();
-          await this.checkCurrentURLUpdated()
-          return `Key ${key} pressed`;
-        },
-        (error) => {
-          return error.message;
-        }
-      );
+          async () => {
+            await this.webBrowser.driver.actions().keyUp(key).perform();
+            await this.checkCurrentURLUpdated()
+            return `Key ${key} pressed`;
+          },
+          (error) => {
+            return error.message;
+          }
+        );
     }
   }
 
@@ -252,5 +294,34 @@ export class WebBrowserService {
       until.elementLocated(By[findOptions.selectorType](findOptions.elementSelector)),
       findOptions.findTimeout
     );
+  }
+
+  private async _getScrollScripts(
+    scrollTo: number,
+    direction: 'Vertical' | 'Horizontal',
+    input: any | null = null
+  ) {
+    let locationScript: string;
+    let updateScrollScript: string;
+
+    if (!input) {
+      // If there is no input element, the scroll will be on the full page
+      locationScript =
+        direction === 'Vertical'
+          ? 'return window.scrollY;'
+          : 'return window.scrollX;';
+      updateScrollScript = `window.scrollTo(${
+        direction === 'Vertical' ? 0 : scrollTo
+      }, ${direction === 'Horizontal' ? 0 : scrollTo});`;
+    } else {
+      // If there is an input element, the scroll will be on the specific element
+      const elementScrollAttribute =
+        direction === 'Vertical' ? 'scrollHeight' : 'scrollWidth';
+      locationScript = `return arguments[0].${elementScrollAttribute};`;
+      updateScrollScript = `arguments[0].scrollTo(${
+        direction === 'Horizontal' ? scrollTo : 0
+      }, ${direction === 'Vertical' ? scrollTo : 0});`;
+    }
+    return { locationScript, updateScrollScript };
   }
 }

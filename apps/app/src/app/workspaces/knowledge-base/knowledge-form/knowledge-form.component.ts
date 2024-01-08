@@ -21,6 +21,8 @@ import { KnowledgeBaseService } from '../knowledge-base.service';
   styleUrls: ['./knowledge-form.component.scss'],
 })
 export class KnowledgeFormComponent {
+  validFileExtensions = ['.pdf', '.csv'];
+
   knowledge: IKnowledge | undefined;
   workspace!: IWorkspace;
   inputType!: KnowledgeTypeEnum;
@@ -229,7 +231,7 @@ export class KnowledgeFormComponent {
 
   onFileSelected(event: any) {
     try {
-      const validExtensions = ['pdf'];
+      const validExtensions = this.validFileExtensions.map(ext => ext.replace('.', ''));
       const fileSizeMbLimit = 500;
       const file: File = event.target.files[0];
 

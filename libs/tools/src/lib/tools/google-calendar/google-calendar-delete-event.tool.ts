@@ -1,18 +1,21 @@
-import { DynamicTool } from 'langchain/tools';
+import { DynamicStructuredTool } from 'langchain/tools';
+import { z } from 'zod';
+import { GoogleCalendarToolkitSettings } from './google-calendar.interfaces';
 import { GoogleCalendarService } from './google-calendar.service';
 
-
-export class GoogleCalendarDeleteEventTool extends DynamicTool {
-  constructor(token: string) {
+export class GoogleCalendarDeleteEventTool extends DynamicStructuredTool {
+  constructor(settings: GoogleCalendarToolkitSettings) {
     super({
       name: 'Google Calendar Delete Events',
       metadata: { id: "google-calendar", tool: 'delete' },
-      description:
-        'Use to delete events from Google Calendar. Input should be the event id, you can use the google calendar list tool to get the event id.',
-      func: async (input: string) => {
+      description: 'Use to delete events from Google Calendar.',
+      schema: z.object({
+        eventId: z.string().describe('ID of event to delete')
+      }),
+      func: async ({ eventId }) => {
         try {
-          const googleCalendarService = new GoogleCalendarService(token);
-          const deleteEvent = await googleCalendarService.deleteEvent(input);
+          const googleCalendarService = new GoogleCalendarService(settings.token);
+          const deleteEvent = await googleCalendarService.deleteEvent(eventId);
           return deleteEvent;
         } catch (error) {
           return error.message;

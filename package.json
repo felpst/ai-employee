@@ -75,6 +75,7 @@
     "ngx-skeleton-loader": "^8.1.0",
     "node-imap": "^0.9.6",
     "nodemailer": "^6.9.7",
+    "nodemailer-markdown": "^1.0.3",
     "openai": "^4.19.0",
     "pdf-parse": "^1.1.1",
     "peggy": "^3.0.2",
