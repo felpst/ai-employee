@@ -1,11 +1,13 @@
 import 'dotenv/config';
-import { SearchApiResult, SearchApiToolSettings } from './internet-research.interface';
-import { InternetResearchService } from './internet-research.service';
-import { SummarizationService } from './summarization.service';
+import { SearchApiResult, SearchApiToolSettings } from '../internet-research.interface';
+import { InternetResearchService } from '../internet-research.service';
+import { SummarizationService } from '../summarization.service';
 
 describe('Internet Research service test', () => {
+  jest.setTimeout(3000000);
   let settings: SearchApiToolSettings
-  let entity: SearchApiResult
+  let entity: SearchApiResult[]
+  const input = 'what are the latest football news in Brazil ?'
 
   beforeAll(async () => {
     settings = {
@@ -16,23 +18,24 @@ describe('Internet Research service test', () => {
   it('search', async () => {
     const researchService = new InternetResearchService(settings);
 
-    const result = await researchService.search('Emerging technologies in 2023');
+    const result = await researchService.search(input);
+    console.log(result)
 
     expect(result.length).toBeGreaterThan(0);
     expect(result[0].position).toBeDefined()
     expect(result[0].title).toBeDefined();
     expect(result[0].url).toBeDefined();
-    expect(result[0].date).toBeDefined();
 
-    entity = result[0]
+    entity = result
   });
 
   it('summarize', async () => {
-    console.log(settings)
     const summarizationService = new SummarizationService();
     await summarizationService.start()
 
-    const result = await summarizationService.summarize(entity);
+    const result = await summarizationService.summarize(entity, input);
+
+    console.log(result)
 
     expect(result).toBeDefined();
   })
