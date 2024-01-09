@@ -4,7 +4,7 @@ import { InternetResearchService } from './internet-research.service';
 import { SummarizationService } from "./summarization.service";
 import { SearchApiToolSettings } from "./internet-research.interface";
 
-export class LinkedInFindLeadsTool extends DynamicStructuredTool {
+export class InternetResearchTool extends DynamicStructuredTool {
   constructor(private settings: SearchApiToolSettings) {
     super({
       name: 'Internet Research',
@@ -12,7 +12,7 @@ export class LinkedInFindLeadsTool extends DynamicStructuredTool {
       description:
         'Use this to find and summarize research form Internet.',
       schema: z.object({
-        query: z.string().describe('a structured query search.'),
+        query: z.string().describe('a structured question to search.'),
       }),
       func: async ({ query }) => {
         try {
@@ -22,12 +22,10 @@ export class LinkedInFindLeadsTool extends DynamicStructuredTool {
           const result = await internetResearchService.search(query);
           if(!result) return 'No results found';
 
-          return await result.map(async (search) => {
-            await summarizationService.start();
-            const summarized = await summarizationService.summarize(search);
-            await summarizationService.stop();
-            return summarized;
-          });
+          await summarizationService.start();
+          const summarized = await summarizationService.summarize(result, query);
+          await summarizationService.stop();
+          return summarized;
         } catch (error) {
           return error.message;
         }
