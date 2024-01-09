@@ -2,6 +2,7 @@ import { IWebBrowser } from '@cognum/interfaces';
 import { ElementSelector } from './common/element-schema';
 import { Element } from './web-browser.service';
 import { JSDOM } from 'jsdom';
+import prettier from 'prettier';
 
 const ELEMENT_OUT_OF_VIEW_ATTR = 'isElementOutsideViewPort';
 
@@ -100,6 +101,28 @@ export default class WebBrowserUtils {
     }, [ELEMENT_OUT_OF_VIEW_ATTR]);
   }
 
+  async getVisibleHtml(): Promise<string> {
+    const stringHTML = await this.getHtml();
+    const document = new JSDOM(stringHTML, { contentType: 'text/html' }).window.document;
+
+    document.head.querySelectorAll('*').forEach(headEl => {
+      if (headEl.tagName.toLowerCase() !== 'title')
+        headEl.remove();
+    });
+
+    document.querySelectorAll('*')
+      .forEach(el => {
+        if (el.hasAttribute(ELEMENT_OUT_OF_VIEW_ATTR))
+          el.remove();
+        if (el.tagName.toLowerCase() === 'svg')
+          el.remove();
+
+        this._sanitizeElement(el);
+      });
+
+    return this._formatHtml(document.documentElement.outerHTML);
+  }
+
   private _getElementText(element: globalThis.Element) {
     const label = (Array.from<globalThis.Element>(element['labels'] || [])
       ?.map(label => label.textContent)
@@ -137,8 +160,53 @@ export default class WebBrowserUtils {
   }
 
   private _filterVisibleElement(element: globalThis.Element) {
-    if (element.getAttribute(ELEMENT_OUT_OF_VIEW_ATTR))
+    if (element.hasAttribute(ELEMENT_OUT_OF_VIEW_ATTR))
       return false;
     return true;
+  }
+
+  private _sanitizeElement(element: globalThis.Element) {
+    const validAttrs = [
+      "id",
+      "src",
+      "alt",
+      "href",
+      "disabled",
+      "placeholder",
+      "aria-placeholder",
+      "label",
+      "aria-label",
+      "value",
+      "checked",
+      "readonly",
+      "required"
+    ];
+
+    const attributesToRemove = [];
+
+    for (let i = 0; i < element.attributes.length; i++) {
+      const attributeName = element.attributes[i].name;
+
+      if (!validAttrs.includes(attributeName) || !validAttrs.includes(attributeName.replace('data-', '')))
+        attributesToRemove.push(attributeName);
+    }
+
+    for (const attributeName of attributesToRemove) {
+      element.removeAttribute(attributeName);
+    }
+  }
+
+  private async _formatHtml(html: string) {
+    const sanitized = html
+      .replace(/<!--[\s\S]*?-->/g, '') // removes comments
+      .replace(/^\s*[\r\n]/gm, ''); // removes empty lines
+
+    return prettier.format(sanitized, {
+      parser: 'html',
+      tabWidth: 2,
+      useTabs: false,
+      printWidth: 3000,
+      bracketSpacing: false
+    });
   }
 }
