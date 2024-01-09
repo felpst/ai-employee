@@ -1,6 +1,9 @@
 import { IWebBrowser } from '@cognum/interfaces';
 import { ElementSelector } from './common/element-schema';
 import { Element } from './web-browser.service';
+import { JSDOM } from 'jsdom';
+
+const ELEMENT_OUT_OF_VIEW_ATTR = 'isElementOutsideViewPort';
 
 export default class WebBrowserUtils {
   constructor(protected webBrowser: IWebBrowser) { }
@@ -54,65 +57,88 @@ export default class WebBrowserUtils {
     }, [selector]);
   }
 
-  async mapPageElements(): Promise<Element[]> {
-    return this.webBrowser.driver.executeScript(() => {
-      const elements = document.body.querySelectorAll('a, button, input, textarea, span');
+  async mapVisibleElements(): Promise<Element[]> {
+    const stringHTML = await this.getHtml();
+    const document = new JSDOM(stringHTML, { contentType: 'text/html' }).window.document;
 
-      return Array.from(elements || [])
-        .filter(isElementOnViewPort)
-        .filter(el => el.checkVisibility())
-        .map(element => ({
-          tag: element.tagName.toLowerCase(),
-          text: getElementText(element),
-          selector: getElementSelector(element)
-        }))
-        .filter(el => Boolean(el.text));
+    const elements = document.body.querySelectorAll('a, button, input, textarea, span');
 
-      function isElementOnViewPort(element) {
-        var rect = element.getBoundingClientRect();
-        var html = document.documentElement;
+    return Array.from(elements || [])
+      .filter(el => this._filterVisibleElement(el))
+      .map(element => ({
+        tag: element.tagName.toLowerCase(),
+        text: this._getElementText(element),
+        selector: this._getElementSelector(element)
+      }))
+      .filter(el => Boolean(el.text));
+  }
+
+  /** Gets page html and sets an attribute for elements out of view
+   *  @returns {string}
+   */
+  async getHtml(): Promise<string> {
+    return this.webBrowser.driver.executeScript((elOutOfViewAttrName: string) => {
+      document.querySelectorAll('body *')
+        .forEach(element => {
+          if (!isInViewPort(element) || !element.checkVisibility())
+            element.setAttribute(elOutOfViewAttrName, 'true');
+        });
+
+      return document.documentElement.outerHTML;
+
+      function isInViewPort(element) {
+        const rect = element.getBoundingClientRect();
+        const html = document.documentElement;
+
         return (
-          rect.top >= 0 &&
-          rect.left >= 0 &&
-          rect.bottom <= (window.innerHeight || html.clientHeight) &&
-          rect.right <= (window.innerWidth || html.clientWidth)
+          rect.bottom > 0 &&
+          rect.right > 0 &&
+          rect.top < (window.innerHeight || html.clientHeight) &&
+          rect.left < (window.innerWidth || html.clientWidth)
         );
       }
+    }, [ELEMENT_OUT_OF_VIEW_ATTR]);
+  }
 
-      function getElementText(element) {
-        const label = (Array.from<any>(element.labels || [])
-          ?.map(label => label.textContent)
-          .join('\n'));
+  private _getElementText(element: globalThis.Element) {
+    const label = (Array.from<globalThis.Element>(element['labels'] || [])
+      ?.map(label => label.textContent)
+      .join('\n'));
 
-        return (
-          element.textContent?.trim()
-          || label?.trim()
-          || element.ariaLabel?.trim()
-          || element.placeholder?.trim()
-          || element.ariaPlaceholder?.trim()
-          || element.title?.trim()
-        )?.split('\n')
-          .filter(sub => Boolean(sub.trim()))
-          .map(sub => sub.replace(/\s\s+/g, ' ').trim())
-          .join('<br>');
+    return (
+      element.textContent?.trim()
+      || label?.trim()
+      || element.getAttribute('label')?.trim()
+      || element.ariaLabel?.trim()
+      || element.getAttribute('placeholder')?.trim()
+      || element.ariaPlaceholder?.trim()
+      || element.getAttribute('title')?.trim()
+    )?.split('\n')
+      .filter(sub => Boolean(sub.trim()))
+      .map(sub => sub.replace(/\s\s+/g, ' ').trim())
+      .join('<br>');
+  }
+
+  private _getElementSelector(element: globalThis.Element) {
+    if (element.tagName.toLowerCase() === 'body') return 'body';
+    const names = [];
+    while (element.parentElement && element.tagName.toLowerCase() !== 'body') {
+      if (element.id) {
+        names.unshift('#' + element.getAttribute('id'));
+        break;
+      } else {
+        let c = 1, e = element;
+        for (; e.previousElementSibling; e = e.previousElementSibling, c++);
+        names.unshift(element.tagName.toLowerCase() + ':nth-child(' + c + ')');
       }
+      element = element.parentElement;
+    }
+    return names.join(' > ');
+  }
 
-      function getElementSelector(element) {
-        if (element.tagName.toLowerCase() === 'body') return 'body';
-        const names = [];
-        while (element.parentElement && element.tagName.toLowerCase() !== 'body') {
-          if (element.id) {
-            names.unshift('#' + element.getAttribute('id'));
-            break;
-          } else {
-            let c = 1, e = element;
-            for (; e.previousElementSibling; e = e.previousElementSibling, c++);
-            names.unshift(element.tagName.toLowerCase() + ':nth-child(' + c + ')');
-          }
-          element = element.parentElement;
-        }
-        return names.join(' > ');
-      }
-    });
+  private _filterVisibleElement(element: globalThis.Element) {
+    if (element.getAttribute(ELEMENT_OUT_OF_VIEW_ATTR))
+      return false;
+    return true;
   }
 }

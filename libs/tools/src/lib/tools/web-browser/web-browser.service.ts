@@ -138,7 +138,7 @@ export class WebBrowserService {
     console.log('preparing vector db...');
 
     const docs =
-      (await new WebBrowserUtils(this.webBrowser).mapPageElements())
+      (await new WebBrowserUtils(this.webBrowser).mapVisibleElements())
         .map(({ text, ...rest }) => new Document({
           pageContent: text,
           metadata: {
@@ -246,7 +246,7 @@ export class WebBrowserService {
   }
 
   async getElementsTree(): Promise<string> {
-    const elements = await this._utils.mapPageElements();
+    const elements = await this._utils.mapVisibleElements();
     const result = {};
 
     elements.forEach((element) => {
