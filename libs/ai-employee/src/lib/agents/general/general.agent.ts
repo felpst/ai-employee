@@ -1,13 +1,15 @@
-import { IAIEmployee, IAgentCall, IUser } from "@cognum/interfaces";
+import { IAIEmployee, IAIEmployeeCallData, IAgentCall, IJob, IUser } from "@cognum/interfaces";
 import { ChatModel } from "@cognum/llm";
 import { JobService } from "@cognum/tools";
 import { initializeAgentExecutorWithOptions } from "langchain/agents";
 import { BufferMemory } from "langchain/memory";
 import { MessagesPlaceholder } from "langchain/prompts";
-import { Tool } from "langchain/tools";
+import { DynamicStructuredTool, Tool } from "langchain/tools";
 import treeify from 'treeify';
 import { AIEmployeeTools } from "../../tools/ai-employee-tools";
 import { Agent } from "../agent";
+import { Job, User } from "@cognum/models";
+import { z } from 'zod';
 
 export class GeneralAgent extends Agent {
 
@@ -37,6 +39,13 @@ export class GeneralAgent extends Agent {
       console.log('Create job tool added')
       const jobService = new JobService({ aiEmployee: this.aiEmployee, user: this.context.user });
       tools.push(...jobService.toolkit() as Tool[]);
+
+      const jobs = await Job.find({ aiEmployee: this.aiEmployee._id });
+      jobs.forEach(async job => {
+        const jobTool = this.jobToTool(job);
+        tools.push(jobTool);
+      });
+  
     }
     const filteredTools = await AIEmployeeTools.filterByContext(tools, input, formattedToolsContext)
 
@@ -96,5 +105,28 @@ export class GeneralAgent extends Agent {
       return formattedContext;
     }
     return ''
+  }
+
+  jobToTool(job: IJob) {
+    return new DynamicStructuredTool({
+      name: job.name,
+      description: job.description,
+      metadata: { id: job._id.toString(), tool: "job" },
+      schema: z.object({}),
+      func: async () => {
+        try {
+          console.log('Preparing to call aiEmployee...');
+          const callData: IAIEmployeeCallData = {
+            input: job.instructions, 
+            user: await User.findById(job.createdBy).exec()
+          };
+          const call = await this.aiEmployee.call(callData);
+    
+          return "Job tool: \n```json\n" + JSON.stringify(call, null, 2) + "\n```";
+        } catch (error) {
+          return error.message;
+        }
+      },
+    });
   }
 }
