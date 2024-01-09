@@ -115,7 +115,6 @@ export class GeneralAgent extends Agent {
       schema: z.object({}),
       func: async () => {
         try {
-          console.log('Preparing to call aiEmployee...');
           const callData: IAIEmployeeCallData = {
             input: job.instructions, 
             user: await User.findById(job.createdBy).exec()
