@@ -36,7 +36,6 @@ export class GeneralAgent extends Agent {
     })
     // Jobs Toolkit
     if (this.context.user) {
-      console.log('Create job tool added')
       const jobService = new JobService({ aiEmployee: this.aiEmployee, user: this.context.user });
       tools.push(...jobService.toolkit() as Tool[]);
 
@@ -45,7 +44,6 @@ export class GeneralAgent extends Agent {
         const jobTool = this.jobToTool(job);
         tools.push(jobTool);
       });
-  
     }
     const filteredTools = await AIEmployeeTools.filterByContext(tools, input, formattedToolsContext)
 
