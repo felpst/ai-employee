@@ -60,8 +60,7 @@ export class BrowserAgent {
       callbacks: [
         {
           async handleChainStart(chain, inputs) {
-            console.log(inputs);
-            const pageElements = await service.getElementsTree();
+            const pageElements = await service.getVisibleHtml();
 
             const browserContext = {
               currentUrl: {
@@ -72,8 +71,8 @@ export class BrowserAgent {
                 description: 'The last url accessed in the browser tab.',
                 value: previousUrl,
               },
-              visibleElements: {
-                description: 'The visible elements in the browser tab ViewPort. Other elements might be visible after scrolling the page.',
+              visibleHtml: {
+                description: 'The visible html in the browser tab ViewPort. Other elements might be visible after scrolling the page.',
                 value: pageElements
               }
             };
@@ -86,6 +85,15 @@ export class BrowserAgent {
               previousUrl = currentUrl;
               currentUrl = url;
             }
+          },
+          handleToolStart(tool, input, runId, parentRunId, tags, metadata, name) {
+            console.log('start tool', { tool: name, input });
+          },
+          handleLLMEnd(output) {
+            console.log('agent output', { output: output.generations[0][0].text });
+          },
+          handleToolError(error) {
+            console.error('tool error', error);
           }
         }
       ]

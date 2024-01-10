@@ -20,7 +20,7 @@ export class ExtractDataUseCase extends WebBrowserUtils {
       until.elementLocated(By[findOptions.selectorType](findOptions.elementSelector)),
       findOptions.findTimeout
     );
-    const htmlContent = await this.getHtmlFromElement(findOptions.elementSelector, findOptions.selectorType);
+    const htmlContent = await this.getElementHtmlByCss(findOptions.elementSelector);
 
     const data = await this.getDataFromHTML(htmlContent);
     return data;

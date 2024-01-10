@@ -11,7 +11,7 @@ export class WebBrowserScrollPageTool extends DynamicStructuredTool {
       metadata: { id: "web-browser", tool: 'scrollPage' },
       description: 'Use this tool to scroll page vertically and get access to elements outside ViewPort.',
       schema: elementSchema.extend({
-        location: z.number().optional().describe("the location where the page will be scrolled"),
+        location: z.number().optional().describe("how much in pixels will be scrolled"),
       }),
       func: async ({ location, ...params }: IElementFindOptions & { location: number; }) => {
         try {

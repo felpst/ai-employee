@@ -1,6 +1,5 @@
 import { DynamicStructuredTool } from 'langchain/tools';
 import { z } from 'zod';
-import { WebBrowserService } from '../web-browser.service';
 import { WebBrowserToolSettings } from '../web-browser.toolkit';
 
 export class WebBrowserExtractDataTool extends DynamicStructuredTool {
@@ -8,20 +7,20 @@ export class WebBrowserExtractDataTool extends DynamicStructuredTool {
     super({
       name: 'Web Browser Extract Data',
       metadata: { id: "web-browser", tool: 'extractData' },
-      description: 'Use this tool to extract data from an element on an web page.',
+      description: 'Use this tool to extract data from inside an element on an web page, such as lists, tables or structured divs/sections.',
       schema: z.object({
-        context: z.string().describe("context of the element to extract data."),
+        vectorId: z.number().describe("vector-id attribute of the element used as data source."),
         findTimeout: z.number().optional().default(10000).describe("timeout to find the element in ms."),
       }),
       func: async ({
-        context,
+        vectorId,
         findTimeout
       }) => {
         try {
-          const element = await settings.webBrowserService.findElementByContext(context)
+          const selector = settings.webBrowserService.findElementById(vectorId);
           const extractData = await settings.webBrowserService.extractData({
-            elementSelector: element.selector,
-            selectorType: element.selectorType,
+            elementSelector: selector,
+            selectorType: 'css',
             findTimeout
           });
           const json = JSON.stringify(extractData);

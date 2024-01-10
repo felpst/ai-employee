@@ -11,28 +11,26 @@ export class WebBrowserInputTextTool extends DynamicStructuredTool {
       description: 'Use this to input a text to an element on web browser.',
       schema: z.object({
         textValue: z.string().describe("the text that will be input."),
-        elementTag: z.string().describe("the html tag of the element."),
-        elementText: z.string().describe("the text content of the element."),
+        vectorId: z.number().describe("vector-id attribute of the choosen element."),
         findTimeout: z.number().optional().default(10000).describe("timeout to find the element in ms."),
       }),
       func: async ({
         textValue,
-        elementTag,
-        elementText,
+        vectorId,
         findTimeout
       }) => {
         try {
-          const element = await settings.webBrowserService.findElementByContent(elementTag, elementText);
+          const selector = settings.webBrowserService.findElementById(vectorId);
 
           const success = await settings.webBrowserService.inputText(textValue, {
-            elementSelector: element.selector,
+            elementSelector: selector,
             selectorType: 'css',
             findTimeout
           });
 
           if (!success) throw new Error(`Input unsuccessful`);
 
-          return `Input ${textValue} was successfully done in element "${element.selector}"`;
+          return `Input ${textValue} was successfully done in element "${selector}"`;
         } catch (error) {
           return error.message;
         }

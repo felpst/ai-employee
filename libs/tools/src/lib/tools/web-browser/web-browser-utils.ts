@@ -3,11 +3,26 @@ import { ElementSelector } from './common/element-schema';
 import { Element } from './web-browser.service';
 import { JSDOM } from 'jsdom';
 import prettier from 'prettier';
+import fs from 'fs';
 
 const ELEMENT_OUT_OF_VIEW_ATTR = 'isElementOutsideViewPort';
+const INTERNAL_ELEMENT_ID = 'vector-id';
 
 export default class WebBrowserUtils {
   constructor(protected webBrowser: IWebBrowser) { }
+
+  async getElementHtmlByCss(selector: string): Promise<string> {
+    const rawHtmlElement = await this.webBrowser.driver.executeScript<string>((selector: string) => {
+      const element = document.querySelector(`${selector}`).cloneNode(true) as globalThis.Element;
+      return element.outerHTML;
+    }, [selector]);
+
+    const dom = this._getDomFromStringHTML(rawHtmlElement);
+    dom.querySelectorAll('*:not(svg)')
+      .forEach(el => this._sanitizeElement(el, true));
+
+    return this._formatHtml(dom.documentElement.outerHTML);
+  }
 
   async getHtmlFromElement(selector: string, selectorType?: ElementSelector): Promise<string> {
     switch (selectorType) {
@@ -59,18 +74,22 @@ export default class WebBrowserUtils {
   }
 
   async mapVisibleElements(): Promise<Element[]> {
-    const stringHTML = await this.getHtml();
-    const document = new JSDOM(stringHTML, { contentType: 'text/html' }).window.document;
+    const { html, selectors } = await this.getVisibleHtml();
+    const document = this._getDomFromStringHTML(html);
 
-    const elements = document.body.querySelectorAll('a, button, input, textarea, span');
+    const elements = document.body.querySelectorAll('*');
 
     return Array.from(elements || [])
-      .filter(el => this._filterVisibleElement(el))
-      .map(element => ({
-        tag: element.tagName.toLowerCase(),
-        text: this._getElementText(element),
-        selector: this._getElementSelector(element)
-      }))
+      .map(element => {
+        const vectorId = +selectors[element.getAttribute(INTERNAL_ELEMENT_ID)];
+
+        return {
+          tag: element.tagName.toLowerCase(),
+          text: this._getElementText(element),
+          selector: selectors[vectorId],
+          vectorId: vectorId
+        };
+      })
       .filter(el => Boolean(el.text));
   }
 
@@ -78,11 +97,13 @@ export default class WebBrowserUtils {
    *  @returns {string}
    */
   async getHtml(): Promise<string> {
-    return this.webBrowser.driver.executeScript((elOutOfViewAttrName: string) => {
+    return this.webBrowser.driver.executeScript((elOutOfViewAttrName: string, internalElementId: string) => {
       document.querySelectorAll('body *')
-        .forEach(element => {
+        .forEach((element, i) => {
           if (!isInViewPort(element) || !element.checkVisibility())
             element.setAttribute(elOutOfViewAttrName, 'true');
+
+          element.setAttribute(internalElementId, `${i}`);
         });
 
       return document.documentElement.outerHTML;
@@ -98,29 +119,48 @@ export default class WebBrowserUtils {
           rect.left < (window.innerWidth || html.clientWidth)
         );
       }
-    }, [ELEMENT_OUT_OF_VIEW_ATTR]);
+    }, ELEMENT_OUT_OF_VIEW_ATTR, INTERNAL_ELEMENT_ID);
   }
 
-  async getVisibleHtml(): Promise<string> {
+  async getVisibleHtml(): Promise<{ html: string, selectors: Record<string, string>; }> {
     const stringHTML = await this.getHtml();
-    const document = new JSDOM(stringHTML, { contentType: 'text/html' }).window.document;
+    const document = this._getDomFromStringHTML(stringHTML);
+    const selectors = {};
 
-    document.head.querySelectorAll('*').forEach(headEl => {
-      if (headEl.tagName.toLowerCase() !== 'title')
-        headEl.remove();
+    // create internal ids and get selectors from when still full html
+    document.querySelectorAll('*:not(script):not(style):not(svg)').forEach(el => {
+      const vectorId = el.getAttribute(INTERNAL_ELEMENT_ID);
+      const isOutOfView = el.getAttribute(ELEMENT_OUT_OF_VIEW_ATTR);
+
+      if (!isOutOfView)
+        selectors[vectorId] = this._getElementSelector(el);
     });
 
+    // (order matters!) replace parent for child when single child, remove elements outside viewport and cleanup unwanted attributes from element 
     document.querySelectorAll('*')
       .forEach(el => {
-        if (el.hasAttribute(ELEMENT_OUT_OF_VIEW_ATTR))
-          el.remove();
-        if (el.tagName.toLowerCase() === 'svg')
-          el.remove();
-
+        this._makeParentFromSingleChild(el);
+        this._removeInvisible(el);
         this._sanitizeElement(el);
       });
 
-    return this._formatHtml(document.documentElement.outerHTML);
+    // remove unwanted elements
+    document.querySelectorAll('script, style, svg')
+      .forEach(el => el.remove());
+
+    // remove all head elements except page title
+    document.head.querySelectorAll('*')
+      .forEach(headEl => {
+        if (headEl.tagName.toLowerCase() !== 'title')
+          headEl.remove();
+      });
+
+    const html = await this._formatHtml(document.documentElement.outerHTML);
+    return { html, selectors };
+  }
+
+  private _getDomFromStringHTML(html: string) {
+    return new JSDOM(html, { contentType: 'text/html' }).window.document;
   }
 
   private _getElementText(element: globalThis.Element) {
@@ -159,16 +199,9 @@ export default class WebBrowserUtils {
     return names.join(' > ');
   }
 
-  private _filterVisibleElement(element: globalThis.Element) {
-    if (element.hasAttribute(ELEMENT_OUT_OF_VIEW_ATTR))
-      return false;
-    return true;
-  }
-
-  private _sanitizeElement(element: globalThis.Element) {
+  private _sanitizeElement(element: globalThis.Element, removeInternalId = false) {
     const validAttrs = [
       "id",
-      "src",
       "alt",
       "href",
       "disabled",
@@ -184,10 +217,19 @@ export default class WebBrowserUtils {
 
     const attributesToRemove = [];
 
+    function mustKeepAttr(attrName: string) {
+      const attrIsInList = validAttrs.includes(attrName);
+      const attrIsAnListItemAlternative = validAttrs.includes(attrName.replace('data-', ''));
+      const isInternalIdAndMustNotRemove = attrName === INTERNAL_ELEMENT_ID && !removeInternalId;
+
+      return attrIsInList || attrIsAnListItemAlternative || isInternalIdAndMustNotRemove;
+    }
+
     for (let i = 0; i < element.attributes.length; i++) {
       const attributeName = element.attributes[i].name;
+      const attributeIsEmpty = !element.attributes[i].value;
 
-      if (!validAttrs.includes(attributeName) || !validAttrs.includes(attributeName.replace('data-', '')))
+      if (!mustKeepAttr(attributeName) || attributeIsEmpty)
         attributesToRemove.push(attributeName);
     }
 
@@ -196,11 +238,34 @@ export default class WebBrowserUtils {
     }
   }
 
+  private _removeInvisible(element: globalThis.Element) {
+    if (element.hasAttribute(ELEMENT_OUT_OF_VIEW_ATTR))
+      element.remove();
+  }
+
+  private _makeParentFromSingleChild(element: globalThis.Element) {
+    if (
+      element.tagName.toLowerCase() === 'div' &&
+      element.children.length === 1 &&
+      element.children[0].tagName.toLowerCase() === 'div') {
+
+      const text = element.textContent.toString();
+      element.replaceWith(element.children[0]);
+      element.textContent = text;
+
+    } else {
+      for (let i = 0; i < element.children.length; i++) {
+        this._makeParentFromSingleChild(element.children[i]);
+      }
+    }
+  }
+
   private async _formatHtml(html: string) {
     const sanitized = html
       .replace(/<!--[\s\S]*?-->/g, '') // removes comments
       .replace(/^\s*[\r\n]/gm, ''); // removes empty lines
 
+    fs.writeFileSync('teste.html', sanitized);
     return prettier.format(sanitized, {
       parser: 'html',
       tabWidth: 2,

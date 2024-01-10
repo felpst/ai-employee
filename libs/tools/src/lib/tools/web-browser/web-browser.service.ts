@@ -1,18 +1,19 @@
 import { IWebBrowser } from '@cognum/interfaces';
-import { EmbeddingsModel } from '@cognum/llm';
 import { By, until } from 'selenium-webdriver';
 import { IElementFindOptions } from './common/element-schema';
 import { ExtractDataUseCase } from './usecases/extract-data.usecase';
 
 import { HNSWLib } from "langchain/vectorstores/hnswlib";
 import WebBrowserUtils from './web-browser-utils';
-import { Document } from 'langchain/document';
 import treeify from 'treeify';
+import { Document } from 'langchain/document';
+import { EmbeddingsModel } from '@cognum/llm';
 
 export class WebBrowserService {
   private _currentURL: string;
   private _vectorStore: HNSWLib;
   private _utils: WebBrowserUtils;
+  private _selectors: Record<string, string>;
 
   constructor(
     private webBrowser: IWebBrowser
@@ -24,6 +25,11 @@ export class WebBrowserService {
     const currentURL = await this.webBrowser.driver.getCurrentUrl();
     if (this._currentURL === currentURL) return false;
     this._currentURL = currentURL;
+    this.webBrowser.driver.wait(async () => {
+      const readyState = await this.webBrowser.driver.executeScript('return document.readyState');
+      return readyState === 'complete';
+    }, 10000);
+
     this._vectorStore = null;
     return true;
   }
@@ -179,7 +185,6 @@ export class WebBrowserService {
         this._vectorStore = null;
         return true;
       } else {
-        await this.webBrowser.driver.sleep(3000);
         offset = _location - currentLocation;
         this.webBrowser.driver.executeScript("window.scrollTo(" + currentLocation + "," + offset + ")");
       }
@@ -238,6 +243,15 @@ export class WebBrowserService {
     } as Element;
   }
 
+  findElementById(vectorId: number): string {
+    const selector = this._selectors[vectorId];
+
+    if (!selector)
+      throw new Error(`Element not found for vector id "${vectorId}".`);
+
+    return selector;
+  }
+
   private async _findElement(findOptions: IElementFindOptions) {
     return this.webBrowser.driver.wait(
       until.elementLocated(By[findOptions.selectorType](findOptions.elementSelector)),
@@ -260,10 +274,20 @@ export class WebBrowserService {
 
     return treeify.asTree(result, true, true);
   }
+
+  async getVisibleHtml() {
+    const { html, selectors } = await this._utils.getVisibleHtml();
+    this._selectors = selectors;
+
+    return `\`\`\`html
+    ${html}
+    \`\`\``;
+  }
 }
 
 export interface Element {
   selector: string;
   text: string;
   tag: string;
+  vectorId: number;
 }
