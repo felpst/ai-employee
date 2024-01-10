@@ -1,4 +1,5 @@
 export * from './cron'
+export * from './file-manager'
 export * from './google-calendar'
 export * from './job'
 export * from './knowledge-retriever'
