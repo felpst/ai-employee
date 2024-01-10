@@ -24,7 +24,7 @@ DatabaseHelper.connect(process.env.MONGO_URL)
       // await new FindElementTest().execute()
       // await new AIELinkedIn().execute()
       try {
-        await new AIELinkedIn().execute()
+        await new LinkedinTest().execute()
       } catch (error) {
         console.error(error.message)
       }

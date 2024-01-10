@@ -120,4 +120,22 @@ export default class WebBrowserUtils {
 
     return selectors;
   }
+  async getDivAndTableElements(): Promise<string[]> {
+
+    const divTableElements = ['div', 'table', 'ul'];
+    const selectors = await this.webBrowser.driver.executeScript((validElements: string[]) => {
+      const divTableElements = document.querySelectorAll(validElements.join(', '));
+
+      const elementClass = Array.from(divTableElements).map(
+        (element) => {
+          return element.classList.value
+        }
+      );
+
+      return elementClass;
+    }, [divTableElements]) as any[];
+    console.log('selector', selectors);
+
+    return selectors;
+  }
 }

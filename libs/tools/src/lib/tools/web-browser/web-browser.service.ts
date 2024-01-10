@@ -148,6 +148,21 @@ export class WebBrowserService {
     this.retriever = vectorStore.asRetriever();
   }
 
+  async prepareVectorBaseToExtract() {
+    if (this.retriever) return;
+    console.log('prepareVectorBase...');
+
+    const docs = await new WebBrowserUtils(this.webBrowser)
+      .getDivAndTableElements();
+
+    console.log('docs lenght:', docs.length);
+
+    const vectorStore = await HNSWLib.fromTexts(docs, {}, new EmbeddingsModel());
+    console.log('vectorStore ready');
+
+    this.retriever = vectorStore.asRetriever();
+  }
+
   async retrieveRelevantContext(context: string): Promise<string[]> {
     const retrievedDocs = await this.retriever.getRelevantDocuments(context);
 
@@ -232,6 +247,20 @@ export class WebBrowserService {
     console.log({ possibleSelectors: possibleSelectors });
 
     const result = await useCase.chooseLikelySelector(context, possibleSelectors);
+    console.log({ llmSelectorChoice: result });
+
+    return result;
+  }
+
+  async findElementByContextToExtract(context: string) {
+    console.log({ pageURL: this.currentURL, context });
+
+    await this.prepareVectorBaseToExtract();
+    const useCase = new FindElementUseCase(this.webBrowser);
+    const possibleSelectors = await this.retrieveRelevantContext(context);
+    console.log({ possibleSelectors: possibleSelectors });
+
+    const result = await useCase.chooseLikelySelectorToExtract(context, possibleSelectors);
     console.log({ llmSelectorChoice: result });
 
     return result;

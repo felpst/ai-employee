@@ -44,13 +44,22 @@ export class LinkedinTest {
 
     await this.service.keyupEmiter('\uE007');
 
-    const peopleButtonContext = 'See all people results';
+    const peopleButtonContext = 'People Filter Button';
     const peopleButtonElement = await this.service.findElementByContext(peopleButtonContext);
     await this.service.click({
       selectorType: peopleButtonElement.selectorType,
       elementSelector: peopleButtonElement.selector,
     });
+
+
     await this.service.scrollPage(1800);
+
+    const extractContext = 'extract data result container';
+    const extractElement = await this.service.findElementByContextToExtract(extractContext);
+    await this.service.extractData({
+      selectorType: extractElement.selectorType,
+      elementSelector: extractElement.selector,
+    });
 
     const nextButtonContext = 'next page button';
     const nextButtonElement = await this.service.findElementByContext(nextButtonContext);
