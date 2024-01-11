@@ -1,15 +1,23 @@
-import { IAIEmployee, IAIEmployeeCall, IAIEmployeeCallStep, IAgentCall } from "@cognum/interfaces";
-import { ChatModel } from "@cognum/llm";
-import { WebBrowser } from "@cognum/tools";
-import { StructuredOutputParser } from "langchain/output_parsers";
-import { PromptTemplate } from "langchain/prompts";
-import { RunnableSequence } from "langchain/schema/runnable";
-import { BehaviorSubject, Observable } from "rxjs";
-import { z } from "zod";
-import { GeneralAgent } from "../../agents/general";
-import { InformationRetrievalAgent } from "../../agents/information-retrieval";
-import { TaskExecutionAgent } from "../../agents/task-execution";
-import { INTENTIONS, intentClassifier } from "../../utils/intent-classifier/intent-classifier.util";
+import {
+  IAIEmployee,
+  IAIEmployeeCall,
+  IAIEmployeeCallStep,
+  IAgentCall,
+} from '@cognum/interfaces';
+import { ChatModel } from '@cognum/llm';
+import { WebBrowser } from '@cognum/tools';
+import { StructuredOutputParser } from 'langchain/output_parsers';
+import { PromptTemplate } from 'langchain/prompts';
+import { RunnableSequence } from 'langchain/schema/runnable';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { z } from 'zod';
+import { GeneralAgent } from '../../agents/general';
+import { InformationRetrievalAgent } from '../../agents/information-retrieval';
+import { TaskExecutionAgent } from '../../agents/task-execution';
+import {
+  INTENTIONS,
+  intentClassifier,
+} from '../../utils/intent-classifier/intent-classifier.util';
 
 interface StepInput {
   lastStep?: IAIEmployeeCallStep;
@@ -21,16 +29,18 @@ export function run(): Observable<IAIEmployeeCall> {
 
   let nextStep = 0;
   const runnableSequence = [
-    async () => { $call.next(call) },
+    async () => {
+      $call.next(call);
+    },
     startRun,
     startResources,
     stepAgent,
-    // stepIntentClassification,
-    // stepIntentExecution,
-    // stepFinalAnswer,
+    stepIntentClassification,
+    stepIntentExecution,
+    stepFinalAnswer,
     endResources,
-    endRun
-  ]
+    endRun,
+  ];
 
   // Run steps
   new Promise(async () => {
@@ -45,29 +55,32 @@ export function run(): Observable<IAIEmployeeCall> {
         nextStep = runnableSequence.length - 1;
       }
     }
-  })
+  });
 
   return $call;
 
   async function startRun(input?: StepInput) {
     call.status = 'running';
     call.startAt = new Date();
-    await call.save()
-    $call.next(call)
+    await call.save();
+    $call.next(call);
   }
 
   async function startResources(input?: StepInput) {
     // Start resources
     (call.aiEmployee as IAIEmployee).resources = {
-      browser: null
-    }
+      browser: null,
+    };
 
     // Browser
     try {
-      const headless = process.env.SERVER_URL.includes('localhost') ? false : true;
-      (call.aiEmployee as IAIEmployee).resources.browser = await new WebBrowser().start({ headless })
+      const headless = process.env.SERVER_URL.includes('localhost')
+        ? false
+        : true;
+      (call.aiEmployee as IAIEmployee).resources.browser =
+        await new WebBrowser().start({ headless });
     } catch (error) {
-      console.error('Error starting browser', error.message)
+      console.error('Error starting browser', error.message);
     }
   }
 
@@ -76,7 +89,7 @@ export function run(): Observable<IAIEmployeeCall> {
     if ((call.aiEmployee as IAIEmployee).resources.browser) {
       try {
         (call.aiEmployee as IAIEmployee).resources.browser.close();
-      } catch (error) { }
+      } catch (error) {}
     }
   }
 
@@ -85,14 +98,17 @@ export function run(): Observable<IAIEmployeeCall> {
     const agent = await new GeneralAgent(aiEmployee).init();
     agent.context = call.context || {};
 
-    const result = await agent.call(call.input, [INTENTIONS.INFORMATION_RETRIEVAL, INTENTIONS.TASK_EXECUTION]);
+    const result = await agent.call(call.input, [
+      INTENTIONS.INFORMATION_RETRIEVAL,
+      INTENTIONS.TASK_EXECUTION,
+    ]);
 
     // Final answer
     call.output = result.output;
 
     // Update call
-    await call.save()
-    $call.next(call)
+    await call.save();
+    $call.next(call);
   }
 
   async function stepIntentClassification(input?: StepInput) {
@@ -101,36 +117,37 @@ export function run(): Observable<IAIEmployeeCall> {
       description: 'Intent classification',
       inputs: {
         text: call.input,
-        context: {}
+        context: {},
       },
       outputs: {},
       tokenUsage: 0,
       status: 'running',
       startAt: new Date(),
-      endAt: null
-    }
+      endAt: null,
+    };
     const index = call.steps.push(stepIntentClassification);
-    await call.save()
-    $call.next(call)
+    await call.save();
+    $call.next(call);
 
     // Run intent classification
-    const intentClassifierResult = await intentClassifier(call.input)
+    const intentClassifierResult = await intentClassifier(call.input);
     // console.log(intentClassifierResult);
 
     // TODO token usage
     stepIntentClassification.outputs = intentClassifierResult;
     stepIntentClassification.status = 'done';
     stepIntentClassification.endAt = new Date();
-    call.steps[index - 1] = stepIntentClassification
-    await call.save()
-    $call.next(call)
+    call.steps[index - 1] = stepIntentClassification;
+    await call.save();
+    $call.next(call);
 
     return stepIntentClassification;
   }
 
   async function stepIntentExecution(input?: StepInput) {
     const stepIntentClassification = input.lastStep;
-    if (!stepIntentClassification) throw new Error('stepIntentClassification not found');
+    if (!stepIntentClassification)
+      throw new Error('stepIntentClassification not found');
 
     // Agent
     let agentCall: IAgentCall;
@@ -140,10 +157,10 @@ export function run(): Observable<IAIEmployeeCall> {
           $call,
           question: stepIntentClassification.inputs.text,
           context: stepIntentClassification.inputs.context,
-          aiEmployee: call.aiEmployee as IAIEmployee
-        }
-        const informationRetrievalAgent = new InformationRetrievalAgent()
-        await informationRetrievalAgent.call(informationRetrievalAgentOptions)
+          aiEmployee: call.aiEmployee as IAIEmployee,
+        };
+        const informationRetrievalAgent = new InformationRetrievalAgent();
+        await informationRetrievalAgent.call(informationRetrievalAgentOptions);
         break;
       case INTENTIONS.TASK_EXECUTION:
         const taskExecutionAgentOptions = {
@@ -151,18 +168,23 @@ export function run(): Observable<IAIEmployeeCall> {
           input: stepIntentClassification.inputs.text,
           context: stepIntentClassification.inputs.context,
           aiEmployee: call.aiEmployee as IAIEmployee,
-          intentions: [INTENTIONS.TASK_EXECUTION]
-        }
-        const taskExecutionAgent = new TaskExecutionAgent()
-        await taskExecutionAgent.call(taskExecutionAgentOptions)
+          intentions: [INTENTIONS.TASK_EXECUTION],
+        };
+        const taskExecutionAgent = new TaskExecutionAgent();
+        await taskExecutionAgent.call(taskExecutionAgentOptions);
         break;
       // case INTENTIONS.CONFIGURATION_OR_CUSTOMIZATION:
       //   const configurationAgent = await new ConfigurationAgent(call.aiEmployee as IAIEmployee).init()
       //   agentCall = await configurationAgent.call(stepIntentClassification.input.text, intention)
       //   break;
       default:
-        const generalAgent = await new GeneralAgent(call.aiEmployee as IAIEmployee).init()
-        agentCall = await generalAgent.call(stepIntentClassification.inputs.text, [])
+        const generalAgent = await new GeneralAgent(
+          call.aiEmployee as IAIEmployee
+        ).init();
+        agentCall = await generalAgent.call(
+          stepIntentClassification.inputs.text,
+          []
+        );
         break;
     }
 
@@ -184,15 +206,15 @@ export function run(): Observable<IAIEmployeeCall> {
       tokenUsage: 0,
       status: 'running',
       startAt: new Date(),
-      endAt: null
-    }
+      endAt: null,
+    };
     const index = call.steps.push(stepFinalAnswer);
-    await call.save()
-    $call.next(call)
+    await call.save();
+    $call.next(call);
 
     const parser = StructuredOutputParser.fromZodSchema(
       z.object({
-        answer: z.string().describe("the answer for the user.")
+        answer: z.string().describe('the answer for the user.'),
       })
     );
 
@@ -223,9 +245,9 @@ export function run(): Observable<IAIEmployeeCall> {
     call.output = stepFinalAnswer.outputs.answer;
 
     // Update call
-    call.steps[index - 1] = stepFinalAnswer
-    await call.save()
-    $call.next(call)
+    call.steps[index - 1] = stepFinalAnswer;
+    await call.save();
+    $call.next(call);
 
     return stepFinalAnswer;
   }
@@ -233,8 +255,7 @@ export function run(): Observable<IAIEmployeeCall> {
   async function endRun(input?: StepInput) {
     call.status = 'done';
     call.endAt = new Date();
-    await call.save()
-    $call.next(call)
+    await call.save();
+    $call.next(call);
   }
 }
-
