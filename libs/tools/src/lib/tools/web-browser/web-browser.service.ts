@@ -130,8 +130,8 @@ export class WebBrowserService {
     return false;
   }
 
-  async extractData(findOptions: IElementFindOptions) {
-    return new ExtractDataUseCase(this.webBrowser).execute(findOptions);
+  async extractData(cssSelector: string) {
+    return new ExtractDataUseCase(this.webBrowser).execute(cssSelector);
   }
 
   async keyupEmiter(key: string, combination?: string[]): Promise<string> {

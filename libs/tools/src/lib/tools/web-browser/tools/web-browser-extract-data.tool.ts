@@ -10,19 +10,12 @@ export class WebBrowserExtractDataTool extends DynamicStructuredTool {
       description: 'Use this tool to extract data from inside an element on an web page, such as lists, tables or structured divs/sections.',
       schema: z.object({
         selectorId: z.number().describe("selector-id attribute of the element used as data source."),
-        findTimeout: z.number().optional().default(10000).describe("timeout to find the element in ms."),
       }),
-      func: async ({
-        selectorId,
-        findTimeout
-      }) => {
+      func: async ({ selectorId }) => {
         try {
           const selector = settings.webBrowserService.findElementById(selectorId);
-          const extractData = await settings.webBrowserService.extractData({
-            elementSelector: selector,
-            selectorType: 'css',
-            findTimeout
-          });
+          const extractData = await settings.webBrowserService.extractData(selector);
+
           const json = JSON.stringify(extractData);
           return json;
         } catch (error) {
