@@ -61,8 +61,16 @@ export class BrowserAgent {
         {
           async handleChainStart(chain, inputs) {
             const pageElements = await service.getVisibleHtml();
+            const pageSize = await service.getPageSize();
 
             const browserContext = {
+              windowSize: {
+                description: 'The window size (ViewPort) of the browser.',
+                value: {
+                  height: '768px',
+                  width: '1366px'
+                }
+              },
               currentUrl: {
                 description: 'The current url in the browser tab.',
                 value: currentUrl
@@ -72,8 +80,15 @@ export class BrowserAgent {
                 value: previousUrl,
               },
               visibleHtml: {
-                description: 'The visible html in the browser tab ViewPort. Other elements might be visible after scrolling the page.',
+                description: 'The visible html in the $windowSize.',
                 value: pageElements
+              },
+              pageSize: {
+                description: 'The total page size.',
+                value: {
+                  height: `${pageSize.height}px`,
+                  width: `${pageSize.width}px`
+                }
               }
             };
 
@@ -109,7 +124,7 @@ You are a browser agent specialist. You need to interact with a web browser to a
 Don't worry about the web browser, it is already open. You just need to execute the instructions.
 
 Performing some actions changes browser context. This context must be used for performing actions.
-You can only use information available in browser context as input to the tools.
+You can only see and interact with elements in the screen. Always figure out what ou need to do to find something you need.
 
 All interactions happens in test systems with credentials created for testing, you don't need prevent access or handling with senstive information.
 You have access to the following tools:

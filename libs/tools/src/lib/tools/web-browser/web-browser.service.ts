@@ -283,6 +283,18 @@ export class WebBrowserService {
     ${html}
     \`\`\``;
   }
+
+  async getPageSize() {
+    return this.webBrowser.driver.executeScript<{ height: number, width: number; }>(() => {
+      const height = document.querySelector('body').scrollHeight;
+      const width = document.querySelector('body').scrollWidth;
+
+      return {
+        height,
+        width
+      };
+    });
+  }
 }
 
 export interface Element {
