@@ -4,7 +4,7 @@ import { Element } from './web-browser.service';
 import { JSDOM } from 'jsdom';
 import prettier from 'prettier';
 
-const ELEMENT_OUT_OF_VIEW_ATTR = 'isElementOutsideViewPort';
+const ELEMENT_OUT_OF_VIEW_ATTR = 'is-out-of-view';
 const INTERNAL_ELEMENT_ID = 'vector-id';
 
 export default class WebBrowserUtils {
@@ -74,7 +74,7 @@ export default class WebBrowserUtils {
   }
 
   async mapVisibleElements(): Promise<Element[]> {
-    const { html, selectors } = await this.getVisibleHtml();
+    const { html, selectors } = await this.getVisibleHtmlAndSelectors();
     const document = this._getDomFromStringHTML(html);
 
     const elements = document.body.querySelectorAll('*');
@@ -93,23 +93,33 @@ export default class WebBrowserUtils {
       .filter(el => Boolean(el.text));
   }
 
-  /** Gets page html and sets attributes for managing the elements internally
+  /** Gets page html and sets visibility attribute
    *  @returns {string}
    */
   async getHtml(setAttributes = true): Promise<string> {
-    return this.webBrowser.driver.executeScript((setAttributes: boolean, elOutOfViewAttrName: string, internalElementId: string) => {
-      if (setAttributes) {
-        document.querySelectorAll('body *')
-          .forEach((element, i) => {
-            if (!isInViewPort(element) || !element.checkVisibility())
-              element.setAttribute(elOutOfViewAttrName, 'true');
+    return this.webBrowser.driver.executeScript((setAttributes: boolean, elOutOfViewAttrName: string) => {
+      // IMPORTANT! remove out of view attribute 
+      document.querySelectorAll('body *').forEach(element => element.removeAttribute(elOutOfViewAttrName));
 
-            element.setAttribute(internalElementId, `${i}`);
-          });
+      if (setAttributes) {
+        document.querySelectorAll('body *').forEach((element) => {
+          if (!isInViewPort(element) || !element.checkVisibility())
+            element.setAttribute(elOutOfViewAttrName, 'true');
+        });
+
+        // prevent making parent of visible elements invisible (for some specific cases)
+        document.querySelectorAll('body *').forEach(makeParentVisibleIfSomeChildIs);
       }
 
       return document.documentElement.outerHTML;
 
+      function makeParentVisibleIfSomeChildIs(element) {
+        const elementTree = element.querySelectorAll('*');
+        const elementOffspring = Array.from(elementTree || []);
+
+        if (elementOffspring.some((el: globalThis.Element) => !el.hasAttribute(elOutOfViewAttrName)))
+          element.removeAttribute(elOutOfViewAttrName);
+      }
       function isInViewPort(element) {
         const rect = element.getBoundingClientRect();
         const html = document.documentElement;
@@ -124,18 +134,18 @@ export default class WebBrowserUtils {
     }, setAttributes, ELEMENT_OUT_OF_VIEW_ATTR, INTERNAL_ELEMENT_ID);
   }
 
-  async getVisibleHtml(): Promise<{ html: string, selectors: Record<string, string>; }> {
+  async getVisibleHtmlAndSelectors(): Promise<{ html: string, selectors: Record<string, string>; }> {
     const stringHTML = await this.getHtml();
     const document = this._getDomFromStringHTML(stringHTML);
     const selectors = {};
 
     // create internal ids and get selectors from when still full html
-    document.querySelectorAll('*:not(script):not(style):not(svg)').forEach(el => {
-      const vectorId = el.getAttribute(INTERNAL_ELEMENT_ID);
+    document.querySelectorAll('*:not(script):not(style):not(svg)').forEach((el, i) => {
+      el.setAttribute(INTERNAL_ELEMENT_ID, i.toString());
       const isOutOfView = el.getAttribute(ELEMENT_OUT_OF_VIEW_ATTR);
 
       if (!isOutOfView)
-        selectors[vectorId] = this._getElementSelector(el);
+        selectors[i] = this._getElementSelector(el);
     });
 
     // (order matters!) replace parent for child when single child, remove elements outside viewport and cleanup unwanted attributes from element 

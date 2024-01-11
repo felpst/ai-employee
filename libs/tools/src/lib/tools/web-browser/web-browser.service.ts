@@ -276,7 +276,7 @@ export class WebBrowserService {
   }
 
   async getVisibleHtml() {
-    const { html, selectors } = await this._utils.getVisibleHtml();
+    const { html, selectors } = await this._utils.getVisibleHtmlAndSelectors();
     this._selectors = selectors;
 
     return `\`\`\`html
