@@ -11,15 +11,15 @@ export class WebBrowserClickTool extends DynamicStructuredTool {
       metadata: { id: "web-browser", tool: 'click' },
       description: 'Use this to click an element on an web browser page.',
       schema: z.object({
-        vectorId: z.number().describe("vector-id attribute of the choosen element."),
+        selectorId: z.number().describe("selector-id attribute of the choosen element."),
         findTimeout: z.number().optional().default(10000).describe("timeout to find the element in ms."),
       }),
       func: async ({
-        vectorId,
+        selectorId,
         findTimeout
       }) => {
         try {
-          const selector = settings.webBrowserService.findElementById(vectorId);
+          const selector = settings.webBrowserService.findElementById(selectorId);
 
           const success = await settings.webBrowserService.clickElement({
             elementSelector: selector,

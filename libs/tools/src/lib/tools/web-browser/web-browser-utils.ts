@@ -3,7 +3,7 @@ import { JSDOM } from 'jsdom';
 import prettier from 'prettier';
 
 const ELEMENT_OUT_OF_VIEW_ATTR = 'is-out-of-view';
-const INTERNAL_ELEMENT_ID = 'vector-id';
+const INTERNAL_ELEMENT_ID = 'selector-id';
 
 export default class WebBrowserUtils {
   constructor(protected webBrowser: IWebBrowser) { }
