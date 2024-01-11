@@ -1,6 +1,4 @@
 import { IWebBrowser } from '@cognum/interfaces';
-import { ElementSelector } from './common/element-schema';
-import { Element } from './web-browser.service';
 import { JSDOM } from 'jsdom';
 import prettier from 'prettier';
 
@@ -10,7 +8,7 @@ const INTERNAL_ELEMENT_ID = 'vector-id';
 export default class WebBrowserUtils {
   constructor(protected webBrowser: IWebBrowser) { }
 
-  async getElementHtmlByCss(selector: string): Promise<string> {
+  async getElementHtmlBySelector(selector: string): Promise<string> {
     const dom = this._getDomFromStringHTML(await this.getHtml(false));
     const element = dom.querySelector(selector);
 
@@ -22,75 +20,6 @@ export default class WebBrowserUtils {
       });
 
     return this._formatHtml(element.outerHTML);
-  }
-
-  async getHtmlFromElement(selector: string, selectorType?: ElementSelector): Promise<string> {
-    switch (selectorType) {
-      case 'id':
-        selector = `#${selector}`;
-        break;
-      case 'xpath':
-        selector = selector
-          .replace('//', '')
-          .replace('@', '');
-        break;
-      default: break;
-    }
-
-    // TODO ideas: tirar atributos inuteis (eventos, name), remover elementos improvaveis
-
-    return this.webBrowser.driver.executeScript((selector: string) => {
-      var element = (document as any).querySelector(`${selector}`).cloneNode(true);
-
-      // Remove todos os elementos <script> e <style> do clone
-      Array.from(element.getElementsByTagName('script')).forEach((el: any) => el.remove());
-      Array.from(element.getElementsByTagName('style')).forEach((el: any) => el.remove());
-      Array.from(element.getElementsByTagName('svg')).forEach((el: any) => el.remove());
-      Array.from(element.getElementsByTagName('hr')).forEach((el: any) => el.remove());
-
-      element.querySelectorAll('*').forEach(el => {
-        el.removeAttribute('jsaction');
-        if (el.style.display === 'none') el.remove();
-      });
-
-      var removeComments = (node: any) => {
-        if (!node) return;
-        node.childNodes.forEach((child: any) => {
-          if (child.nodeType === 8) { // Node.COMMENT_NODE
-            child.remove();
-          } else {
-            removeComments(child);
-          }
-        });
-      };
-      removeComments(element);
-
-      var html = element.innerHTML;
-      html = html.replace(/\n/g, '\n').trim();
-      html = html.replace(/\s+/g, ' ').trim();
-
-      return html;
-    }, [selector]);
-  }
-
-  async mapVisibleElements(): Promise<Element[]> {
-    const { html, selectors } = await this.getVisibleHtmlAndSelectors();
-    const document = this._getDomFromStringHTML(html);
-
-    const elements = document.body.querySelectorAll('*');
-
-    return Array.from(elements || [])
-      .map(element => {
-        const vectorId = +selectors[element.getAttribute(INTERNAL_ELEMENT_ID)];
-
-        return {
-          tag: element.tagName.toLowerCase(),
-          text: this._getElementText(element),
-          selector: selectors[vectorId],
-          vectorId: vectorId
-        };
-      })
-      .filter(el => Boolean(el.text));
   }
 
   /** Gets page html and sets visibility attribute
@@ -173,25 +102,6 @@ export default class WebBrowserUtils {
 
   private _getDomFromStringHTML(html: string) {
     return new JSDOM(html, { contentType: 'text/html' }).window.document;
-  }
-
-  private _getElementText(element: globalThis.Element) {
-    const label = (Array.from<globalThis.Element>(element['labels'] || [])
-      ?.map(label => label.textContent)
-      .join('\n'));
-
-    return (
-      element.textContent?.trim()
-      || label?.trim()
-      || element.getAttribute('label')?.trim()
-      || element.ariaLabel?.trim()
-      || element.getAttribute('placeholder')?.trim()
-      || element.ariaPlaceholder?.trim()
-      || element.getAttribute('title')?.trim()
-    )?.split('\n')
-      .filter(sub => Boolean(sub.trim()))
-      .map(sub => sub.replace(/\s\s+/g, ' ').trim())
-      .join('<br>');
   }
 
   private _getElementSelector(element: globalThis.Element) {
