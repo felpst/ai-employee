@@ -3,7 +3,6 @@ import { ElementSelector } from './common/element-schema';
 import { Element } from './web-browser.service';
 import { JSDOM } from 'jsdom';
 import prettier from 'prettier';
-import fs from 'fs';
 
 const ELEMENT_OUT_OF_VIEW_ATTR = 'isElementOutsideViewPort';
 const INTERNAL_ELEMENT_ID = 'vector-id';
@@ -12,16 +11,17 @@ export default class WebBrowserUtils {
   constructor(protected webBrowser: IWebBrowser) { }
 
   async getElementHtmlByCss(selector: string): Promise<string> {
-    const rawHtmlElement = await this.webBrowser.driver.executeScript<string>((selector: string) => {
-      const element = document.querySelector(`${selector}`).cloneNode(true) as globalThis.Element;
-      return element.outerHTML;
-    }, [selector]);
+    const dom = this._getDomFromStringHTML(await this.getHtml(false));
+    const element = dom.querySelector(selector);
 
-    const dom = this._getDomFromStringHTML(rawHtmlElement);
-    dom.querySelectorAll('*:not(svg)')
-      .forEach(el => this._sanitizeElement(el, true));
+    element.querySelectorAll('*')
+      .forEach(el => {
+        if (el.tagName.toLowerCase() === 'svg')
+          el.remove();
+        this._sanitizeElement(el, true);
+      });
 
-    return this._formatHtml(dom.documentElement.outerHTML);
+    return this._formatHtml(element.outerHTML);
   }
 
   async getHtmlFromElement(selector: string, selectorType?: ElementSelector): Promise<string> {
@@ -93,18 +93,20 @@ export default class WebBrowserUtils {
       .filter(el => Boolean(el.text));
   }
 
-  /** Gets page html and sets an attribute for elements out of view
+  /** Gets page html and sets attributes for managing the elements internally
    *  @returns {string}
    */
-  async getHtml(): Promise<string> {
-    return this.webBrowser.driver.executeScript((elOutOfViewAttrName: string, internalElementId: string) => {
-      document.querySelectorAll('body *')
-        .forEach((element, i) => {
-          if (!isInViewPort(element) || !element.checkVisibility())
-            element.setAttribute(elOutOfViewAttrName, 'true');
+  async getHtml(setAttributes = true): Promise<string> {
+    return this.webBrowser.driver.executeScript((setAttributes: boolean, elOutOfViewAttrName: string, internalElementId: string) => {
+      if (setAttributes) {
+        document.querySelectorAll('body *')
+          .forEach((element, i) => {
+            if (!isInViewPort(element) || !element.checkVisibility())
+              element.setAttribute(elOutOfViewAttrName, 'true');
 
-          element.setAttribute(internalElementId, `${i}`);
-        });
+            element.setAttribute(internalElementId, `${i}`);
+          });
+      }
 
       return document.documentElement.outerHTML;
 
@@ -119,7 +121,7 @@ export default class WebBrowserUtils {
           rect.left < (window.innerWidth || html.clientWidth)
         );
       }
-    }, ELEMENT_OUT_OF_VIEW_ATTR, INTERNAL_ELEMENT_ID);
+    }, setAttributes, ELEMENT_OUT_OF_VIEW_ATTR, INTERNAL_ELEMENT_ID);
   }
 
   async getVisibleHtml(): Promise<{ html: string, selectors: Record<string, string>; }> {
@@ -265,7 +267,6 @@ export default class WebBrowserUtils {
       .replace(/<!--[\s\S]*?-->/g, '') // removes comments
       .replace(/^\s*[\r\n]/gm, ''); // removes empty lines
 
-    fs.writeFileSync('teste.html', sanitized);
     return prettier.format(sanitized, {
       parser: 'html',
       tabWidth: 2,
