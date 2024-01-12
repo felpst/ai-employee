@@ -3,10 +3,10 @@ import { RouterModule, Routes } from '@angular/router';
 import { AdminComponent } from '../../layouts/admin/admin.component';
 import { WorkspaceComponent } from '../workspace/workspace.component';
 import { AdminAIEmployeeComponent } from './admin-ai-employee/admin-ai-employee.component';
+import { AIEmployeeFileManagerComponent } from './ai-employee-file-manager/ai-employee-file-manager.component';
 import { AIEmployeeHistoryComponent } from './ai-employee-history/ai-employee-history.component';
 import { AIEmployeeHistoryResolver } from './ai-employee-history/ai-employee-history.resolver';
 import { AIEmployeeMemoryComponent } from './ai-employee-memory/ai-employee-memory.component';
-import { AIEmployeeMemoryResolver } from './ai-employee-memory/ai-employee-memory.resolver';
 import { AIEmployeeResolver } from './ai-employee.resolver';
 import { AIEmployeesComponent } from './ai-employees.component';
 import { AIEmployeesResolver } from './ai-employees.resolver';
@@ -20,8 +20,8 @@ const routes: Routes = [
         path: '',
         resolve: [AIEmployeesResolver],
         component: AIEmployeesComponent,
-      }
-    ]
+      },
+    ],
   },
   {
     path: ':id',
@@ -30,31 +30,31 @@ const routes: Routes = [
     children: [
       {
         path: 'overview',
-        component: WorkspaceComponent
+        component: WorkspaceComponent,
       },
       {
         path: 'chats',
         loadChildren: () =>
-          import('./chats/chats.module').then(
-            (m) => m.ChatsModule
-          ),
+          import('./chats/chats.module').then((m) => m.ChatsModule),
       },
       {
         path: 'jobs',
         loadChildren: () =>
-          import('./jobs/jobs.module').then(
-            (m) => m.JobsModule
-          ),
+          import('./jobs/jobs.module').then((m) => m.JobsModule),
+      },
+      {
+        path: 'files',
+        component: AIEmployeeFileManagerComponent,
       },
       {
         path: 'memory',
-        resolve: [AIEmployeeMemoryResolver],
-        component: AIEmployeeMemoryComponent
+
+        component: AIEmployeeMemoryComponent,
       },
       {
         path: 'history',
         resolve: [AIEmployeeHistoryResolver],
-        component: AIEmployeeHistoryComponent
+        component: AIEmployeeHistoryComponent,
       },
       {
         path: 'settings',
@@ -73,4 +73,4 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
 })
-export class AIEmployeesRoutingModule { }
+export class AIEmployeesRoutingModule {}
