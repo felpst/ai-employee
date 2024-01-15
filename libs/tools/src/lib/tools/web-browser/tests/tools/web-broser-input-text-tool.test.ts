@@ -5,13 +5,13 @@ import {
 import { agentTest } from '../../../../tests/agent-test';
 import { WebBrowser } from '../../web-browser';
 import { WebBrowserInputTextTool } from '../../web-browser-input-text.tool';
-import { WebBrowserService } from '../../web-browser.service';
+import { WebBrowserService } from '../../services/web-browser.service';
 import { WebBrowserToolSettings } from '../../web-browser.toolkit';
 
 
 
 describe('Extract Content Tool test', () => {
-    jest.setTimeout(300000)
+    jest.setTimeout(300000);
     let executor!: AgentExecutor;
     const webBrowser = new WebBrowser();
     const service = new WebBrowserService(webBrowser);
@@ -32,6 +32,6 @@ describe('Extract Content Tool test', () => {
         const result = await executor.call({ input: inputText });
         console.log(result.output);
         expect(result.output).toContain('has been successfully');
-    })
+    });
 
 });

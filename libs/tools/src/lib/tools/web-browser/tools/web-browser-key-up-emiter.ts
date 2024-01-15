@@ -1,7 +1,7 @@
 import { DynamicStructuredTool } from 'langchain/tools';
 import { z } from 'zod';
 import { Key } from '../keyup-emiter/keyup-emiter.interface';
-import { WebBrowserService } from '../web-browser.service';
+import { WebBrowserService } from '../services/web-browser.service';
 import { WebBrowserToolSettings } from '../web-browser.toolkit';
 
 export class KeyPressTool extends DynamicStructuredTool {

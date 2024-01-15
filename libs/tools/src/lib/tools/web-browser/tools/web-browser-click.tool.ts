@@ -1,6 +1,6 @@
 import { DynamicStructuredTool } from 'langchain/tools';
 import { z } from 'zod';
-import { WebBrowserService } from '../web-browser.service';
+import { WebBrowserService } from '../services/web-browser.service';
 import { WebBrowserToolSettings } from '../web-browser.toolkit';
 import { IElementFindOptions } from '../common/element-schema';
 
