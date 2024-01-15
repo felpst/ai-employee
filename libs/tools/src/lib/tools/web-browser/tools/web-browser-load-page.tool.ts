@@ -16,7 +16,7 @@ export class WebBrowserLoadPageTool extends DynamicStructuredTool {
         try {
           const loaded = await settings.webBrowserService.loadPage(url);
           if (!loaded) throw new Error(`Page not loaded on web browser: ${url}`);
-          console.log('Current page url: ', settings.webBrowserService.currentURL);
+
           return `Page loaded on web browser: ${url}`;
         } catch (error) {
           return error.message;

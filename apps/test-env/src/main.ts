@@ -2,7 +2,7 @@ import 'dotenv/config';
 import express from 'express';
 // import { LinkedinTest } from './tests/web-browser/linkedin';
 import { DatabaseHelper } from '@cognum/helpers';
-// import { AIELinkedIn } from './tests/web-browser/aie-linkedin';
+import { AIELinkedIn } from './tests/web-browser/aie-linkedin';
 // import { FindElementTest } from './tests/web-browser/find-element';
 import { XandrExtractData } from './tests/web-browser/xandr';
 
@@ -23,12 +23,12 @@ DatabaseHelper.connect(process.env.MONGO_URL)
       console.log(`[ ready ] http://${host}:${port}`);
 
       // await new FindElementTest().execute()
-      // await new AIELinkedIn().execute()
       // await new LinkedinTest().execute()
+      // await new XandrExtractData().execute()
       try {
-        await new XandrExtractData().execute()
+        await new AIELinkedIn().execute()
       } catch (error) {
-        console.error(error.message)
+        console.error(error.message);
       }
       console.log('END TEST');
 

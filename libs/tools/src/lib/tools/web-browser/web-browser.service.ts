@@ -1,31 +1,29 @@
 import { IWebBrowser } from '@cognum/interfaces';
-import { EmbeddingsModel } from '@cognum/llm';
 import { By, until } from 'selenium-webdriver';
 import { IElementFindOptions } from './common/element-schema';
 import { ExtractDataUseCase } from './usecases/extract-data.usecase';
-import { FindElementUseCase } from './usecases/find-element.usecase';
-
-
-import { ContextualCompressionRetriever } from "langchain/retrievers/contextual_compression";
-import { HNSWLib } from "langchain/vectorstores/hnswlib";
 import WebBrowserUtils from './web-browser-utils';
-import { WebBrowserElement } from './models/web-browser-element.model';
-import { VectorStoreRetriever } from 'langchain/dist/vectorstores/base';
 
 export class WebBrowserService {
-  currentURL: string;
-  retriever: ContextualCompressionRetriever | VectorStoreRetriever;
+  private _currentURL: string;
+  private _utils: WebBrowserUtils;
+  private _selectors: Record<string, string>;
 
   constructor(
     private webBrowser: IWebBrowser
-  ) { }
+  ) {
+    this._utils = new WebBrowserUtils(this.webBrowser);
+  }
 
   async checkCurrentURLUpdated() {
-    await this.webBrowser.driver.sleep(5000);
     const currentURL = await this.webBrowser.driver.getCurrentUrl();
-    if (this.currentURL === currentURL) return false;
-    this.currentURL = currentURL;
-    this.retriever = null;
+    if (this._currentURL === currentURL) return false;
+    this._currentURL = currentURL;
+    this.webBrowser.driver.wait(async () => {
+      const readyState = await this.webBrowser.driver.executeScript('return document.readyState');
+      return readyState === 'complete';
+    }, 10000);
+
     return true;
   }
 
@@ -95,85 +93,13 @@ export class WebBrowserService {
 
     if (!element) return false;
     await element.click();
+    await this.checkCurrentURLUpdated();
 
     return true;
   }
 
-  async findElementByContextBkp(context: string): Promise<any> {
-    // Load
-    console.log({ pageURL: this.currentURL, context });
-
-    const element = await WebBrowserElement.findOne({ pageURL: this.currentURL, context }).exec();
-    console.log(element);
-
-    // TODO force
-    if (element) { return element; }
-
-    await this.prepareVectorBase();
-    const useCase = new FindElementUseCase(this.webBrowser);
-    const relevantContext = await this.retrieveRelevantContext(context);
-    const result = await useCase.findElementByContext(context, relevantContext.join('\n'));
-
-    if (!result.found) {
-      throw new Error(`Element not found for context: ${{ pageURL: this.currentURL, context }}`);
-    }
-
-    // Save element
-    await WebBrowserElement.deleteMany({ pageURL: this.currentURL, context }).exec();
-    if (result.found) {
-      const newElement = await WebBrowserElement.create({
-        pageURL: this.currentURL,
-        context,
-        selector: result.selector,
-        selectorType: result.selectorType,
-      });
-      console.log({ newElement });
-    }
-
-    return result;
-  }
-
-  async prepareVectorBase() {
-    if (this.retriever) return;
-    console.log('prepareVectorBase...');
-
-    const docs = await new WebBrowserUtils(this.webBrowser)
-      .getInteractiveElementsXPathSelectors();
-
-    console.log('docs lenght:', docs.length);
-
-    const vectorStore = await HNSWLib.fromTexts(docs, {}, new EmbeddingsModel());
-    console.log('vectorStore ready');
-
-    this.retriever = vectorStore.asRetriever();
-  }
-
-  async prepareVectorBaseToExtract() {
-    if (this.retriever) return;
-    console.log('prepareVectorBase...');
-
-    const docs = await new WebBrowserUtils(this.webBrowser)
-      .getDivAndTableElements();
-
-    console.log('docs lenght:', docs.length);
-
-    const vectorStore = await HNSWLib.fromTexts(docs, {}, new EmbeddingsModel());
-    console.log('vectorStore ready');
-
-    this.retriever = vectorStore.asRetriever();
-  }
-
-  async retrieveRelevantContext(context: string): Promise<string[]> {
-    const retrievedDocs = await this.retriever.getRelevantDocuments(context);
-
-    if (!retrievedDocs.length) throw new Error('Error retrieving relevant context');
-
-    return retrievedDocs.map(doc => doc.pageContent);
-  }
-
   async getPageSource(): Promise<string> {
-    const webBrowserUtils = new WebBrowserUtils(this.webBrowser);
-    const source = await webBrowserUtils.getHtmlFromElement('body');
+    const source = await this._utils.getElementHtmlBySelector('body');
     return source;
   }
 
@@ -197,17 +123,15 @@ export class WebBrowserService {
       if (currentLocation >= _location) {
         return true;
       } else {
-        await this.webBrowser.driver.sleep(3000);
         offset = _location - currentLocation;
         this.webBrowser.driver.executeScript("window.scrollTo(" + currentLocation + "," + offset + ")");
       }
-
     }
     return false;
   }
 
-  async extractData(findOptions: IElementFindOptions) {
-    return new ExtractDataUseCase(this.webBrowser).execute(findOptions);
+  async extractData(cssSelector: string) {
+    return new ExtractDataUseCase(this.webBrowser).execute(cssSelector);
   }
 
   async keyupEmiter(key: string, combination?: string[]): Promise<string> {
@@ -238,33 +162,16 @@ export class WebBrowserService {
     }
   }
 
-  async findElementByContext(context: string) {
-    console.log({ pageURL: this.currentURL, context });
+  findElementById(selectorId: number): string {
+    const selector = this._selectors[selectorId];
 
-    await this.prepareVectorBase();
-    const useCase = new FindElementUseCase(this.webBrowser);
-    const possibleSelectors = await this.retrieveRelevantContext(context);
-    console.log({ possibleSelectors: possibleSelectors });
+    if (!selector)
+      throw new Error(`Element not found for selector id "${selectorId}".`);
 
-    const result = await useCase.chooseLikelySelector(context, possibleSelectors);
-    console.log({ llmSelectorChoice: result });
-
-    return result;
+    return selector;
   }
 
-  async findElementByContextToExtract(context: string) {
-    console.log({ pageURL: this.currentURL, context });
 
-    await this.prepareVectorBaseToExtract();
-    const useCase = new FindElementUseCase(this.webBrowser);
-    const possibleSelectors = await this.retrieveRelevantContext(context);
-    console.log({ possibleSelectors: possibleSelectors });
-
-    const result = await useCase.chooseLikelySelectorToExtract(context, possibleSelectors);
-    console.log({ llmSelectorChoice: result });
-
-    return result;
-  }
 
   private async _findElement(findOptions: IElementFindOptions) {
     return this.webBrowser.driver.wait(
@@ -273,21 +180,24 @@ export class WebBrowserService {
     );
   }
 
-  async mapPageElements(filterByTag?: string): Promise<Element[]> {
-    const elements = (await new WebBrowserUtils(this.webBrowser).getInteractiveElementsXPathSelectors()).map(e => ({
-      selector: e,
-      context: e.split('/').pop(),
-      tag: e.split('/').pop().split('[').shift()
-    }));
-    if (filterByTag) {
-      return elements.filter(e => e.tag === filterByTag);
-    }
-    return elements;
-  }
-}
+  async getVisibleHtml() {
+    const { html, selectors } = await this._utils.getVisibleHtmlAndSelectors();
+    this._selectors = selectors;
 
-export interface Element {
-  selector: string;
-  context: string;
-  tag: string;
+    return `\`\`\`html
+    ${html}
+    \`\`\``;
+  }
+
+  async getPageSize() {
+    return this.webBrowser.driver.executeScript<{ height: number, width: number; }>(() => {
+      const height = document.querySelector('body').scrollHeight;
+      const width = document.querySelector('body').scrollWidth;
+
+      return {
+        height,
+        width
+      };
+    });
+  }
 }

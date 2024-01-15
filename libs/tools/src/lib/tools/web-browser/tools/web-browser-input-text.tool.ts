@@ -1,7 +1,7 @@
 import { DynamicStructuredTool } from 'langchain/tools';
 import { z } from 'zod';
-import { WebBrowserService } from '../web-browser.service';
 import { WebBrowserToolSettings } from '../web-browser.toolkit';
+import { IElementFindOptions } from '../common/element-schema';
 
 export class WebBrowserInputTextTool extends DynamicStructuredTool {
   constructor(settings: WebBrowserToolSettings) {
@@ -11,19 +11,26 @@ export class WebBrowserInputTextTool extends DynamicStructuredTool {
       description: 'Use this to input a text to an element on web browser.',
       schema: z.object({
         textValue: z.string().describe("the text that will be input."),
-        context: z.string().describe("context description of the element to input data."),
+        selectorId: z.number().describe("selector-id attribute of the choosen element."),
+        findTimeout: z.number().optional().default(10000).describe("timeout to find the element in ms."),
       }),
-      func: async ({ textValue, context }) => {
+      func: async ({
+        textValue,
+        selectorId,
+        findTimeout
+      }) => {
         try {
-          const element = await settings.webBrowserService.findElementByContext(context)
+          const selector = settings.webBrowserService.findElementById(selectorId);
 
           const success = await settings.webBrowserService.inputText(textValue, {
-            elementSelector: element.selector,
-            selectorType: element.selectorType,
+            elementSelector: selector,
+            selectorType: 'css',
+            findTimeout
           });
+
           if (!success) throw new Error(`Input unsuccessful`);
 
-          return `Input ${textValue} was successfully done`;
+          return `Input ${textValue} was successfully done in element "${selector}"`;
         } catch (error) {
           return error.message;
         }
