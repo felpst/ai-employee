@@ -1,8 +1,8 @@
 import { IWebBrowser } from '@cognum/interfaces';
 import { By, until } from 'selenium-webdriver';
-import { IElementFindOptions } from './common/element-schema';
-import { ExtractDataUseCase } from './usecases/extract-data.usecase';
-import WebBrowserUtils from './web-browser-utils';
+import { IElementFindOptions } from '../common/element-schema';
+import { ExtractDataUseCase } from '../usecases/extract-data.usecase';
+import WebBrowserUtils from '../web-browser-utils';
 
 export class WebBrowserService {
   private _currentURL: string;

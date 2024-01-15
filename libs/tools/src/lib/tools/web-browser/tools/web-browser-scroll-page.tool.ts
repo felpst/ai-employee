@@ -1,7 +1,7 @@
 import { DynamicStructuredTool } from 'langchain/tools';
 import { z } from 'zod';
 import { IElementFindOptions, elementSchema } from '../common/element-schema';
-import { WebBrowserService } from '../web-browser.service';
+import { WebBrowserService } from '../services/web-browser.service';
 import { WebBrowserToolSettings } from '../web-browser.toolkit';
 
 export class WebBrowserScrollPageTool extends DynamicStructuredTool {

@@ -1,6 +1,6 @@
 import 'dotenv/config';
 import { WebBrowser } from '../web-browser';
-import { WebBrowserService } from '../web-browser.service';
+import { WebBrowserService } from '../services/web-browser.service';
 
 describe('Find Element tool test', () => {
   jest.setTimeout(300000);
@@ -119,7 +119,7 @@ describe('Find Element tool test', () => {
 
 
   afterAll(async () => {
-    await webBrowser.driver.close()
+    await webBrowser.driver.close();
   });
 
 });

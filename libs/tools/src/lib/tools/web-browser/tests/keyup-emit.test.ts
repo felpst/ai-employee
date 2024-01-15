@@ -1,6 +1,6 @@
 import 'dotenv/config';
 import { WebBrowser } from '../web-browser';
-import { WebBrowserService } from '../web-browser.service';
+import { WebBrowserService } from '../services/web-browser.service';
 
 describe('Input Text tool test', () => {
   jest.setTimeout(300000);
