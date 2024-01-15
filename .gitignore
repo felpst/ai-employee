@@ -57,4 +57,4 @@ __pycache__/
 #json keys
 oauth2.keys.json
 .nx
-
+xandr*.json
