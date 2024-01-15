@@ -1,5 +1,5 @@
 import { IWebBrowser } from '@cognum/interfaces';
-import { JSDOM } from 'jsdom';
+import { JSDOM, VirtualConsole } from 'jsdom';
 import prettier from 'prettier';
 
 const ELEMENT_OUT_OF_VIEW_ATTR = 'is-out-of-view';
@@ -101,7 +101,10 @@ export default class WebBrowserUtils {
   }
 
   private _getDomFromStringHTML(html: string) {
-    return new JSDOM(html, { contentType: 'text/html' }).window.document;
+    return new JSDOM(html, {
+      contentType: 'text/html',
+      virtualConsole: new VirtualConsole()
+    }).window.document;
   }
 
   private _getElementSelector(element: globalThis.Element) {
