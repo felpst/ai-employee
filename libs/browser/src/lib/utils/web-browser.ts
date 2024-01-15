@@ -1,11 +1,11 @@
 import { IWebBrowserOptions } from '@cognum/interfaces';
 import * as chromedriver from 'chromedriver';
 import { ProxyPlugin } from 'selenium-chrome-proxy-plugin';
-import { Browser, Builder, By, WebDriver } from 'selenium-webdriver';
+import { Browser, Builder, By, WebDriver, until } from 'selenium-webdriver';
 import { Options } from 'selenium-webdriver/chrome';
 
 export class WebBrowser {
-  driver: WebDriver
+  driver: WebDriver;
 
   async open(options: IWebBrowserOptions = {}) {
     try {
@@ -38,7 +38,7 @@ export class WebBrowser {
         chromeOptions = await new ProxyPlugin({
           proxyConfig,
           chromeOptions
-        })
+        });
       }
 
       this.driver = await new Builder()
@@ -47,7 +47,7 @@ export class WebBrowser {
         .build();
       console.log('Driver started...');
     } catch (error) {
-      console.error(error)
+      console.error(error);
       throw new Error(error.message);
     }
   }
@@ -56,7 +56,7 @@ export class WebBrowser {
     await this.driver.quit();
   }
 
-  async loadUrl({ url }: { url: string; } ): Promise<boolean> {
+  async loadUrl({ url }: { url: string; }): Promise<boolean> {
     this.driver.get(url);
     await this.driver.sleep(500);
     for (let i = 0; i < 3; i++) {
@@ -73,20 +73,20 @@ export class WebBrowser {
     return this.driver.getCurrentUrl();
   }
 
-  async click({ selector, sleep }: { selector: string, sleep?: number }) {
+  async click({ selector, sleep }: { selector: string, sleep?: number; }) {
     await this.waitPageLoad();
     const element = await this._findElement(selector);
     await element.click();
     if (sleep) await this.driver.sleep(sleep);
   }
 
-  async inputText({ selector, content }: {selector: string, content: string}) {
+  async inputText({ selector, content }: { selector: string, content: string; }) {
     await this.waitPageLoad();
     const element = await this._findElement(selector);
     return element.sendKeys(content);
   }
 
-  async sleep({ time }: { time: number }) {
+  async sleep({ time }: { time: number; }) {
     return await this.driver.sleep(time);
   }
 
@@ -98,7 +98,10 @@ export class WebBrowser {
   }
 
   private async _findElement(selector: string) {
-    return this.driver.findElement(By.css(selector));
+    return this.driver.wait(
+      until.elementLocated(By.css(selector)),
+      10000
+    );
   }
 
 }
