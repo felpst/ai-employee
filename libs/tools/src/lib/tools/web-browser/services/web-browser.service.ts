@@ -171,6 +171,8 @@ export class WebBrowserService {
     return selector;
   }
 
+
+
   private async _findElement(findOptions: IElementFindOptions) {
     return this.webBrowser.driver.wait(
       until.elementLocated(By[findOptions.selectorType](findOptions.elementSelector)),

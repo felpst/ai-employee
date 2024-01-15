@@ -122,4 +122,48 @@ export class FindElementUseCase extends WebBrowserUtils {
       selectorType: 'xpath',
     };
   }
+
+  async chooseLikelySelectorToExtract(context: string, selectors: any[]): Promise<any> {
+    const parser = StructuredOutputParser.fromZodSchema(
+      z.object({
+        selectorIndex: z.number().describe("choosen selector index from the list."),
+        found: z.boolean().describe("true if the selector matches the context, false otherwise."),
+      })
+    );
+
+    const enumeratedSelectorsList = selectors
+      .sort()
+      .map((selector, index) => `${index + 1} - ${selector}`)
+      .join('\n');
+
+    const chain = RunnableSequence.from([
+      PromptTemplate.fromTemplate(
+        `Task: You need to identify the most likely selector for an element in an html page source code using the context.
+        Context: {context}
+        Possible selector options:
+        \`\`\`txt
+        {list}
+        \`\`\`
+
+        {format_instructions}`
+      ),
+      new ChatModel({ maxTokens: 50 }),
+      parser,
+    ]);
+
+    const result = await chain.invoke({
+      context,
+      list: enumeratedSelectorsList,
+      format_instructions: parser.getFormatInstructions()
+    });
+
+    if (!result.found) {
+      throw new Error(`Element not found for context: "${context}"`);
+    }
+
+    return {
+      selector: selectors.sort()[result.selectorIndex - 1],
+      selectorType: 'css',
+    };
+  }
 }
