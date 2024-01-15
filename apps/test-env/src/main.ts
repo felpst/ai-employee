@@ -2,6 +2,7 @@ import 'dotenv/config';
 import express from 'express';
 import { DatabaseHelper } from '@cognum/helpers';
 import { AIELinkedIn } from './tests/web-browser/aie-linkedin';
+import { ExecutorTest } from './tests/web-browser/executor';
 
 const host = process.env.HOST ?? 'localhost';
 const port = process.env.PORT ? Number(process.env.PORT) : 3000;
@@ -20,7 +21,8 @@ DatabaseHelper.connect(process.env.MONGO_URL)
       console.log(`[ ready ] http://${host}:${port}`);
 
       try {
-        await new AIELinkedIn().execute();
+        // await new AIELinkedIn().execute();
+        await new ExecutorTest().execute();
       } catch (error) {
         console.error(error.message);
       }
