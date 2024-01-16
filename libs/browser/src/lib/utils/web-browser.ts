@@ -56,7 +56,7 @@ export class WebBrowser {
     await this.driver.quit();
   }
 
-  async loadUrl({ url }: { url: string; } ): Promise<boolean> {
+  async loadUrl({ url }: { url: string; }): Promise<boolean> {
     this.driver.get(url);
     await this.driver.sleep(500);
     for (let i = 0; i < 3; i++) {
@@ -80,7 +80,7 @@ export class WebBrowser {
     if (sleep) await this.driver.sleep(sleep);
   }
 
-  async inputText({ selector, content }: {selector: string, content: string}) {
+  async inputText({ selector, content }: { selector: string, content: string }) {
     await this.waitPageLoad();
     const element = await this._findElement(selector);
     return element.sendKeys(content);
@@ -88,6 +88,14 @@ export class WebBrowser {
 
   async sleep({ time }: { time: number }) {
     return await this.driver.sleep(time);
+  }
+
+  async findMultiplesElementsToClick({ selector, sleep, position }: { selector: string, sleep?: number, position: number }) {
+    await this.waitPageLoad();
+    const elements = await this._findElements(selector);
+    console.log('elements', elements.length);
+    await elements[position].click();
+    if (sleep) await this.driver.sleep(sleep);
   }
 
   private async waitPageLoad() {
@@ -99,6 +107,10 @@ export class WebBrowser {
 
   private async _findElement(selector: string) {
     return this.driver.findElement(By.css(selector));
+  }
+
+  private async _findElements(name: string) {
+    return this.driver.findElements(By.className(name));
   }
 
 }
