@@ -42,7 +42,7 @@ export class XandrExtractData {
             totalDatas.push(...collectData);
 
             const saveToJson = JSON.stringify(collectData, null, 2);
-            fs.appendFileSync('xandr-221-271.json', saveToJson);
+            fs.appendFileSync('xandr.json', saveToJson);
 
             //next page
             await buttons[3].click();

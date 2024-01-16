@@ -1,15 +1,20 @@
 import 'dotenv/config';
 import { BrowserAgent } from "../lib/browser";
-import { Skill } from "../lib/browser.interfaces";
+import { DataCollection, Skill } from "../lib/browser.interfaces";
 
 describe('AI Agent Browser', () => {
-  const dataToCollect = [
+  const dataToCollect: DataCollection[] = [
     { name: 'name', selector: 'dmp-Segments-Segment-Name', position: 0 },
     { name: 'provider', selector: 'dmp-Segments-Segment-Name', position: 1 },
     { name: 'id', selector: 'dmp-Segments-Segment-Id', position: 0 },
     { name: 'price', selector: 'dmp-Segments-row-price', position: 0 },
     { name: 'impressions', selector: 'lucid-Table-align-right', position: 0 },
     { name: 'users', selector: 'lucid-Table-align-right', position: 1 },
+  ];
+
+  const loopWhile = [
+    { "method": "extractData", "params": { "selector": "lucid-Table-Tr", "dataToCollect": dataToCollect } },
+    { "method": "findMultiplesElementsToClick", "params": { "selector": "lucid-Button", "sleep": 15000, "position": 3 } }
   ];
 
   const skills: Skill[] = [
@@ -48,8 +53,7 @@ describe('AI Agent Browser', () => {
       "steps": [
         { "method": "loadUrl", "params": { "url": "https://invest.xandr.com/dmp/segments" } },
         { "method": "findMultiplesElementsToClick", "params": { "selector": "lucid-Tabs-Tab", "sleep": 15000, "position": 2 } },
-        { "method": "extractData", "params": { "selector": "lucid-Table-Tr", "dataToCollect": dataToCollect } },
-        { "method": "findMultiplesElementsToClick", "params": { "selector": "lucid-Button", "sleep": 15000, "position": 3 } },
+        { "method": "loop", "params": { "times": 3, "steps": loopWhile} },
       ]
     }
   ]

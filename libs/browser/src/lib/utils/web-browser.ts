@@ -4,6 +4,7 @@ import { ProxyPlugin } from 'selenium-chrome-proxy-plugin';
 import { Browser, Builder, By, WebDriver, WebElement } from 'selenium-webdriver';
 import { Options } from 'selenium-webdriver/chrome';
 import { DataCollection } from '../browser.interfaces';
+import * as fs from 'fs';
 
 export class WebBrowser {
   driver: WebDriver
@@ -106,22 +107,28 @@ export class WebBrowser {
     return await this.collectData(dataContainer, dataToCollect);
   }
 
+  async loop({ times, steps }: { times: number, steps: { method: string, params: { [key: string]: any } }[] }) {
+    for (let i = 0; i < times; i++) {
+      for (const step of steps) {
+        await this[step.method](step.params);
+      }
+    }
+  }
+
   private async collectData(dataContainer: WebElement[], dataToCollect: DataCollection[]) {
     let totalDataCollected = [];
-    console.log(dataContainer);
     for (let i = 1; i < dataContainer.length; i++) {
-      const tr = dataContainer[i];
+      const elementsToExtract = dataContainer[i];
       const rowData = {};
       for (const data of dataToCollect) {
-        console.log('data', data);
-        const element = await tr.findElements(By.className(data.selector));
+        const element = await elementsToExtract.findElements(By.className(data.selector));
         rowData[data.name] = await element[data.position].getText();
       }
       totalDataCollected.push(rowData);
     }
     console.log('totalDataCollected', totalDataCollected);
-
-    return totalDataCollected;
+    const saveToJson = JSON.stringify(totalDataCollected, null, 2);
+    fs.appendFileSync('xandr.json', saveToJson);
   }
 
   private async waitPageLoad() {
