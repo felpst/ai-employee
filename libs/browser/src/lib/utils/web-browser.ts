@@ -92,7 +92,7 @@ export class WebBrowser {
     return await this.driver.sleep(time);
   }
 
-  async findMultiplesElementsToClick({ selector, sleep, position }: { selector: string, sleep?: number, position: number }) {
+  async findMultiplesElementsToClick({ selector, sleep, position }: { selector: string, sleep?: number, position: number }): Promise<void> {
     await this.waitPageLoad();
     this.driver.sleep(5000);
     const elements = await this._findElements(selector);
@@ -107,7 +107,7 @@ export class WebBrowser {
     return await this.collectData(dataContainer, dataToCollect);
   }
 
-  async loop({ times, steps }: { times: number, steps: { method: string, params: { [key: string]: any } }[] }) {
+  async loop({ times, steps }: { times: number, steps: { method: string, params: { [key: string]: any } }[] }): Promise<void> {
     for (let i = 0; i < times; i++) {
       for (const step of steps) {
         await this[step.method](step.params);
@@ -115,7 +115,7 @@ export class WebBrowser {
     }
   }
 
-  private async collectData(dataContainer: WebElement[], dataToCollect: DataCollection[]) {
+  private async collectData(dataContainer: WebElement[], dataToCollect: DataCollection[]): Promise<void> {
     let totalDataCollected = [];
     for (let i = 1; i < dataContainer.length; i++) {
       const elementsToExtract = dataContainer[i];
@@ -126,7 +126,6 @@ export class WebBrowser {
       }
       totalDataCollected.push(rowData);
     }
-    console.log('totalDataCollected', totalDataCollected);
     const saveToJson = JSON.stringify(totalDataCollected, null, 2);
     fs.appendFileSync('xandr.json', saveToJson);
   }
@@ -138,11 +137,11 @@ export class WebBrowser {
     }, 10000);
   }
 
-  private async _findElement(selector: string) {
+  private async _findElement(selector: string): Promise<WebElement> {
     return this.driver.findElement(By.css(selector));
   }
 
-  private async _findElements(name: string) {
+  private async _findElements(name: string): Promise<WebElement[]> {
     return this.driver.findElements(By.className(name));
   }
 
