@@ -1,8 +1,9 @@
 import { IWebBrowserOptions } from '@cognum/interfaces';
 import * as chromedriver from 'chromedriver';
 import { ProxyPlugin } from 'selenium-chrome-proxy-plugin';
-import { Browser, Builder, By, WebDriver } from 'selenium-webdriver';
+import { Browser, Builder, By, WebDriver, WebElement } from 'selenium-webdriver';
 import { Options } from 'selenium-webdriver/chrome';
+import { DataCollection } from '../browser.interfaces';
 
 export class WebBrowser {
   driver: WebDriver
@@ -92,10 +93,35 @@ export class WebBrowser {
 
   async findMultiplesElementsToClick({ selector, sleep, position }: { selector: string, sleep?: number, position: number }) {
     await this.waitPageLoad();
+    this.driver.sleep(5000);
     const elements = await this._findElements(selector);
     console.log('elements', elements.length);
     await elements[position].click();
     if (sleep) await this.driver.sleep(sleep);
+  }
+
+  async extractData({ selector, dataToCollect }: { selector: string, dataToCollect: DataCollection[] }) {
+    await this.waitPageLoad();
+    const dataContainer = await this._findElements(selector);
+    return await this.collectData(dataContainer, dataToCollect);
+  }
+
+  private async collectData(dataContainer: WebElement[], dataToCollect: DataCollection[]) {
+    let totalDataCollected = [];
+    console.log(dataContainer);
+    for (let i = 1; i < dataContainer.length; i++) {
+      const tr = dataContainer[i];
+      const rowData = {};
+      for (const data of dataToCollect) {
+        console.log('data', data);
+        const element = await tr.findElements(By.className(data.selector));
+        rowData[data.name] = await element[data.position].getText();
+      }
+      totalDataCollected.push(rowData);
+    }
+    console.log('totalDataCollected', totalDataCollected);
+
+    return totalDataCollected;
   }
 
   private async waitPageLoad() {
@@ -112,5 +138,7 @@ export class WebBrowser {
   private async _findElements(name: string) {
     return this.driver.findElements(By.className(name));
   }
+
+
 
 }
