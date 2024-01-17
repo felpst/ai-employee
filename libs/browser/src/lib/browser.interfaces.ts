@@ -1,5 +1,5 @@
 export type SkillInputType = 'string' | 'number' | 'boolean' | 'object' | 'array' | 'function' | 'any';
-export type SkillStepMethod = 'loadUrl' | 'click' | 'inputText' | 'sleep' | 'scroll' | 'findMultiplesElementsToClick' | 'extractData' | 'loop';
+export type SkillStepMethod = 'loadUrl' | 'click' | 'inputText' | 'sleep' | 'scroll' | 'dataExtraction' | 'loop' | 'saveOnFile';
 
 export interface Skill {
   name: string;
@@ -9,8 +9,7 @@ export interface Skill {
 }
 
 
-export interface DataCollection {
+export interface DataExtractionProperty {
   name: string;
   selector: string;
-  position: number;
 }
