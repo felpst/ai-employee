@@ -44,6 +44,10 @@ export class GeneralAgent extends Agent {
     prefix += `You are talking with ${this.context.user.name} <${this.context.user.email}>.`
     prefix += `You need to answer best as you can trying different tools to execute the job and achieve the goal.`
 
+    // Adding information from the Agent's memory to the chat context so it can answer questions based on prior knowledge
+    const memoryContext = await this.aiEmployee.memorySearch(input);
+    if (memoryContext.accuracy) prefix += `\nMemory:${memoryContext.answer}\n`;
+
     // Call Context
     const formattedContext = this.formatContext();
     if (formattedContext) prefix += `\n\n${formattedContext}`
@@ -65,8 +69,8 @@ export class GeneralAgent extends Agent {
     const chainValues = await this._executor.call({ input }, [this.handlers]);
 
     // Update AIEmployee Memory
-    // const memoryUpdateResponse = await this.aiEmployee.memoryInstruction(`Check if there is any relevant information in this information to add to the database:` + JSON.stringify({ input: agentCall.input, output: agentCall.output }), this.context)
-    // console.log({ memoryUpdateResponse });
+    const memoryUpdateResponse = await this.aiEmployee.memoryInstruction(`Check if there is any relevant information in this information to add to the database:` + JSON.stringify({ input: agentCall.input, output: agentCall.output }))
+    console.log({ memoryUpdateResponse });
 
     await this._afterCall(agentCall, chainValues.output);
     return agentCall;
