@@ -5,7 +5,6 @@ import { WorkspaceComponent } from '../workspace/workspace.component';
 import { AdminAIEmployeeComponent } from './admin-ai-employee/admin-ai-employee.component';
 import { AIEmployeeFileManagerComponent } from './ai-employee-file-manager/ai-employee-file-manager.component';
 import { AIEmployeeHistoryComponent } from './ai-employee-history/ai-employee-history.component';
-import { AIEmployeeHistoryResolver } from './ai-employee-history/ai-employee-history.resolver';
 import { AIEmployeeMemoryComponent } from './ai-employee-memory/ai-employee-memory.component';
 import { AIEmployeeResolver } from './ai-employee.resolver';
 import { AIEmployeesComponent } from './ai-employees.component';
@@ -48,12 +47,10 @@ const routes: Routes = [
       },
       {
         path: 'memory',
-
         component: AIEmployeeMemoryComponent,
       },
       {
         path: 'history',
-        resolve: [AIEmployeeHistoryResolver],
         component: AIEmployeeHistoryComponent,
       },
       {

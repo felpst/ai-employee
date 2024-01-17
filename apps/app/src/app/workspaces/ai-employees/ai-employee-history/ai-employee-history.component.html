@@ -1,23 +1,35 @@
 <div class="main">
-    <div class="header">
-      <div class="title">
-        <h2>{{ aiEmployee.name }}'s History</h2>
-      </div>
-      <div class="filters">
-        <cognum-sort-buttons
-          [data]="chats"
-          [dateField]="'createdAt'"
-          (sortedData)="handleSortedData($event)">
-        </cognum-sort-buttons>
-  
-        <cognum-search-bar 
-          (searchUpdated)="onSearch($event)" 
-          (searchCleared)="clearSearch()">
-        </cognum-search-bar>
-      </div>
+  <div class="header">
+    <div class="title">
+      <h2>{{ aiEmployee.name }}'s History</h2>
     </div>
-  
-    <cognum-chat-history [chats]="chats" (chatDeleted)="loadChats()"></cognum-chat-history>
+    <div class="filters">
+      <cognum-sort-buttons
+        [data]="filteredList"
+        [dateField]="'createdAt'"
+        (sortedData)="handleSortedData($event)"
+      >
+      </cognum-sort-buttons>
+
+      <cognum-search-bar
+        (searchUpdated)="onSearch($event)"
+        (searchCleared)="clearSearch()"
+      >
+      </cognum-search-bar>
+    </div>
+  </div>
+
+  <mat-spinner
+    *ngIf="isLoading"
+    class="upload-spinner"
+    diameter="30"
+    strokeWidth="4"
+  ></mat-spinner>
+
+  <cognum-calls-history
+    *ngIf="!isLoading"
+    [calls]="filteredList"
+    (chatDeleted)="loadCalls()"
+  ></cognum-calls-history>
 </div>
 <router-outlet></router-outlet>
-  
