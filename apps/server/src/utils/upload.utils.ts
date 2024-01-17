@@ -1,4 +1,8 @@
-import { Bucket, File, Storage } from '@google-cloud/storage';
+import {
+  Bucket,
+  File as GoogleCloudFile,
+  Storage
+} from '@google-cloud/storage';
 import crypto from 'crypto';
 import fs from 'fs';
 
@@ -18,6 +22,25 @@ export class UploadUtils {
       });
     }
     this._bucket = this._storage.bucket(bucket);
+  }
+
+  private async _convertToJSFile(file: GoogleCloudFile) {
+    const { name } = file;
+    const buffers = await file.download();
+    const data = await file.getMetadata();
+    const [metadata] = data;
+    const { contentType, updated } = metadata;
+    // Concatene os buffers
+    const concatenatedBuffer = Buffer.concat(buffers);
+
+    // Converta para string base64
+    const base64String = concatenatedBuffer.toString('base64');
+    return {
+      name,
+      contentType,
+      data: base64String,
+      lastModified: updated,
+    };
   }
 
   /**
@@ -76,7 +99,7 @@ export class UploadUtils {
    * @param {string} folderPrefix - The folder prefix that will be used to filter the files.
    * @returns {Promise<File[]>} Array of files existing in the folder.
    */
-  async listFolderContent(folderPrefix): Promise<File[]> {
+  async listFolderContent(folderPrefix) {
     try {
       const [files] = await this._bucket.getFiles({
         prefix: folderPrefix,
@@ -84,8 +107,12 @@ export class UploadUtils {
 
       // Required to remove references to the folder itself
       const filtered = files.filter((arquivo) => !arquivo.name.endsWith('/'));
+      // Converting to JavaScript files
+      const parsedFiles = await Promise.all(
+        filtered.map(async (file) => this._convertToJSFile(file))
+      );
 
-      return filtered;
+      return parsedFiles;
     } catch (error) {
       const { errors } = error;
       console.log('An error occurred while listing files in the folder: ', {
@@ -102,9 +129,10 @@ export class UploadUtils {
    * @param {string} filePrefix - The file prefix.
    * @returns {Promise<File>} Requested file of exists.
    */
-  async getFile(filePrefix): Promise<File> {
+  async getFile(filePrefix) {
     try {
-      return await this._bucket.file(filePrefix);
+      const data = await this._bucket.file(filePrefix);
+      return this._convertToJSFile(data);
     } catch (error) {
       const { errors } = error;
       console.log('An error occurred while retrieving the file', {
