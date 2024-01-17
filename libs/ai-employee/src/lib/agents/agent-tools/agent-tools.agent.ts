@@ -23,7 +23,7 @@ export class AgentTools {
     const { aiEmployee, intentions } = options;
     const model = new ChatModel();
 
-    const intetionTools = AIEmployeeTools.intetionTools({
+    const intetionTools = await AIEmployeeTools.intetionTools({
       aiEmployee,
       intentions,
       user: options.context?.user

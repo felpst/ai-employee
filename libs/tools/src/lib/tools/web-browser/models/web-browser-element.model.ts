@@ -15,6 +15,6 @@ const schema = new Schema<IWebBrowserElement>(
 );
 triggers(schema);
 
-const WebBrowserElement = models['WebBrowserElement'] || model<IWebBrowserElement>('ChatRoom', schema);
+const WebBrowserElement = models['WebBrowserElement'] || model<IWebBrowserElement>('WebBrowserElement', schema);
 export { WebBrowserElement };
 
