@@ -115,6 +115,30 @@ export class WebBrowser {
     }
   }
 
+  async storeSession() {
+    const sessionInfos = {
+      session: this.driver.getSession(),
+      cookies: await this.driver.manage().getCookies(),
+      currentUrl: await this.driver.getCurrentUrl(),
+    }
+    console.log('session', sessionInfos.session);
+    console.log('sessionInfos', sessionInfos);
+
+    this.saveSession(sessionInfos);
+  }
+
+  async retrieverSession() {
+    const sessionInfos = await this.loadSession();
+    await this.driver.get(sessionInfos.currentUrl);
+    console.log('sessionInfos', sessionInfos);
+    await this.driver.manage().deleteAllCookies();
+    if (sessionInfos) {
+      for (const cookie of sessionInfos.cookies) {
+        await this.driver.manage().addCookie(cookie);
+      }
+    }
+  }
+
   private async collectData(dataContainer: WebElement[], dataToCollect: DataCollection[]): Promise<void> {
     let totalDataCollected = [];
     for (let i = 1; i < dataContainer.length; i++) {
@@ -145,6 +169,14 @@ export class WebBrowser {
     return this.driver.findElements(By.className(name));
   }
 
+  private async saveSession(infos: any) {
+    const data = JSON.stringify(infos);
+    fs.writeFileSync('session.json', data);
+  }
 
-
+  private async loadSession() {
+    const data = fs.readFileSync('session.json', 'utf8');
+    const session = JSON.parse(data);
+    return session;
+  }
 }

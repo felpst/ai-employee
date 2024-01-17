@@ -1,5 +1,5 @@
 export type SkillInputType = 'string' | 'number' | 'boolean' | 'object' | 'array' | 'function' | 'any';
-export type SkillStepMethod = 'loadUrl' | 'click' | 'inputText' | 'sleep' | 'scroll' | 'findMultiplesElementsToClick' | 'extractData' | 'loop';
+export type SkillStepMethod = 'loadUrl' | 'click' | 'inputText' | 'sleep' | 'scroll' | 'findMultiplesElementsToClick' | 'extractData' | 'loop' | 'storeSession' | 'retrieverSession';
 
 export interface Skill {
   name: string;
