@@ -27,7 +27,7 @@ export class AIEmployeeHistoryComponent {
 
   loadCalls() {
     this.isLoading = true;
-    this.aiEmployeesService.loadCalls().subscribe({
+    this.aiEmployeesService.loadCalls([this.aiEmployee._id]).subscribe({
       next: (calls) => {
         this.calls = calls;
         this.filteredList = calls;

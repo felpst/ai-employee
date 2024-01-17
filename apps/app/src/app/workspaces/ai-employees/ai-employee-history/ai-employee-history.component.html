@@ -26,10 +26,10 @@
     strokeWidth="4"
   ></mat-spinner>
 
-  <cognum-chat-history
+  <cognum-calls-history
     *ngIf="!isLoading"
     [calls]="filteredList"
     (chatDeleted)="loadCalls()"
-  ></cognum-chat-history>
+  ></cognum-calls-history>
 </div>
 <router-outlet></router-outlet>

@@ -2,10 +2,10 @@ import { Component, Input } from '@angular/core';
 import { IAIEmployeeCall } from '@cognum/interfaces';
 
 @Component({
-  selector: 'cognum-chat-history',
-  templateUrl: './chat-history.component.html',
-  styleUrls: ['./chat-history.component.scss'],
+  selector: 'cognum-calls-history',
+  templateUrl: './calls-history.component.html',
+  styleUrls: ['./calls-history.component.scss'],
 })
-export class ChatHistoryComponent {
+export class CallsHistoryComponent {
   @Input({ required: false }) calls: IAIEmployeeCall[] = [];
 }

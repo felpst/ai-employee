@@ -118,9 +118,10 @@ export class AIEmployeesService {
     ) as Observable<IAIEmployee>;
   }
 
-  loadCalls(): Observable<IAIEmployeeCall[]> {
+  loadCalls(ids: string[]): Observable<IAIEmployeeCall[]> {
+    const _ids = ids.join(',');
     let params = new HttpParams();
-    params = params.set('filter[aiEmployee]', this.aiEmployee._id);
+    params = params.set('filter[aiEmployee]', _ids);
     // populate user
     params = params.set('populate[0][path]', 'createdBy');
     params = params.set('populate[0][select]', 'name email photo');

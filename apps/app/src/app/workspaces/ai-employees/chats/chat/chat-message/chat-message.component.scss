@@ -58,10 +58,12 @@
       .info {
         display: flex;
         flex-direction: column;
+        gap: 6px;
 
         div {
-          display: flex;
-          flex-direction: row;
+          display: grid;
+          grid-template-columns: auto 1fr;
+          gap: 8px;
           align-items: center;
         }
       }
