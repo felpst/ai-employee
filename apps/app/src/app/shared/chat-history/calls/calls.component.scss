@@ -1,0 +1,87 @@
+.chat-message {
+  background-color: #fff;
+  padding: 24px;
+  display: flex;
+  flex-direction: row;
+  gap: 16px;
+
+  .content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+
+    .header {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 16px;
+    }
+  }
+
+  .steps {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+
+    .step {
+      display: flex;
+      flex-direction: row;
+      align-items: start;
+      border: 1px solid #efefef;
+      border-radius: 4px;
+      padding: 8px;
+      gap: 16px;
+
+      .icon img {
+        width: 32px;
+        height: 32px;
+        border-radius: 8px;
+      }
+
+      .loading-icon {
+        position: relative;
+
+        img {
+          position: absolute;
+          width: 32px;
+          height: 32px;
+          border-radius: 50%;
+        }
+
+        mat-spinner {
+          position: relative;
+        }
+      }
+
+      .info {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+
+        div {
+          display: grid;
+          grid-template-columns: auto 1fr;
+          gap: 8px;
+          align-items: center;
+        }
+      }
+    }
+  }
+}
+
+.showActions {
+  background-color: #fff;
+  width: 100%;
+  border: 1px solid #efefef;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #efefef;
+  }
+}

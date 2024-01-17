@@ -6,12 +6,12 @@ import storageRoutes from './storage/ai-employee-storage.routes';
 
 const router: Router = express.Router();
 
+router.use('/calls', callsRoutes);
+router.use('/storage', storageRoutes);
 router.post('/', authMiddleware, employeeController.create);
 router.get('/', authMiddleware, employeeController.find);
 router.get('/:id', authMiddleware, employeeController.getById);
 router.put('/:id', authMiddleware, employeeController.update);
 router.delete('/:id', authMiddleware, employeeController.delete);
-router.use('/calls', callsRoutes);
-router.use('/storage', storageRoutes);
 
 export default router;

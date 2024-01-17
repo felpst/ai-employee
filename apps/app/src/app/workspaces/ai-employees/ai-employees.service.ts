@@ -1,6 +1,11 @@
 import { HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { IAIEmployee, IChatRoom, IWorkspace } from '@cognum/interfaces';
+import {
+  IAIEmployee,
+  IAIEmployeeCall,
+  IChatRoom,
+  IWorkspace,
+} from '@cognum/interfaces';
 import { Observable, firstValueFrom } from 'rxjs';
 import { CoreApiService } from '../../services/apis/core-api.service';
 import { ChatsService } from './chats/chats.service';
@@ -146,5 +151,21 @@ export class AIEmployeesService {
     return this.coreApiService.delete(
       `${this.route}/storage/${item._id}/files/${filename}`
     ) as Observable<IAIEmployee>;
+  }
+
+  loadCalls(): Observable<IAIEmployeeCall[]> {
+    let params = new HttpParams();
+    params = params.set('filter[aiEmployee]', this.aiEmployee._id);
+    // populate user
+    params = params.set('populate[0][path]', 'createdBy');
+    params = params.set('populate[0][select]', 'name email photo');
+
+    // populate ai employee
+    params = params.set('populate[1][path]', 'aiEmployee');
+    params = params.set('populate[1][select]', 'name avatar');
+    params = params.set('sort', '-updatedAt');
+    return this.coreApiService.get(`${this.route}/calls`, {
+      params,
+    }) as Observable<IAIEmployeeCall[]>;
   }
 }
