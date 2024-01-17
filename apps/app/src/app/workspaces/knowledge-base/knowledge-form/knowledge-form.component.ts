@@ -103,7 +103,6 @@ export class KnowledgeFormComponent {
   }
 
   private async uploadFile(file: File): Promise<string> {
-    return 'https://aaa.com';
     try {
       const { url } = await new Promise<{ url: string; }>((resolve) => {
         this.uploadsService

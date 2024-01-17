@@ -4,6 +4,11 @@ import { IElementFindOptions, elementSchema } from '../common/element-schema';
 import { WebBrowserService } from '../services/web-browser.service';
 import { WebBrowserToolSettings } from '../web-browser.toolkit';
 
+export type ScrollPageProps = {
+  direction: 'Vertical' | 'Horizontal';
+  scrollTo: number
+}
+
 export class WebBrowserScrollPageTool extends DynamicStructuredTool {
   constructor(settings: WebBrowserToolSettings) {
     super({
@@ -13,13 +18,13 @@ export class WebBrowserScrollPageTool extends DynamicStructuredTool {
       schema: elementSchema.extend({
         location: z.number().optional().describe("how much in pixels will be scrolled"),
       }),
-      func: async ({ location, ...params }: IElementFindOptions & { location: number; }) => {
+      func: async ({ scrollTo, direction, ...params }: IElementFindOptions & ScrollPageProps) => {
         try {
 
           const success = await settings.webBrowserService.scrollPage(location, params);
           if (!success) throw new Error(`Location scroll unsuccessful`);
 
-          return `Location scroll to ${location} was successfully done`;
+          return `Location scroll to ${scrollTo} was successfully done`;
         } catch (error) {
           return error.message;
         }

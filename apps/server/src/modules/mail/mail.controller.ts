@@ -20,7 +20,7 @@ export class MailController extends ModelController<typeof Job> {
       const mails = await mailService.find({
         status: 'UNSEEN',
       })
-      console.log(mails);
+      // console.log(mails);
 
       for (const mail of mails) {
         // Get AI Employee
@@ -40,6 +40,11 @@ export class MailController extends ModelController<typeof Job> {
         if (!aiEmployee) continue;
         // console.log(aiEmployee);
 
+        // Loading related messages
+        let relatedMessages = [];
+        if (mail.references) {
+          relatedMessages = await mailService.find({ references: mail.references });
+        }
         // Get user
         const emailFrom = mail.from.includes('<') ? mail.from.split('<')[1]?.split('>')[0] : mail.from
         // console.log(emailFrom);
@@ -54,7 +59,10 @@ export class MailController extends ModelController<typeof Job> {
         // Execute call
         const call = await aiEmployee.call({
           input: mail.text,
-          user
+          user,
+          context: {
+            chatMessages: relatedMessages && relatedMessages.length > 0 ? relatedMessages : [],
+          },
         })
         call.context.chatChannel = 'email';
         const callResult: IAIEmployeeCall = await new Promise((resolve, reject) => {
@@ -68,7 +76,7 @@ export class MailController extends ModelController<typeof Job> {
         });
 
         // Answer email
-        await mailService.send({
+        await mailService.sendMarkdown({
           from: `${aiEmployee.name} - Cognum AI Employee <${aiEmployee.getEmail()}>`,
           replyTo: `${aiEmployee.name} - Cognum AI Employee <${aiEmployee.getEmail()}>`,
           inReplyTo: mail.id,
@@ -80,7 +88,7 @@ export class MailController extends ModelController<typeof Job> {
 
         // Marcar email como lido
         // console.log('Marking email as read');
-        // await mailService.markAsRead(mail.uid);
+        await mailService.markAsRead(mail.uid);
       }
 
       return res.status(200).json({ message: 'Emails are checked' });
