@@ -17,8 +17,8 @@ import { RouterModule } from '@angular/router';
 import { NgScrollbarModule } from 'ngx-scrollbar';
 import { MarkdownModule } from 'ngx-markdown';
 import { AIEmployeeFormComponent } from './ai-employee-form/ai-employee-form.component';
-import { ChatHistoryComponent } from './chat-history/chat-history.component';
-import { CallsComponent } from './chat-history/calls/calls.component';
+import { CallsHistoryComponent } from './calls-history/calls-history.component';
+import { CallsComponent } from './calls-history/calls/calls.component';
 import { DefaultPageComponent } from './default-page/default-page.component';
 import { DialogComponent } from './dialog/dialog.component';
 import { HeaderComponent } from './header/header.component';
@@ -39,7 +39,7 @@ const declarations: any[] = [
   DefaultPageComponent,
   TabNavigatorComponent,
   UploadImageComponent,
-  ChatHistoryComponent,
+  CallsHistoryComponent,
   SortButtonsComponent,
   CallsComponent,
 ];
