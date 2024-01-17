@@ -14,10 +14,10 @@ export class AIToolSettingsMailSenderComponent implements OnInit {
     constructor(private formBuilder: FormBuilder) { }
 
     ngOnInit() {
-        const mailSenderOptions = this.data.tool?.options?.subTools?.mailSender;
-        this.formGroup.addControl('host', new FormControl(mailSenderOptions?.host, Validators.required));
-        this.formGroup.addControl('port', new FormControl(mailSenderOptions?.port, Validators.required));
-        this.formGroup.addControl('secure', new FormControl(mailSenderOptions?.secure, Validators.required));
+        const mailSenderOptions = this.data.tool?.options;
+        this.formGroup.addControl('host', new FormControl(mailSenderOptions?.smtp?.host, Validators.required));
+        this.formGroup.addControl('port', new FormControl(mailSenderOptions?.smtp?.port, Validators.required));
+        this.formGroup.addControl('secure', new FormControl(mailSenderOptions?.smtp?.tls, Validators.required));
         this.formGroup.addControl('auth', this.formBuilder.group({
             user: new FormControl(mailSenderOptions?.auth?.user, Validators.required),
             pass: new FormControl(mailSenderOptions?.auth?.pass, Validators.required),

@@ -5,6 +5,7 @@ import { ToolsHelper } from '@cognum/helpers';
 import { IToolSettings } from '@cognum/interfaces';
 import { AIToolSettingsMailReaderComponent } from './mail-reader/tool-settings-mail-reader.component';
 import { AIToolSettingsMailSenderComponent } from './mail-sender/tool-settings-mail-sender.component';
+import { MailToolSettings } from '../../../../../../../../../../libs/tools/src/lib/tools/mail/mail.interfaces';
 
 @Component({
   selector: 'cognum-ai-tool-settings-mail',
@@ -28,8 +29,8 @@ export class AIToolSettingsMailComponent implements AfterViewInit {
   initializeFormGroup() {
     this.formGroup = this.formBuilder.group({
       subTools: this.formBuilder.group({
-        mailSenderSelected: new FormControl(this.data.tool.options?.subTools?.mailSenderSelected !== undefined ? this.data.tool.options.subTools.mailSenderSelected : true),
-        mailReaderSelected: new FormControl(this.data.tool.options?.subTools?.mailReaderSelected !== undefined ? this.data.tool.options.subTools.mailReaderSelected : true),
+        mailSenderSelected: new FormControl(this.data.tool.options?.tools?.send !== undefined ? this.data.tool.options.tools.send : true),
+        mailReaderSelected: new FormControl(this.data.tool.options?.tools?.read !== undefined ? this.data.tool.options.tools.read : true),
         mailSender: this.formBuilder.group({}),
         mailReader: this.formBuilder.group({}),
       }),
@@ -68,8 +69,23 @@ export class AIToolSettingsMailComponent implements AfterViewInit {
     return ToolsHelper.get(this.data.tool.id);
   }
 
+  transformFormValue(formValue: any): MailToolSettings {
+    const { mailSenderSelected: send, mailReaderSelected: read, mailSender = {}, mailReader = {} } = formValue.subTools;
+    const { auth = { user: '', pass: '' }, host = '', port = '', secure = false } = send ? mailSender : {};
+    const { host: imapHost = '', port: imapPort = '', tls = false } = read ? mailReader : {};
+    return {
+      from: auth.user,
+      replyTo: auth.user,
+      auth,
+      smtp: { host, port, tls: secure },
+      imap: { host: imapHost, port: imapPort, tls },
+      tools: { send, read }
+    };
+  }
+
   onSubmit() {
-    const data = this.formGroup.value;
+    const formValue = this.formGroup.value;
+    const data = this.transformFormValue(formValue);
     this.dialogRef.close(data);
   }
 
