@@ -82,7 +82,6 @@ export class BrowserExecutorAgent {
         func: async (inputs) => {
           let response = 'Done';
           try {
-            console.log('inputs', inputs);
             response = await webBrowser.runSteps(skill.steps, inputs);
           } catch (error) { console.error(error); return error.message; }
           return response;

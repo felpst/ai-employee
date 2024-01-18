@@ -42,9 +42,17 @@ describe('AI Agent Browser', () => {
       "inputs": {},
       "steps": [
         { "method": "loadUrl", "params": { "url": "https://chat.google.com/" } },
-        { "method": "dataExtraction", "params": { "container": "div.PQ2yBb", "saveOn": "rooms", "properties": [
+        { "method": "test", "params": { "container": "div.PQ2yBb" } },
+        { "method": "switchToFrame", "params": { "selector": "iframe#gtn-roster-iframe-id" } },
+        { "method": "dataExtraction", "params": { "container": "div.PQ2yBb > span", "saveOn": "rooms", "properties": [
+          // { "name": 'selector', "selector": 'span.njhDLd.O5OMdc' },
           { "name": 'name', "selector": 'span.njhDLd.O5OMdc' },
         ]}},
+        { "method": "dataExtraction", "params": { "container": "div.PQ2yBb > span", "saveOn": "rooms", "properties": [
+          // { "name": 'selector', "selector": 'span.njhDLd.O5OMdc' },
+          { "name": 'name', "selector": 'span.yue6if.jy2fzc' },
+        ]}},
+        { "method": "switchToDefaultContent" },
         { "method": "saveOnFile", "params": { "fileName": "google-chats-rooms", "memoryKey": "rooms" } }
       ]
     },

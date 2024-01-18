@@ -102,22 +102,43 @@ export class WebBrowser {
     await this.driver.sleep(time);
   }
 
+  async test({ selector }: { selector: string }) {
+    await this.sleep({ time: 3000 })
+  }
+
+  async switchToFrame({ selector }: { selector: string }) {
+    const element = await this._findElement(selector);
+    await this.driver.switchTo().frame(element);
+  }
+
+  async switchToDefaultContent() {
+    await this.driver.switchTo().defaultContent();
+  }
+
   async dataExtraction({ container, properties, saveOn }: { container: string, properties: DataExtractionProperty[], saveOn?: string }) {
+    // await this.sleep({ time: 5000 })
+
     let data = [];
 
     const containerElements = await this._findElements(container);
-    console.log('containerElements', containerElements.length);
-
     for (const containerElement of containerElements) {
       const rowData = {};
       for (const property of properties) {
         try {
           rowData[property.name] = await containerElement.findElement(By.css(property.selector)).getText() || null;
         } catch (error) {
-          throw new Error(`Error on data extraction (${JSON.stringify({ property })}): ${error.message}`);
+          if (property.required) throw new Error(`Error on data extraction (${JSON.stringify({ property })}): ${error.message}`);
+          rowData[property.name] = null;
         }
       }
-      data.push(rowData);
+
+      // Check if all values are null
+      let isValid = false;
+      for (const value of Object.values(rowData)) {
+        if (value) { isValid = true; break; }
+      }
+
+      if (isValid) data.push(rowData);
     }
 
     console.log(JSON.stringify(data));
@@ -174,7 +195,7 @@ export class WebBrowser {
     return response;
   }
 
-  async runSteps(steps: { method: string, params: { [key: string]: any } }[], inputs: any = this.memory.inputs || {}) {
+  async runSteps(steps: { method: string, params?: { [key: string]: any } }[] , inputs: any = this.memory.inputs || {}) {
     let response: any;
 
     // Set memory
@@ -182,6 +203,7 @@ export class WebBrowser {
 
     // Evaluate inputs
     for (const step of steps) {
+      if (!step.params) continue;
       for (const key of Object.keys(step.params)) {
         const value = step.params[key];
         if (typeof value === 'string' && value.startsWith('{') && value.endsWith('}')) {
@@ -190,7 +212,7 @@ export class WebBrowser {
         }
       }
     }
-    console.log(JSON.stringify(steps));
+    // console.log(JSON.stringify(steps));
 
     for (const step of steps) {
       const { method, params } = step;

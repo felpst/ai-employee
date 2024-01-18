@@ -1,15 +1,16 @@
 export type SkillInputType = 'string' | 'number' | 'boolean' | 'object' | 'array' | 'function' | 'any';
-export type SkillStepMethod = 'loadUrl' | 'click' | 'inputText' | 'sleep' | 'scroll' | 'dataExtraction' | 'loop' | 'saveOnFile' | 'if';
+export type SkillStepMethod = 'loadUrl' | 'click' | 'inputText' | 'sleep' | 'scroll' | 'dataExtraction' | 'loop' | 'saveOnFile' | 'if' | 'test' | 'switchToFrame' | 'switchToDefaultContent';
 
 export interface Skill {
   name: string;
   description: string;
   inputs?: { [key: string]: { type: SkillInputType, description: string } };
-  steps: { method: SkillStepMethod, params: { [key: string]: any } }[];
+  steps: { method: SkillStepMethod, params?: { [key: string]: any } }[];
 }
 
 
 export interface DataExtractionProperty {
   name: string;
   selector: string;
+  required?: boolean;
 }
