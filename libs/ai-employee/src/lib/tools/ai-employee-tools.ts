@@ -27,15 +27,19 @@ export class AIEmployeeTools {
         return false;
       })
       .map(tool => ({ id: tool.id, }))
-
+    
     const filteredToolsSettings = aiEmployee.tools.filter(toolSettings => {
       if (options.user) toolSettings.options.user = options.user;
       const tool = ToolsHelper.get(toolSettings.id);
+    
+      if (!tool) return false;
+    
       for (const intetion of tool.intentions || []) {
         if (intentions.includes(intetion)) return true;
       }
       return false;
     })
+    
     const toolsSettings = [...commonTools, ...filteredToolsSettings]
     const tools: any[] = AIEmployeeTools.get(toolsSettings);
 

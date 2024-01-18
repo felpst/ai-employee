@@ -1,5 +1,11 @@
-import { File as GoogleFile } from '@google-cloud/storage';
 import { Schema } from 'mongoose';
+
+export type IFileResponse = {
+  data: string;
+  contentType: string;
+  lastModified: Date;
+  name: string;
+};
 
 export type IFileManagerOptions = {
   aiEmployeeId: string | Schema.Types.ObjectId;
@@ -20,8 +26,8 @@ export type IUpdateFileOptions = IFileManagerOptions & {
 
 export interface IFileManager {
   create(options: ICreateFileOptions): Promise<string>;
-  read(options: IReadOrDeleteFileOptions): Promise<GoogleFile>;
+  read(options: IReadOrDeleteFileOptions): Promise<IFileResponse>;
   update(options: IUpdateFileOptions): Promise<string>;
-  list(options: IFileManagerOptions): Promise<GoogleFile[]>;
+  list(options: IFileManagerOptions): Promise<IFileResponse[]>;
   delete(options: IReadOrDeleteFileOptions): Promise<boolean>;
 }
