@@ -3,6 +3,7 @@ import { WebDriver } from "selenium-webdriver";
 export type BrowserType = 'chrome' | 'brightdata';
 
 export interface IWebBrowserOptions {
+  aiEmployeeId?: string;
   browser?: BrowserType;
   proxy?: boolean;
   headless?: boolean;

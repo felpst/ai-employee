@@ -1,5 +1,5 @@
 export type SkillInputType = 'string' | 'number' | 'boolean' | 'object' | 'array' | 'function' | 'any';
-export type SkillStepMethod = 'loadUrl' | 'click' | 'inputText' | 'sleep' | 'scroll' | 'dataExtraction' | 'loop' | 'saveOnFile';
+export type SkillStepMethod = 'loadUrl' | 'click' | 'inputText' | 'sleep' | 'scroll' | 'dataExtraction' | 'loop' | 'saveOnFile' | 'if';
 
 export interface Skill {
   name: string;

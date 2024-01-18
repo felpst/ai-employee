@@ -5,7 +5,7 @@ import { Skill } from "../lib/browser.interfaces";
 describe('AI Agent Browser', () => {
   jest.setTimeout(600000);
 
-  const sleep = 20000;
+  const sleep = 2000;
 
   const skills: Skill[] = [
     {
@@ -28,13 +28,14 @@ describe('AI Agent Browser', () => {
       "steps": [
         { "method": "loadUrl", "params": { "url": "https://invest.xandr.com/login" } },
         { "method": "inputText", "params": { "selector": "#anxs-login-username", "content": "{username}" } },
-        { "method": "click", "params": { "selector": "#identity-check-button", "sleep": sleep } },
+        { "method": "click", "params": { "selector": "#identity-check-button" } },
         { "method": "inputText", "params": { "selector": "#i0116", "content": "{email}" } },
-        { "method": "click", "params": { "selector": "#idSIButton9", "sleep": sleep } },
-        { "method": "inputText", "params": { "selector": "#i0118", "content": "{password}" } },
-        { "method": "click", "params": { "selector": "#idSIButton9", "sleep": sleep } },
-        { "method": "click", "params": { "selector": "#idSIButton9", "sleep": sleep } }
-        // { "method": "storeSession", "params": { } }
+        { "method": "click", "params": { "selector": "#idSIButton9" } },
+        { "method": "if", "params": { "condition": "!browserMemory.currentUrl.includes('https://invest.xandr.com/')", "steps": [
+          { "method": "inputText", "params": { "selector": "#i0118", "content": "{password}" } },
+          { "method": "click", "params": { "selector": "#idSIButton9" } },
+          { "method": "click", "params": { "selector": "#idSIButton9" } }
+        ]}},
       ]
     },
     {
@@ -58,14 +59,6 @@ describe('AI Agent Browser', () => {
         { "method": "saveOnFile", "params": { "fileName": "xandr-audiences", "memoryKey": "audiences" } }
       ]
     },
-    // {
-    //   "name": "Retriver Session from Xandr",
-    //   "description": "Use this to retriver session from Xandr.",
-    //   "inputs": {},
-    //   "steps": [
-    //     { "method": "retrieverSession", "params": { } },
-    //   ]
-    // }
   ]
 
   const memory = `
@@ -98,7 +91,7 @@ describe('AI Agent Browser', () => {
 
     try {
       const result = await browserAgent.executorAgent.invoke({
-        input: 'extract audiences.'
+        input: 'Login on Xandr and extract audiences.'
       })
       console.log(result);
     } catch (error) {
@@ -106,18 +99,5 @@ describe('AI Agent Browser', () => {
     }
     expect(true).toBe(true);
   });
-  test('retriever session on Xandr', async () => {
-    const browserAgent = new BrowserAgent(skills, memory);
-    await browserAgent.seed();
 
-    try {
-      const result = await browserAgent.executorAgent.invoke({
-        input: 'Retriver Session from Xandr and extract data'
-      })
-      console.log(result);
-    } catch (error) {
-      console.error(error);
-    }
-    expect(true).toBe(true);
-  });
 });

@@ -1,8 +1,11 @@
 import 'dotenv/config';
 import { BrowserAgent } from "../lib/browser";
 import { Skill } from "../lib/browser.interfaces";
+import { IAIEmployee } from '@cognum/interfaces';
 
 describe('AI Agent Browser', () => {
+  jest.setTimeout(600000);
+
   const skills: Skill[] = [
     {
       "name": "Login on Google",
@@ -34,6 +37,18 @@ describe('AI Agent Browser', () => {
       ]
     },
     {
+      "name": "List Rooms on Google Chat",
+      "description": "Use this to list rooms on Google Chat.",
+      "inputs": {},
+      "steps": [
+        { "method": "loadUrl", "params": { "url": "https://chat.google.com/" } },
+        { "method": "dataExtraction", "params": { "container": "div.PQ2yBb", "saveOn": "rooms", "properties": [
+          { "name": 'name', "selector": 'span.njhDLd.O5OMdc' },
+        ]}},
+        { "method": "saveOnFile", "params": { "fileName": "google-chats-rooms", "memoryKey": "rooms" } }
+      ]
+    },
+    {
       "name": "Open Message on Google Chat",
       "description": "Use this to open a message on Google Chat.",
       "inputs": {},
@@ -41,21 +56,40 @@ describe('AI Agent Browser', () => {
         { "method": "click", "params": { "selector": "#space/AAAAeXMMTpY/SCcFR", "sleep": 5000 } }
       ]
     }
-
   ]
-  const email = process.env.EMAIL_USER
-  const password = process.env.EMAIL_PASSWORD
+  const email = process.env.GOOGLE_EMAIL
+  const password = process.env.GOOGLE_PASSWORD
 
   // TODO: switch to personal email for testing
   const memory = `
     Google:
     - Email: ${email}
-    - Password: ${password}`
+    - Password: ${password}
+
+    Google Login status: true
+    `
+
+  const browserAgent = new BrowserAgent(skills, memory, { _id: 'testaiemployee' } as IAIEmployee);
+
+  beforeAll(async () => {
+    await browserAgent.seed();
+  });
+
+  test('Google login', async () => {
+    const resultLogin = await browserAgent.executorAgent.invoke({
+      input: 'Login on Google'
+    })
+    console.log(resultLogin)
+  });
+
+  test('Select chat', async () => {
+    const resultLogin = await browserAgent.executorAgent.invoke({
+      input: 'List rooms on Google Chat'
+    })
+    console.log(resultLogin)
+  });
 
   test('Google chat', async () => {
-    const browserAgent = new BrowserAgent(skills, memory);
-    await browserAgent.seed();
-
     try {
       const resultLogin = await browserAgent.executorAgent.invoke({
         input: 'Login on Google'
