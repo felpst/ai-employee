@@ -98,7 +98,7 @@ describe('AI Agent Browser', () => {
 
     try {
       const result = await browserAgent.executorAgent.invoke({
-        input: 'Login on Xandr and extract audiences.'
+        input: 'extract audiences.'
       })
       console.log(result);
     } catch (error) {

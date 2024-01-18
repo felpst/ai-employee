@@ -15,13 +15,14 @@ export class WebBrowser {
       console.log('Starting chrome driver...');
 
       chromedriver.path; // Force chromedriver to be downloaded
-      const profileDirectory = '/home/renato/Documentos/Projects/apps/tmp'
+      const profileDirectory = '/home/renato/Documentos/Projects/apps/tmp/Default'
+      const profileSubDirectory = 'newProfile'
 
       let chromeOptions = new Options();
       if (options.headless) chromeOptions.addArguments('--headless=new');
       chromeOptions.addArguments('--window-size=1366,768');
       chromeOptions.addArguments('--user-data-dir=' + profileDirectory);
-      chromeOptions.addArguments('--profile-directory=newProfile');
+      chromeOptions.addArguments('--profile-directory=' + profileSubDirectory);
       const prefs = {
         'profile.default_content_setting_values.media_stream_camera': 1,
         'profile.default_content_setting_values.media_stream_mic': 1,
@@ -29,6 +30,10 @@ export class WebBrowser {
         'profile.default_content_setting_values.geolocation': 0,
       };
       chromeOptions.setUserPreferences(prefs);
+
+      if (!fs.existsSync(profileDirectory + '/' + profileSubDirectory)) {
+        fs.mkdirSync(profileDirectory + '/' + profileSubDirectory);
+      }
 
       const proxyConfig = {
         host: 'brd.superproxy.io',
@@ -134,7 +139,7 @@ export class WebBrowser {
     }
   }
 
-    // async storeSession() {
+  // async storeSession() {
   //   const sessionInfos = {
   //     session: this.driver.getSession(),
   //     cookies: await this.driver.manage().getCookies(),
