@@ -27,7 +27,7 @@ export class GeneralAgent extends Agent {
     }, true, undefined)
 
     // Tools
-    const tools = AIEmployeeTools.intetionTools({
+    const tools = await AIEmployeeTools.intetionTools({
       aiEmployee: this.aiEmployee,
       intentions,
       user: this.context.user

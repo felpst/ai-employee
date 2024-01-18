@@ -3,11 +3,12 @@ import * as chromedriver from 'chromedriver';
 import { ProxyPlugin } from 'selenium-chrome-proxy-plugin';
 import { Browser, Builder, By, WebDriver, WebElement } from 'selenium-webdriver';
 import { Options } from 'selenium-webdriver/chrome';
-import { DataCollection } from '../browser.interfaces';
+import { DataExtractionProperty } from '../browser.interfaces';
 import * as fs from 'fs';
 
 export class WebBrowser {
   driver: WebDriver
+  memory: any = {};
 
   async open(options: IWebBrowserOptions = {}) {
     try {
@@ -64,7 +65,6 @@ export class WebBrowser {
     this.driver.get(url);
     await this.driver.sleep(500);
     for (let i = 0; i < 3; i++) {
-      console.log(`Waiting for page load: ${url}`);
       const currentUrl = await this.driver.getCurrentUrl();
       if (currentUrl.includes(url)) {
         return true;
@@ -78,14 +78,12 @@ export class WebBrowser {
   }
 
   async click({ selector, sleep }: { selector: string, sleep?: number }) {
-    await this.waitPageLoad();
     const element = await this._findElement(selector);
     await element.click();
     if (sleep) await this.driver.sleep(sleep);
   }
 
   async inputText({ selector, content }: { selector: string, content: string }) {
-    await this.waitPageLoad();
     const element = await this._findElement(selector);
     return element.sendKeys(content);
   }
@@ -94,19 +92,38 @@ export class WebBrowser {
     return await this.driver.sleep(time);
   }
 
-  async findMultiplesElementsToClick({ selector, sleep, position }: { selector: string, sleep?: number, position: number }): Promise<void> {
-    await this.waitPageLoad();
-    this.driver.sleep(5000);
-    const elements = await this._findElements(selector);
-    console.log('elements', elements.length);
-    await elements[position].click();
-    if (sleep) await this.driver.sleep(sleep);
+  async dataExtraction({ container, properties, saveOn }: { container: string, properties: DataExtractionProperty[], saveOn?: string }) {
+    let data = [];
+
+    const containerElements = await this._findElements(container);
+    for (const containerElement of containerElements) {
+      const rowData = {};
+      for (const property of properties) {
+        try {
+          rowData[property.name] = await containerElement.findElement(By.css(property.selector)).getText() || null;
+        } catch (error) {
+          throw new Error(`Error on data extraction (${JSON.stringify({ property })}): ${error.message}`);
+        }
+      }
+      data.push(rowData);
+    }
+
+    // Save data on browser memory
+    if (saveOn) {
+      this.saveMemory({ key: saveOn, value: data });
+    }
+
+    return data;
   }
 
-  async extractData({ selector, dataToCollect }: { selector: string, dataToCollect: DataCollection[] }) {
-    await this.waitPageLoad();
-    const dataContainer = await this._findElements(selector);
-    return await this.collectData(dataContainer, dataToCollect);
+  async saveMemory({ key, value }: { key: string, value: any }) {
+    this.memory[key] = this.memory[key] ? this.memory[key].concat(value) : value;
+  }
+
+  async saveOnFile({ fileName, memoryKey }: { fileName: string, memoryKey: string }) {
+    const data = this.memory[memoryKey];
+    if (!data) throw new Error(`Memory key not found: ${memoryKey}`);
+    fs.writeFileSync('tmp/' + fileName + '.json', JSON.stringify(data, null, 2));
   }
 
   async loop({ times, steps }: { times: number, steps: { method: string, params: { [key: string]: any } }[] }): Promise<void> {
@@ -117,7 +134,7 @@ export class WebBrowser {
     }
   }
 
-  // async storeSession() {
+    // async storeSession() {
   //   const sessionInfos = {
   //     session: this.driver.getSession(),
   //     cookies: await this.driver.manage().getCookies(),
@@ -141,34 +158,12 @@ export class WebBrowser {
   //   }
   // }
 
-  private async collectData(dataContainer: WebElement[], dataToCollect: DataCollection[]): Promise<void> {
-    let totalDataCollected = [];
-    for (let i = 1; i < dataContainer.length; i++) {
-      const elementsToExtract = dataContainer[i];
-      const rowData = {};
-      for (const data of dataToCollect) {
-        const element = await elementsToExtract.findElements(By.className(data.selector));
-        rowData[data.name] = await element[data.position].getText();
-      }
-      totalDataCollected.push(rowData);
-    }
-    const saveToJson = JSON.stringify(totalDataCollected, null, 2);
-    fs.appendFileSync('xandr.json', saveToJson);
-  }
-
-  private async waitPageLoad() {
-    await this.driver.wait(async () => {
-      const readyState = await this.driver.executeScript('return document.readyState');
-      return readyState === 'complete';
-    }, 10000);
-  }
-
   private async _findElement(selector: string): Promise<WebElement> {
     return this.driver.findElement(By.css(selector));
   }
 
-  private async _findElements(name: string): Promise<WebElement[]> {
-    return this.driver.findElements(By.className(name));
+  private async _findElements(selector: string): Promise<WebElement[]> {
+    return this.driver.findElements(By.css(selector));
   }
 
   // private async saveSession(infos: any) {

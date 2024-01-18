@@ -1,21 +1,11 @@
 import 'dotenv/config';
 import { BrowserAgent } from "../lib/browser";
-import { DataCollection, Skill } from "../lib/browser.interfaces";
+import { Skill } from "../lib/browser.interfaces";
 
 describe('AI Agent Browser', () => {
-  const dataToCollect: DataCollection[] = [
-    { name: 'name', selector: 'dmp-Segments-Segment-Name', position: 0 },
-    { name: 'provider', selector: 'dmp-Segments-Segment-Name', position: 1 },
-    { name: 'id', selector: 'dmp-Segments-Segment-Id', position: 0 },
-    { name: 'price', selector: 'dmp-Segments-row-price', position: 0 },
-    { name: 'impressions', selector: 'lucid-Table-align-right', position: 0 },
-    { name: 'users', selector: 'lucid-Table-align-right', position: 1 },
-  ];
+  jest.setTimeout(600000);
 
-  const loopWhile = [
-    { "method": "extractData", "params": { "selector": "lucid-Table-Tr", "dataToCollect": dataToCollect } },
-    { "method": "findMultiplesElementsToClick", "params": { "selector": "lucid-Button", "sleep": 15000, "position": 3 } }
-  ];
+  const sleep = 5000;
 
   const skills: Skill[] = [
     {
@@ -38,36 +28,45 @@ describe('AI Agent Browser', () => {
       "steps": [
         { "method": "loadUrl", "params": { "url": "https://invest.xandr.com/login" } },
         { "method": "inputText", "params": { "selector": "#anxs-login-username", "content": "{username}" } },
-        { "method": "click", "params": { "selector": "#identity-check-button", "sleep": 20000 } },
+        { "method": "click", "params": { "selector": "#identity-check-button", "sleep": sleep } },
         { "method": "inputText", "params": { "selector": "#i0116", "content": "{email}" } },
-        { "method": "click", "params": { "selector": "#idSIButton9", "sleep": 20000 } },
+        { "method": "click", "params": { "selector": "#idSIButton9", "sleep": sleep } },
         { "method": "inputText", "params": { "selector": "#i0118", "content": "{password}" } },
-        { "method": "click", "params": { "selector": "#idSIButton9", "sleep": 20000 } },
+        { "method": "click", "params": { "selector": "#idSIButton9", "sleep": sleep } },
+        { "method": "click", "params": { "selector": "#idSIButton9", "sleep": sleep } }
         // { "method": "storeSession", "params": { } }
       ]
     },
     {
-      "name": "Extract Data from Xandr",
-      "description": "Use this to extract data from Xandr.",
+      "name": "Extract Audiences Data from Xandr",
+      "description": "Use this to extract audiences data from Xandr.",
       "inputs": {},
       "steps": [
         { "method": "loadUrl", "params": { "url": "https://invest.xandr.com/dmp/segments" } },
-        { "method": "findMultiplesElementsToClick", "params": { "selector": "lucid-Tabs-Tab", "sleep": 15000, "position": 2 } },
-        { "method": "loop", "params": { "times": 3, "steps": loopWhile} },
+        { "method": "click", "params": { "selector": "div.lucid-Tabs > ul > li:nth-child(3)", "sleep": sleep } },
+        { "method": "loop", "params": { "times": 3, "steps": [
+          { "method": "dataExtraction", "params": { "container": "table.lucid-Table > tbody > tr", "saveOn": "audiences", "properties": [
+            { "name": 'name', "selector": '.dmp-Segments-Segment-Name' },
+            { "name": 'provider', "selector": '.dmp-Segments-Segment-Name' },
+            { "name": 'id', "selector": '.dmp-Segments-Segment-Id' },
+            { "name": 'price', "selector": '.dmp-Segments-row-price' },
+            { "name": 'impressions', "selector": 'td:nth-child(6)' },
+            { "name": 'users', "selector": 'td:nth-child(7)' },
+          ]}},
+          { "method": "click", "params": { "selector": ".lucid-Tabs footer button:nth-of-type(2)", "sleep": sleep }}]}
+        },
+        { "method": "saveOnFile", "params": { "fileName": "xandr-audiences", "memoryKey": "audiences" } }
       ]
     },
-    {
-      "name": "Retriver Session from Xandr",
-      "description": "Use this to retriver session from Xandr.",
-      "inputs": {},
-      "steps": [
-        { "method": "retrieverSession", "params": { } },
-      ]
-    }
+    // {
+    //   "name": "Retriver Session from Xandr",
+    //   "description": "Use this to retriver session from Xandr.",
+    //   "inputs": {},
+    //   "steps": [
+    //     { "method": "retrieverSession", "params": { } },
+    //   ]
+    // }
   ]
-
-
-
 
   const memory = `
     Xandr:
@@ -99,7 +98,7 @@ describe('AI Agent Browser', () => {
 
     try {
       const result = await browserAgent.executorAgent.invoke({
-        input: 'after login on Xandr, extract data'
+        input: 'Login on Xandr and extract audiences.'
       })
       console.log(result);
     } catch (error) {

@@ -13,14 +13,14 @@ describe('Scroll Page tool test', () => {
   });
 
   it('Scroll page to location', async () => {
-    const result = await service.scrollPage(4235);
+    const result = await service.scrollPage(635, 'Vertical');
     expect(result).toBe(true);
   });
 
-  it('Scroll page to element in page', async () => {
-    const result = await service.scrollPage(null, {
+  it('Scroll page to element', async () => {
+    const result = await service.scrollPage(500, 'Vertical', {
       selectorType: 'id',
-      elementSelector: 'bstn-launcher'
+      elementSelector: 'wrapper',
     });
     expect(result).toBe(true);
   });
@@ -28,5 +28,4 @@ describe('Scroll Page tool test', () => {
   afterAll(async () => {
     await webBrowser.driver.close();
   });
-
 });
