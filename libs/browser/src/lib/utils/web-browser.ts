@@ -20,7 +20,7 @@ export class WebBrowser {
       let chromeOptions = new Options();
       if (options.headless) chromeOptions.addArguments('--headless=new');
       chromeOptions.addArguments('--window-size=1366,768');
-      chromeOptions.setUserPreferences('/home/renato/.config/google-chrome/Default');
+      chromeOptions.addArguments('--user-data-dir=' + profileDirectory);
       chromeOptions.addArguments('--profile-directory=newProfile');
       const prefs = {
         'profile.default_content_setting_values.media_stream_camera': 1,

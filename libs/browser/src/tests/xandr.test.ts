@@ -5,7 +5,7 @@ import { Skill } from "../lib/browser.interfaces";
 describe('AI Agent Browser', () => {
   jest.setTimeout(600000);
 
-  const sleep = 5000;
+  const sleep = 20000;
 
   const skills: Skill[] = [
     {
