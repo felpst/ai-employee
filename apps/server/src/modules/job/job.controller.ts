@@ -44,7 +44,9 @@ export class JobController extends ModelController<typeof Job> {
         return next();
       }
 
-      await jobService.schedulerRun(job);
+      if (job.scheduler && job.scheduler.frequency) {
+        await jobService.schedulerRun(job);
+      }
       req.body = job;
       next();
     } catch (error) {
