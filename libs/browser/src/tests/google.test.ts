@@ -25,15 +25,34 @@ describe('AI Agent Browser', () => {
         { "method": "click", "params": { "selector": "#passwordNext", "sleep": 5000 } }
       ]
     },
+    {
+      "name": "Access Google Chat",
+      "description": "Use this to access Google Chat.",
+      "inputs": {},
+      "steps": [
+        { "method": "loadUrl", "params": { "url": "https://chat.google.com/" } }
+      ]
+    },
+    {
+      "name": "Open Message on Google Chat",
+      "description": "Use this to open a message on Google Chat.",
+      "inputs": {},
+      "steps": [
+        { "method": "click", "params": { "selector": "#space/AAAAeXMMTpY/SCcFR", "sleep": 5000 } }
+      ]
+    }
+
   ]
+  const email = process.env.EMAIL_USER
+  const password = process.env.EMAIL_PASSWORD
 
   // TODO: switch to personal email for testing
   const memory = `
     Google:
-    - Email: aiemployee@cognum.ai
-    - Password: upmw mlrj ytcq zuxm`
+    - Email: ${email}
+    - Password: ${password}`
 
-  test('Login on Google', async () => {
+  test('Google chat', async () => {
     const browserAgent = new BrowserAgent(skills, memory);
     await browserAgent.seed();
 
@@ -42,6 +61,16 @@ describe('AI Agent Browser', () => {
         input: 'Login on Google'
       })
       console.log(resultLogin)
+
+      const resultAccess = await browserAgent.executorAgent.invoke({
+        input: 'Access Google Chat'
+      });
+      console.log(resultAccess);
+
+      const resultOpenMessage = await browserAgent.executorAgent.invoke({
+        input: 'Open Message on Google Chat'
+      });
+      console.log(resultOpenMessage);
     } catch (error) {
       console.error(error);
     }
