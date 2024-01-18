@@ -43,7 +43,7 @@ describe('AI Agent Browser', () => {
         { "method": "click", "params": { "selector": "#idSIButton9", "sleep": 20000 } },
         { "method": "inputText", "params": { "selector": "#i0118", "content": "{password}" } },
         { "method": "click", "params": { "selector": "#idSIButton9", "sleep": 20000 } },
-        { "method": "storeSession", "params": { } }
+        // { "method": "storeSession", "params": { } }
       ]
     },
     {

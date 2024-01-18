@@ -14,11 +14,13 @@ export class WebBrowser {
       console.log('Starting chrome driver...');
 
       chromedriver.path; // Force chromedriver to be downloaded
+      const profileDirectory = '/home/renato/Documentos/Projects/apps/tmp'
 
       let chromeOptions = new Options();
       if (options.headless) chromeOptions.addArguments('--headless=new');
       chromeOptions.addArguments('--window-size=1366,768');
-
+      chromeOptions.setUserPreferences('/home/renato/.config/google-chrome/Default');
+      chromeOptions.addArguments('--profile-directory=newProfile');
       const prefs = {
         'profile.default_content_setting_values.media_stream_camera': 1,
         'profile.default_content_setting_values.media_stream_mic': 1,
@@ -115,29 +117,29 @@ export class WebBrowser {
     }
   }
 
-  async storeSession() {
-    const sessionInfos = {
-      session: this.driver.getSession(),
-      cookies: await this.driver.manage().getCookies(),
-      currentUrl: await this.driver.getCurrentUrl(),
-    }
-    console.log('session', sessionInfos.session);
-    console.log('sessionInfos', sessionInfos);
+  // async storeSession() {
+  //   const sessionInfos = {
+  //     session: this.driver.getSession(),
+  //     cookies: await this.driver.manage().getCookies(),
+  //     currentUrl: await this.driver.getCurrentUrl(),
+  //   }
+  //   console.log('session', sessionInfos.session);
+  //   console.log('sessionInfos', sessionInfos);
 
-    this.saveSession(sessionInfos);
-  }
+  //   this.saveSession(sessionInfos);
+  // }
 
-  async retrieverSession() {
-    const sessionInfos = await this.loadSession();
-    await this.driver.get(sessionInfos.currentUrl);
-    console.log('sessionInfos', sessionInfos);
-    await this.driver.manage().deleteAllCookies();
-    if (sessionInfos) {
-      for (const cookie of sessionInfos.cookies) {
-        await this.driver.manage().addCookie(cookie);
-      }
-    }
-  }
+  // async retrieverSession() {
+  //   const sessionInfos = await this.loadSession();
+  //   await this.driver.get(sessionInfos.currentUrl);
+  //   console.log('sessionInfos', sessionInfos);
+  //   await this.driver.manage().deleteAllCookies();
+  //   if (sessionInfos) {
+  //     for (const cookie of sessionInfos.cookies) {
+  //       await this.driver.manage().addCookie(cookie);
+  //     }
+  //   }
+  // }
 
   private async collectData(dataContainer: WebElement[], dataToCollect: DataCollection[]): Promise<void> {
     let totalDataCollected = [];
@@ -169,14 +171,16 @@ export class WebBrowser {
     return this.driver.findElements(By.className(name));
   }
 
-  private async saveSession(infos: any) {
-    const data = JSON.stringify(infos);
-    fs.writeFileSync('session.json', data);
-  }
+  // private async saveSession(infos: any) {
+  //   const data = JSON.stringify(infos);
+  //   fs.writeFileSync('session.json', data);
+  // }
 
-  private async loadSession() {
-    const data = fs.readFileSync('session.json', 'utf8');
-    const session = JSON.parse(data);
-    return session;
-  }
+  // private async loadSession() {
+  //   const data = fs.readFileSync('session.json', 'utf8');
+  //   const session = JSON.parse(data);
+  //   return session;
+  // }
+
+
 }
