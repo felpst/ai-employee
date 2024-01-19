@@ -184,28 +184,44 @@
   "fileMap": {
     "nonProjectFiles": [
       {
-        "file": ".prettierignore",
-        "hash": "7848693104264504795"
+        "file": "package.json",
+        "hash": "14461399923385275726"
       },
       {
-        "file": "apps/python_api/tests/files/asd.csv",
-        "hash": "8601209053115251610"
+        "file": "apps/python_api/__init__.py",
+        "hash": "12216659898782861321"
       },
       {
-        "file": "apps/python_api/tools/__init__.py",
+        "file": "nx.json",
+        "hash": "11757389799699217383"
+      },
+      {
+        "file": "apps/python_api/tests/azure_model.py",
+        "hash": "17223849457839398648"
+      },
+      {
+        "file": "apps/python_api/tests/pandas.agent.ipynb",
+        "hash": "2007289260998837849"
+      },
+      {
+        "file": ".gcloudignore",
         "hash": "3244421341483603138"
       },
       {
-        "file": "apps/python_api/tests/monthly-report.txt",
-        "hash": "17345562879594279086"
+        "file": "package-lock.json",
+        "hash": "10368024547824080381"
       },
       {
         "file": ".editorconfig",
         "hash": "5443105041930014821"
       },
       {
-        "file": "apps/python_api/tests/pandas.agent.ipynb",
-        "hash": "2007289260998837849"
+        "file": ".dockerignore",
+        "hash": "8638814097786739329"
+      },
+      {
+        "file": "apps/.gitkeep",
+        "hash": "3244421341483603138"
       },
       {
         "file": "tsconfig.base.json",
@@ -216,160 +232,120 @@
         "hash": "17223849457839398648"
       },
       {
-        "file": "jest.preset.js",
-        "hash": "9430166341120122740"
+        "file": "apps/query/clientes.csv",
+        "hash": "7147469616875522911"
       },
       {
-        "file": "apps/python_api/tests/files/products-data.csv",
-        "hash": "8601209053115251610"
-      },
-      {
-        "file": "package.json",
-        "hash": "14461399923385275726"
-      },
-      {
-        "file": "apps/python_api/tests/files/qwe.csv",
-        "hash": "634649158596724605"
-      },
-      {
-        "file": "apps/query/query-sql.ipynb",
-        "hash": "6489917456964906235"
-      },
-      {
-        "file": ".eslintrc.json",
-        "hash": "9291018849818920492"
+        "file": "apps/python_api/tools/__init__.py",
+        "hash": "3244421341483603138"
       },
       {
         "file": ".eslintignore",
         "hash": "7663861978715868291"
       },
       {
-        "file": "apps/query/clientes.csv",
-        "hash": "7147469616875522911"
-      },
-      {
-        "file": ".gcloudignore",
-        "hash": "3244421341483603138"
-      },
-      {
         "file": "apps/python_api/tools/sql_tool.py",
         "hash": "11035721884065884506"
-      },
-      {
-        "file": "docker-compose.base.yml",
-        "hash": "15738343271823285337"
-      },
-      {
-        "file": "nx.json",
-        "hash": "11757389799699217383"
-      },
-      {
-        "file": "apps/query/query-csv.ipynb",
-        "hash": "6749133765034751238"
-      },
-      {
-        "file": "apps/python_api/requirements.txt",
-        "hash": "16540778553432464050"
-      },
-      {
-        "file": "README.md",
-        "hash": "8862511390474802420"
-      },
-      {
-        "file": "apps/query/produtos.csv",
-        "hash": "5025840485535761692"
-      },
-      {
-        "file": "apps/python_api/tests/azure_model.py",
-        "hash": "17223849457839398648"
       },
       {
         "file": "apps/python_api/model/__init__.py",
         "hash": "3244421341483603138"
       },
       {
-        "file": "apps/python_api/tools/python_tool.py",
-        "hash": "13939266534835678289"
+        "file": "docker-compose.base.yml",
+        "hash": "15738343271823285337"
       },
       {
-        "file": ".dockerignore",
-        "hash": "8638814097786739329"
+        "file": ".prettierrc",
+        "hash": "16267754514737964994"
       },
       {
-        "file": ".firebaserc",
-        "hash": "14511543978326579611"
+        "file": "apps/python_api/tests/files/qwe.csv",
+        "hash": "634649158596724605"
       },
       {
-        "file": "apps/python_api/agent.example.py",
-        "hash": "18240702300592251227"
+        "file": ".gitignore",
+        "hash": "14514740681577263052"
       },
       {
-        "file": "apps/python_api/Dockerfile-python",
-        "hash": "10869569346660703166"
-      },
-      {
-        "file": "docker-compose.yml",
-        "hash": "7285945019434506281"
-      },
-      {
-        "file": "Dockerfile",
-        "hash": "13035996372612894973"
-      },
-      {
-        "file": "apps/.gitkeep",
-        "hash": "3244421341483603138"
-      },
-      {
-        "file": "apps/python_api/tests/files/zxc.csv",
-        "hash": "6087155422363513618"
-      },
-      {
-        "file": "firebase.json",
-        "hash": "12848014580443061089"
-      },
-      {
-        "file": "libs/.gitkeep",
-        "hash": "3244421341483603138"
-      },
-      {
-        "file": "apps/python_api/routes.py",
-        "hash": "8890337967153991625"
-      },
-      {
-        "file": "jest.config.ts",
-        "hash": "12333515226966617182"
+        "file": "apps/python_api/tests/files/asd.csv",
+        "hash": "8601209053115251610"
       },
       {
         "file": "apps/python_api/tests/files/inventory-data.csv",
         "hash": "3952178027986721852"
       },
       {
-        "file": "apps/python_api/.gcloudignore",
-        "hash": "3691743180706062318"
-      },
-      {
-        "file": "apps/query/vendas.csv",
-        "hash": "5334884199145841583"
-      },
-      {
-        "file": "apps/python_api/app.py",
-        "hash": "11820410709517913209"
+        "file": "jest.config.ts",
+        "hash": "12333515226966617182"
       },
       {
         "file": "apps/python_api/tests/sales-report.txt",
         "hash": "14210833836931205694"
       },
       {
-        "file": "apps/query/query.ipynb",
-        "hash": "3244421341483603138"
-      },
-      {
         "file": "apps/python_api/tests/files/sales-data.csv",
         "hash": "634649158596724605"
       },
       {
-        "file": ".prettierrc",
-        "hash": "16267754514737964994"
+        "file": "apps/python_api/tests/files/zxc.csv",
+        "hash": "6087155422363513618"
+      },
+      {
+        "file": "Dockerfile",
+        "hash": "13035996372612894973"
+      },
+      {
+        "file": "apps/python_api/Dockerfile-python",
+        "hash": "10869569346660703166"
+      },
+      {
+        "file": "apps/query/query-csv.ipynb",
+        "hash": "6749133765034751238"
+      },
+      {
+        "file": "apps/python_api/agent.example.py",
+        "hash": "18240702300592251227"
+      },
+      {
+        "file": "apps/query/produtos.csv",
+        "hash": "5025840485535761692"
+      },
+      {
+        "file": "apps/query/vendas.csv",
+        "hash": "5334884199145841583"
+      },
+      {
+        "file": "apps/query/query-sql.ipynb",
+        "hash": "6489917456964906235"
+      },
+      {
+        "file": "apps/python_api/routes.py",
+        "hash": "8890337967153991625"
+      },
+      {
+        "file": "docker-compose.yml",
+        "hash": "7285945019434506281"
+      },
+      {
+        "file": "apps/python_api/.gcloudignore",
+        "hash": "3691743180706062318"
+      },
+      {
+        "file": "apps/python_api/app.py",
+        "hash": "11820410709517913209"
+      },
+      {
+        "file": ".eslintrc.json",
+        "hash": "9291018849818920492"
+      },
+      {
+        "file": "apps/python_api/tests/files/products-data.csv",
+        "hash": "8601209053115251610"
+      },
+      {
+        "file": "apps/query/query.ipynb",
+        "hash": "3244421341483603138"
       },
       {
         "file": "apps/query/query-csv-tool.ipynb",
@@ -380,20 +356,44 @@
         "hash": "7450574226196224244"
       },
       {
-        "file": ".gitignore",
-        "hash": "14514740681577263052"
+        "file": "libs/.gitkeep",
+        "hash": "3244421341483603138"
       },
       {
-        "file": "apps/python_api/__init__.py",
-        "hash": "12216659898782861321"
+        "file": ".prettierignore",
+        "hash": "7848693104264504795"
+      },
+      {
+        "file": "apps/python_api/requirements.txt",
+        "hash": "16540778553432464050"
+      },
+      {
+        "file": "jest.preset.js",
+        "hash": "9430166341120122740"
+      },
+      {
+        "file": "apps/python_api/tools/python_tool.py",
+        "hash": "13939266534835678289"
+      },
+      {
+        "file": "apps/python_api/tests/monthly-report.txt",
+        "hash": "17345562879594279086"
+      },
+      {
+        "file": "README.md",
+        "hash": "8862511390474802420"
+      },
+      {
+        "file": "firebase.json",
+        "hash": "12848014580443061089"
+      },
+      {
+        "file": ".firebaserc",
+        "hash": "14511543978326579611"
       },
       {
         "file": "apps/python_api/tests/test.ipynb",
         "hash": "5478241463245350604"
-      },
-      {
-        "file": "package-lock.json",
-        "hash": "10368024547824080381"
       }
     ],
     "projectFileMap": {
@@ -956,7 +956,7 @@
         },
         {
           "file": "libs/ai-employee/src/lib/agents/general/general.agent.ts",
-          "hash": "15251233366983429030",
+          "hash": "17820549234682282852",
           "deps": [
             "interfaces",
             "llm",

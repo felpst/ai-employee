@@ -54,7 +54,6 @@ export class GeneralAgent extends Agent {
     // Adding information from the Agent's memory to the chat context so it can answer questions based on prior knowledge
     // const memoryContext = await this.aiEmployee.memorySearch(input);
     // if (memoryContext.accuracy) prefix += `\nMemory:${memoryContext.answer}\n`;
-    console.log('Memory searched');
 
     // Call Context
     const formattedContext = this.formatContext();
