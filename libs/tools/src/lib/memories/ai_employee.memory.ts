@@ -1,9 +1,9 @@
 // import { IUser } from '@cognum/interfaces';
 // import { ChatModel } from '@cognum/llm';
-// import { Callbacks } from 'langchain/callbacks';
+// import { Callbacks } from '@langchain/core/callbacks/base';
 // import { LLMChain } from 'langchain/chains';
 // import { Document } from 'langchain/document';
-// import { PromptTemplate } from 'langchain/prompts';
+// import { PromptTemplate } from '@langchain/core/prompts';
 // import { AttributeInfo } from 'langchain/schema/query_constructor';
 // import { AIEmployeeVectorStore } from '../vectorstores/ai_employee.vectorstore';
 // import { IChatRoom } from '@cognum/chat';

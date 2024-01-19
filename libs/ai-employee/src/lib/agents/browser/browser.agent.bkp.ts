@@ -3,7 +3,7 @@ import { ChatModel } from "@cognum/llm";
 import { WebBrowser, WebBrowserService, WebBrowserToolkit } from "@cognum/tools";
 import { AgentExecutor, initializeAgentExecutorWithOptions } from "langchain/agents";
 import { BufferMemory } from "langchain/memory";
-import { MessagesPlaceholder } from "langchain/prompts";
+import { MessagesPlaceholder } from "@langchain/core/prompts";
 import { BehaviorSubject } from "rxjs";
 
 export interface IBrowserlAgentOptions {

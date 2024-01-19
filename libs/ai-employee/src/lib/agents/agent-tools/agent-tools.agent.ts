@@ -3,7 +3,7 @@ import { ChatModel } from "@cognum/llm";
 import { AgentExecutor, initializeAgentExecutorWithOptions } from "langchain/agents";
 import { Serialized } from "langchain/load/serializable";
 import { BufferMemory } from "langchain/memory";
-import { MessagesPlaceholder } from "langchain/prompts";
+import { MessagesPlaceholder } from "@langchain/core/prompts";
 import { ChainValues } from "langchain/schema";
 import { BehaviorSubject } from "rxjs";
 import { AIEmployeeTools } from "../../tools/ai-employee-tools";

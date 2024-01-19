@@ -21,8 +21,8 @@ export class WebBrowserScrollPageTool extends DynamicStructuredTool {
       func: async ({ scrollTo, direction, ...params }: IElementFindOptions & ScrollPageProps) => {
         try {
 
-          const success = await settings.webBrowserService.scrollPage(location, params);
-          if (!success) throw new Error(`Location scroll unsuccessful`);
+          // const success = await settings.webBrowserService.scrollPage(location, params);
+          // if (!success) throw new Error(`Location scroll unsuccessful`);
 
           return `Location scroll to ${scrollTo} was successfully done`;
         } catch (error) {

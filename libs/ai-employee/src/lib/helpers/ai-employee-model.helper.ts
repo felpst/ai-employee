@@ -1,6 +1,6 @@
 import { ChatModel } from "@cognum/llm";
 import { BaseChatModelParams } from "langchain/chat_models/base";
-import { AzureOpenAIInput, OpenAIChatInput } from "langchain/chat_models/openai";
+import { AzureOpenAIInput, OpenAIChatInput } from "@langchain/openai";
 
 
 export class AIEmployeeModelHelper {

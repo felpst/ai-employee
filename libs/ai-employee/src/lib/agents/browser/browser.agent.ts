@@ -2,7 +2,7 @@ import { IAIEmployee, IAIEmployeeCall } from "@cognum/interfaces";
 import { ChatModel } from "@cognum/llm";
 import { WebBrowser, WebBrowserService, WebBrowserToolkit } from "@cognum/tools";
 import { AgentExecutor, createStructuredChatAgent } from "langchain/agents";
-import { ChatPromptTemplate, HumanMessagePromptTemplate, MessagesPlaceholder, SystemMessagePromptTemplate } from "langchain/prompts";
+import { ChatPromptTemplate, HumanMessagePromptTemplate, MessagesPlaceholder, SystemMessagePromptTemplate } from "@langchain/core/prompts";
 import { BehaviorSubject } from "rxjs";
 import { SystemMessage } from "langchain/schema";
 import * as treeify from 'treeify';

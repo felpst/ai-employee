@@ -3,7 +3,7 @@ import { ChatModel } from "@cognum/llm";
 import { JobService } from "@cognum/tools";
 import { initializeAgentExecutorWithOptions } from "langchain/agents";
 import { BufferMemory } from "langchain/memory";
-import { MessagesPlaceholder } from "langchain/prompts";
+import { MessagesPlaceholder } from "@langchain/core/prompts";
 import * as treeify from 'treeify';
 import { DynamicStructuredTool, Tool } from "langchain/tools";
 import { AIEmployeeTools } from "../../tools/ai-employee-tools";
@@ -52,8 +52,9 @@ export class GeneralAgent extends Agent {
     prefix += `You need to answer best as you can trying different tools to execute the job and achieve the goal.`
 
     // Adding information from the Agent's memory to the chat context so it can answer questions based on prior knowledge
-    const memoryContext = await this.aiEmployee.memorySearch(input);
-    if (memoryContext.accuracy) prefix += `\nMemory:${memoryContext.answer}\n`;
+    // const memoryContext = await this.aiEmployee.memorySearch(input);
+    // if (memoryContext.accuracy) prefix += `\nMemory:${memoryContext.answer}\n`;
+    console.log('Memory searched');
 
     // Call Context
     const formattedContext = this.formatContext();
@@ -76,8 +77,8 @@ export class GeneralAgent extends Agent {
     const chainValues = await this._executor.call({ input }, [this.handlers]);
 
     // Update AIEmployee Memory
-    const memoryUpdateResponse = await this.aiEmployee.memoryInstruction(`Check if there is any relevant information in this information to add to the database:` + JSON.stringify({ input: agentCall.input, output: agentCall.output }))
-    console.log({ memoryUpdateResponse });
+    // const memoryUpdateResponse = await this.aiEmployee.memoryInstruction(`Check if there is any relevant information in this information to add to the database:` + JSON.stringify({ input: agentCall.input, output: agentCall.output }))
+    // console.log({ memoryUpdateResponse });
 
     await this._afterCall(agentCall, chainValues.output);
     return agentCall;

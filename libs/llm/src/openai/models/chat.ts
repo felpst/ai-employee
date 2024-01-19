@@ -1,13 +1,13 @@
 import {
   BaseCallbackHandler,
   CallbackHandlerMethods,
-} from 'langchain/callbacks';
+} from '@langchain/core/callbacks/base';
 import { BaseChatModelParams } from 'langchain/chat_models/base';
 import {
   AzureOpenAIInput,
   ChatOpenAI as LangchainChatOpenAI,
   OpenAIChatInput,
-} from 'langchain/chat_models/openai';
+} from '@langchain/openai';
 import { LLMCallbackHandler } from '../callbacks/callback.handler';
 
 export class ChatModel extends LangchainChatOpenAI {

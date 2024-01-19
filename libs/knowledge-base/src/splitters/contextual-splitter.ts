@@ -1,7 +1,7 @@
 import { ChatModel } from '@cognum/llm';
 import { Document } from 'langchain/document';
 import { StructuredOutputParser } from 'langchain/output_parsers';
-import { ChatPromptTemplate, HumanMessagePromptTemplate, SystemMessagePromptTemplate } from 'langchain/prompts';
+import { ChatPromptTemplate, HumanMessagePromptTemplate, SystemMessagePromptTemplate } from '@langchain/core/prompts';
 import { RecursiveCharacterTextSplitter } from 'langchain/text_splitter';
 import { z } from 'zod';
 

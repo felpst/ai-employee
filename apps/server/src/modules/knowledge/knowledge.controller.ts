@@ -6,7 +6,7 @@ import { CronService, KnowledgeRetrieverService, SchedulerService } from '@cognu
 import { NextFunction, Request, Response } from 'express';
 import { LLMChain } from 'langchain/chains';
 import { Document } from 'langchain/document';
-import { PromptTemplate } from 'langchain/prompts';
+import { PromptTemplate } from '@langchain/core/prompts';
 import mongoose from 'mongoose';
 import ModelController from '../../controllers/model.controller';
 
