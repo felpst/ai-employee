@@ -3,9 +3,7 @@ import { ChatModel } from '@cognum/llm';
 import { StructuredOutputParser } from 'langchain/output_parsers';
 import { PromptTemplate } from "langchain/prompts";
 import { RunnableSequence } from 'langchain/schema/runnable';
-import { By, until } from 'selenium-webdriver';
 import { z } from 'zod';
-import { IElementFindOptions } from '../common/element-schema';
 import WebBrowserUtils from '../web-browser-utils';
 
 export class ExtractDataUseCase extends WebBrowserUtils {
@@ -15,12 +13,8 @@ export class ExtractDataUseCase extends WebBrowserUtils {
     super(webBrowser);
   }
 
-  async execute(findOptions: IElementFindOptions) {
-    await this.webBrowser.driver.wait(
-      until.elementLocated(By[findOptions.selectorType](findOptions.elementSelector)),
-      findOptions.findTimeout
-    );
-    const htmlContent = await this.getHtmlFromElement(findOptions.elementSelector, findOptions.selectorType);
+  async execute(selector: string) {
+    const htmlContent = await this.getElementHtmlBySelector(selector);
 
     const data = await this.getDataFromHTML(htmlContent);
     return data;

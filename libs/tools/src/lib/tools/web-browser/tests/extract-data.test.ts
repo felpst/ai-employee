@@ -1,6 +1,6 @@
 import 'dotenv/config';
 import { WebBrowser } from '../web-browser';
-import { WebBrowserService } from '../web-browser.service';
+import { WebBrowserService } from '../services/web-browser.service';
 
 describe('Extract Data tool test', () => {
   jest.setTimeout(300000);
@@ -15,10 +15,7 @@ describe('Extract Data tool test', () => {
     await service.loadPage('https://www.laliga.com/en-GB/where-to-watch-laliga');
     await webBrowser.driver.sleep(2000);
 
-    const res = await service.extractData({
-      selectorType: 'css',
-      elementSelector: '#__next > div.styled__BorderContainer-sc-1sq1srj-8.ksxJIT > div > div > div > table',
-    });
+    const res = await service.extractData('#__next > div.styled__BorderContainer-sc-1sq1srj-8.ksxJIT > div > div > div > table');
 
     expect(Array.isArray(res)).toBe(true);
     expect(res.length).toBeGreaterThan(0);
@@ -26,10 +23,7 @@ describe('Extract Data tool test', () => {
 
   it('W3schools table', async () => {
     await service.loadPage('https://www.w3schools.com/html/html_tables.asp');
-    const res = await service.extractData({
-      selectorType: 'id',
-      elementSelector: 'customers',
-    });
+    const res = await service.extractData('#customers');
 
     expect(Array.isArray(res)).toBe(true);
     expect(res.length).toBeGreaterThan(0);
@@ -37,10 +31,7 @@ describe('Extract Data tool test', () => {
 
   it('Globo list', async () => {
     await service.loadPage('https://redeglobo.globo.com/sao-paulo/programacao/');
-    const res = service.extractData({
-      selectorType: 'xpath',
-      elementSelector: '//*[@id="grade-pagina"]',
-    });
+    const res = service.extractData('#grade-pagina');
 
     await expect(res).rejects.toThrow('Error trying to get data from HTML.');
   });

@@ -4,8 +4,8 @@ import { JobService } from "@cognum/tools";
 import { initializeAgentExecutorWithOptions } from "langchain/agents";
 import { BufferMemory } from "langchain/memory";
 import { MessagesPlaceholder } from "langchain/prompts";
+import * as treeify from 'treeify';
 import { DynamicStructuredTool, Tool } from "langchain/tools";
-import treeify from 'treeify';
 import { AIEmployeeTools } from "../../tools/ai-employee-tools";
 import { Agent } from "../agent";
 import { Job, User } from "@cognum/models";
@@ -26,7 +26,7 @@ export class GeneralAgent extends Agent {
     const formattedToolsContext = treeify.asTree({
       dateNow: new Date().toISOString(),
       chatChannel: this.context.chatChannel || undefined,
-    }, true)
+    }, true, undefined)
 
     // Tools
     const tools = await AIEmployeeTools.intetionTools({
@@ -98,7 +98,7 @@ export class GeneralAgent extends Agent {
         }
       }
 
-      const treeObj = treeify.asTree(this.context, true)
+      const treeObj = treeify.asTree(this.context as any, true, undefined)
       const formattedContext = `\nBelow you have access to the context of your interaction with the user, take the context into account when making your decisions.
       Context:
       \`\`\`objectTree
@@ -118,11 +118,11 @@ export class GeneralAgent extends Agent {
       func: async () => {
         try {
           const callData: IAIEmployeeCallData = {
-            input: job.instructions, 
+            input: job.instructions,
             user: await User.findById(job.createdBy).exec()
           };
           const call = await this.aiEmployee.call(callData);
-    
+
           return "Job tool: \n```json\n" + JSON.stringify(call, null, 2) + "\n```";
         } catch (error) {
           return error.message;
