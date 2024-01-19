@@ -132,7 +132,8 @@ export class UploadUtils {
   async getFile(filePrefix) {
     try {
       const data = await this._bucket.file(filePrefix);
-      return this._convertToJSFile(data);
+      const file = await this._convertToJSFile(data);
+      return file;
     } catch (error) {
       const { errors } = error;
       console.log('An error occurred while retrieving the file', {
