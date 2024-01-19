@@ -7,6 +7,8 @@ import { DataExtractionProperty, SkillStep } from '../browser.interfaces';
 import * as fs from 'fs';
 import * as path from 'path';
 import * as os from 'os';
+import { IKey } from 'selenium-webdriver/lib/input';
+import { Key } from './press-key.interface';
 
 export class WebBrowser {
   driver: WebDriver
@@ -241,9 +243,21 @@ export class WebBrowser {
     return response;
   }
 
-  async pressKey({ key }: { key: string }): Promise<void> {
-    await this.driver.actions().sendKeys(key).perform();
-  }
+  async pressKey({ key }: { key: string }): Promise<string> {
+    await this.sleep({ time: 1000 })
+
+    key = Key[key];
+    return await this.driver.actions().keyDown(key).perform().then(
+      async () => {
+        await this.driver.actions().keyUp(key).perform();
+        return `Key ${key} pressed`;
+      },
+      (error) => {
+        return error.message;
+      }
+    );
+  };
+
   async parseResponse(response: string, memory: any = this.memory) {
     console.log('parseResponse', response);
 
