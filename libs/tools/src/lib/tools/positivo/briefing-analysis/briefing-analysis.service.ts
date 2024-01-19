@@ -5,23 +5,20 @@ import { MemoryVectorStore } from "langchain/vectorstores/memory";
 import { FileManagerService } from '../../file-manager';
 
 export class BriefingAnalysisService {
-  async analyze(briefing: string, data: Audiences[], aiEmployeeId: string, qt: number = 50, briefingFileName?: string, audienceFileName?: string): Promise<string> {
-    const fileManagerService = new FileManagerService();
+  async analyze(briefingFileName: string, audienceFileName: string, aiEmployeeId: string, qt: number = 50): Promise<string> {
 
-    const datat = await (fileManagerService.read({ aiEmployeeId, filename: audienceFileName }))
-    const briefingt = await fileManagerService.read({ aiEmployeeId, filename: briefingFileName })
-
-    console.log('audience', datat)
-    console.log('briefing', briefingt)
+    const briefing = await this.getDataFromFile(briefingFileName, aiEmployeeId)
+    const audienceData = await this.getDataFromFile(audienceFileName, aiEmployeeId)
 
     const briefingSumary = await this.getBriefingSumary(briefing)
+    const audiences: Audiences[] = JSON.parse(audienceData)
 
     console.log('creating documents...')
 
     const docs: Document[] = []
     
-    for (let i = 0; i < data.length; i++) {
-      docs.push(new Document({ pageContent: JSON.stringify(data[i]), metadata: { index: i } }))
+    for (let i = 0; i < audiences.length; i++) {
+      docs.push(new Document({ pageContent: JSON.stringify(audiences[i]), metadata: { index: i } }))
     }
 
     console.log('save documents...', docs.length)
@@ -38,14 +35,28 @@ export class BriefingAnalysisService {
 
     const audienceAnalysis = await vectorStore.similaritySearch(prompt, qt);
 
-    const file = await this.saveFile(audienceAnalysis, data, aiEmployeeId)
+    const file = await this.saveFile(audienceAnalysis, audiences, aiEmployeeId)
 
     return `Analysis complete: saved in file ${file}.`;
   }
 
-  private getFileName(): string {
-    const date = new Date();
-    return `analysis${date.getFullYear()}${date.getFullYear()}${date.getMonth()}${date.getDate()}${date.getHours()}${date.getMinutes()}${date.getSeconds()}${date.getMilliseconds()}.txt`;
+  private async getDataFromFile(filename: string, aiEmployeeId: string) {
+    console.log('reading file...')
+
+    const fileManagerService = new FileManagerService();
+    const fileResponse = await fileManagerService.read({ aiEmployeeId, filename })
+
+    const { contentType, data, lastModified, name } = fileResponse;
+    const binaryString = Buffer.from(data, 'base64');
+    const blob = new Blob([binaryString], {
+      type: 'application/octet-stream',
+    });
+    const file = new File([blob], name, {
+      type: contentType,
+      lastModified: new Date(lastModified).getTime(),
+    });
+    
+    return await file.text()
   }
 
   private async getBriefingSumary(briefing: string): Promise<string> {
@@ -54,6 +65,8 @@ export class BriefingAnalysisService {
 
     const { content } = await model.invoke(`Get the Age, Sex, Profession, Interests, City, state
     and Country informations from the briefing: ${briefing}`)
+
+    console.log('briefing content: ', content)
 
     return <string>content
   }
@@ -66,8 +79,7 @@ export class BriefingAnalysisService {
       result.push(JSON.stringify(data[analysis.metadata.index]))
     }
 
-    const filename = this.getFileName()
-    const file = new File(result, filename)
+    const file = new File(result, 'analysis.txt')
 
     const fileManagerService = new FileManagerService();
 
