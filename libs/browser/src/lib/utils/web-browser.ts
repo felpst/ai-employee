@@ -223,6 +223,10 @@ export class WebBrowser {
     return response;
   }
 
+  async pressKey({ key }: { key: string }): Promise<void> {
+    await this.driver.actions().sendKeys(key).perform();
+  }
+
   private async _findElement(selector: string): Promise<WebElement> {
     try {
       return await this.driver.wait(until.elementLocated(By.css(selector)), 10000);
