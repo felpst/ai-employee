@@ -37,7 +37,6 @@ export class BrowserExecutorAgent {
       azureOpenAIApiDeploymentName: 'gpt-4',
     });
     const tools = this.skillsToTools(this.skills);
-    console.log(tools);
 
     // Memory
     prompt.promptMessages.push(new SystemMessage(`Memory: ${this.memory}`));
@@ -82,8 +81,10 @@ export class BrowserExecutorAgent {
         func: async (inputs) => {
           let response = 'Done';
           try {
-            response = await webBrowser.runSteps(skill.steps, inputs);
+            response = await webBrowser.runSteps(skill.steps, inputs) || response;
+            if (skill.successMessage) response = await webBrowser.parseResponse(skill.successMessage) || response;
           } catch (error) { console.error(error); return error.message; }
+          console.log('response', response);
           return response;
         }
       });
