@@ -1,8 +1,8 @@
-import { File } from '@google-cloud/storage';
 import axios from 'axios';
 import {
   ICreateFileOptions,
   IFileManagerOptions,
+  IFileResponse,
   IReadOrDeleteFileOptions,
   IUpdateFileOptions,
 } from './interfaces/file-manager.interfaces';
@@ -22,8 +22,8 @@ export class FileManagerService {
   async read({
     aiEmployeeId,
     filename,
-  }: IReadOrDeleteFileOptions): Promise<File> {
-    const { data } = await axios.get<File>(
+  }: IReadOrDeleteFileOptions): Promise<IFileResponse> {
+    const { data } = await axios.get<IFileResponse>(
       `${process.env.SERVER_URL}/employees/storage/${aiEmployeeId}/files/${filename}`
     );
 
@@ -55,8 +55,8 @@ export class FileManagerService {
     }
   }
 
-  async list({ aiEmployeeId }: IFileManagerOptions): Promise<File[]> {
-    const { data } = await axios.get<File[]>(
+  async list({ aiEmployeeId }: IFileManagerOptions): Promise<IFileResponse[]> {
+    const { data } = await axios.get<IFileResponse[]>(
       `${process.env.SERVER_URL}/employees/storage/${aiEmployeeId}`
     );
     return data;

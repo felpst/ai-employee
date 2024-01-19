@@ -1,0 +1,76 @@
+<div class="page">
+  <div class="header">
+    <h2>{{ aiEmployee.name }}'s Files</h2>
+
+    <div class="controls">
+      <button
+        mat-raised-button
+        color="primary"
+        (click)="openForm()"
+        class="new-info-btn"
+      >
+        <mat-icon>add</mat-icon>
+        New File
+      </button>
+    </div>
+  </div>
+
+  <div class="files" *ngIf="files.length > 0">
+    <div class="mat-elevation-z8">
+      <table mat-table [dataSource]="dataSource">
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef>Name</th>
+          <td mat-cell *matCellDef="let element">
+            {{ getOriginalname(element) }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="created_at">
+          <th mat-header-cell *matHeaderCellDef>Updated at</th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.lastModified | date }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef>Actions</th>
+          <td mat-cell *matCellDef="let element">
+            <div class="actions-container">
+              <button
+                mat-icon-button
+                aria-label="Download"
+                (click)="downloadFile(element)"
+              >
+                <mat-icon>download</mat-icon>
+              </button>
+              <button
+                mat-icon-button
+                color="warn"
+                aria-label="Delete"
+                (click)="deleteFile(element)"
+              >
+                <mat-icon>delete</mat-icon>
+              </button>
+            </div>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+      </table>
+
+      <mat-paginator
+        [pageSizeOptions]="[5, 10, 20]"
+        showFirstLastButtons
+        aria-label="Select page of files"
+      >
+      </mat-paginator>
+    </div>
+  </div>
+
+  <div *ngIf="files.length === 0">
+    <p style="text-align: center">
+      AIEmployee does not have any files in its internal storage
+    </p>
+  </div>
+</div>

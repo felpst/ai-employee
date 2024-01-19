@@ -1,4 +1,4 @@
-import { AbstractControl, ValidationErrors } from "@angular/forms";
+import { AbstractControl, ValidationErrors } from '@angular/forms';
 
 // Maximum size: 10MB
 export const maxFileSize = 10 * 1024 * 1024;
@@ -10,9 +10,10 @@ export const validFileTypes = [
   'application/octet-stream',
 ];
 
-
 // : ValidationErrors | null
-export const validatorFile = (control: AbstractControl): ValidationErrors | null => {
+export const validatorFile = (
+  control: AbstractControl
+): ValidationErrors | null => {
   const file = control.value;
   if (!file) return null;
   const { name, type, size } = file;
@@ -26,4 +27,15 @@ export const validatorFile = (control: AbstractControl): ValidationErrors | null
     return { invalidFormat: 'Valid formats: .png, .jpg, .jpeg and .svg' };
   if (conditionSize) return { invalidSize: 'Maximum size: 10MB' };
   return null;
-}
+};
+
+export const validatorFileSize = (
+  control: AbstractControl
+): ValidationErrors | null => {
+  const file = control.value;
+  if (!file) return null;
+  const { size } = file;
+  const conditionSize = size > maxFileSize || size <= 0;
+  if (conditionSize) return { invalidSize: 'Maximum size: 10MB' };
+  return null;
+};
