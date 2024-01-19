@@ -3,7 +3,7 @@ import * as chromedriver from 'chromedriver';
 import { ProxyPlugin } from 'selenium-chrome-proxy-plugin';
 import { Browser, Builder, By, WebDriver, WebElement, until } from 'selenium-webdriver';
 import { Options } from 'selenium-webdriver/chrome';
-import { DataExtractionProperty } from '../browser.interfaces';
+import { DataExtractionProperty, SkillStep } from '../browser.interfaces';
 import * as fs from 'fs';
 import * as path from 'path';
 import * as os from 'os';
@@ -116,7 +116,7 @@ export class WebBrowser {
   }
 
   async dataExtraction({ container, properties, saveOn }: { container: string, properties: DataExtractionProperty[], saveOn?: string }) {
-    // await this.sleep({ time: 5000 })
+    await this.sleep({ time: 5000 })
 
     let data = [];
 
@@ -124,19 +124,42 @@ export class WebBrowser {
     for (const containerElement of containerElements) {
       const rowData = {};
       for (const property of properties) {
-        try {
-          rowData[property.name] = await containerElement.findElement(By.css(property.selector)).getText() || null;
-        } catch (error) {
-          if (property.required) throw new Error(`Error on data extraction (${JSON.stringify({ property })}): ${error.message}`);
-          rowData[property.name] = null;
+
+        if (property.attribute) {
+          rowData[property.name] = await containerElement.getAttribute(property.attribute) || null;
+        } else if (property.selector) {
+          if (!property.type) property.type = 'string';
+          try {
+            // TODO - Check if element is displayed
+            const element = containerElement.findElement(By.css(property.selector))
+
+            switch (property.type) {
+              case 'boolean':
+                rowData[property.name] = await element?.isDisplayed() || false;
+                break;
+              default:
+                rowData[property.name] = await element.getText() || null;
+                break;
+            }
+          } catch (error) {
+            rowData[property.name] = null;
+          }
         }
       }
 
-      // Check if all values are null
+      console.log('rowData', JSON.stringify(rowData));
+
       let isValid = false;
+      // Check if have at least one value
       for (const value of Object.values(rowData)) {
         if (value) { isValid = true; break; }
       }
+      // Check if all required values are present
+      for (const property of properties) {
+        const value = rowData[property.name];
+        if (property.required && !value) { isValid = false; break; }
+      }
+      console.log('rowDataisValid', isValid, JSON.stringify(rowData));
 
       if (isValid) data.push(rowData);
     }
@@ -148,7 +171,8 @@ export class WebBrowser {
       this.saveMemory({ key: saveOn, value: data });
     }
 
-    return `Data extraction completed: ${data.length} rows.`;
+    const response = `Data extraction completed: ${data.length} rows. ${saveOn ? `Saved on memory: ${saveOn}` : ''}. First ${data.length > 20 ? 20 : data.length} results: \`\`\`json\n${JSON.stringify(data.slice(0, 20))}\n\`\`\``;
+    return response;
   }
 
   async untilElementIsVisible({ selector }: { selector: string }) {
@@ -168,7 +192,7 @@ export class WebBrowser {
     fs.writeFileSync('tmp/' + fileName + '.json', JSON.stringify(data, null, 2));
   }
 
-  async loop({ times, steps }: { times: number, steps: { method: string, params: { [key: string]: any } }[] }): Promise<void> {
+  async loop({ times, steps }: { times: number, steps: SkillStep[] }): Promise<void> {
     let response: any;
     for (let i = 0; i < times; i++) {
       response = await this.runSteps(steps);
@@ -176,18 +200,15 @@ export class WebBrowser {
     return response;
   }
 
-  async if ({ condition, steps }: { condition: string, steps: { method: string, params: { [key: string]: any } }[] }): Promise<void> {
+  async if({ condition, steps }: { condition: string, steps: SkillStep[] }): Promise<void> {
     await this.sleep({ time: 5000 })
 
     await this.updateMemory();
     let response: any;
-    // console.log('memory', JSON.stringify(this.memory));
 
     // Evaluate condition
     const func = `const browserMemory = JSON.parse('${JSON.stringify(this.memory)}'); ${condition};`;
-    // console.log('func', func);
     const isValid = eval(func);
-    // console.log('isValid', isValid);
 
     if (isValid) {
       response = await this.runSteps(steps);
@@ -195,29 +216,26 @@ export class WebBrowser {
     return response;
   }
 
-  async runSteps(steps: { method: string, params?: { [key: string]: any } }[] , inputs: any = this.memory.inputs || {}) {
+  async runSteps(steps: SkillStep[], inputs: any = this.memory.inputs || {}) {
     let response: any;
 
     // Set memory
     this.memory.inputs = inputs;
 
-    // Evaluate inputs
-    for (const step of steps) {
-      if (!step.params) continue;
-      for (const key of Object.keys(step.params)) {
-        const value = step.params[key];
-        if (typeof value === 'string' && value.startsWith('{') && value.endsWith('}')) {
-          const inputKey = value.substring(1, value.length - 1);
-          step.params[key] = inputs[inputKey];
-        }
-      }
-    }
-    // console.log(JSON.stringify(steps));
-
     for (const step of steps) {
       const { method, params } = step;
+
+      // Parse params
+      if (!params) continue;
+      for (const param of Object.keys(params)) {
+        if (!params[param] || typeof params[param] !== 'string') continue;
+        params[param] = params[param].replace(/{(.*?)}/g, (match, inputKey) => inputs[inputKey]);
+      }
+
       console.log('instruction', JSON.stringify(step));
       response = await this[method](params) || response;
+
+      if (step.successMessage) response = await this.parseResponse(step.successMessage, inputs) || response;
     }
 
     return response;
@@ -225,6 +243,17 @@ export class WebBrowser {
 
   async pressKey({ key }: { key: string }): Promise<void> {
     await this.driver.actions().sendKeys(key).perform();
+  }
+  async parseResponse(response: string, memory: any = this.memory) {
+    console.log('parseResponse', response);
+
+    if (!response || typeof response !== 'string') return;
+    return response.replace(/{(.*?)}/g, (match, inputKey) => {
+      const value = memory[inputKey];
+      if (Array.isArray(value)) return `\`\`\`json\n${JSON.stringify(value.slice(0, 20))}\n\`\`\``;;
+      if (typeof value === 'object') return `\`\`\`json\n${JSON.stringify(value)}\n\`\`\``;
+      return value;
+    });
   }
 
   private async _findElement(selector: string): Promise<WebElement> {

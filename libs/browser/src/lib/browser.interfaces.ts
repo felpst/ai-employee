@@ -5,12 +5,21 @@ export interface Skill {
   name: string;
   description: string;
   inputs?: { [key: string]: { type: SkillInputType, description: string } };
-  steps: { method: SkillStepMethod, params?: { [key: string]: any } }[];
+  steps: SkillStep[];
+  successMessage?: string;
+}
+
+export interface SkillStep {
+  method: SkillStepMethod;
+  params?: { [key: string]: any };
+  successMessage?: string;
 }
 
 
 export interface DataExtractionProperty {
   name: string;
-  selector: string;
+  selector?: string;
+  attribute?: string;
   required?: boolean;
+  type?: 'string' | 'number' | 'boolean' | 'object' | 'array' | 'function' | 'any';
 }
