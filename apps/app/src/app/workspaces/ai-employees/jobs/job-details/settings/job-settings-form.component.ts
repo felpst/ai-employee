@@ -33,10 +33,11 @@ export class JobSettingsFormComponent {
   ) {
     this.form = this.formBuilder.group({
       name: [this.job.name || '', [Validators.required]],
+      description: [this.job.description || '', [Validators.required]],
       instructions: [this.job.instructions || '', Validators.required],
       status: [this.job.status || 'running', [Validators.required]],
       scheduler: this.formBuilder.group({
-        frequency: [this.job?.scheduler?.frequency || '', Validators.required],
+        frequency: [this.job?.scheduler?.frequency || ''],
       }),
     });
   }

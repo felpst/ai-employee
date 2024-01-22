@@ -1,7 +1,6 @@
 import { Component, EventEmitter, Output } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { IAIEmployee, IChatRoom, IUser, IWorkspace } from '@cognum/interfaces';
-import { WorkspacesService } from '../../workspaces.service';
+import { IAIEmployeeCall } from '@cognum/interfaces';
+import { NotificationsService } from '../../../services/notifications/notifications.service';
 import { AIEmployeesService } from '../ai-employees.service';
 
 @Component({
@@ -12,54 +11,65 @@ import { AIEmployeesService } from '../ai-employees.service';
 export class AIEmployeeHistoryComponent {
   @Output() sortedData = new EventEmitter<any[]>();
 
-  chats: IChatRoom[] = [];
   searchText = '';
-  createdByUser: IUser | null = null;
-  workspace!: IWorkspace;
-  aiEmployee!: IAIEmployee;
+  isLoading = true;
+  calls: IAIEmployeeCall[] = [];
+  filteredList: IAIEmployeeCall[] = [];
 
   constructor(
-    private route: ActivatedRoute,
     private aiEmployeesService: AIEmployeesService,
-    private workspaceService: WorkspacesService,
-  ) {
-
-  }
+    private notificationsService: NotificationsService
+  ) {}
 
   ngOnInit() {
-    this.workspace = this.workspaceService.selectedWorkspace;
-    this.aiEmployee = this.aiEmployeesService.aiEmployee;
-    this.route.data.subscribe(data => {
-      const aiEmployeesWithChats = data['0'];
-      this.chats = aiEmployeesWithChats
-        .flatMap((aiEmployee: { chats: IChatRoom; }) => aiEmployee.chats)
-        .filter((chat: { aiEmployee: { _id: string }; }) => chat.aiEmployee._id === this.aiEmployee._id)
+    this.loadCalls();
+  }
+
+  loadCalls() {
+    this.isLoading = true;
+    this.aiEmployeesService.loadCalls([this.aiEmployee._id]).subscribe({
+      next: (calls) => {
+        this.calls = calls;
+        this.filteredList = calls;
+        this.isLoading = false;
+      },
+      error: (error) => {
+        console.log('An error occurred while listing calls: ', { error });
+        this.notificationsService.show(
+          'An error occurred while listing calls, please try again in a moment'
+        );
+        this.isLoading = false;
+      },
     });
   }
 
-  loadChats() {
-    this.aiEmployeesService.load(this.workspace).subscribe(aiEmployeesWithChats => {
-      this.chats = aiEmployeesWithChats.flatMap(aiEmployee => aiEmployee.chats);
-    });
+  handleSortedData(sortedCalls: IAIEmployeeCall[]) {
+    this.filteredList = sortedCalls;
   }
 
-  handleSortedData(sortedChats: IChatRoom[]) {
-    this.chats = sortedChats;
-  }
-
-  filterChats() {
-    this.chats = this.chats.filter(chat =>
-      this.searchText && chat.name && chat.name.toLowerCase().includes(this.searchText.toLowerCase())
-    ) || [...this.chats];
+  filterCalls() {
+    const searchText = this.searchText;
+    this.filteredList = this.calls.filter((call) => {
+      const { input, output } = call;
+      return (
+        searchText &&
+        ((input && input.toLowerCase().includes(searchText.toLowerCase())) ||
+          (output && output.toLowerCase().includes(searchText.toLowerCase())))
+      );
+    }) || [...this.calls];
   }
 
   onSearch(searchText: string) {
     this.searchText = searchText;
-    this.searchText ? this.filterChats() : this.clearSearch();
+    return searchText ? this.filterCalls() : this.clearSearch();
   }
 
   clearSearch() {
     this.searchText = '';
-    this.loadChats();
+    this.loadCalls();
+  }
+
+  get aiEmployee() {
+    return this.aiEmployeesService.aiEmployee;
   }
 }

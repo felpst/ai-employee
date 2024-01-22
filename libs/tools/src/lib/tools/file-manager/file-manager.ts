@@ -1,9 +1,9 @@
-import { File } from '@google-cloud/storage';
 import { FileManagerService } from './file-manager.service';
 import {
   ICreateFileOptions,
   IFileManager,
   IFileManagerOptions,
+  IFileResponse,
   IReadOrDeleteFileOptions,
   IUpdateFileOptions,
 } from './interfaces/file-manager.interfaces';
@@ -19,7 +19,7 @@ export class FileManager implements IFileManager {
     return this._service.create(options);
   }
 
-  async read(options: IReadOrDeleteFileOptions): Promise<any> {
+  async read(options: IReadOrDeleteFileOptions): Promise<IFileResponse> {
     return this._service.read(options);
   }
 
@@ -31,7 +31,7 @@ export class FileManager implements IFileManager {
     return this._service.delete(options);
   }
 
-  async list(options: IFileManagerOptions): Promise<File[]> {
+  async list(options: IFileManagerOptions): Promise<IFileResponse[]> {
     return this._service.list(options);
   }
 }

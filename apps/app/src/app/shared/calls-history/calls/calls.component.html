@@ -1,0 +1,100 @@
+<div class="chat-message">
+  <div class="avatar">
+    <cognum-users-avatar [users]="[sender]"></cognum-users-avatar>
+  </div>
+  <div class="content">
+    <div class="header">
+      <div class="name cognum-heading-3">{{ sender.name }}</div>
+      <div
+        class="time cognum-font-color-grey-light"
+        matTooltip="{{ call.createdAt | date : 'MM-dd-yyyy HH:mm:ss' }}"
+        matTooltipPosition="above"
+      >
+        {{ utilsService.timeDifference(call.createdAt) }}
+      </div>
+    </div>
+
+    <div class="message" *ngIf="call?.input">
+      <markdown [data]="call.input"></markdown>
+    </div>
+  </div>
+</div>
+
+<div class="chat-message">
+  <div class="avatar">
+    <cognum-users-avatar [users]="[aiEmployee]"></cognum-users-avatar>
+  </div>
+  <div class="content">
+    <div class="header">
+      <div class="name cognum-heading-3">{{ aiEmployee.name }}</div>
+    </div>
+
+    <div class="message" *ngIf="call?.output">
+      <markdown [data]="call.output"></markdown>
+    </div>
+
+    <div class="steps" *ngIf="call && (showActions || loading)">
+      <div class="step" *ngFor="let step of call.steps">
+        <div class="icon">
+          <mat-icon
+            *ngIf="step.type === 'intent-classification'"
+            matTooltip="Intent classification"
+            >psychology_alt</mat-icon
+          >
+          <mat-icon *ngIf="step.type === 'action'" matTooltip="Action"
+            >bolt</mat-icon
+          >
+          <mat-icon
+            *ngIf="step.type === 'final-answer'"
+            matTooltip="Final Answer"
+            >sms</mat-icon
+          >
+        </div>
+        <div class="info">
+          <div>
+            <mat-icon *ngIf="step.status === 'running'" matTooltip="Running"
+              >pending</mat-icon
+            >
+            <mat-icon *ngIf="step.status === 'done'" matTooltip="Running"
+              >done</mat-icon
+            >
+            {{ step.status === 'running' ? 'Running' : 'Done' }}
+          </div>
+
+          <div>
+            <mat-icon matTooltip="Input">description</mat-icon>
+            {{ step.description }}
+          </div>
+
+          <div>
+            <mat-icon matTooltip="Input">exit_to_app</mat-icon>
+            {{ step.inputs | json }}
+          </div>
+
+          <div *ngIf="step.outputs">
+            <mat-icon matTooltip="Output">output</mat-icon>
+            {{ step.outputs | json }}
+          </div>
+
+          <div *ngIf="step.status === 'done'">
+            <mat-icon matTooltip="Execution Time">timer</mat-icon>
+            {{
+              utilsService.timeDifference(step.startAt, step.endAt, 'seconds')
+            }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div
+  class="showActions"
+  *ngIf="(call?.steps?.length || 0) > 0 && !loading"
+  (click)="showActions = !showActions"
+  [matTooltip]="!showActions ? 'Show actions' : 'Hide actions'"
+  mat-ripple
+>
+  <mat-icon *ngIf="!showActions">expand_more</mat-icon>
+  <mat-icon *ngIf="showActions">expand_less</mat-icon>
+</div>
