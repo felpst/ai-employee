@@ -91,7 +91,8 @@ export class MailService {
     qt: 5,
     since: undefined,
     from: undefined,
-    subject: undefined
+    subject: undefined,
+    references: undefined,
   }): Promise<Email[]> {
     return new Promise((resolve, reject) => {
       let emails: Email[] = []
@@ -206,6 +207,18 @@ export class MailService {
           // Filter by to
           if (filters.to) emails = emails.filter(email => email.to === filters.to);
 
+          // Filter by references
+          if (filters.references) {
+            emails = emails.reduce((filteredEmails, email) => {
+              if (Array.isArray(email.references) && email.references.some(ref => filters.references.includes(ref))) {
+                let previousEmails = this.findPreviousEmails(email, emails, this.findPreviousEmails);
+                filteredEmails.push(email, ...previousEmails);
+              }
+              return filteredEmails;
+            }, []);
+            console.log(emails)
+          }
+
           resolve(emails)
         });
 
@@ -242,6 +255,17 @@ export class MailService {
           })
         });
       });
+    });
+  }
+
+  findPreviousEmails(email, emails, callback) {
+    if (!Array.isArray(email.references)) {
+      return [];
+    }
+  
+    return email.references.flatMap(ref => {
+      const previousEmail = emails.find(e => e.id === ref);
+      return previousEmail ? [previousEmail, ...callback(previousEmail, emails, callback)] : [];
     });
   }
 }

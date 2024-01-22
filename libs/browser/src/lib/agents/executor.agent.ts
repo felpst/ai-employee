@@ -37,7 +37,6 @@ export class BrowserExecutorAgent {
       azureOpenAIApiDeploymentName: 'gpt-4',
     });
     const tools = this.skillsToTools(this.skills);
-    console.log(tools);
 
     // Memory
     prompt.promptMessages.push(new SystemMessage(`Memory: ${this.memory}`));
@@ -49,9 +48,10 @@ export class BrowserExecutorAgent {
     });
 
     this.agentExecutor = new AgentExecutor({
-      verbose: true,
+      // verbose: true,
       agent: this.agent,
       tools,
+      returnIntermediateSteps: true,
     });
   }
 
@@ -79,29 +79,13 @@ export class BrowserExecutorAgent {
         description: skill.description,
         schema: z.object(props),
         func: async (inputs) => {
+          let response = 'Done';
           try {
-            console.log('inputs', inputs);
-
-            // Evaluate inputs
-            for (const step of skill.steps) {
-              for (const key of Object.keys(step.params)) {
-                const value = step.params[key];
-                if (typeof value === 'string' && value.startsWith('{') && value.endsWith('}')) {
-                  const inputKey = value.substring(1, value.length - 1);
-                  step.params[key] = inputs[inputKey];
-                }
-              }
-            }
-            console.log(JSON.stringify(skill.steps));
-
-            for (const step of skill.steps) {
-              const { method, params } = step;
-              console.log('instruction', JSON.stringify(step));
-
-              await webBrowser[method](params);
-            }
+            response = await webBrowser.runSteps(skill.steps, inputs) || response;
+            if (skill.successMessage) response = await webBrowser.parseResponse(skill.successMessage) || response;
           } catch (error) { console.error(error); return error.message; }
-          return 'Done';
+          console.log('response', response);
+          return response;
         }
       });
       tools.push(tool);

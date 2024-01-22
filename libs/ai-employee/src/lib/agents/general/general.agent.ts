@@ -1,13 +1,15 @@
-import { IAIEmployee, IAgentCall, IUser } from "@cognum/interfaces";
+import { IAIEmployee, IAIEmployeeCallData, IAgentCall, IJob, IUser } from "@cognum/interfaces";
 import { ChatModel } from "@cognum/llm";
 import { JobService } from "@cognum/tools";
 import { initializeAgentExecutorWithOptions } from "langchain/agents";
 import { BufferMemory } from "langchain/memory";
 import { MessagesPlaceholder } from "langchain/prompts";
-import { Tool } from "langchain/tools";
 import * as treeify from 'treeify';
+import { DynamicStructuredTool, Tool } from "langchain/tools";
 import { AIEmployeeTools } from "../../tools/ai-employee-tools";
 import { Agent } from "../agent";
+import { Job, User } from "@cognum/models";
+import { z } from 'zod';
 
 export class GeneralAgent extends Agent {
 
@@ -27,22 +29,31 @@ export class GeneralAgent extends Agent {
     }, true, undefined)
 
     // Tools
-    const tools = AIEmployeeTools.intetionTools({
+    const tools = await AIEmployeeTools.intetionTools({
       aiEmployee: this.aiEmployee,
       intentions,
       user: this.context.user
     })
     // Jobs Toolkit
     if (this.context.user) {
-      console.log('Create job tool added')
       const jobService = new JobService({ aiEmployee: this.aiEmployee, user: this.context.user });
       tools.push(...jobService.toolkit() as Tool[]);
+
+      const jobs = await Job.find({ aiEmployee: this.aiEmployee._id });
+      jobs.forEach(async job => {
+        const jobTool = this.jobToTool(job);
+        tools.push(jobTool);
+      });
     }
     const filteredTools = await AIEmployeeTools.filterByContext(tools, input, formattedToolsContext)
 
     let prefix = `Your name is ${this.aiEmployee.name} and your role is ${this.aiEmployee.role}. `
     prefix += `You are talking with ${this.context.user.name} <${this.context.user.email}>.`
     prefix += `You need to answer best as you can trying different tools to execute the job and achieve the goal.`
+
+    // Adding information from the Agent's memory to the chat context so it can answer questions based on prior knowledge
+    const memoryContext = await this.aiEmployee.memorySearch(input);
+    if (memoryContext.accuracy) prefix += `\nMemory:${memoryContext.answer}\n`;
 
     // Call Context
     const formattedContext = this.formatContext();
@@ -65,8 +76,8 @@ export class GeneralAgent extends Agent {
     const chainValues = await this._executor.call({ input }, [this.handlers]);
 
     // Update AIEmployee Memory
-    // const memoryUpdateResponse = await this.aiEmployee.memoryInstruction(`Check if there is any relevant information in this information to add to the database:` + JSON.stringify({ input: agentCall.input, output: agentCall.output }), this.context)
-    // console.log({ memoryUpdateResponse });
+    const memoryUpdateResponse = await this.aiEmployee.memoryInstruction(`Check if there is any relevant information in this information to add to the database:` + JSON.stringify({ input: agentCall.input, output: agentCall.output }))
+    console.log({ memoryUpdateResponse });
 
     await this._afterCall(agentCall, chainValues.output);
     return agentCall;
@@ -96,5 +107,27 @@ export class GeneralAgent extends Agent {
       return formattedContext;
     }
     return ''
+  }
+
+  jobToTool(job: IJob) {
+    return new DynamicStructuredTool({
+      name: job.name,
+      description: job.description,
+      metadata: { id: job._id.toString(), tool: "job" },
+      schema: z.object({}),
+      func: async () => {
+        try {
+          const callData: IAIEmployeeCallData = {
+            input: job.instructions,
+            user: await User.findById(job.createdBy).exec()
+          };
+          const call = await this.aiEmployee.call(callData);
+
+          return "Job tool: \n```json\n" + JSON.stringify(call, null, 2) + "\n```";
+        } catch (error) {
+          return error.message;
+        }
+      },
+    });
   }
 }

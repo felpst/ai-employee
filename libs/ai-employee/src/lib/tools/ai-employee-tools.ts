@@ -1,3 +1,4 @@
+import { LlmTool } from './../../../../tools/src/lib/tools/llm/llm.tool';
 import { ToolsHelper } from "@cognum/helpers";
 import { IAIEmployee, IToolSettings, IUser } from "@cognum/interfaces";
 import { ChatModel, EmbeddingsModel } from "@cognum/llm";
@@ -9,10 +10,11 @@ import { DynamicStructuredTool, SerpAPI, Tool } from "langchain/tools";
 import { Calculator } from "langchain/tools/calculator";
 import { HNSWLib } from "langchain/vectorstores/hnswlib";
 import { INTENTIONS } from "../utils/intent-classifier/intent-classifier.util";
+import { Knowledge } from "@cognum/models";
 
 export class AIEmployeeTools {
 
-  static intetionTools(options: { aiEmployee: IAIEmployee; intentions?: string[]; user: Partial<IUser> }) {
+  static async intetionTools(options: { aiEmployee: IAIEmployee; intentions?: string[]; user: Partial<IUser> }) {
     let { intentions, aiEmployee } = options;
     if (!intentions) intentions = [];
 
@@ -25,17 +27,30 @@ export class AIEmployeeTools {
         return false;
       })
       .map(tool => ({ id: tool.id, }))
-
+    
     const filteredToolsSettings = aiEmployee.tools.filter(toolSettings => {
       if (options.user) toolSettings.options.user = options.user;
       const tool = ToolsHelper.get(toolSettings.id);
+    
+      if (!tool) return false;
+    
       for (const intetion of tool.intentions || []) {
         if (intentions.includes(intetion)) return true;
       }
       return false;
     })
+    
     const toolsSettings = [...commonTools, ...filteredToolsSettings]
-    const tools = AIEmployeeTools.get(toolsSettings);
+    const tools: any[] = AIEmployeeTools.get(toolsSettings);
+
+    // Resource: Knowledge Retriever
+    const knowledges = await Knowledge
+      .find({ workspace: aiEmployee.workspace })
+      .select('openaiFileId')
+      .lean();
+    const openaiFileIds = knowledges.map(({ openaiFileId }) => openaiFileId);
+    const toolkit = [new KnowledgeRetrieverTool({ openaiFileIds })]
+    tools.push(...toolkit)
 
     // Resource: Web browser
     if (aiEmployee.resources?.browser && intentions.includes(INTENTIONS.TASK_EXECUTION)) {
@@ -97,8 +112,6 @@ export class AIEmployeeTools {
           id: 'google-search',
         }
         return [tool];
-      // case 'web-browser':
-      //   return [new WebBrowserTool()];
       case 'random-number':
         return [new RandomNumberTool()];
       case 'mail':
@@ -107,17 +120,17 @@ export class AIEmployeeTools {
         return [new PythonTool()];
       case 'sql-connector':
         return [new SQLConnectorTool(toolSettings.options)];
-      case 'knowledge-retriever':
-        return [new KnowledgeRetrieverTool(toolSettings.options)]
       case 'linkedin-lead-scraper':
         return [new LinkedInFindLeadsTool(toolSettings.options)]
       case 'google-calendar':
         return GoogleCalendarToolkit(toolSettings.options);
+      case 'llm':
+        return [new LlmTool()];
     }
   }
 
   static async filterByContext(tools: (Tool[] | DynamicStructuredTool[]), input: string, formattedToolsContext: string) {
-    const model = new ChatModel();
+    const model = new ChatModel({ temperature: 0.7 });
     const baseCompressor = LLMChainExtractor.fromLLM(model);
 
     const docs = tools.map((tool: any) => {
@@ -144,13 +157,13 @@ export class AIEmployeeTools {
 
 
     let retrievedDocs = await retriever.getRelevantDocuments(formattedInput);
-    // const retrievedDocs = await vectorStore.similaritySearch(formattedInput, 3)
     console.log({ toolsFounded: retrievedDocs });
 
     if (!retrievedDocs.length) {
       // TODO add basic tools
       retrievedDocs = [
         { pageContent: '', metadata: { id: 'mail', tool: 'send' } },
+        { pageContent: '', metadata: { id: 'knowledge-retriever' } },
       ]
     }
 

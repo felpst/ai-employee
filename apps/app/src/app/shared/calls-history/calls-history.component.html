@@ -1,0 +1,16 @@
+<div class="content">
+  <div class="messages-wrapper" *ngIf="calls && calls.length > 0; else noChat">
+    <div class="chat-messages">
+      <cognum-calls
+        *ngFor="let message of calls"
+        [call]="message"
+      ></cognum-calls>
+    </div>
+  </div>
+
+  <ng-template #noChat>
+    <div class="no-chat-message">
+      <p>No chat created yet</p>
+    </div>
+  </ng-template>
+</div>

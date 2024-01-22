@@ -16,14 +16,14 @@ export class AIToolSettingsMailReaderComponent implements OnInit {
     ) { }
 
     ngOnInit() {
-        const mailReaderOptions = this.data.tool?.options?.subTools?.mailReader;
-        this.formGroup.addControl('user', new FormControl(mailReaderOptions?.user, Validators.required));
-        this.formGroup.addControl('password', new FormControl(mailReaderOptions?.password, Validators.required));
-        this.formGroup.addControl('host', new FormControl(mailReaderOptions?.host, Validators.required));
-        this.formGroup.addControl('port', new FormControl(mailReaderOptions?.port, Validators.required));
-        this.formGroup.addControl('tls', new FormControl(mailReaderOptions?.tls));
+        const mailReaderOptions = this.data.tool?.options;
+        this.formGroup.addControl('user', new FormControl(mailReaderOptions?.auth?.user, Validators.required));
+        this.formGroup.addControl('password', new FormControl(mailReaderOptions?.auth?.pass, Validators.required));
+        this.formGroup.addControl('host', new FormControl(mailReaderOptions?.imap?.host, Validators.required));
+        this.formGroup.addControl('port', new FormControl(mailReaderOptions?.imap?.port, Validators.required));
+        this.formGroup.addControl('tls', new FormControl(mailReaderOptions?.imap?.tls));
         this.formGroup.addControl('tlsOptions', this.formBuilder.group({
-            servername: new FormControl(mailReaderOptions?.tlsOptions?.servername, Validators.required),
+            servername: new FormControl(mailReaderOptions?.imap?.servername, Validators.required),
         }));
     }
 }

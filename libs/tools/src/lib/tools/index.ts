@@ -1,4 +1,5 @@
 export * from './cron'
+export * from './file-manager'
 export * from './google-calendar'
 export * from './job'
 export * from './knowledge-retriever'
@@ -9,4 +10,5 @@ export * from './random-number'
 export * from './scheduler'
 export * from './sql-connector'
 export * from './web-browser'
+export * from './csv-assistant'
 
