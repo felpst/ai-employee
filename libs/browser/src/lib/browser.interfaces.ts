@@ -1,5 +1,5 @@
 export type SkillInputType = 'string' | 'number' | 'boolean' | 'object' | 'array' | 'function' | 'any';
-export type SkillStepMethod = 'loadUrl' | 'click' | 'doubleClick' | 'inputText' | 'sleep' | 'scroll' | 'dataExtraction' | 'loop' | 'saveOnFile' | 'if' | 'test' | 'switchToFrame' | 'switchToDefaultContent' | "pressKey";
+export type SkillStepMethod = 'loadUrl' | 'click' | 'inputText' | 'sleep' | 'scroll' | 'dataExtraction' | 'loop' | 'saveOnFile' | 'if' | 'test' | 'switchToFrame' | 'switchToDefaultContent' | "pressKey" | "clickByText";
 
 export interface Skill {
   name: string;
@@ -9,9 +9,11 @@ export interface Skill {
   successMessage?: string;
 }
 
+export type Param = { [key: string]: any };
+
 export interface SkillStep {
   method: SkillStepMethod;
-  params?: { [key: string]: any };
+  params?: Param;
   successMessage?: string;
 }
 

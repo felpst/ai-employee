@@ -55,19 +55,39 @@ describe('AI Agent Browser', () => {
       "successMessage": "Google Chats available rooms: {rooms}."
     },
     {
-      "name": "Open room on Google Chat",
-      "description": "Use this to open a room with person or space on Google Chat.",
+      "name": "Select a chat on Google Chat",
+      "description": "Use this to select a chat with person or space on Google Chat.",
       "inputs": {
+        "roomType": {
+          "type": "string",
+          "description": "Type of the room (dm or space)"
+        },
         "roomId": {
           "type": "string",
           "description": "Room ID"
         }
       },
       "steps": [
-        { "method": "loadUrl", "params": { "url": "https://mail.google.com/chat/u/0/#chat/{roomId}" }, "successMessage": "Room selected: {roomId}." },
+        { "method": "loadUrl", "params": { "url": "https://mail.google.com/chat/u/0/#chat/{roomType}/{roomId}" }, "successMessage": "Room selected: {roomId}." },
       ]
     },
-    // TODO - Send message
+    {
+      "name": "Send message on Google Chat",
+      "description": "Use this to send a message on Google Chat.",
+      "inputs": {
+        "message": {
+          "type": "string",
+          "description": "Message to be sent."
+        }
+      },
+      "steps": [
+        { "method": "switchToFrame", "params": { "selector": 'iframe.aAtlvd.bl' } },
+        { "method": "inputText", "params": { "selector": 'div[role="textbox"]', "content": "{message}" } },
+        { "method": "click", "params": { "selector": "button[aria-label='Send message']", "sleep": 5000 } },
+        { "method": "switchToDefaultContent" },
+      ],
+      "successMessage": "Message sent: {message}."
+    }
     // TODO - Read messages
     // TODO - Open unread room
   ]
@@ -79,6 +99,9 @@ describe('AI Agent Browser', () => {
     Google:
     - Email: ${email}
     - Password: ${password}
+    - RoomType: space
+    - RoomId: AAAAeXMMTpY
+    - Message: Test message - Hello World!
     `
 
   const browserAgent = new BrowserAgent(skills, memory, { _id: 'testaiemployee' } as IAIEmployee);
@@ -103,7 +126,14 @@ describe('AI Agent Browser', () => {
 
   test('Select chat', async () => {
     const result = await browserAgent.executorAgent.invoke({
-      input: 'Start a chat with Aline.'
+      input: 'Select a chat on Google Chat'
+    })
+    console.log(JSON.stringify(result))
+  });
+
+  test('Send message', async () => {
+    const result = await browserAgent.executorAgent.invoke({
+      input: 'Send message on Google Chat'
     })
     console.log(JSON.stringify(result))
   });

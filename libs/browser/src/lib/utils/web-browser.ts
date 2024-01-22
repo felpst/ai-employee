@@ -3,7 +3,7 @@ import * as chromedriver from 'chromedriver';
 import { ProxyPlugin } from 'selenium-chrome-proxy-plugin';
 import { Browser, Builder, By, WebDriver, WebElement, until } from 'selenium-webdriver';
 import { Options } from 'selenium-webdriver/chrome';
-import { DataExtractionProperty, SkillStep } from '../browser.interfaces';
+import { DataExtractionProperty, Param, SkillStep } from '../browser.interfaces';
 import * as fs from 'fs';
 import * as path from 'path';
 import * as os from 'os';
@@ -94,6 +94,13 @@ export class WebBrowser {
     if (sleep) await this.driver.sleep(sleep);
   }
 
+  async clickByText({ text, tagName, sleep }: { text: string, tagName: string, sleep?: number }) {
+    await this.driver.sleep(sleep);
+    const element = await this._findElementByText(text, tagName);
+    await element.click();
+    if (sleep) await this.driver.sleep(sleep);
+  }
+
   async doubleClick({ selector }: { selector: string; }) {
     const element = await this._findElement(selector);
     await this.driver.actions().doubleClick(element).perform();
@@ -104,7 +111,7 @@ export class WebBrowser {
     element.sendKeys(content);
   }
 
-  async sleep({ time }: { time: number; }) {
+  async sleep({ time }: any) {
     await this.driver.sleep(time);
   }
 
@@ -121,8 +128,16 @@ export class WebBrowser {
     await this.driver.switchTo().defaultContent();
   }
 
-  async dataExtraction({ container, properties, saveOn }: { container: string, properties: DataExtractionProperty[], saveOn?: string; }) {
-    await this.sleep({ time: 5000 });
+  async scroll({ pixels }: { pixels: string }) {
+    try {
+      await this.driver.executeScript(`window.scrollBy(0, ${pixels});`);
+    } catch (error) {
+      throw new Error('Scroll is not posible');
+    }
+  };
+
+  async dataExtraction({ container, properties, saveOn }: { container: string, properties: DataExtractionProperty[], saveOn?: string }) {
+    await this.sleep({ time: 5000 })
 
     let data = [];
 
@@ -132,6 +147,7 @@ export class WebBrowser {
       for (const property of properties) {
 
         if (property.attribute) {
+          //TODO: GET ATRIBUTES IS NOT WORK
           rowData[property.name] = await containerElement.getAttribute(property.attribute) || null;
         } else if (property.selector) {
           if (!property.type) property.type = 'string';
@@ -254,12 +270,14 @@ export class WebBrowser {
     return await this.driver.actions().keyDown(key).perform().then(
       async () => {
         await this.driver.actions().keyUp(key).perform();
+        await this.sleep({ time: 10000 })
         return `Key ${key} pressed`;
       },
       (error) => {
         return error.message;
       }
     );
+
   };
 
   async parseResponse(response: string, memory: any = this.memory) {
@@ -293,4 +311,16 @@ export class WebBrowser {
   private async updateMemory() {
     this.memory['currentUrl'] = await this.driver.getCurrentUrl();
   }
+
+  private async _findElementByText(text: string, tagName: string = '*'): Promise<WebElement> {
+    try {
+      const path = `//${tagName}[text() = '${text}']`;
+      const el = await this.driver.findElement(By.xpath(path));
+      return el;
+    } catch (error) {
+      throw new Error(`Element not found with this text: ${text}`);
+    }
+  }
+
+
 }
