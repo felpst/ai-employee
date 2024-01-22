@@ -95,6 +95,11 @@ export class WebBrowser {
     if (sleep) await this.driver.sleep(sleep);
   }
 
+  async doubleClick({ selector }: { selector: string }) {
+    const element = await this._findElement(selector);
+    await this.driver.actions().doubleClick(element).perform();
+  }
+
   async inputText({ selector, content }: { selector: string, content: string }) {
     const element = await this._findElement(selector);
     element.sendKeys(content);
