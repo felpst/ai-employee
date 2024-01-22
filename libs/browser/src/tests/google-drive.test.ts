@@ -82,8 +82,33 @@ describe('AI Agent Browser', () => {
         { "method": "switchToDefaultContent" },
         { "method": "saveOnFile", "params": { "fileName": "google-documents-folders", "memoryKey": "folders" } }
       ],
+    },
+    {
+      "name": "Delete File on Google Drive",
+      "description": "Use this to delete a file on Google Drive.",
+      "inputs": {
+        "folderId": {
+          "type": "string",
+          "description": "Folder ID"
+        },
+        "fileId": {
+          "type": "string",
+          "description": "File ID"
+        }
+      },
+      "steps": [
+        { "method": "loadUrl", "params": { "url": "https://drive.google.com/" } },
+        { "method": 'click', "params": { "selector": "div.PjVfac.OOxkGf > div.YAetr.UFlFNc > div > div:nth-child(2) > button", "sleep": 10000 } },
+        { "method": "loadUrl", "params": { "url": "https://drive.google.com/drive/folders/{folderId}" }, "successMessage": "Folder selected: {folderId}." },
+        { "method": "dataExtraction", "params": { "container": "div.WYuW0e", "saveOn": "files", "properties": [
+          { "name": 'id', "attribute": 'data-id', "required": true },
+          { "name": 'name', "selector": 'div.KL4NAf', "required": true },
+        ]}},
+        { "method": "click", "params": { "selector": 'div[data-id="{fileId}"]', "sleep": 10000 }, "successMessage": "File selected" },
+        { "method": "click", "params": { "selector": '#drive_main_page > div > div.g3Fmkb > div.S630me > div > div > div > div:nth-child(2) > div > div.a-s-tb-sc-Ja-Q.a-s-tb-sc-Ja-Q-Nm.a-Ba-Ed.a-s-Ba-ce > div > div.uEnUtd > div > div:nth-child(5) > div > div', "sleep": 10000 }},
+        { "method": "click", "params": { "selector": 'body > div.ZACE2c.vMI2nb.dif24c.vhoiae.KkxPLb.eO2Zfd > div.xmQMab > div > div > div > div > div.OsLnq.IRlIld > div:nth-child(2) > button', "sleep": 10000 }, "successMessage": "Deleted File."},
+      ]
     }
-
   ]
   const email = process.env.GOOGLE_EMAIL
   const password = process.env.GOOGLE_PASSWORD
@@ -124,6 +149,13 @@ describe('AI Agent Browser', () => {
   test('List Files', async () => {
     const result = await browserAgent.executorAgent.invoke({
       input: 'List files in Teste Folder on Google Drive'
+    })
+    console.log(JSON.stringify(result))
+  });
+
+  test('Delete File', async () => {
+    const result = await browserAgent.executorAgent.invoke({
+      input: 'In Teste folder Delete image.png file on Google Drive'
     })
     console.log(JSON.stringify(result))
   });
