@@ -1,14 +1,14 @@
-import { IWebBrowser } from '@cognum/interfaces';
 import { ChatModel } from '@cognum/llm';
 import { StructuredOutputParser } from 'langchain/output_parsers';
 import { PromptTemplate } from "langchain/prompts";
 import { RunnableSequence } from 'langchain/schema/runnable';
 import { z } from 'zod';
 import WebBrowserUtils from '../web-browser-utils';
+import { WebBrowser } from '@cognum/browser';
 
 export class ExtractDataUseCase extends WebBrowserUtils {
   constructor(
-    protected webBrowser: IWebBrowser
+    protected webBrowser: WebBrowser
   ) {
     super(webBrowser);
   }
