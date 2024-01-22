@@ -95,6 +95,13 @@ export class WebBrowser {
     if (sleep) await this.driver.sleep(sleep);
   }
 
+  async clickByText({ text, tagName, sleep }: { text: string, tagName: string, sleep?: number }) {
+    await this.sleep({ time: 5000 })
+    const element = await this._findElementByText(text, tagName);
+    await element.click();
+    if (sleep) await this.driver.sleep(sleep);
+  }
+
   async inputText({ selector, content }: { selector: string, content: string }) {
     const element = await this._findElement(selector);
     element.sendKeys(content);
@@ -250,12 +257,14 @@ export class WebBrowser {
     return await this.driver.actions().keyDown(key).perform().then(
       async () => {
         await this.driver.actions().keyUp(key).perform();
+        await this.sleep({ time: 10000 })
         return `Key ${key} pressed`;
       },
       (error) => {
         return error.message;
       }
     );
+
   };
 
   async parseResponse(response: string, memory: any = this.memory) {
@@ -288,6 +297,17 @@ export class WebBrowser {
 
   private async updateMemory() {
     this.memory['currentUrl'] = await this.driver.getCurrentUrl();
+  }
+
+  private async _findElementByText(text: string, tagName: string = '*'): Promise<WebElement> {
+    try {
+      // const path = `//${tagName}[contains(text(), '${text}')]`;
+      const path = `//${tagName}[text() = '${text}']`;
+      const el = await this.driver.findElement(By.xpath(path));
+      return el;
+    } catch (error) {
+      throw new Error(`Element not found with this text: ${text}`);
+    }
   }
 
 
