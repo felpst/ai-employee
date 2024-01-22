@@ -9,9 +9,11 @@ export interface Skill {
   successMessage?: string;
 }
 
+export type Param = { [key: string]: any };
+
 export interface SkillStep {
   method: SkillStepMethod;
-  params?: { [key: string]: any };
+  params?: Param;
   successMessage?: string;
 }
 
