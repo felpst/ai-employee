@@ -64,10 +64,11 @@ describe('AI Agent Browser', () => {
                                         { "name": 'profission', "selector": '.entity-result__primary-subtitle' },
                                         { "name": 'city', "selector": '.entity-result__secondary-subtitle' },
                                         { "name": 'current', "selector": '.entity-result__summary' },
-                                        { "name": 'link', "selector": 'div:nth-child(1) > span:nth-child(1) > span:nth-child(1) > a:nth-child(1)', "attribute": "href" },
+                                        { "name": 'link', "selector": '.app-aware-link', "attribute": "href" },
                                     ]
                                 }
                             },
+                            { "method": "scroll", "params": { "pixels": "1600" } },
                             { "method": "click", "params": { "selector": ".artdeco-pagination__button--next", "sleep": 5000 } },
                         ]
                     }

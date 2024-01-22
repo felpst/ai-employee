@@ -96,7 +96,7 @@ export class WebBrowser {
   }
 
   async clickByText({ text, tagName, sleep }: { text: string, tagName: string, sleep?: number }) {
-    await this.sleep({ time: 5000 })
+    await this.driver.sleep(sleep);
     const element = await this._findElementByText(text, tagName);
     await element.click();
     if (sleep) await this.driver.sleep(sleep);
@@ -107,7 +107,7 @@ export class WebBrowser {
     element.sendKeys(content);
   }
 
-  async sleep({ time }: { time: number }) {
+  async sleep({ time }: any) {
     await this.driver.sleep(time);
   }
 
@@ -124,6 +124,14 @@ export class WebBrowser {
     await this.driver.switchTo().defaultContent();
   }
 
+  async scroll({ pixels }: { pixels: string }) {
+    try {
+      await this.driver.executeScript(`window.scrollBy(0, ${pixels});`);
+    } catch (error) {
+      throw new Error('Scroll is not posible');
+    }
+  };
+
   async dataExtraction({ container, properties, saveOn }: { container: string, properties: DataExtractionProperty[], saveOn?: string }) {
     await this.sleep({ time: 5000 })
 
@@ -135,6 +143,7 @@ export class WebBrowser {
       for (const property of properties) {
 
         if (property.attribute) {
+          //TODO: GET ATRIBUTES IS NOT WORK
           rowData[property.name] = await containerElement.getAttribute(property.attribute) || null;
         } else if (property.selector) {
           if (!property.type) property.type = 'string';
@@ -301,7 +310,6 @@ export class WebBrowser {
 
   private async _findElementByText(text: string, tagName: string = '*'): Promise<WebElement> {
     try {
-      // const path = `//${tagName}[contains(text(), '${text}')]`;
       const path = `//${tagName}[text() = '${text}']`;
       const el = await this.driver.findElement(By.xpath(path));
       return el;
