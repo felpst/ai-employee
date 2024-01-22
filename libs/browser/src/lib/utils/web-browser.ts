@@ -7,11 +7,10 @@ import { DataExtractionProperty, SkillStep } from '../browser.interfaces';
 import * as fs from 'fs';
 import * as path from 'path';
 import * as os from 'os';
-import { IKey } from 'selenium-webdriver/lib/input';
 import { Key } from './press-key.interface';
 
 export class WebBrowser {
-  driver: WebDriver
+  driver: WebDriver;
   memory: any = {};
 
   async open(options: IWebBrowserOptions = {}) {
@@ -22,7 +21,7 @@ export class WebBrowser {
 
       // Profile
       const tmpPath = process.env.PROD === 'true' ? '/tmp' : os.tmpdir();
-      const profileDirectory = `${path.join(tmpPath, 'browser', 'users', options.aiEmployeeId || 'default')}`
+      const profileDirectory = `${path.join(tmpPath, 'browser', 'users', options.aiEmployeeId || 'default')}`;
       if (options.aiEmployeeId) {
         fs.mkdirSync(profileDirectory, { recursive: true });
       }
@@ -55,7 +54,7 @@ export class WebBrowser {
         chromeOptions = await new ProxyPlugin({
           proxyConfig,
           chromeOptions
-        })
+        });
       }
 
       this.driver = await new Builder()
@@ -64,7 +63,7 @@ export class WebBrowser {
         .build();
       console.log('Driver started...');
     } catch (error) {
-      console.error(error)
+      console.error(error);
       throw new Error(error.message);
     }
   }
@@ -89,31 +88,31 @@ export class WebBrowser {
     return this.driver.getCurrentUrl();
   }
 
-  async click({ selector, sleep }: { selector: string, sleep?: number }) {
+  async click({ selector, sleep }: { selector: string, sleep?: number; }) {
     const element = await this._findElement(selector);
     await element.click();
     if (sleep) await this.driver.sleep(sleep);
   }
 
-  async doubleClick({ selector }: { selector: string }) {
+  async doubleClick({ selector }: { selector: string; }) {
     const element = await this._findElement(selector);
     await this.driver.actions().doubleClick(element).perform();
   }
 
-  async inputText({ selector, content }: { selector: string, content: string }) {
+  async inputText({ selector, content }: { selector: string, content: string; }) {
     const element = await this._findElement(selector);
     element.sendKeys(content);
   }
 
-  async sleep({ time }: { time: number }) {
+  async sleep({ time }: { time: number; }) {
     await this.driver.sleep(time);
   }
 
-  async test({ selector }: { selector: string }) {
-    await this.sleep({ time: 3000 })
+  async test({ selector }: { selector: string; }) {
+    await this.sleep({ time: 3000 });
   }
 
-  async switchToFrame({ selector }: { selector: string }) {
+  async switchToFrame({ selector }: { selector: string; }) {
     const element = await this._findElement(selector);
     await this.driver.switchTo().frame(element);
   }
@@ -122,8 +121,8 @@ export class WebBrowser {
     await this.driver.switchTo().defaultContent();
   }
 
-  async dataExtraction({ container, properties, saveOn }: { container: string, properties: DataExtractionProperty[], saveOn?: string }) {
-    await this.sleep({ time: 5000 })
+  async dataExtraction({ container, properties, saveOn }: { container: string, properties: DataExtractionProperty[], saveOn?: string; }) {
+    await this.sleep({ time: 5000 });
 
     let data = [];
 
@@ -138,7 +137,7 @@ export class WebBrowser {
           if (!property.type) property.type = 'string';
           try {
             // TODO - Check if element is displayed
-            const element = containerElement.findElement(By.css(property.selector))
+            const element = containerElement.findElement(By.css(property.selector));
 
             switch (property.type) {
               case 'boolean':
@@ -182,24 +181,24 @@ export class WebBrowser {
     return response;
   }
 
-  async untilElementIsVisible({ selector }: { selector: string }) {
+  async untilElementIsVisible({ selector }: { selector: string; }) {
     const element = await this._findElement(selector);
     await this.driver.wait(async () => {
       return await element.isDisplayed();
     }, 10000);
   }
 
-  async saveMemory({ key, value }: { key: string, value: any }) {
+  async saveMemory({ key, value }: { key: string, value: any; }) {
     this.memory[key] = this.memory[key] ? this.memory[key].concat(value) : value;
   }
 
-  async saveOnFile({ fileName, memoryKey }: { fileName: string, memoryKey: string }) {
+  async saveOnFile({ fileName, memoryKey }: { fileName: string, memoryKey: string; }) {
     const data = this.memory[memoryKey];
     if (!data) throw new Error(`Memory key not found: ${memoryKey}`);
     fs.writeFileSync('tmp/' + fileName + '.json', JSON.stringify(data, null, 2));
   }
 
-  async loop({ times, steps }: { times: number, steps: SkillStep[] }): Promise<void> {
+  async loop({ times, steps }: { times: number, steps: SkillStep[]; }): Promise<void> {
     let response: any;
     for (let i = 0; i < times; i++) {
       response = await this.runSteps(steps);
@@ -207,8 +206,8 @@ export class WebBrowser {
     return response;
   }
 
-  async if({ condition, steps }: { condition: string, steps: SkillStep[] }): Promise<void> {
-    await this.sleep({ time: 5000 })
+  async if({ condition, steps }: { condition: string, steps: SkillStep[]; }): Promise<void> {
+    await this.sleep({ time: 5000 });
 
     await this.updateMemory();
     let response: any;
@@ -248,8 +247,8 @@ export class WebBrowser {
     return response;
   }
 
-  async pressKey({ key }: { key: string }): Promise<string> {
-    await this.sleep({ time: 1000 })
+  async pressKey({ key }: { key: string; }): Promise<string> {
+    await this.sleep({ time: 1000 });
 
     key = Key[key];
     return await this.driver.actions().keyDown(key).perform().then(
@@ -294,6 +293,4 @@ export class WebBrowser {
   private async updateMemory() {
     this.memory['currentUrl'] = await this.driver.getCurrentUrl();
   }
-
-
 }
