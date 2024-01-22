@@ -3,11 +3,13 @@ import { BrowserExecutorAgent } from './agents/executor.agent';
 import { Skill } from "./browser.interfaces";
 import { IAIEmployee } from "@cognum/interfaces";
 import { BrowserAdaptatorAgent } from './agents/adaptator.agent';
+import { BrowserLearnerAgent } from './agents/learner.agent';
 
 export class BrowserAgent {
   webBrowser = new WebBrowser();
   executorAgent: BrowserExecutorAgent;
   adaptatorAgent: BrowserAdaptatorAgent;
+  learnerAgent: BrowserLearnerAgent;
 
   constructor(
     private skills?: Skill[],
@@ -24,8 +26,9 @@ export class BrowserAgent {
     this.adaptatorAgent = new BrowserAdaptatorAgent(this.webBrowser, this.memory);
     await this.adaptatorAgent.seed();
 
+    this.learnerAgent = new BrowserLearnerAgent(this.memory);
+    await this.learnerAgent.seed();
+
     console.log('BrowserAgent seeded');
   }
-
-
 }
