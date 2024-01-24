@@ -26,7 +26,7 @@ describe('AI Agent Browser', () => {
                 { "method": "click", "params": { "selector": "#login", "sleep": 5000 } },
                 {
                     "method": "if", "params": {
-                        "condition": "!browserMemory.currentUrl.includes('https://trello.com/w')", "steps": [
+                        "condition": "!browserMemory.currentUrl.includes('https://trello.com/')", "steps": [
                             { "method": "inputText", "params": { "selector": "#password", "content": "{password}" } },
                             { "method": "click", "params": { "selector": "#login-submit" } },
                         ]
@@ -219,7 +219,8 @@ describe('AI Agent Browser', () => {
                 { "method": "clickByText", "params": { "text": "{query}", "sleep": 5000 } },
                 { "method": "click", "params": { "selector": ".js-move-card", "sleep": 5000 } },
                 { "method": "click", "params": { "selector": ".js-select-list", "sleep": 5000 } },
-                { "method": "clickByText", "params": { "text": "{query}", "sleep": 5000 } },
+                { "method": "clickByText", "params": { "text": "{list}", "tagName": "option", "sleep": 5000 } },
+                { "method": "click", "params": { "selector": '[data-testid="move-card-popover-move-button"]', "sleep": 5000 } },
             ],
         },
     ]
