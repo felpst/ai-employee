@@ -1,4 +1,4 @@
-import { IWebBrowser } from '@cognum/interfaces';
+import { WebBrowser } from '@cognum/browser';
 import { JSDOM, VirtualConsole } from 'jsdom';
 import prettier from 'prettier';
 
@@ -6,7 +6,7 @@ const ELEMENT_OUT_OF_VIEW_ATTR = 'is-out-of-view';
 const INTERNAL_ELEMENT_ID = 'selector-id';
 
 export default class WebBrowserUtils {
-  constructor(protected webBrowser: IWebBrowser) { }
+  constructor(protected webBrowser: WebBrowser) { }
 
   async getElementHtmlBySelector(selector: string): Promise<string> {
     const dom = this._getDomFromStringHTML(await this.getHtml(false));

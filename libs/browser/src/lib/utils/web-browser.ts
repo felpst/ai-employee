@@ -3,13 +3,13 @@ import * as chromedriver from 'chromedriver';
 import { ProxyPlugin } from 'selenium-chrome-proxy-plugin';
 import { Browser, Builder, By, WebDriver, WebElement, until } from 'selenium-webdriver';
 import { Options } from 'selenium-webdriver/chrome';
-import { DataExtractionProperty, Param, SkillStep } from '../browser.interfaces';
+import { DataExtractionProperty, SkillStep, WebBrowserShared } from '../browser.interfaces';
 import * as fs from 'fs';
 import * as path from 'path';
 import * as os from 'os';
 import { Key } from './press-key.interface';
 
-export class WebBrowser {
+export class WebBrowser implements WebBrowserShared {
   driver: WebDriver;
   memory: any = {};
 
@@ -94,7 +94,7 @@ export class WebBrowser {
     if (sleep) await this.driver.sleep(sleep);
   }
 
-  async clickByText({ text, tagName, sleep }: { text: string, tagName: string, sleep?: number }) {
+  async clickByText({ text, tagName, sleep }: { text: string, tagName: string, sleep?: number; }) {
     await this.driver.sleep(sleep);
     const element = await this._findElementByText(text, tagName);
     await element.click();
@@ -116,12 +116,8 @@ export class WebBrowser {
     element.sendKeys(content);
   }
 
-  async sleep({ time }: any) {
+  async sleep({ time }: { time: number; }) {
     await this.driver.sleep(time);
-  }
-
-  async test({ selector }: { selector: string; }) {
-    await this.sleep({ time: 3000 });
   }
 
   async switchToFrame({ selector }: { selector: string; }) {
@@ -133,7 +129,7 @@ export class WebBrowser {
     await this.driver.switchTo().defaultContent();
   }
 
-  async scroll({ pixels }: { pixels: string }) {
+  async scroll({ pixels }: { pixels: number; }) {
     try {
       await this.driver.executeScript(`window.scrollBy(0, ${pixels});`);
     } catch (error) {
@@ -141,8 +137,8 @@ export class WebBrowser {
     }
   };
 
-  async dataExtraction({ container, properties, saveOn }: { container: string, properties: DataExtractionProperty[], saveOn?: string }) {
-    await this.sleep({ time: 5000 })
+  async dataExtraction({ container, properties, saveOn }: { container: string, properties: DataExtractionProperty[], saveOn?: string; }) {
+    await this.sleep({ time: 5000 });
 
     let data = [];
 
@@ -260,7 +256,7 @@ export class WebBrowser {
       }
 
       console.log('instruction', JSON.stringify(step));
-      response = await this[method](params) || response;
+      response = await this[method](params as any) || response;
 
       if (step.successMessage) response = await this.parseResponse(step.successMessage, inputs) || response;
     }
@@ -275,7 +271,7 @@ export class WebBrowser {
     return await this.driver.actions().keyDown(key).perform().then(
       async () => {
         await this.driver.actions().keyUp(key).perform();
-        await this.sleep({ time: 10000 })
+        await this.sleep({ time: 10000 });
         return `Key ${key} pressed`;
       },
       (error) => {
@@ -326,5 +322,4 @@ export class WebBrowser {
       throw new Error(`Element not found with this text: ${text}`);
     }
   }
-
 }
