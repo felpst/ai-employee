@@ -3,13 +3,13 @@ import * as chromedriver from 'chromedriver';
 import { ProxyPlugin } from 'selenium-chrome-proxy-plugin';
 import { Browser, Builder, By, WebDriver, WebElement, until } from 'selenium-webdriver';
 import { Options } from 'selenium-webdriver/chrome';
-import { DataExtractionProperty, SkillStep, WebBrowserShared } from '../browser.interfaces';
+import { BrowserActions, DataExtractionProperty, SkillStep } from '../browser.interfaces';
 import * as fs from 'fs';
 import * as path from 'path';
 import * as os from 'os';
 import { Key } from './press-key.interface';
 
-export class WebBrowser implements WebBrowserShared {
+export class WebBrowser implements BrowserActions {
   driver: WebDriver;
   memory: any = {};
 

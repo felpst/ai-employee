@@ -1,10 +1,10 @@
 import { ChatModel } from "@cognum/llm";
 import { AgentExecutor, createStructuredChatAgent } from "langchain/agents";
-import { ChatPromptTemplate, HumanMessagePromptTemplate, MessagesPlaceholder, SystemMessagePromptTemplate } from "langchain/prompts";
+import { ChatPromptTemplate, HumanMessagePromptTemplate, SystemMessagePromptTemplate } from "langchain/prompts";
 import { SystemMessage } from "langchain/schema";
 import { DynamicStructuredTool } from 'langchain/tools';
 import { z } from 'zod';
-import { Skill, SkillInputType, SkillStepMethod } from '../browser.interfaces';
+import { Skill, EveryType, SkillStepMethod } from '../browser.interfaces';
 import { writeFileSync } from 'fs';
 
 export class BrowserLearnerAgent {
@@ -28,10 +28,9 @@ export class BrowserLearnerAgent {
     });
 
     this._agent = new AgentExecutor({
-      // verbose: true,
+      verbose: true,
       agent,
       tools,
-      returnIntermediateSteps: true,
     });
 
   }
@@ -40,23 +39,7 @@ export class BrowserLearnerAgent {
     if (!this._agent)
       throw new Error('Agent not seeded!');
 
-    const result = await this._agent.invoke({
-      input,
-    }, {
-      callbacks: [
-        {
-          handleLLMEnd(output) {
-            const [[generated]] = output.generations;
-            console.log('agent output', { output: generated.text });
-          },
-          handleToolError(error) {
-            console.error('tool error', error);
-          },
-          awaitHandlers: true
-        }
-      ]
-    });
-    return result;
+    return this._agent.invoke({ input });
   }
 
   private _prompt = ChatPromptTemplate.fromMessages([
@@ -100,7 +83,7 @@ Action:
 }}
 
 Begin! Reminder to ALWAYS respond with a valid json blob of a single action. Use tools if necessary. Respond directly if appropriate. Format is Action:\`\`\`$JSON_BLOB\`\`\`then Observation
-      `),
+`),
     HumanMessagePromptTemplate.fromTemplate(`{input}
 {agent_scratchpad}
 (reminder to respond in a JSON blob no matter what)`)
@@ -122,7 +105,7 @@ class SkillLearningTool extends DynamicStructuredTool {
         })).describe('sequence of steps until acheive the skill goal.'),
         inputs: z.array(z.record(
           z.string().describe('input key.'), z.object({
-            type: z.enum(SkillInputType).describe('type of the parameter variable.'),
+            type: z.enum(EveryType).describe('type of the parameter variable.'),
             description: z.string().describe('description of the parameter variable.')
           })
         )).describe('dynamic steps inputs.'),
