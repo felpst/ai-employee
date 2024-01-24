@@ -1,8 +1,17 @@
 import 'dotenv/config';
 import { BrowserAgent } from "../lib/browser";
-import fs from 'fs/promises';
-import path from 'path';
-import os from 'os';
+import { DatabaseHelper } from '@cognum/helpers';
+import mongoose, { Model, Schema } from 'mongoose';
+
+let skillModel: Model<any>;
+beforeAll(async () => {
+  await DatabaseHelper.connect(process.env.MONGO_URL);
+  const SkillSchema = new Schema({}, { strict: false });
+  skillModel = mongoose.model('Skill', SkillSchema, 'skills');
+});
+afterAll(async () => {
+  await DatabaseHelper.disconnect();
+});
 
 describe('Skill Learning test', () => {
   jest.setTimeout(600000);
@@ -119,11 +128,8 @@ describe('Skill Learning test', () => {
     const browserAgent = new BrowserAgent([], '');
     await browserAgent.seed();
 
-    const skillDir = path.join('.', 'tmp', 'skills');
-    const oldFileCountInDir = await fs.readdir(skillDir)
-      .then(read => read.length)
-      .catch(() => 0);
 
+    const countBefore = await skillModel.count();
     try {
       const result = await browserAgent.learnerAgent.invoke({
         task: 'login to xandr',
@@ -134,8 +140,8 @@ describe('Skill Learning test', () => {
     } catch (error) {
       console.error(error);
     }
-    const newFileCountInDir = (await fs.readdir(skillDir)).length;
+    const countAfter = await skillModel.count();
 
-    expect(newFileCountInDir).toBe(oldFileCountInDir + 1);
+    expect(countAfter).toBe(countBefore + 1);
   });
 });

@@ -6,7 +6,7 @@ import { DynamicStructuredTool } from 'langchain/tools';
 import { z } from 'zod';
 import { Skill, EveryType, SkillStepMethod } from '../browser.interfaces';
 import fs from 'fs';
-import path from 'path';
+import SkillVectorDB from '../database/skill-db';
 
 export class BrowserLearnerAgent {
   private _agent: AgentExecutor;
@@ -132,13 +132,8 @@ class SkillLearningTool extends DynamicStructuredTool {
       }),
       func: async (skill: Skill) => {
         try {
-          const skillDir = path.join('.', 'tmp', 'skills');
-          fs.mkdirSync(skillDir);
-
-          fs.writeFileSync(
-            `${skillDir}/${skill.name}.json`,
-            JSON.stringify(skill, null, 2)
-          );
+          const db = new SkillVectorDB();
+          await db.addSkill(skill);
 
           return `Skill successully learned!`;
         } catch (error) {
