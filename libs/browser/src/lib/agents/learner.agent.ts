@@ -5,7 +5,8 @@ import { SystemMessage } from "langchain/schema";
 import { DynamicStructuredTool } from 'langchain/tools';
 import { z } from 'zod';
 import { Skill, EveryType, SkillStepMethod } from '../browser.interfaces';
-import { writeFileSync } from 'fs';
+import fs from 'fs';
+import path from 'path';
 
 export class BrowserLearnerAgent {
   private _agent: AgentExecutor;
@@ -35,17 +36,35 @@ export class BrowserLearnerAgent {
 
   }
 
-  async invoke({ input }) {
+  async invoke({ task, steps }) {
     if (!this._agent)
       throw new Error('Agent not seeded!');
 
-    return this._agent.invoke({ input });
+    const input = `Learn skill for task performed '${task}'.
+Actions: 
+\`\`\`json
+${JSON.stringify(steps, null, 2)}
+\`\`\``;
+
+    const interfaces = fs
+      .readFileSync(__dirname + '/../browser.interfaces.ts')
+      .toString();
+
+    return this._agent.invoke({
+      input,
+      interfaces
+    });
   }
 
   private _prompt = ChatPromptTemplate.fromMessages([
     SystemMessagePromptTemplate.fromTemplate(`
 You are a browser skill learner agent. Your job is to learn skills from action lists provided by the human.
 You must consider observation FIRST for getting useful information of each step. If step is successful, learn it.
+
+Your skill should work for BrowserActions class, so take a look in the interfaces:
+\`\`\`typescript
+{interfaces}
+\`\`\`
 
 You have access to the following tools:
 
@@ -108,12 +127,19 @@ class SkillLearningTool extends DynamicStructuredTool {
             type: z.enum(EveryType).describe('type of the parameter variable.'),
             description: z.string().describe('description of the parameter variable.')
           })
-        )).describe('dynamic steps inputs.'),
+        )).optional().describe('dynamic steps inputs.'),
         successMessage: z.string().optional().describe('success message for skill execution.')
       }),
       func: async (skill: Skill) => {
         try {
-          writeFileSync('skill.json', JSON.stringify(skill));
+          const skillDir = path.join('.', 'tmp', 'skills');
+          fs.mkdirSync(skillDir);
+
+          fs.writeFileSync(
+            `${skillDir}/${skill.name}.json`,
+            JSON.stringify(skill, null, 2)
+          );
+
           return `Skill successully learned!`;
         } catch (error) {
           return error.message;
