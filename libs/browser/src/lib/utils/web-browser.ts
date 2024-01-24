@@ -101,6 +101,11 @@ export class WebBrowser implements BrowserActions {
     if (sleep) await this.driver.sleep(sleep);
   }
 
+  async selectOption({ selector, value }: { selector: string, value: string; }) {
+    const element = await this._findElement(selector);
+    await element.findElement(By.css(`option[value="${value}"]`)).click();
+  }
+
   async doubleClick({ selector }: { selector: string; }) {
     const element = await this._findElement(selector);
     await this.driver.actions().doubleClick(element).perform();
