@@ -46,7 +46,7 @@ describe('AI Agent Browser', () => {
           method: 'inputText',
           params: { selector: '#password', content: '{password}' },
         },
-        { method: 'click', params: { selector: '#loginBtn', sleep: 3000 } },
+        { method: 'click', params: { selector: '#loginBtn', sleep: 2000 } },
       ],
     },
 
@@ -100,7 +100,7 @@ describe('AI Agent Browser', () => {
                 params: {
                   selector:
                     '#view_container > div > div > div.pwWryf.bxPAYd > div > div.WEQkZc > div > form > span > section > div > div > div > div > ul > li.JDAKTe.eARute.W7Aapd.zpCp3.SmR8 > div',
-                  sleep: 3000,
+                  sleep: 2000,
                 },
               },
             ],
@@ -118,7 +118,7 @@ describe('AI Agent Browser', () => {
               },
               {
                 method: 'click',
-                params: { selector: '#identifierNext', sleep: 3000 },
+                params: { selector: '#identifierNext', sleep: 2000 },
               },
               {
                 method: 'inputText',
@@ -126,12 +126,12 @@ describe('AI Agent Browser', () => {
                   selector:
                     '#password > div.aCsJod.oJeWuf > div > div.Xb9hP > input',
                   content: '{password}',
-                  sleep: 3000,
+                  sleep: 2000,
                 },
               },
               {
                 method: 'click',
-                params: { selector: '#passwordNext', sleep: 3000 },
+                params: { selector: '#passwordNext', sleep: 2000 },
               },
             ],
           },
@@ -172,8 +172,7 @@ describe('AI Agent Browser', () => {
         {
           method: 'click',
           params: {
-            selector:
-              '#crm > div.app > div.IndexPage__FullPageContainer-sc-1qk8t2m-0.gqqwxU > header > div.UIHeader__Inner-a1tdub-1.jxTFtr.private-header__inner > div.UIHeader__Toolbar-a1tdub-3.fEVNvx.private-header__toolbar > div > div > div:nth-child(4) > div > button',
+            selector: '[data-test-id="new-object-button"]',
             sleep: 2000,
           },
         },
@@ -202,10 +201,19 @@ describe('AI Agent Browser', () => {
           params: { selector: '#UIFormControl-13', sleep: 1000 },
         },
         {
+          method: 'clickByText',
+          params: {
+            text: 'Remove number formatting',
+            tagName: 'i18n-string',
+            sleep: 1500,
+            ignoreNotExists: true,
+          },
+        },
+        {
           method: 'inputText',
           params: {
             selector:
-              '#uiopenpopup-12 > div > div > div.private-popover__inner > div > div.uiEditableControls.private-editable-control.PropertyInputPhoneWrapper__StyledUIEditableControls-sc-1lamag0-0.dWeqSS.m-bottom-1.p-x-4.p-bottom-4.private-editable-control--flush > div.PropertyInputPhone__Wrapper-t64kac-0.kqOajG > input',
+              '#uiopenpopup-12 > div > div > div.private-popover__inner > div > div.uiEditableControls.private-editable-control.PropertyInputPhoneWrapper__StyledUIEditableControls-wstpno-0.dRfCJR.m-bottom-1.p-x-4.p-bottom-4.private-editable-control--flush > div.PropertyInputPhone__Wrapper-sc-1ylillo-0.ggbLXq > input',
             content: '{phone}',
             sleep: 2000,
           },
@@ -213,8 +221,7 @@ describe('AI Agent Browser', () => {
         {
           method: 'click',
           params: {
-            selector:
-              '#uiopenpopup-12 > div > div > div.private-popover__inner > div > div.uiEditableControls.private-editable-control.PropertyInputPhoneWrapper__StyledUIEditableControls-sc-1lamag0-0.dWeqSS.m-bottom-1.p-x-4.p-bottom-4.private-editable-control--flush > div.TwoWayTransition__PlainWrapper-keky8h-0.bAYAlG.AccordionTransition__AccordionTransitionWrapper-sc-1jme8yh-0.UISlideoutDrawer__SlideoutTransitionWrapper-sc-1ocl0bj-0.ctAOth.uiEditableControlsStage > div > div > button.uiButton.private-button.private-button--tertiary.private-button--xs.private-editable-control__save.private-button--non-link',
+            selector: '[data-button-use="tertiary"]',
             sleep: 2000,
           },
         },

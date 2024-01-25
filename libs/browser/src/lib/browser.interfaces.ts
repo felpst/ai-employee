@@ -91,7 +91,7 @@ export interface LoopParams {
 
 export interface IfParams {
   /** The condition to check
-   * @example 
+   * @example
    * browserMemory.currentUrl.includes('google.com')
    */
   condition: string;
@@ -100,7 +100,7 @@ export interface IfParams {
 
 export abstract class BrowserActions implements Record<typeof SkillStepMethod[number], (...args: any[]) => void> {
   abstract loadUrl(params: { url: string; }): void;
-  abstract click(params: { selector: string; sleep?: number; }): void;
+  abstract click(params: { selector: string; sleep?: number; ignoreNotExists?: boolean; }): void;
   abstract inputText(params: { selector: string; content: string; }): void;
   abstract sleep(params: { time: number; }): void;
   abstract scroll(params: { pixels: number; }): void;
@@ -111,5 +111,5 @@ export abstract class BrowserActions implements Record<typeof SkillStepMethod[nu
   abstract switchToFrame(params: { selector: string; }): void;
   abstract switchToDefaultContent(): void;
   abstract pressKey(params: { key: string; }): void;
-  abstract clickByText(params: { text: string; tagName: string; sleep?: number; }): void;
+  abstract clickByText(params: { text: string; tagName: string; sleep?: number; ignoreNotExists?: boolean; }): void;
 }
