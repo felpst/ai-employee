@@ -40,7 +40,10 @@ export class BrowserLearnerAgent {
     if (!this._agent)
       throw new Error('Agent not seeded!');
 
-    const input = `Learn skill for task performed '${task}'.
+    const input = `Learn skill for task performed.
+Task:
+${task}
+
 Actions: 
 \`\`\`json
 ${JSON.stringify(steps, null, 2)}
@@ -60,6 +63,8 @@ ${JSON.stringify(steps, null, 2)}
     SystemMessagePromptTemplate.fromTemplate(`
 You are a browser skill learner agent. Your job is to learn skills from action lists provided by the human.
 You must consider observation FIRST for getting useful information of each step. If step is successful, learn it.
+
+You should make improvements to the skill flow, such as using loops for repetitive tasks, extracting data for use in future step or using conditions ("if" action).
 
 Your skill should work for BrowserActions class, so take a look in the interfaces:
 \`\`\`typescript
