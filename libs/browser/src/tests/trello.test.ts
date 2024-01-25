@@ -26,7 +26,7 @@ describe('AI Agent Browser', () => {
                 { "method": "click", "params": { "selector": "#login", "sleep": 5000 } },
                 {
                     "method": "if", "params": {
-                        "condition": "!browserMemory.currentUrl.includes('https://trello.com/w')", "steps": [
+                        "condition": "!browserMemory.currentUrl.includes('https://trello.com/')", "steps": [
                             { "method": "inputText", "params": { "selector": "#password", "content": "{password}" } },
                             { "method": "click", "params": { "selector": "#login-submit" } },
                         ]
@@ -102,6 +102,23 @@ describe('AI Agent Browser', () => {
                     }
                 },
                 { "method": "saveOnFile", "params": { "fileName": "cards", "memoryKey": "cards" } }
+
+            ],
+        },
+        {
+            "name": "List all lists on Trello board",
+            "description": "Use this to list all lists on Trello board.",
+            "inputs": {},
+            "steps": [
+                {
+                    "method": "dataExtraction", "params": {
+                        "container": '[data-testid="list-wrapper"]', "saveOn": "lists", "properties": [
+                            { "name": 'id', "attribute": 'data-list-id' },
+                            { "name": 'name', "selector": '[data-testid="list-name"]' },
+                        ]
+                    }
+                },
+                { "method": "saveOnFile", "params": { "fileName": "trello-lists", "memoryKey": "lists" } }
 
             ],
         },
@@ -219,7 +236,46 @@ describe('AI Agent Browser', () => {
                 { "method": "clickByText", "params": { "text": "{query}", "sleep": 5000 } },
                 { "method": "click", "params": { "selector": ".js-move-card", "sleep": 5000 } },
                 { "method": "click", "params": { "selector": ".js-select-list", "sleep": 5000 } },
+                { "method": "clickByText", "params": { "text": "{list}", "tagName": "option", "sleep": 5000 } },
+                { "method": "click", "params": { "selector": '[data-testid="move-card-popover-move-button"]', "sleep": 5000 } },
+            ],
+        },
+        {
+            "name": "Move Card for other column in trello",
+            "description": "Use this to move a card in trello",
+            "inputs": {
+                "query": {
+                    "type": "string",
+                    "description": "Name of card"
+                },
+                "list": {
+                    "type": "string",
+                    "description": "Name of board to move card"
+                },
+            },
+            "steps": [
                 { "method": "clickByText", "params": { "text": "{query}", "sleep": 5000 } },
+                { "method": "click", "params": { "selector": ".js-move-card", "sleep": 5000 } },
+                { "method": "click", "params": { "selector": ".js-select-list", "sleep": 5000 } },
+                { "method": "clickByText", "params": { "text": "{list}", "tagName": "option", "sleep": 5000 } },
+                { "method": "click", "params": { "selector": '[data-testid="move-card-popover-move-button"]', "sleep": 5000 } },
+            ],
+        },
+        {
+            "name": "Create new card in Trello",
+            "description": "Use this to create a new card in Trello",
+            "inputs": {
+                "listId": {
+                    "type": "string",
+                    "description": "List id to create card."
+                },
+                "name": {
+                    "type": "string",
+                    "description": "Name of card."
+                },
+            },
+            "steps": [
+              { "method": "click", "params": { "selector": '[data-list-id="{listId}"] button[data-testid="list-add-card-button"]', "sleep": 5000 } },
             ],
         },
     ]
@@ -259,6 +315,13 @@ describe('AI Agent Browser', () => {
         console.log(JSON.stringify(result))
     });
 
+    test('Trello list all lists', async () => {
+        const result = await browserAgent.executorAgent.invoke({
+            input: 'Go to Product Roadmap board and list all lists'
+        })
+        console.log(JSON.stringify(result))
+    });
+
     test('Trello delete card', async () => {
         const result = await browserAgent.executorAgent.invoke({
             input: 'Go to Product Roadmap board and delete Teste Renato card'
@@ -292,6 +355,12 @@ describe('AI Agent Browser', () => {
     test('Trello move card', async () => {
         const result = await browserAgent.executorAgent.invoke({
             input: 'Go to Product Roadmap board and to Teste Renato card and move it to Developing list'
+        })
+        console.log(JSON.stringify(result))
+    });
+    test('Trello create a card', async () => {
+        const result = await browserAgent.executorAgent.invoke({
+            input: 'Go to Product Roadmap board and create a "Test" card in Developing list'
         })
         console.log(JSON.stringify(result))
     });
