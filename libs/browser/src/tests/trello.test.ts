@@ -106,6 +106,22 @@ describe('AI Agent Browser', () => {
             ],
         },
         {
+            "name": "List All Lists on trello",
+            "description": "Use this to list lists on Trello ",
+            "inputs": {},
+            "steps": [
+                {
+                    "method": "dataExtraction", "params": {
+                        "container": '[data-testid="list-header"]', "saveOn": "lists", "properties": [
+                            { "name": 'listName', "selector": '[data-testid="list-name"]' },                    
+                        ]
+                    }
+                },
+                { "method": "saveOnFile", "params": { "fileName": "lists", "memoryKey": "lists" } }
+
+            ],
+        },
+        {
             "name": "Delete a card in trello",
             "description": "Use this to delete a card in trello",
             "inputs": {
@@ -223,6 +239,53 @@ describe('AI Agent Browser', () => {
                 { "method": "click", "params": { "selector": '[data-testid="move-card-popover-move-button"]', "sleep": 5000 } },
             ],
         },
+        {
+            "name": "Move Card for other column in trello",
+            "description": "Use this to move a card in trello",
+            "inputs": {
+                "query": {
+                    "type": "string",
+                    "description": "Name of card"
+                },
+                "list": {
+                    "type": "string",
+                    "description": "Name of board to move card"
+                },
+            },
+            "steps": [
+                { "method": "clickByText", "params": { "text": "{query}", "sleep": 5000 } },
+                { "method": "click", "params": { "selector": ".js-move-card", "sleep": 5000 } },
+                { "method": "click", "params": { "selector": ".js-select-list", "sleep": 5000 } },
+                { "method": "clickByText", "params": { "text": "{list}", "tagName": "option", "sleep": 5000 } },
+                { "method": "click", "params": { "selector": '[data-testid="move-card-popover-move-button"]', "sleep": 5000 } },
+            ],
+        },
+        {
+            "name": "Create new Card in trello",
+            "description": "Use this to create a new card in trello",
+            "inputs": {
+                "list": {
+                    "type": "string",
+                    "description": "Name of list to create card"
+                },
+            },
+            "steps": [
+                {
+                    "method": "dataExtraction", "params": {
+                        "container": "[data-testid='list-wrapper']", "saveOn": "lists", "properties": [
+                            { "name": 'listName', "selector": "[data-testid='list-name']" },
+                            {
+                                "method": "if", "params": {
+                                    "condition": "listName == {list}", "steps": [
+                                        { "method": "click", "params": { "selector": '[data-testid="list-add-card-button"]', "sleep": 5000 } },
+                                    ]
+                                }
+                            },
+                        ]
+                    }
+                },
+            ],
+        },
     ]
     const email = process.env.TRELLO_USERNAME
     const password = process.env.TRELLO_PASSWORD
@@ -260,6 +323,13 @@ describe('AI Agent Browser', () => {
         console.log(JSON.stringify(result))
     });
 
+    test('Trello list all lists', async () => {
+        const result = await browserAgent.executorAgent.invoke({
+            input: 'Go to Product Roadmap board and list All lists'
+        })
+        console.log(JSON.stringify(result))
+    });
+
     test('Trello delete card', async () => {
         const result = await browserAgent.executorAgent.invoke({
             input: 'Go to Product Roadmap board and delete Teste Renato card'
@@ -293,6 +363,12 @@ describe('AI Agent Browser', () => {
     test('Trello move card', async () => {
         const result = await browserAgent.executorAgent.invoke({
             input: 'Go to Product Roadmap board and to Teste Renato card and move it to Developing list'
+        })
+        console.log(JSON.stringify(result))
+    });
+    test('Trello create a card', async () => {
+        const result = await browserAgent.executorAgent.invoke({
+            input: 'Go to Product Roadmap board and and create a card in Developing list'
         })
         console.log(JSON.stringify(result))
     });
