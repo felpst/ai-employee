@@ -1,11 +1,12 @@
 import { ChatModel } from "@cognum/llm";
 import { AgentExecutor, createStructuredChatAgent } from "langchain/agents";
-import { ChatPromptTemplate, HumanMessagePromptTemplate, MessagesPlaceholder, SystemMessagePromptTemplate } from "langchain/prompts";
+import { ChatPromptTemplate, HumanMessagePromptTemplate, SystemMessagePromptTemplate } from "langchain/prompts";
 import { SystemMessage } from "langchain/schema";
 import { DynamicStructuredTool } from 'langchain/tools';
 import { z } from 'zod';
-import { Skill, SkillInputType, SkillStepMethod } from '../browser.interfaces';
-import { writeFileSync } from 'fs';
+import { Skill, EveryType, SkillStepMethod } from '../browser.interfaces';
+import fs from 'fs';
+import SkillVectorDB from '../database/skill-db';
 
 export class BrowserLearnerAgent {
   private _agent: AgentExecutor;
@@ -28,41 +29,42 @@ export class BrowserLearnerAgent {
     });
 
     this._agent = new AgentExecutor({
-      // verbose: true,
+      verbose: true,
       agent,
       tools,
-      returnIntermediateSteps: true,
     });
 
   }
 
-  async invoke({ input }) {
+  async invoke({ task, steps }) {
     if (!this._agent)
       throw new Error('Agent not seeded!');
 
-    const result = await this._agent.invoke({
+    const input = `Learn skill for task performed '${task}'.
+Actions: 
+\`\`\`json
+${JSON.stringify(steps, null, 2)}
+\`\`\``;
+
+    const interfaces = fs
+      .readFileSync(__dirname + '/../browser.interfaces.ts')
+      .toString();
+
+    return this._agent.invoke({
       input,
-    }, {
-      callbacks: [
-        {
-          handleLLMEnd(output) {
-            const [[generated]] = output.generations;
-            console.log('agent output', { output: generated.text });
-          },
-          handleToolError(error) {
-            console.error('tool error', error);
-          },
-          awaitHandlers: true
-        }
-      ]
+      interfaces
     });
-    return result;
   }
 
   private _prompt = ChatPromptTemplate.fromMessages([
     SystemMessagePromptTemplate.fromTemplate(`
 You are a browser skill learner agent. Your job is to learn skills from action lists provided by the human.
 You must consider observation FIRST for getting useful information of each step. If step is successful, learn it.
+
+Your skill should work for BrowserActions class, so take a look in the interfaces:
+\`\`\`typescript
+{interfaces}
+\`\`\`
 
 You have access to the following tools:
 
@@ -100,7 +102,7 @@ Action:
 }}
 
 Begin! Reminder to ALWAYS respond with a valid json blob of a single action. Use tools if necessary. Respond directly if appropriate. Format is Action:\`\`\`$JSON_BLOB\`\`\`then Observation
-      `),
+`),
     HumanMessagePromptTemplate.fromTemplate(`{input}
 {agent_scratchpad}
 (reminder to respond in a JSON blob no matter what)`)
@@ -122,15 +124,17 @@ class SkillLearningTool extends DynamicStructuredTool {
         })).describe('sequence of steps until acheive the skill goal.'),
         inputs: z.array(z.record(
           z.string().describe('input key.'), z.object({
-            type: z.enum(SkillInputType).describe('type of the parameter variable.'),
+            type: z.enum(EveryType).describe('type of the parameter variable.'),
             description: z.string().describe('description of the parameter variable.')
           })
-        )).describe('dynamic steps inputs.'),
+        )).optional().describe('dynamic steps inputs.'),
         successMessage: z.string().optional().describe('success message for skill execution.')
       }),
       func: async (skill: Skill) => {
         try {
-          writeFileSync('skill.json', JSON.stringify(skill));
+          const db = new SkillVectorDB();
+          await db.addSkill(skill);
+
           return `Skill successully learned!`;
         } catch (error) {
           return error.message;
