@@ -21,7 +21,6 @@ describe('Skill Learning test', () => {
     const browserAgent = new BrowserAgent([], '');
     await browserAgent.seed();
 
-
     const countBefore = await skillModel.count();
     try {
       const result = await browserAgent.learnerAgent.invoke({
@@ -46,8 +45,28 @@ describe('Skill Learning test', () => {
     const countBefore = await skillModel.count();
     try {
       const result = await browserAgent.learnerAgent.invoke({
-        task: 'Extract Software Engineers from linkedin until the third page',
+        task: 'Extract 3 pages of Software Engineers from linkedin',
         steps: LinkedinSteps.extractLeads
+      });
+
+      console.log(result);
+    } catch (error) {
+      console.error(error);
+    }
+    const countAfter = await skillModel.count();
+
+    expect(countAfter).toBe(countBefore + 1);
+  });
+
+  test('Should learn Linkedin Login and with an if condition', async () => {
+    const browserAgent = new BrowserAgent([], '');
+    await browserAgent.seed();
+
+    const countBefore = await skillModel.count();
+    try {
+      const result = await browserAgent.learnerAgent.invoke({
+        task: 'Login to LinkedIn',
+        steps: LinkedinSteps.login
       });
 
       console.log(result);

@@ -1,6 +1,50 @@
 import { IntermediateSteps } from '.';
 
 export namespace LinkedinSteps {
+  export const login: IntermediateSteps = [
+    {
+      action: {
+        tool: "Web Browser Load Page",
+        toolInput: {
+          url: "https://www.linkedin.com/login"
+        },
+        log: "Self Locate: I am on a new tab page in the browser, as indicated by the page title \"Nova guia\" and the URL \"chrome://new-tab-page/\".\nThought: Since I am on a new tab page, I need to load the LinkedIn login page to proceed with the login process.\n\nAction:\n```\n{\n  \"action\": \"Web Browser Load Page\",\n  \"action_inpu\: {\n    \"url\": \"https://www.linkedin.com/login\"\n  }\n}\n```\n"
+      },
+      observation: "Page loaded on web browser: https://www.linkedin.com/login"
+    },
+    {
+      action: {
+        tool: "Web Browser Input Text",
+        toolInput: {
+          textValue: "aiemployee@cognum.ai",
+          selectorId: 96
+        },
+        log: "Self Locate: I am on the LinkedIn login page, as indicated by the page title \"Entrar ou cadastrar-se no LinkedIn | LinkedIn\" and the current URL in the browser tab \"https://www.linkedin.com/login\".\nThought: Since I am on the LinkedIn login page, I need to input the provided test credentials into the email and password fields and then click the login button to perform the login action.\n\nAction:\n```\n{\n  \"action\": \"Web Browser Input Text\",\n  \"action_inpu\: {\n    \"textValue\": \"aiemployee@cognum.ai\",\n    \"selectorId\": 96\n  }\n}\n```\n\n"
+      },
+      observation: "Input aiemployee@cognum.ai was successfully done in element \"#username\""
+    },
+    {
+      action: {
+        tool: "Web Browser Input Text",
+        toolInput: {
+          textValue: "gWHT#TDBtw7Z#,@",
+          selectorId: 122
+        },
+        log: "Action:\n```\n{\n  \"action\": \"Web Browser Input Text\",\n  \"action_inpu\: {\n    \"textValue\": \"gWHT#TDBtw7Z#,@\",\n    \"selectorId\": 122\n  }\n}\n```\n\n"
+      },
+      observation: "Input gWHT#TDBtw7Z#,@ was successfully done in element \"#password\""
+    },
+    {
+      action: {
+        tool: "Web Browser Click",
+        toolInput: {
+          selectorId: 128
+        },
+        log: "Action:\n```\n{\n  \"action\": \"Web Browser Click\",\n  \"action_inpu\: {\n    \"selectorId\": 128\n  }\n}\n```"
+      },
+      observation: "The element \"#organic-div > form:nth-child(2) > div:nth-child(30) > button:nth-child(1)\" was clicked"
+    }
+  ];
   export const extractLeads: IntermediateSteps = [
     {
       action: {
