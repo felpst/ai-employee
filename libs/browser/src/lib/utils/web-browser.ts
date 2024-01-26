@@ -88,17 +88,48 @@ export class WebBrowser implements BrowserActions {
     return this.driver.getCurrentUrl();
   }
 
-  async click({ selector, sleep }: { selector: string, sleep?: number; }) {
-    const element = await this._findElement(selector);
-    await element.click();
-    if (sleep) await this.driver.sleep(sleep);
+  async click({
+    selector,
+    sleep,
+    ignoreNotExists = false,
+  }: {
+    selector: string;
+    sleep?: number;
+    ignoreNotExists: boolean;
+  }) {
+    try {
+      const element = await this._findElement(selector);
+      await element.click();
+      if (sleep) await this.driver.sleep(sleep);
+    } catch (error) {
+      if (!ignoreNotExists || !error.message.includes('Element not found'))
+        throw error;
+    }
   }
 
-  async clickByText({ text, tagName, sleep }: { text: string, tagName: string, sleep?: number; }) {
-    await this.driver.sleep(sleep);
-    const element = await this._findElementByText(text, tagName);
-    await element.click();
-    if (sleep) await this.driver.sleep(sleep);
+  async clickByText({
+    text,
+    tagName,
+    sleep,
+    ignoreNotExists = false,
+  }: {
+    text: string;
+    tagName: string;
+    sleep?: number;
+    ignoreNotExists?: boolean;
+  }) {
+    try {
+      await this.driver.sleep(sleep);
+      const element = await this._findElementByText(text, tagName);
+      await element.click();
+      if (sleep) await this.driver.sleep(sleep);
+    } catch (error) {
+      if (
+        !ignoreNotExists ||
+        !error.message.includes('Element not found with this text')
+      )
+        throw error;
+    }
   }
 
   async selectOption({ selector, value }: { selector: string, value: string; }) {
