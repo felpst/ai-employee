@@ -16,6 +16,7 @@ export const SkillStepMethod = [
   'switchToDefaultContent',
   'pressKey',
   'clickByText',
+  'elementScroll',
 ] as const;
 
 export interface Skill {
@@ -114,4 +115,5 @@ export abstract class BrowserActions implements Record<typeof SkillStepMethod[nu
   abstract switchToDefaultContent(): void;
   abstract pressKey(params: { key: string; }): void;
   abstract clickByText(params: { text: string; tagName: string; sleep?: number; ignoreNotExists?: boolean; }): void;
+  abstract elementScroll(params: { selector: string; pixels: number; direction: 'vertical' | 'horizontal'; useCurrentScroll: boolean }): void;
 }
