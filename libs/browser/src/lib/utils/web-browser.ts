@@ -166,7 +166,42 @@ export class WebBrowser implements BrowserActions {
     } catch (error) {
       throw new Error('Scroll is not posible');
     }
-  };
+  }
+
+  async elementScroll({
+    direction,
+    pixels,
+    selector,
+    useCurrentScroll = false,
+  }: {
+    direction: 'vertical' | 'horizontal';
+    pixels: number;
+    selector: string;
+    useCurrentScroll: boolean;
+  }) {
+    try {
+      const element = await this._findElement(selector);
+      let position = 0;
+      if (useCurrentScroll) {
+        const scriptStr =
+          direction === 'horizontal'
+            ? 'return arguments[0].scrollLeft;'
+            : 'return arguments[0].scrollTop;';
+        position = parseInt(
+          await this.driver.executeScript(scriptStr, element)
+        );
+
+      }
+      const script =
+        direction === 'horizontal'
+          ? `arguments[0].scrollLeft = ${position + pixels};`
+          : `arguments[0].scrollTop = ${position + pixels};`;
+
+      await this.driver.executeScript(script, element);
+    } catch (error) {
+      throw new Error('Scroll is not posible');
+    }
+  }
 
   async dataExtraction({ container, properties, saveOn }: { container: string, properties: DataExtractionProperty[], saveOn?: string; }) {
     await this.sleep({ time: 5000 });
@@ -308,15 +343,15 @@ export class WebBrowser implements BrowserActions {
 
     key = Key[key];
     return await this.driver.actions().keyDown(key).perform().then(
-      async () => {
-        await this.driver.actions().keyUp(key).perform();
-        await this.sleep({ time: 10000 });
-        return `Key ${key} pressed`;
-      },
-      (error) => {
-        return error.message;
-      }
-    );
+        async () => {
+          await this.driver.actions().keyUp(key).perform();
+          await this.sleep({ time: 10000 });
+          return `Key ${key} pressed`;
+        },
+        (error) => {
+          return error.message;
+        }
+      );
 
   };
 
@@ -350,7 +385,7 @@ export class WebBrowser implements BrowserActions {
 
   private async updateMemory() {
     this.memory['currentUrl'] = await this.driver.getCurrentUrl();
-  }
+      }
 
   private async _findElementByText(text: string, tagName: string = '*'): Promise<WebElement> {
     try {
