@@ -1,6 +1,5 @@
 import { DynamicStructuredTool } from 'langchain/tools';
 import { z } from 'zod';
-import { WebBrowserService } from '../services/web-browser.service';
 import { WebBrowserToolSettings } from '../web-browser.toolkit';
 
 export class WebBrowserLoadPageTool extends DynamicStructuredTool {
@@ -14,10 +13,9 @@ export class WebBrowserLoadPageTool extends DynamicStructuredTool {
       }),
       func: async ({ url }) => {
         try {
-          const loaded = await settings.webBrowserService.loadPage(url);
-          if (!loaded) throw new Error(`Page not loaded on web browser: ${url}`);
+          const currentUrl = await settings.webBrowserService.loadPage(url);
 
-          return `Page loaded on web browser: ${url}`;
+          return `Page loaded on web browser: ${currentUrl}`;
         } catch (error) {
           return error.message;
         }

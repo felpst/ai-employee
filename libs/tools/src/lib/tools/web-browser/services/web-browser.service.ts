@@ -27,18 +27,17 @@ export class WebBrowserService {
     return true;
   }
 
-  async loadPage(url: string): Promise<boolean> {
-    this.webBrowser.driver.get(url);
-    await this.webBrowser.driver.sleep(500);
-    for (let i = 0; i < 3; i++) {
-      console.log(`Waiting for page load: ${url}`);
-      const currentUrl = await this.webBrowser.driver.getCurrentUrl();
-      if (currentUrl.includes(url)) {
-        await this.checkCurrentURLUpdated();
-        return true;
-      }
-    }
-    return false;
+  async loadPage(url: string): Promise<string> {
+    await this.webBrowser.driver.get(url).then(async () =>
+      await this.webBrowser.driver.wait(async () => {
+        const readyState = await this.webBrowser.driver.executeScript('return document.readyState');
+        return readyState === 'complete';
+      }, 10000)
+        .then()
+        .catch()
+    );
+
+    return this.getCurrentUrl();
   }
 
   async getCurrentUrl(): Promise<string> {
