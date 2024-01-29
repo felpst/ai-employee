@@ -107,18 +107,53 @@ describe('AI Agent Browser', () => {
         },
         {
             "name": "List all lists on Trello board",
-            "description": "Use this to list all lists on Trello board.",
+            "description": "Use this to list all list on Trello",
             "inputs": {},
             "steps": [
                 {
                     "method": "dataExtraction", "params": {
                         "container": '[data-testid="list-wrapper"]', "saveOn": "lists", "properties": [
                             { "name": 'id', "attribute": 'data-list-id' },
+                            { "name": 'class', "attribute": 'class' },
                             { "name": 'name', "selector": '[data-testid="list-name"]' },
                         ]
                     }
                 },
-                { "method": "saveOnFile", "params": { "fileName": "trello-lists", "memoryKey": "lists" } }
+                { "method": "saveOnFile", "params": { "fileName": "lists", "memoryKey": "lists" } }
+
+            ],
+        },
+        {
+            "name": "List all lists and cards on Trello board",
+            "description": "Use this only after you have used list all lists on Trello",
+            "inputs": {
+                "class": {
+                    "type": "string",
+                    "description": "class of list."
+                },
+            },
+            "steps": [
+                {
+                    "method": "dataExtraction", "params": {
+                        "container": '[data-testid="list-wrapper"]', "saveOn": "lists-cards", "properties": [
+                            { "name": 'id', "attribute": 'data-list-id' },
+                            { "name": 'class', "attribute": 'class' },
+                            { "name": 'name', "selector": '[data-testid="list-name"]' },
+                            {
+                                "name": 'cards', "method": "dataExtraction", "params": {
+                                    "container": '[data-testid="list-cards"]', "properties": [
+                                        { "name": 'class', "attribute": 'class' },
+                                        { "name": 'name', "selector": '[data-testid="card-name"]' },
+                                        { "name": 'name', "selector": '[data-testid="card-name"]', "attribute": "class"},
+
+
+                                    ]
+                                }
+                            }
+                        ]
+                    }
+                },
+                { "method": "saveOnFile", "params": { "fileName": "trello-lists", "memoryKey": "lists-cards" } }
 
             ],
         },
@@ -275,7 +310,7 @@ describe('AI Agent Browser', () => {
                 },
             },
             "steps": [
-              { "method": "click", "params": { "selector": '[data-list-id="{listId}"] button[data-testid="list-add-card-button"]', "sleep": 5000 } },
+                { "method": "click", "params": { "selector": '[data-list-id="{listId}"] button[data-testid="list-add-card-button"]', "sleep": 5000 } },
             ],
         },
     ]
@@ -317,7 +352,7 @@ describe('AI Agent Browser', () => {
 
     test('Trello list all lists', async () => {
         const result = await browserAgent.executorAgent.invoke({
-            input: 'Go to Product Roadmap board and list all lists'
+            input: 'Go to Product Roadmap board list all lists and cards'
         })
         console.log(JSON.stringify(result))
     });

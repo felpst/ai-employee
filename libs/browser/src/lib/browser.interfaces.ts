@@ -68,6 +68,8 @@ export interface SkillStep {
 /** Represents a property to be extracted in data extraction */
 export interface DataExtractionProperty {
   name: string;
+  method?: typeof SkillStepMethod[number];
+  params?: any;
   selector?: string;
   attribute?: string;
   required?: boolean;

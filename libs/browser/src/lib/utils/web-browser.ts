@@ -185,12 +185,17 @@ export class WebBrowser implements BrowserActions {
           if (!property.type) property.type = 'string';
           try {
             // TODO - Check if element is displayed
-            const element = containerElement.findElement(By.css(property.selector));
+            const element = await containerElement.findElement(By.css(property.selector));
 
             switch (property.type) {
               case 'boolean':
                 rowData[property.name] = await element?.isDisplayed() || false;
                 break;
+              // case 'function':
+              //   console.log('params', property.params);
+              //   const result = await this.dataExtraction({ container: property.selector, properties: property.params });
+              //   rowData[property.name] = result
+              //   break;
               default:
                 rowData[property.name] = await element.getText() || null;
                 break;
@@ -198,6 +203,9 @@ export class WebBrowser implements BrowserActions {
           } catch (error) {
             rowData[property.name] = null;
           }
+        } else if (property.method) {
+          const result = await this[property.method](property.params);
+          rowData[property.name] = result;
         }
       }
 
