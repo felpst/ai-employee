@@ -32,35 +32,20 @@ describe('AI Agent Browser', () => {
       "successMessage": "Google Login successful!"
     },
     {
-      "name": "List Folders on Google Drive",
-      "description": "Use this to list Folders on Google Drive.",
+      "name": "List Files and Folders on Google Drive",
+      "description": "Use this to list files on Google Drive.",
       "inputs": {},
       "steps": [
-        { "method": "loadUrl", "params": { "url": "https://drive.google.com/" } },
-        { "method": 'click', "params": { "selector": "div.PjVfac.OOxkGf > div.YAetr.UFlFNc > div > div:nth-child(2) > button", "sleep": 10000 } },
+        { "method": "loadUrl", "params": { "url": "https://drive.google.com/drive/my-drive" } },
         { "method": "dataExtraction", "params": { "container": "div.WYuW0e", "saveOn": "folders", "properties": [
           { "name": 'id', "attribute": 'data-id', "required": true },
           { "name": 'name', "selector": 'div.KL4NAf', "required": true },
+          { "name": 'type', "selector": ".l-o-c-qd", "value": "folder" },
+          { "name": 'type', "selector": ".a-Ua-c", "value": "file" }
         ]}},
         { "method": "switchToDefaultContent" },
-        { "method": "saveOnFile", "params": { "fileName": "google-documents-folders", "memoryKey": "folders" } }
+        { "method": "saveOnFile", "params": { "fileName": "google-documents", "memoryKey": "folders" } }
       ],
-      "successMessage": "Google Documents available folders: {folders}."
-    },
-    {
-      "name": "Open Folder on Google Drive",
-      "description": "Use this to open a folder on Google Drive.",
-      "inputs": {
-        "folderId": {
-          "type": "string",
-          "description": "Folder ID"
-        }
-      },
-      "steps": [
-        { "method": "loadUrl", "params": { "url": "https://drive.google.com/" } },
-        { "method": 'click', "params": { "selector": "div.PjVfac.OOxkGf > div.YAetr.UFlFNc > div > div:nth-child(2) > button", "sleep": 10000 } },
-        { "method": "loadUrl", "params": { "url": "https://drive.google.com/drive/folders/{folderId}" }, "successMessage": "Folder selected: {folderId}." },
-      ]
     },
     {
       "name": "List Files in Folders on Google Drive",
@@ -72,16 +57,24 @@ describe('AI Agent Browser', () => {
         }
       },
       "steps": [
-        { "method": "loadUrl", "params": { "url": "https://drive.google.com/" } },
-        { "method": 'click', "params": { "selector": "div.PjVfac.OOxkGf > div.YAetr.UFlFNc > div > div:nth-child(2) > button", "sleep": 10000 } },
+        { "method": "loadUrl", "params": { "url": "https://drive.google.com/drive/my-drive" } },
         { "method": "loadUrl", "params": { "url": "https://drive.google.com/drive/folders/{folderId}" }, "successMessage": "Folder selected: {folderId}." },
-        { "method": "dataExtraction", "params": { "container": "div.WYuW0e", "saveOn": "folders", "properties": [
-          { "name": 'id', "attribute": 'data-id', "required": true },
-          { "name": 'name', "selector": 'div.KL4NAf', "required": true },
-        ]}},
         { "method": "switchToDefaultContent" },
-        { "method": "saveOnFile", "params": { "fileName": "google-documents-folders", "memoryKey": "folders" } }
+        { "method": "saveOnFile", "params": { "fileName": "google-documents", "memoryKey": "folders" } }
       ],
+    },
+    {
+      "name": "Open Folder on Google Drive",
+      "description": "Use this to open a folder on Google Drive.",
+      "inputs": {
+        "folderId": {
+          "type": "string",
+          "description": "Folder ID"
+        }
+      },
+      "steps": [
+        { "method": "loadUrl", "params": { "url": "https://drive.google.com/drive/folders/{folderId}", "sleep": 10000 }, "successMessage": "Folder selected: {folderId}." },
+      ]
     },
     {
       "name": "Delete Files on Google Drive",
@@ -94,10 +87,6 @@ describe('AI Agent Browser', () => {
       },
       "steps": [
         { "method": "loadUrl", "params": { "url": "https://drive.google.com/drive/my-drive" } },
-        { "method": "dataExtraction", "params": { "container": "div.WYuW0e", "saveOn": "files", "properties": [
-          { "name": 'id', "attribute": 'data-id', "required": true },
-          { "name": 'name', "attribute": 'data-id', "required": true },
-        ]}},
         { "method": "click", "params": { "selector": 'div[data-id="{fileId}"]', "sleep": 10000 }, "successMessage": "File selected" },
         { "method": "click", "params": { "selector": '#drive_main_page > div > div.g3Fmkb > div.S630me > div > div > div > div:nth-child(2) > div > div.a-s-tb-sc-Ja-Q.a-s-tb-sc-Ja-Q-Nm.a-Ba-Ed.a-s-Ba-ce > div > div.uEnUtd > div > div:nth-child(5) > div > div', "sleep": 10000 }},
         { "method": "click", "params": { "selector": 'body > div.ZACE2c.vMI2nb.dif24c.vhoiae.KkxPLb.eO2Zfd > div.xmQMab > div > div > div > div > div.OsLnq.IRlIld > div:nth-child(2) > button', "sleep": 10000 }, "successMessage": "Deleted File."},
@@ -126,13 +115,6 @@ describe('AI Agent Browser', () => {
     console.log(JSON.stringify(result))
   });
 
-  test('List Folders', async () => {
-    const result = await browserAgent.executorAgent.invoke({
-      input: 'List folders on Google Drive'
-    })
-    console.log(JSON.stringify(result))
-  });
-
   test('Open Folder', async () => {
     const result = await browserAgent.executorAgent.invoke({
       input: 'Open Isso é um teste Folder on Google Drive'
@@ -140,9 +122,16 @@ describe('AI Agent Browser', () => {
     console.log(JSON.stringify(result))
   });
 
-  test('List Files', async () => {
+  test('List Files and Folders', async () => {
     const result = await browserAgent.executorAgent.invoke({
-      input: 'List files in Teste Folder on Google Drive'
+      input: 'List files and folders on Google Drive'
+    })
+    console.log(JSON.stringify(result))
+  });
+
+  test('List Files in Folders', async () => {
+    const result = await browserAgent.executorAgent.invoke({
+      input: 'List files in Isso é um teste Folder on Google Drive'
     })
     console.log(JSON.stringify(result))
   });
