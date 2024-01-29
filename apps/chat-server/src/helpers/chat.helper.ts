@@ -1,6 +1,6 @@
 import { IChatMessage, IChatRoom } from "@cognum/interfaces";
 import { ChatModel } from "@cognum/llm";
-import { Callbacks } from "langchain/callbacks";
+import { Callbacks } from "@langchain/core/callbacks/manager";
 import { LLMChain } from "langchain/chains";
 import { PromptTemplate } from "langchain/prompts";
 
