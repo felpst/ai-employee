@@ -1,7 +1,12 @@
 import { ChatModel } from "@cognum/llm";
 import { WebBrowserService, WebBrowserToolkit } from "@cognum/tools";
 import { AgentExecutor, createStructuredChatAgent } from "langchain/agents";
-import { ChatPromptTemplate, HumanMessagePromptTemplate, MessagesPlaceholder, SystemMessagePromptTemplate } from "langchain/prompts";
+import {
+  ChatPromptTemplate,
+  HumanMessagePromptTemplate,
+  MessagesPlaceholder,
+  SystemMessagePromptTemplate
+} from "@langchain/core/prompts";
 import { SystemMessage } from "@langchain/core/messages";
 import * as treeify from 'treeify';
 import { WebBrowser } from '../utils/web-browser';
