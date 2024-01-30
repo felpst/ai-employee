@@ -2,7 +2,7 @@ import { AzureOpenAIInput } from 'langchain/chat_models/openai';
 import {
   OpenAIEmbeddings as LangchainOpenAIEmbeddings,
   OpenAIEmbeddingsParams,
-} from 'langchain/embeddings/openai';
+} from '@langchain/openai';
 import { ClientOptions } from 'openai';
 
 export class EmbeddingsModel extends LangchainOpenAIEmbeddings {

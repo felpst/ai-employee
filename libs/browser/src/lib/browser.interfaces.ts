@@ -24,6 +24,7 @@ export const SkillStepMethod = [
   'switchToDefaultContent',
   'pressKey',
   'clickByText',
+  'elementScroll',
 ] as const;
 
 export interface Skill {
@@ -132,5 +133,11 @@ export abstract class BrowserActions
     tagName: string;
     sleep?: number;
     ignoreNotExists?: boolean;
+  }): void;
+  abstract elementScroll(params: {
+    selector: string;
+    pixels: number;
+    direction: 'vertical' | 'horizontal';
+    useCurrentScroll: boolean;
   }): void;
 }

@@ -190,6 +190,40 @@ export class WebBrowser implements BrowserActions {
     }
   }
 
+  async elementScroll({
+    direction,
+    pixels,
+    selector,
+    useCurrentScroll = false,
+  }: {
+    direction: 'vertical' | 'horizontal';
+    pixels: number;
+    selector: string;
+    useCurrentScroll: boolean;
+  }) {
+    try {
+      const element = await this._findElement(selector);
+      let position = 0;
+      if (useCurrentScroll) {
+        const scriptStr =
+          direction === 'horizontal'
+            ? 'return arguments[0].scrollLeft;'
+            : 'return arguments[0].scrollTop;';
+        position = parseInt(
+          await this.driver.executeScript(scriptStr, element)
+        );
+      }
+      const script =
+        direction === 'horizontal'
+          ? `arguments[0].scrollLeft = ${position + pixels};`
+          : `arguments[0].scrollTop = ${position + pixels};`;
+
+      await this.driver.executeScript(script, element);
+    } catch (error) {
+      throw new Error('Scroll is not posible');
+    }
+  }
+
   async dataExtraction({
     container,
     properties,

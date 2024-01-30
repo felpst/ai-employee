@@ -61,8 +61,8 @@ ${JSON.stringify(steps, null, 2)}
 
   private _prompt = ChatPromptTemplate.fromMessages([
     SystemMessagePromptTemplate.fromTemplate(`
-You are a browser skill learner agent. Your job is to learn skills from action lists provided by the human.
-You must consider observation FIRST for getting useful information of each step.
+You are a browser skill learner agent. Your job is to learn skills from action lists provided by the human. These skills must be prepared for running in a blank browser tab.
+You must consider observation FIRST for getting useful information such as element selectors.
 
 You should make improvements to the skill flow, such as using loops for repetitive tasks or extracting data for use in future steps.
 Use available information from logs to make conditional validations (if action) for skills. Do that mandatorily for tasks like login, that may not be needed in case they are already done.

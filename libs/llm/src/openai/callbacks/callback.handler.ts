@@ -1,5 +1,5 @@
 import { OpenAILogsService } from '@cognum/logs';
-import { BaseCallbackHandler } from 'langchain/callbacks';
+import { BaseCallbackHandler } from '@langchain/core/callbacks/base';
 import { Serialized } from 'langchain/load/serializable';
 import { AgentAction, AgentFinish, ChainValues } from 'langchain/schema';
 
