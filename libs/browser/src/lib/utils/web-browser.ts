@@ -8,10 +8,16 @@ import * as fs from 'fs';
 import * as path from 'path';
 import * as os from 'os';
 import { Key } from './press-key.interface';
+import BrowserPage from './browser-page';
 
 export class WebBrowser implements BrowserActions {
   driver: WebDriver;
   memory: any = {};
+  page: BrowserPage;
+
+  constructor() {
+    this.page = new BrowserPage(this);
+  }
 
   async open(options: IWebBrowserOptions = {}) {
     try {
@@ -72,16 +78,17 @@ export class WebBrowser implements BrowserActions {
     await this.driver.quit();
   }
 
-  async loadUrl({ url }: { url: string; }): Promise<boolean> {
-    this.driver.get(url);
-    await this.driver.sleep(500);
-    for (let i = 0; i < 3; i++) {
-      const currentUrl = await this.driver.getCurrentUrl();
-      if (currentUrl.includes(url)) {
-        return true;
-      }
-    }
-    return false;
+  async loadUrl({ url }: { url: string; }): Promise<string> {
+    await this.driver.get(url).then(async () =>
+      await this.driver.wait(async () => {
+        const readyState = await this.driver.executeScript('return document.readyState');
+        return readyState === 'complete';
+      }, 10000)
+        .then()
+        .catch()
+    );
+
+    return this.getCurrentUrl();
   }
 
   async getCurrentUrl(): Promise<string> {
@@ -332,7 +339,7 @@ export class WebBrowser implements BrowserActions {
     });
   }
 
-  private async _findElement(selector: string): Promise<WebElement> {
+  protected async _findElement(selector: string): Promise<WebElement> {
     try {
       return await this.driver.wait(until.elementLocated(By.css(selector)), 10000);
     } catch (error) {
@@ -340,19 +347,24 @@ export class WebBrowser implements BrowserActions {
     }
   }
 
-  private async _findElements(selector: string): Promise<WebElement[]> {
+  protected async _findElements(selector: string): Promise<WebElement[]> {
     try {
-      return await this.driver.wait(until.elementsLocated(By.css(selector)), 10000);
+      return this.driver.findElements(By.css(selector));
     } catch (error) {
-      throw new Error(`Elements not found: ${selector}`);
+      return this.driver
+        .wait(until.elementsLocated(By.css(selector)), 10000)
+        .then(r => r)
+        .catch((e) => {
+          throw new Error(`Elements not found: ${selector}`);
+        });
     }
   }
 
-  private async updateMemory() {
+  protected async updateMemory() {
     this.memory['currentUrl'] = await this.driver.getCurrentUrl();
   }
 
-  private async _findElementByText(text: string, tagName: string = '*'): Promise<WebElement> {
+  protected async _findElementByText(text: string, tagName: string = '*'): Promise<WebElement> {
     try {
       const path = `//${tagName}[text() = '${text}']`;
       const el = await this.driver.findElement(By.xpath(path));
