@@ -301,7 +301,7 @@ describe('AI Agent Browser', () => {
         console.log(JSON.stringify(result))
     });
 
-    test('Trello list all lists', async () => {
+    test('Trello list all lists and cards', async () => {
         const result = await browserAgent.executorAgent.invoke({
             input: 'Go to Product Roadmap board list all lists and cards'
         })
@@ -346,7 +346,7 @@ describe('AI Agent Browser', () => {
     });
     test('Trello create a card', async () => {
         const result = await browserAgent.executorAgent.invoke({
-            input: 'Go to Product Roadmap board and create a "Test" card in Developing list'
+            input: 'Go to Product Roadmap board and create a "Test Create Card" card in Backlog list'
         })
         console.log(JSON.stringify(result))
     });
