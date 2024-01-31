@@ -255,7 +255,7 @@ export class WebBrowser implements BrowserActions {
         } else if (property.selector) {
           if (!property.type) property.type = 'string';
           try {
-            let element: WebElement;
+            let elements: WebElement[];
             try {
               elements = await containerElement.findElements(
                 By.css(property.selector)
