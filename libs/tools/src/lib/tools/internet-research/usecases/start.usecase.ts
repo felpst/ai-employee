@@ -1,11 +1,11 @@
+import { WebBrowser } from '@cognum/browser';
 import { BrowserType } from "@cognum/interfaces";
-import { WebBrowser } from "../../web-browser";
 
 export class StartUseCase {
 
   async execute(browser: BrowserType) {
     const webBrowser = new WebBrowser();
-    await webBrowser.start({ browser })
+    await webBrowser.open({ browser });
     return webBrowser;
   }
 

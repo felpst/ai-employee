@@ -1,4 +1,4 @@
-import { WebBrowser } from "../../web-browser/web-browser";
+import { WebBrowser } from '@cognum/browser';
 
 export class CloseUseCase {
 
@@ -7,7 +7,7 @@ export class CloseUseCase {
   ) { }
 
   async execute() {
-    await this.driver.close()
+    await this.driver.close();
   }
 
 }
