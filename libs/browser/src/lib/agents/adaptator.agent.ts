@@ -1,5 +1,5 @@
 import { ChatModel } from "@cognum/llm";
-import { WebBrowserService, WebBrowserToolkit } from "@cognum/tools";
+import { WebBrowserToolkit } from "@cognum/tools";
 import { AgentExecutor, createStructuredChatAgent } from "langchain/agents";
 import {
   ChatPromptTemplate,
@@ -13,19 +13,19 @@ import { WebBrowser } from '../utils/web-browser';
 
 export class BrowserAdaptatorAgent {
   private _agent: AgentExecutor;
-  private _webBrowserService: WebBrowserService;
 
   constructor(
     private _webBrowser: WebBrowser,
     private _memory: String = '',
   ) {
     this._prompt.promptMessages.push(new SystemMessage(`Memory: ${this._memory}`));
-    this._webBrowserService = new WebBrowserService(this._webBrowser);
   }
 
   async seed(): Promise<void> {
     // Tools
-    const tools = WebBrowserToolkit({ webBrowserService: this._webBrowserService });
+    const tools = WebBrowserToolkit({
+      browser: this._webBrowser
+    });
 
     // Agent
     const agent = await createStructuredChatAgent({
@@ -46,17 +46,17 @@ export class BrowserAdaptatorAgent {
     if (!this._agent)
       throw new Error('Agent not seeded!');
 
-    const service = this._webBrowserService;
+    const browser = this._webBrowser;
 
     const windowSize =
       await this._webBrowser.driver.manage().window().getSize();
     let currentUrl = '', previousUrl = '';
 
     async function getBrowserContext() {
-      const pageElements = await service.getVisibleHtml();
-      const pageSize = await service.getPageSize();
-      const pageTitle = await service.getPageTitle();
-      const url = await service.getCurrentUrl();
+      const formattedHtml = await browser.page.getVisibleHtml();
+      const pageSize = await browser.page.getSize();
+      const pageTitle = await browser.page.getTitle();
+      const url = await browser.getCurrentUrl();
       if (url && url !== currentUrl) {
         previousUrl = currentUrl;
         currentUrl = url;
@@ -65,7 +65,7 @@ export class BrowserAdaptatorAgent {
       const browserContext = {
         'Page title': pageTitle,
         'Current Url in the browser tab': currentUrl,
-        'Visible HTML on the Browser Window': pageElements,
+        'Visible HTML on the Browser Window': `\`\`\`html\\n${formattedHtml}\`\`\``,
         'Last url accessed in the browser tab': previousUrl,
         'Browser Window Size': {
           height: `${windowSize.height}px`,

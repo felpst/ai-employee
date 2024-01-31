@@ -1,6 +1,4 @@
-import { WebBrowser } from "../web-browser/web-browser";
-import { WebBrowserService } from '../web-browser';
-import { BrowserType } from './drivers/Search.driver'
+import { BrowserType } from './drivers/Search.driver';
 import { StartUseCase } from './usecases/start.usecase';
 import { CloseUseCase } from './usecases/close.usecase';
 import { SearchApiResult } from './internet-research.interface';
@@ -9,29 +7,28 @@ import { RecursiveCharacterTextSplitter } from "langchain/text_splitter";
 import { HNSWLib } from "langchain/vectorstores/hnswlib";
 import { ContextualCompressionRetriever } from "langchain/retrievers/contextual_compression";
 import { LLMChainExtractor } from "langchain/retrievers/document_compressors/chain_extract";
+import { WebBrowser } from '@cognum/browser';
 
 export class SummarizationService {
-  webBrowser: WebBrowser
+  webBrowser: WebBrowser;
 
   async start(browser: BrowserType = 'chrome') {
-    this.webBrowser = await new StartUseCase().execute(browser)
+    this.webBrowser = await new StartUseCase().execute(browser);
   }
 
   async stop() {
-    await new CloseUseCase(this.webBrowser).execute()
+    await new CloseUseCase(this.webBrowser).execute();
   }
 
   async summarize(search: SearchApiResult[], input: string): Promise<string> {
-    const webBrowserService = new WebBrowserService(this.webBrowser)
-
-    const sourceResults = []
+    const sourceResults = [];
 
     for (const result of search) {
-      await webBrowserService.loadPage(result.url)
-      const source = await webBrowserService.getPageSource();
+      await this.webBrowser.loadUrl({ url: result.url });
+      const source = await this.webBrowser.driver.getPageSource();
       if (!source) throw new Error('Error getting page source');
 
-      sourceResults.push(source)
+      sourceResults.push(source);
     }
 
     const model = new ChatModel();
@@ -54,16 +51,16 @@ export class SummarizationService {
 
     console.log(questionsArr);
 
-    let retrievedDocs = []
-    
+    let retrievedDocs = [];
+
     for (const question of questionsArr) {
 
       const retrievedDoc = await retriever.getRelevantDocuments(question);
       console.log('doc', retrievedDocs);
-      retrievedDoc.map(doc => { retrievedDocs.push(doc.pageContent.toString()) })
+      retrievedDoc.map(doc => { retrievedDocs.push(doc.pageContent.toString()); });
     }
     console.log('docs', retrievedDocs);
-    
+
     const ansewer = await model.invoke(`Sumarize the following topics into an article:\n${retrievedDocs}\n`);
 
     return ansewer.content.toString();

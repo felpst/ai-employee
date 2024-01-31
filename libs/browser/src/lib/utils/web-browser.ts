@@ -19,10 +19,16 @@ import * as fs from 'fs';
 import * as path from 'path';
 import * as os from 'os';
 import { Key } from './press-key.interface';
+import BrowserPage from './browser-page';
 
 export class WebBrowser implements BrowserActions {
   driver: WebDriver;
   memory: any = {};
+  page: BrowserPage;
+
+  constructor() {
+    this.page = new BrowserPage(this);
+  }
 
   async open(options: IWebBrowserOptions = {}) {
     try {
@@ -88,16 +94,17 @@ export class WebBrowser implements BrowserActions {
     await this.driver.quit();
   }
 
-  async loadUrl({ url }: { url: string }): Promise<boolean> {
-    this.driver.get(url);
-    await this.driver.sleep(500);
-    for (let i = 0; i < 3; i++) {
-      const currentUrl = await this.driver.getCurrentUrl();
-      if (currentUrl.includes(url)) {
-        return true;
-      }
-    }
-    return false;
+  async loadUrl({ url }: { url: string; }): Promise<string> {
+    await this.driver.get(url).then(async () =>
+      await this.driver.wait(async () => {
+        const readyState = await this.driver.executeScript('return document.readyState');
+        return readyState === 'complete';
+      }, 10000)
+        .then()
+        .catch()
+    );
+
+    return this.getCurrentUrl();
   }
 
   async getCurrentUrl(): Promise<string> {
@@ -148,12 +155,12 @@ export class WebBrowser implements BrowserActions {
     }
   }
 
-  async selectOption({ selector, value }: { selector: string; value: string }) {
+  async selectOption({ selector, value }: { selector: string; value: string; }) {
     const element = await this._findElement(selector);
     await element.findElement(By.css(`option[value="${value}"]`)).click();
   }
 
-  async doubleClick({ selector }: { selector: string }) {
+  async doubleClick({ selector }: { selector: string; }) {
     const element = await this._findElement(selector);
     await this.driver.actions().doubleClick(element).perform();
   }
@@ -169,11 +176,11 @@ export class WebBrowser implements BrowserActions {
     element.sendKeys(content);
   }
 
-  async sleep({ time }: { time: number }) {
+  async sleep({ time }: { time: number; }) {
     await this.driver.sleep(time);
   }
 
-  async switchToFrame({ selector }: { selector: string }) {
+  async switchToFrame({ selector }: { selector: string; }) {
     const element = await this._findElement(selector);
     await this.driver.switchTo().frame(element);
   }
@@ -182,7 +189,7 @@ export class WebBrowser implements BrowserActions {
     await this.driver.switchTo().defaultContent();
   }
 
-  async scroll({ pixels }: { pixels: number }) {
+  async scroll({ pixels }: { pixels: number; }) {
     try {
       await this.driver.executeScript(`window.scrollBy(0, ${pixels});`);
     } catch (error) {
@@ -314,22 +321,20 @@ export class WebBrowser implements BrowserActions {
       this.saveMemory({ key: saveOn, value: data });
     }
 
-    const response = `Data extraction completed: ${data.length} rows. ${
-      saveOn ? `Saved on memory: ${saveOn}` : ''
-    }. First ${
-      data.length > 20 ? 20 : data.length
-    } results: \`\`\`json\n${JSON.stringify(data.slice(0, 20))}\n\`\`\``;
+    const response = `Data extraction completed: ${data.length} rows. ${saveOn ? `Saved on memory: ${saveOn}` : ''
+      }. First ${data.length > 20 ? 20 : data.length
+      } results: \`\`\`json\n${JSON.stringify(data.slice(0, 20))}\n\`\`\``;
     return response;
   }
 
-  async untilElementIsVisible({ selector }: { selector: string }) {
+  async untilElementIsVisible({ selector }: { selector: string; }) {
     const element = await this._findElement(selector);
     await this.driver.wait(async () => {
       return await element.isDisplayed();
     }, 10000);
   }
 
-  async saveMemory({ key, value }: { key: string; value: any }) {
+  async saveMemory({ key, value }: { key: string; value: any; }) {
     this.memory[key] = this.memory[key]
       ? this.memory[key].concat(value)
       : value;
@@ -418,7 +423,7 @@ export class WebBrowser implements BrowserActions {
     return response;
   }
 
-  async pressKey({ key }: { key: string }): Promise<string> {
+  async pressKey({ key }: { key: string; }): Promise<string> {
     await this.sleep({ time: 1000 });
 
     key = Key[key];
@@ -452,7 +457,7 @@ export class WebBrowser implements BrowserActions {
     });
   }
 
-  private async _findElement(selector: string): Promise<WebElement> {
+  protected async _findElement(selector: string): Promise<WebElement> {
     try {
       return await this.driver.wait(
         until.elementLocated(By.css(selector)),
@@ -463,18 +468,20 @@ export class WebBrowser implements BrowserActions {
     }
   }
 
-  private async _findElements(selector: string): Promise<WebElement[]> {
+  protected async _findElements(selector: string): Promise<WebElement[]> {
     try {
-      return await this.driver.wait(
-        until.elementsLocated(By.css(selector)),
-        10000
-      );
+      return this.driver.findElements(By.css(selector));
     } catch (error) {
-      throw new Error(`Elements not found: ${selector}`);
+      return this.driver
+        .wait(until.elementsLocated(By.css(selector)), 10000)
+        .then(r => r)
+        .catch((e) => {
+          throw new Error(`Elements not found: ${selector}`);
+        });
     }
   }
 
-  private async updateMemory() {
+  protected async updateMemory() {
     this.memory['currentUrl'] = await this.driver.getCurrentUrl();
   }
 
