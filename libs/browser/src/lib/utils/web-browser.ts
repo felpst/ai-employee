@@ -259,7 +259,7 @@ export class WebBrowser implements BrowserActions {
           try {
             let element: WebElement;
             try {
-              element = await containerElement.findElement(
+              elements = await containerElement.findElements(
                 By.css(property.selector)
               );
             } catch (_) { }
@@ -267,29 +267,27 @@ export class WebBrowser implements BrowserActions {
             switch (property.type) {
               case 'boolean':
                 rowData[property.name] =
-                  (await element?.isDisplayed()) || false;
+                  (await elements[0].isDisplayed()) || false;
                 break;
-              // case 'function':
-              //   console.log('params', property.params);
-              //   const result = await this.dataExtraction({ container: property.selector, properties: property.params });
-              //   rowData[property.name] = result
-              //   break;
+              case 'array':
+                const name = property.name;
+                rowData[name] = await Promise.all(elements.map(async (element) => {
+                  return await element.getText();
+                })) || [];
+                break;
               default:
                 if (property.attribute) {
                   rowData[property.name] =
                     (await containerElement.getAttribute(property.attribute)) ||
                     null;
                 } else {
-                  rowData[property.name] = (await element.getText()) || null;
+                  rowData[property.name] = (await elements[0].getText()) || null;
                 }
                 break;
             }
           } catch (error) {
             rowData[property.name] = null;
           }
-        } else if (property.method) {
-          const result = await this[property.method](property.params);
-          rowData[property.name] = result;
         }
       }
 
