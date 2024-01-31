@@ -244,8 +244,10 @@ export class WebBrowser implements BrowserActions {
 
     let data = [];
 
-    const containerElements = await this._findElements(container);
-    for (const containerElement of containerElements) {
+    const containerEl = await this._findElement(container);
+    const containerChildren = await containerEl.findElements(By.xpath('./*'));
+
+    for (const containerElement of containerChildren) {
       const rowData = {};
       for (const property of properties) {
         if (!property.selector && property.attribute) {
@@ -260,7 +262,7 @@ export class WebBrowser implements BrowserActions {
               elements = await containerElement.findElements(
                 By.css(property.selector)
               );
-            } catch (_) {}
+            } catch (_) { }
 
             switch (property.type) {
               case 'boolean':
@@ -457,12 +459,14 @@ export class WebBrowser implements BrowserActions {
 
   protected async _findElement(selector: string): Promise<WebElement> {
     try {
-      return await this.driver.wait(
-        until.elementLocated(By.css(selector)),
-        10000
-      );
+      return this.driver.findElement(By.css(selector));
     } catch (error) {
-      throw new Error(`Element not found: ${selector}`);
+      return this.driver
+        .wait(until.elementLocated(By.css(selector)), 10000)
+        .then(r => r)
+        .catch((e) => {
+          throw new Error(`Element not found: ${selector}`);
+        });
     }
   }
 
