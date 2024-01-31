@@ -185,27 +185,25 @@ export class WebBrowser implements BrowserActions {
           if (!property.type) property.type = 'string';
           try {
             // TODO - Check if element is displayed
-            const element = await containerElement.findElement(By.css(property.selector));
+            const elements = await containerElement.findElements(By.css(property.selector));
 
             switch (property.type) {
               case 'boolean':
-                rowData[property.name] = await element?.isDisplayed() || false;
+                rowData[property.name] = await elements[0].isDisplayed() || false;
                 break;
-              // case 'function':
-              //   console.log('params', property.params);
-              //   const result = await this.dataExtraction({ container: property.selector, properties: property.params });
-              //   rowData[property.name] = result
-              //   break;
+              case 'array':
+                const name = property.name;
+                rowData[name] = await Promise.all(elements.map(async (element) => {
+                  return await element.getText();
+                })) || [];
+                break;
               default:
-                rowData[property.name] = await element.getText() || null;
+                rowData[property.name] = await elements[0].getText() || null;
                 break;
             }
           } catch (error) {
             rowData[property.name] = null;
           }
-        } else if (property.method) {
-          const result = await this[property.method](property.params);
-          rowData[property.name] = result;
         }
       }
 

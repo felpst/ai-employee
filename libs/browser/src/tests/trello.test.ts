@@ -82,48 +82,6 @@ describe('AI Agent Browser', () => {
             ],
         },
         {
-            "name": "List All Cards on trello",
-            "description": "Use this to list cards on Trello ",
-            "inputs": {},
-            "steps": [
-                {
-                    "method": "if", "params": {
-                        "condition": "!browserMemory.currentUrl.includes('https://trello.com/b/')", "steps": [
-                            { "method": "loadUrl", "params": { "url": "https://trello.com/b/" } },
-                        ]
-                    }
-                },
-                {
-                    "method": "dataExtraction", "params": {
-                        "container": '[data-testid="list-card"]', "saveOn": "cards", "properties": [
-                            { "name": 'cardName', "selector": '[data-testid="card-name"]' },
-
-                        ]
-                    }
-                },
-                { "method": "saveOnFile", "params": { "fileName": "cards", "memoryKey": "cards" } }
-
-            ],
-        },
-        {
-            "name": "List all lists on Trello board",
-            "description": "Use this to list all list on Trello",
-            "inputs": {},
-            "steps": [
-                {
-                    "method": "dataExtraction", "params": {
-                        "container": '[data-testid="list-wrapper"]', "saveOn": "lists", "properties": [
-                            { "name": 'id', "attribute": 'data-list-id' },
-                            { "name": 'class', "attribute": 'class' },
-                            { "name": 'name', "selector": '[data-testid="list-name"]' },
-                        ]
-                    }
-                },
-                { "method": "saveOnFile", "params": { "fileName": "lists", "memoryKey": "lists" } }
-
-            ],
-        },
-        {
             "name": "List all lists and cards on Trello board",
             "description": "Use this only after you have used list all lists on Trello",
             "inputs": {
@@ -139,21 +97,11 @@ describe('AI Agent Browser', () => {
                             { "name": 'id', "attribute": 'data-list-id' },
                             { "name": 'class', "attribute": 'class' },
                             { "name": 'name', "selector": '[data-testid="list-name"]' },
-                            {
-                                "name": 'cards', "method": "dataExtraction", "params": {
-                                    "container": '[data-testid="list-cards"]', "properties": [
-                                        { "name": 'class', "attribute": 'class' },
-                                        { "name": 'name', "selector": '[data-testid="card-name"]' },
-                                        { "name": 'name', "selector": '[data-testid="card-name"]', "attribute": "class"},
-
-
-                                    ]
-                                }
-                            }
+                            { "name": 'cardsNames', "selector": '[data-testid="card-name"]', 'type': 'array' },
                         ]
                     }
                 },
-                { "method": "saveOnFile", "params": { "fileName": "trello-lists", "memoryKey": "lists-cards" } }
+                { "method": "saveOnFile", "params": { "fileName": "trello-list-cards", "memoryKey": "lists-cards" } }
 
             ],
         },
@@ -161,13 +109,13 @@ describe('AI Agent Browser', () => {
             "name": "Delete a card in trello",
             "description": "Use this to delete a card in trello",
             "inputs": {
-                "query": {
+                "cardName": {
                     "type": "string",
-                    "description": "Name of card"
-                },
+                    "description": "You will have a array of cards, you need find the card name and put here"
+                }
             },
             "steps": [
-                { "method": "clickByText", "params": { "text": "{query}", "sleep": 5000 } },
+                { "method": "clickByText", "params": { "text": "{cardName}", "sleep": 5000 } },
                 { "method": "click", "params": { "selector": ".js-archive-card", "sleep": 5000 } },
                 { "method": "click", "params": { "selector": ".js-delete-card", "sleep": 5000 } },
                 { "method": "click", "params": { "selector": ".js-confirm", "sleep": 5000 } },
@@ -178,9 +126,9 @@ describe('AI Agent Browser', () => {
             "name": "Adding member to a card in trello",
             "description": "Use this add new member at a card in trello",
             "inputs": {
-                "query": {
+                "cardName": {
                     "type": "string",
-                    "description": "Name of card"
+                    "description": "You will have a array of cards, you need find the card name and put here"
                 },
                 "name": {
                     "type": "string",
@@ -188,7 +136,7 @@ describe('AI Agent Browser', () => {
                 },
             },
             "steps": [
-                { "method": "clickByText", "params": { "text": "{query}", "sleep": 5000 } },
+                { "method": "clickByText", "params": { "text": "{cardName}", "sleep": 5000 } },
                 { "method": "click", "params": { "selector": ".js-change-card-members", "sleep": 5000 } },
                 { "method": "click", "params": { "selector": "[alt*='{name}']", "sleep": 5000 } },
 
@@ -306,11 +254,14 @@ describe('AI Agent Browser', () => {
                 },
                 "name": {
                     "type": "string",
-                    "description": "Name of card."
+                    "description": "Name of new card."
                 },
             },
             "steps": [
                 { "method": "click", "params": { "selector": '[data-list-id="{listId}"] button[data-testid="list-add-card-button"]', "sleep": 5000 } },
+                { "method": "inputText", "params": { "selector": '[data-testid="list-card-composer-textarea"]', "content": "{name}" } },
+                { "method": "click", "params": { "selector": '[data-testid="list-card-composer-add-card-button"]', "sleep": 5000 } },
+
             ],
         },
     ]
@@ -359,7 +310,7 @@ describe('AI Agent Browser', () => {
 
     test('Trello delete card', async () => {
         const result = await browserAgent.executorAgent.invoke({
-            input: 'Go to Product Roadmap board and delete Teste Renato card'
+            input: "Go to Product Roadmap board and delete teste renato card"
         })
         console.log(JSON.stringify(result))
     });
@@ -383,7 +334,7 @@ describe('AI Agent Browser', () => {
     });
     test('Trello remove tag', async () => {
         const result = await browserAgent.executorAgent.invoke({
-            input: 'Go to Product Roadmap board and to Teste Renato card and remove tag Bugs'
+            input: "Go to Product Roadmap board and to 'teste renato' card and remove tag Bugs"
         })
         console.log(JSON.stringify(result))
     });
