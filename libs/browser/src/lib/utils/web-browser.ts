@@ -241,17 +241,19 @@ export class WebBrowser implements BrowserActions {
     for (const containerElement of containerElements) {
       const rowData = {};
       for (const property of properties) {
-        if (property.attribute) {
+        if (!property.selector && property.attribute) {
           //TODO: GET ATRIBUTES IS NOT WORK
           rowData[property.name] =
             (await containerElement.getAttribute(property.attribute)) || null;
         } else if (property.selector) {
           if (!property.type) property.type = 'string';
           try {
-            // TODO - Check if element is displayed
-            const element = await containerElement.findElement(
-              By.css(property.selector)
-            );
+            let element: WebElement;
+            try {
+              element = await containerElement.findElement(
+                By.css(property.selector)
+              );
+            } catch (_) {}
 
             switch (property.type) {
               case 'boolean':
@@ -264,7 +266,13 @@ export class WebBrowser implements BrowserActions {
               //   rowData[property.name] = result
               //   break;
               default:
-                rowData[property.name] = (await element.getText()) || null;
+                if (property.attribute) {
+                  rowData[property.name] =
+                    (await containerElement.getAttribute(property.attribute)) ||
+                    null;
+                } else {
+                  rowData[property.name] = (await element.getText()) || null;
+                }
                 break;
             }
           } catch (error) {

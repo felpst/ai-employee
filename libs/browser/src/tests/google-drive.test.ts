@@ -71,16 +71,10 @@ describe('AI Agent Browser', () => {
               { name: 'id', attribute: 'data-id', required: true },
               { name: 'name', selector: 'div.KL4NAf', required: true },
               {
-                method: 'if',
-                params: {
-                  condition: "document.querySelector('img.a-Ua-c') !== null",
-                  steps: [
-                    {
-                      method: 'saveOnMemory',
-                      params: { key: 'type', value: 'file' },
-                    },
-                  ],
-                },
+                name: 'isFolder',
+                selector:
+                  'div > div > div > div.rO7ncc.M3pype > div > div > div > div > svg',
+                type: 'boolean',
               },
             ],
           },
@@ -115,26 +109,6 @@ describe('AI Agent Browser', () => {
         {
           method: 'saveOnFile',
           params: { fileName: 'google-documents', memoryKey: 'folders' },
-        },
-      ],
-    },
-    {
-      name: 'Open Folder on Google Drive',
-      description: 'Use this to open a folder on Google Drive.',
-      inputs: {
-        folderId: {
-          type: 'string',
-          description: 'Folder ID',
-        },
-      },
-      steps: [
-        {
-          method: 'loadUrl',
-          params: {
-            url: 'https://drive.google.com/drive/folders/{folderId}',
-            sleep: 10000,
-          },
-          successMessage: 'Folder selected: {folderId}.',
         },
       ],
     },
@@ -197,13 +171,6 @@ describe('AI Agent Browser', () => {
   test('Google login', async () => {
     const result = await browserAgent.executorAgent.invoke({
       input: 'Login on Google',
-    });
-    console.log(JSON.stringify(result));
-  });
-
-  test('Open Folder', async () => {
-    const result = await browserAgent.executorAgent.invoke({
-      input: 'Open Isso é um teste Folder on Google Drive',
     });
     console.log(JSON.stringify(result));
   });
