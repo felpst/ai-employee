@@ -127,6 +127,8 @@ export class WebBrowser implements BrowserActions {
     } catch (error) {
       if (!ignoreNotExists || !error.message.includes('Element not found'))
         throw error;
+    } finally {
+      return true;
     }
   }
 
@@ -173,7 +175,8 @@ export class WebBrowser implements BrowserActions {
     content: string;
   }) {
     const element = await this._findElement(selector);
-    element.sendKeys(content);
+    await element.sendKeys(content);
+    return true;
   }
 
   async sleep({ time }: { time: number; }) {
@@ -192,6 +195,7 @@ export class WebBrowser implements BrowserActions {
   async scroll({ pixels }: { pixels: number; }) {
     try {
       await this.driver.executeScript(`window.scrollBy(0, ${pixels});`);
+      return true;
     } catch (error) {
       throw new Error('Scroll is not posible');
     }
@@ -314,17 +318,13 @@ export class WebBrowser implements BrowserActions {
       if (isValid) data.push(rowData);
     }
 
-    console.log(JSON.stringify(data));
-
     // Save data on browser memory
     if (saveOn) {
       this.saveMemory({ key: saveOn, value: data });
     }
 
-    const response = `Data extraction completed: ${data.length} rows. ${saveOn ? `Saved on memory: ${saveOn}` : ''
-      }. First ${data.length > 20 ? 20 : data.length
-      } results: \`\`\`json\n${JSON.stringify(data.slice(0, 20))}\n\`\`\``;
-    return response;
+    return `Data extraction completed: ${data.length} rows. ${saveOn ? `Saved on memory key: "${saveOn}".` : ''
+      }\nFirst ${data.length > 20 ? 20 : data.length} results: \n\`\`\`json\n${JSON.stringify(data.slice(0, 20), null, 2)}\n\`\`\``;
   }
 
   async untilElementIsVisible({ selector }: { selector: string; }) {
@@ -423,24 +423,19 @@ export class WebBrowser implements BrowserActions {
     return response;
   }
 
-  async pressKey({ key }: { key: string; }): Promise<string> {
+  async pressKey({ key }: { key: string; }): Promise<boolean> {
     await this.sleep({ time: 1000 });
 
     key = Key[key];
-    return await this.driver
+    return this.driver
       .actions()
       .keyDown(key)
       .perform()
-      .then(
-        async () => {
-          await this.driver.actions().keyUp(key).perform();
-          await this.sleep({ time: 10000 });
-          return `Key ${key} pressed`;
-        },
-        (error) => {
-          return error.message;
-        }
-      );
+      .then(async () => {
+        await this.driver.actions().keyUp(key).perform();
+        await this.sleep({ time: 10000 });
+        return true;
+      });
   }
 
   async parseResponse(response: string, memory: any = this.memory) {
