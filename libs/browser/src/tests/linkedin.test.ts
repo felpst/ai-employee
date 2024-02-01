@@ -59,12 +59,12 @@ describe('AI Agent Browser', () => {
                         "times": 3, "steps": [
                             {
                                 "method": "dataExtraction", "params": {
-                                    "container": "li.reusable-search__result-container", "saveOn": "leads", "properties": [
-                                        { "name": 'name', "selector": 'a:nth-child(1) > span:nth-child(1) > span:nth-child(1)' },
-                                        { "name": 'profission', "selector": '.entity-result__primary-subtitle' },
-                                        { "name": 'city', "selector": '.entity-result__secondary-subtitle' },
-                                        { "name": 'current', "selector": '.entity-result__summary' },
-                                        { "name": 'link', "selector": '.app-aware-link', "attribute": "href" },
+                                    "container": "div.search-results-container > div:nth-child(2) > div > ul", "saveOn": "leads", "properties": [
+                                        { "name": "name", "selector": "span > span > a > span" },
+                                        { "name": "profission", "selector": "div.entity-result__primary-subtitle" },
+                                        { "name": "city", "selector": "div.entity-result__secondary-subtitle" },
+                                        { "name": "current", "selector": "p.entity-result__summary" },
+                                        { "name": "link", "selector": "a.app-aware-link", "attribute": "href" },
                                     ]
                                 }
                             },
@@ -76,15 +76,15 @@ describe('AI Agent Browser', () => {
                 { "method": "saveOnFile", "params": { "fileName": "linkedin-leads", "memoryKey": "leads" } }
             ]
         },
-    ]
-    const email = process.env.LINKEDIN_USERNAME
-    const password = process.env.LINKEDIN_PASSWORD
+    ];
+    const email = process.env.LINKEDIN_USERNAME;
+    const password = process.env.LINKEDIN_PASSWORD;
 
     // TODO: switch to personal email for testing
     const memory = `
     LinkedIn:
     - Email: ${email}
-    - Password: ${password}`
+    - Password: ${password}`;
 
     const browserAgent = new BrowserAgent(skills, memory, { _id: 'testaiemployee' } as IAIEmployee);
 
@@ -95,14 +95,14 @@ describe('AI Agent Browser', () => {
     test('LinkedIn login', async () => {
         const result = await browserAgent.executorAgent.invoke({
             input: 'Login on LinkedIn'
-        })
-        console.log(JSON.stringify(result))
+        });
+        console.log(JSON.stringify(result));
     });
 
     test('Extract Leads', async () => {
         const resultLogin = await browserAgent.executorAgent.invoke({
             input: 'Extract Software Engineers leads on LinkedIn.'
-        })
-        console.log(resultLogin)
+        });
+        console.log(resultLogin);
     });
 });
