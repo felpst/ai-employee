@@ -37,42 +37,30 @@ describe('AI Agent Browser', () => {
         },
         {
             "name": "Access Board on trello",
-            "description": "Use this to access board on Trello ",
+            "description": "Use this after list all boards to access a board.",
             "inputs": {
-                "query": {
+                "boardUrl": {
                     "type": "string",
-                    "description": "Name of board"
+                    "description": "Url to access board."
                 },
             },
             "steps": [
-                {
-                    "method": "if", "params": {
-                        "condition": "!browserMemory.currentUrl.includes('https://trello.com/u/')", "steps": [
-                            { "method": "loadUrl", "params": { "url": "https://trello.com/u/boards" } },
-                        ]
-                    }
-                },
-                { "method": "loadUrl", "params": { "url": "https://trello.com/" } },
-                { "method": "clickByText", "params": { "text": "{query}", "tagName": "div", "sleep": 5000 } },
+                { "method": "loadUrl", "params": { "url": "{boardUrl}" } },
             ],
+            "successMessage": "{boardUrl} accessed!",
         },
         {
             "name": "List All Boards on trello",
             "description": "Use this to list boards on Trello ",
             "inputs": {},
             "steps": [
-                {
-                    "method": "if", "params": {
-                        "condition": "!browserMemory.currentUrl.includes('https://trello.com/u/')", "steps": [
-                            { "method": "loadUrl", "params": { "url": "https://trello.com/u/boards" } },
-                        ]
-                    }
-                },
                 { "method": "loadUrl", "params": { "url": "https://trello.com/" } },
                 {
                     "method": "dataExtraction", "params": {
-                        "container": "#content > div > div.js-boards-page > div > div > div > div > div > div > div > div:nth-child(4) > div > div:nth-child(2) > ul", "saveOn": "boards", "properties": [
+                        "container": "div.boards-page-board-section:nth-child(2) > div:nth-child(2) > ul:nth-child(1)", "saveOn": "boards", "properties": [
                             { "name": 'boardName', "selector": 'div.board-tile-details-name' },
+                            { "name": 'boardUrl', "selector": 'a.board-tile', "attribute": 'href' }
+
 
                         ]
                     }
@@ -98,6 +86,7 @@ describe('AI Agent Browser', () => {
                             { "name": 'class', "attribute": 'class' },
                             { "name": 'name', "selector": '[data-testid="list-name"]' },
                             { "name": 'cardsNames', "selector": '[data-testid="card-name"]', 'type': 'array' },
+                            { "name": 'cardsUrls', "selector": '[data-testid="card-name"]', 'attribute': 'href'}
                         ]
                     }
                 },

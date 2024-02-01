@@ -250,6 +250,7 @@ export class WebBrowser implements BrowserActions {
 
     const containerEl = await this._findElement(container);
     const containerChildren = await containerEl.findElements(By.xpath('./*'));
+    console.log('containerChildren', containerChildren);
 
     for (const containerElement of containerChildren) {
       const rowData = {};
@@ -279,11 +280,19 @@ export class WebBrowser implements BrowserActions {
                   return await element.getText();
                 })) || [];
                 break;
+
               default:
-                if (property.attribute) {
-                  rowData[property.name] =
-                    (await containerElement.getAttribute(property.attribute)) ||
-                    null;
+                if (property.selector && property.attribute) {
+                  if (elements.length > 1) {
+                    console.log(elements.length, 'elements');
+                    rowData[property.name] = await Promise.all(elements.map(async (element) => {
+                      return await element.getAttribute(property.attribute);
+                    })) || [];
+                  } else {
+                    rowData[property.name] =
+                      (await elements[0].getAttribute(property.attribute)) ||
+                      null;
+                  }
                 } else {
                   rowData[property.name] = (await elements[0].getText()) || null;
                 }
