@@ -1,4 +1,4 @@
-import { IWebBrowserOptions } from '@cognum/interfaces';
+import { IAIEmployee, IAIEmployeeCall, IWebBrowserOptions } from '@cognum/interfaces';
 import * as chromedriver from 'chromedriver';
 import { ProxyPlugin } from 'selenium-chrome-proxy-plugin';
 import { Browser, Builder, By, WebDriver, WebElement, until } from 'selenium-webdriver';
@@ -9,12 +9,16 @@ import * as path from 'path';
 import * as os from 'os';
 import { IKey } from 'selenium-webdriver/lib/input';
 import { Key } from './press-key.interface';
+import { BrowserAgent } from "../browser";
+import { AIEmployee } from '@cognum/ai-employee';
 
 export class WebBrowser {
   driver: WebDriver
   memory: any = {};
+  aiEmployeeId: string;
 
   async open(options: IWebBrowserOptions = {}) {
+    this.aiEmployeeId = options.aiEmployeeId;
     try {
       console.log('Starting chrome driver...');
 
@@ -126,7 +130,7 @@ export class WebBrowser {
     for (const containerElement of containerElements) {
       const rowData = {};
       for (const property of properties) {
-
+        
         if (property.attribute) {
           rowData[property.name] = await containerElement.getAttribute(property.attribute) || null;
         } else if (property.selector) {
@@ -134,14 +138,19 @@ export class WebBrowser {
           try {
             // TODO - Check if element is displayed
             const element = containerElement.findElement(By.css(property.selector))
-
-            switch (property.type) {
-              case 'boolean':
-                rowData[property.name] = await element?.isDisplayed() || false;
-                break;
-              default:
-                rowData[property.name] = await element.getText() || null;
-                break;
+            
+            if (property.innerAttribute) {
+              const attributeValue = await element.getAttribute(property.innerAttribute);
+              rowData[property.name] = attributeValue || null;
+            } else {
+              switch (property.type) {
+                case 'boolean':
+                  rowData[property.name] = await element?.isDisplayed() || false;
+                  break;
+                default:
+                  rowData[property.name] = await element.getText() || null;
+                  break;
+              }
             }
           } catch (error) {
             rowData[property.name] = null;
@@ -207,7 +216,6 @@ export class WebBrowser {
 
     await this.updateMemory();
     let response: any;
-
     // Evaluate condition
     const func = `const browserMemory = JSON.parse('${JSON.stringify(this.memory)}'); ${condition};`;
     const isValid = eval(func);
@@ -288,6 +296,43 @@ export class WebBrowser {
 
   private async updateMemory() {
     this.memory['currentUrl'] = await this.driver.getCurrentUrl();
+  }
+
+  async replyMessages({messagesKey, inputSelector, buttonSelector} : {messagesKey: string, inputSelector: string, buttonSelector: string}) {
+  
+    const aiEmployee: IAIEmployee = await AIEmployee.findOne({ _id: this.aiEmployeeId });
+    const lastMessage = this.memory[messagesKey].pop()
+    
+    const message = await aiEmployee.call({
+      input: lastMessage.messageContent,
+      user: {
+        _id: aiEmployee._id,
+        name: lastMessage.name,
+        email: lastMessage.email
+      },
+      context: {
+        chatChannel: 'chat',
+        chatMessages: this.memory[messagesKey].map((message) => ({
+          sender: `${message.name} - ${message.email}`,
+          content: message.messageContent 
+        }))
+      }
+    })
+    
+    const callResult: IAIEmployeeCall = await new Promise((resolve, reject) => {
+      try {
+        message.run().subscribe(message => {
+          if (message.status === 'done') { resolve(message); }
+        })
+      } catch (error) {
+        reject(error);
+      }
+    });
+  
+    await this.inputText({ selector: inputSelector, content: callResult.output });
+  
+    await this.click({ selector: buttonSelector });
+  
   }
 
 

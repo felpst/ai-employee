@@ -31,7 +31,7 @@ export class AIEmployeeTools {
     const filteredToolsSettings = aiEmployee.tools.filter(toolSettings => {
       if (options.user) toolSettings.options.user = options.user;
       const tool = ToolsHelper.get(toolSettings.id);
-      for (const intetion of tool.intentions || []) {
+      for (const intetion of tool?.intentions || []) {
         if (intentions.includes(intetion)) return true;
       }
       return false;
@@ -49,7 +49,7 @@ export class AIEmployeeTools {
     tools.push(...toolkit)
 
     // Resource: Web browser
-    if (aiEmployee.resources?.browser && intentions.includes(INTENTIONS.TASK_EXECUTION)) {
+    if (aiEmployee.resources?.browser && intentions?.includes(INTENTIONS.TASK_EXECUTION)) {
       // const toolkit = WebBrowserToolkit({ webBrowser: aiEmployee.resources.browser }) as Tool[];
       // tools.push(...toolkit)
     }
@@ -101,13 +101,13 @@ export class AIEmployeeTools {
     switch (toolSettings.id) {
       case 'calculator':
         return [new Calculator()];
-      case 'google-search':
-        // eslint-disable-next-line no-case-declarations
-        const tool = new SerpAPI();
-        tool.metadata = {
-          id: 'google-search',
-        }
-        return [tool];
+      // case 'google-search':
+      //   // eslint-disable-next-line no-case-declarations
+      //   const tool = new SerpAPI();
+      //   tool.metadata = {
+      //     id: 'google-search',
+      //   }
+      //   return [tool];
       case 'random-number':
         return [new RandomNumberTool()];
       case 'mail':

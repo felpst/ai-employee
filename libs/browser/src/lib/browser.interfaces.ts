@@ -20,6 +20,7 @@ export interface DataExtractionProperty {
   name: string;
   selector?: string;
   attribute?: string;
+  innerAttribute?: string;
   required?: boolean;
   type?: 'string' | 'number' | 'boolean' | 'object' | 'array' | 'function' | 'any';
 }
