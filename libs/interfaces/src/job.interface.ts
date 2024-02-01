@@ -26,6 +26,7 @@ export interface IJobContext {
 export interface IJob extends DefaultModel {
   _id?: string;
   name: string;
+  description: string;
   instructions: string;
   context?: IJobContext;
   scheduler?: IJobScheduler;

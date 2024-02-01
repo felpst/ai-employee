@@ -1,11 +1,12 @@
 import { IAIEmployee, IAIEmployeeCall } from "@cognum/interfaces";
 import { ChatModel } from "@cognum/llm";
-import { WebBrowser, WebBrowserService, WebBrowserToolkit } from "@cognum/tools";
+import { WebBrowserToolkit } from "@cognum/tools";
 import { AgentExecutor, createStructuredChatAgent } from "langchain/agents";
 import { ChatPromptTemplate, HumanMessagePromptTemplate, MessagesPlaceholder, SystemMessagePromptTemplate } from "langchain/prompts";
 import { BehaviorSubject } from "rxjs";
 import { SystemMessage } from "langchain/schema";
 import * as treeify from 'treeify';
+import { WebBrowser } from '@cognum/browser';
 
 export interface IBrowserlAgentOptions {
   $call: BehaviorSubject<IAIEmployeeCall>;
@@ -20,16 +21,15 @@ export interface IBrowserlAgentOutput {
 
 export class BrowserAgent {
   private _executor: AgentExecutor;
-  private _webBrowserService: WebBrowserService;
+  private _webBrowser: WebBrowser;
 
   async init(): Promise<void> {
     const llm = new ChatModel();
 
     // Tools
-    const webBrowser = new WebBrowser();
-    await webBrowser.start({ headless: false });
-    this._webBrowserService = new WebBrowserService(webBrowser);
-    const tools = WebBrowserToolkit({ webBrowserService: this._webBrowserService });
+    this._webBrowser = new WebBrowser();
+    await this._webBrowser.open({ headless: false });
+    const tools = WebBrowserToolkit({ browser: this._webBrowser });
 
     // Agent
     const agent = await createStructuredChatAgent({
@@ -48,7 +48,7 @@ export class BrowserAgent {
   }
 
   async call(input: string) {
-    const service = this._webBrowserService;
+    const browser = this._webBrowser;
 
     let currentUrl = 'blank';
     let previousUrl = 'blank';
@@ -60,8 +60,8 @@ export class BrowserAgent {
       callbacks: [
         {
           async handleChainStart(chain, inputs) {
-            const pageElements = await service.getVisibleHtml();
-            const pageSize = await service.getPageSize();
+            const pageElements = await browser.page.getVisibleHtml();
+            const pageSize = await browser.page.getSize();
 
             const browserContext = {
               windowSize: {
@@ -95,7 +95,7 @@ export class BrowserAgent {
             inputs.browserContext = [new SystemMessage(`Browser Context:\n${treeify.asTree(browserContext, true, undefined)}`)];
           },
           async handleChainEnd() {
-            const url = await service.getCurrentUrl();
+            const url = await browser.getCurrentUrl();
             if (url && url !== currentUrl) {
               previousUrl = currentUrl;
               currentUrl = url;

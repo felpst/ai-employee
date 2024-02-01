@@ -19,6 +19,17 @@
       </mat-error>
     </div>
 
+    <div class="cognum-form-row-4">
+      <span class="cognum-heading-4 title">Description</span>
+      <input formControlName="description" type="text" placeholder="Job description" />
+      <mat-error
+        *ngIf="hasInputError('description', 'required')"
+        class="cognum-text-12 warning-message"
+      >
+        Description field is required
+      </mat-error>
+    </div>
+
     <div formGroupName="scheduler">
       <div class="cognum-form-row-4">
         <span class="cognum-heading-4 title">Frequency</span>
@@ -28,12 +39,6 @@
           type="text"
           placeholder="Example: Run weekly once, on Wednesdays at 5 pm"
         />
-        <mat-error
-          *ngIf="hasInputError('frequency', 'required')"
-          class="cognum-text-12 warning-message"
-        >
-          Frequency field is required
-        </mat-error>
       </div>
     </div>
 

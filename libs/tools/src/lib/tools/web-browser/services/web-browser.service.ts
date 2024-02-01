@@ -1,8 +1,8 @@
-import { IWebBrowser } from '@cognum/interfaces';
 import { By, until } from 'selenium-webdriver';
 import { IElementFindOptions } from '../common/element-schema';
 import { ExtractDataUseCase } from '../usecases/extract-data.usecase';
 import WebBrowserUtils from '../web-browser-utils';
+import { WebBrowser } from '@cognum/browser';
 
 export class WebBrowserService {
   private _currentURL: string;
@@ -10,7 +10,7 @@ export class WebBrowserService {
   private _selectors: Record<string, string>;
 
   constructor(
-    private webBrowser: IWebBrowser
+    private webBrowser: WebBrowser
   ) {
     this._utils = new WebBrowserUtils(this.webBrowser);
   }
@@ -27,18 +27,17 @@ export class WebBrowserService {
     return true;
   }
 
-  async loadPage(url: string): Promise<boolean> {
-    this.webBrowser.driver.get(url);
-    await this.webBrowser.driver.sleep(500);
-    for (let i = 0; i < 3; i++) {
-      console.log(`Waiting for page load: ${url}`);
-      const currentUrl = await this.webBrowser.driver.getCurrentUrl();
-      if (currentUrl.includes(url)) {
-        await this.checkCurrentURLUpdated();
-        return true;
-      }
-    }
-    return false;
+  async loadPage(url: string): Promise<string> {
+    await this.webBrowser.driver.get(url).then(async () =>
+      await this.webBrowser.driver.wait(async () => {
+        const readyState = await this.webBrowser.driver.executeScript('return document.readyState');
+        return readyState === 'complete';
+      }, 10000)
+        .then()
+        .catch()
+    );
+
+    return this.getCurrentUrl();
   }
 
   async getCurrentUrl(): Promise<string> {
@@ -185,8 +184,8 @@ export class WebBrowserService {
     this._selectors = selectors;
 
     return `\`\`\`html
-    ${html}
-    \`\`\``;
+${html}
+\`\`\``;
   }
 
   async getPageSize() {
@@ -199,5 +198,9 @@ export class WebBrowserService {
         width
       };
     });
+  }
+
+  async getPageTitle() {
+    return this.webBrowser.driver.executeScript<string>(() => document.title);
   }
 }

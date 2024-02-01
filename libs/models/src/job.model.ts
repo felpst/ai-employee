@@ -7,7 +7,7 @@ const SchedulerSchema = new Schema<IJobScheduler>({
   description: { type: String, required: false },
   schedule: { type: String, required: false },
   runOnce: { type: Boolean, default: false },
-  frequency: { type: String, required: true },
+  frequency: { type: String, required: false },
   timeZone: { type: String, required: false },
   startAt: { type: Date, required: false, default: new Date() },
   endAt: { type: Date, required: false },
@@ -20,6 +20,7 @@ const SchedulerSchema = new Schema<IJobScheduler>({
 
 const schema = new Schema<IJob>({
   name: { type: String, required: true },
+  description: { type: String, required: true },
   instructions: { type: String, required: true },
   context: { type: Schema.Types.Mixed, required: false, default: {} },
   scheduler: { type: SchedulerSchema, required: false },

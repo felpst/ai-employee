@@ -1,0 +1,51 @@
+<div class="header-container">
+  <h2 mat-dialog-title>AI Employee File</h2>
+  <mat-dialog-actions align="end">
+    <button mat-button (click)="closeModal(false)" class="close-btn">
+      <mat-icon style="margin: 0">close</mat-icon>
+    </button>
+  </mat-dialog-actions>
+</div>
+
+<mat-dialog-content>
+  <form [formGroup]="form" *ngIf="!isUploading">
+    <div
+      id="upload-container"
+      class="file-upload-container"
+      (click)="fileInput.click()"
+      (drop)="onFileDropped($event)"
+      (dragover)="onFileDragOver($event)"
+      (dragleave)="onFileDragLeave($event)"
+    >
+      <div class="info-container">
+        <mat-icon>file_upload</mat-icon>
+        <span class="cognum-text-12" id="span-upload"
+          >Click here or drag a file to upload...</span
+        >
+        <input
+          type="file"
+          #fileInput
+          (change)="onFileSelected($event)"
+          style="display: none"
+          [multiple]="false"
+        />
+        <mat-error
+          class="cognum-text-12 warning-message"
+          *ngIf="hasInputError('file', 'invalidSize')"
+        >
+          Maximum size: 10MB
+        </mat-error>
+      </div>
+    </div>
+  </form>
+  <mat-spinner
+    *ngIf="isUploading"
+    class="upload-spinner"
+    diameter="30"
+    strokeWidth="4"
+  ></mat-spinner
+></mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button mat-dialog-close>Cancel</button>
+</mat-dialog-actions>

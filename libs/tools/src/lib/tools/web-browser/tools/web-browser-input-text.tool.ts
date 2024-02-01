@@ -1,7 +1,6 @@
 import { DynamicStructuredTool } from 'langchain/tools';
 import { z } from 'zod';
-import { WebBrowserToolSettings } from '../web-browser.toolkit';
-import { IElementFindOptions } from '../common/element-schema';
+import { WebBrowserToolSettings, buildToolOutput } from '../web-browser.toolkit';
 
 export class WebBrowserInputTextTool extends DynamicStructuredTool {
   constructor(settings: WebBrowserToolSettings) {
@@ -10,29 +9,31 @@ export class WebBrowserInputTextTool extends DynamicStructuredTool {
       metadata: { id: "web-browser", tool: 'inputText' },
       description: 'Use this to input a text to an element on web browser.',
       schema: z.object({
-        textValue: z.string().describe("the text that will be input."),
+        content: z.string().describe("the content that will be input."),
         selectorId: z.number().describe("selector-id attribute of the choosen element."),
-        findTimeout: z.number().optional().default(10000).describe("timeout to find the element in ms."),
       }),
       func: async ({
-        textValue,
+        content,
         selectorId,
-        findTimeout
       }) => {
+        let success = false;
+        let message: string;
+        let input: { selector: string, content: string; };
+
         try {
-          const selector = settings.webBrowserService.findElementById(selectorId);
+          const selector = settings.browser.page.getSelectorById(selectorId);
+          input = { selector, content };
+          success = await settings.browser.inputText(input);
 
-          const success = await settings.webBrowserService.inputText(textValue, {
-            elementSelector: selector,
-            selectorType: 'css',
-            findTimeout
-          });
-
-          if (!success) throw new Error(`Input unsuccessful`);
-
-          return `Input ${textValue} was successfully done in element "${selector}"`;
+          message = `Input was done!`;
         } catch (error) {
-          return error.message;
+          message = error.message;
+        } finally {
+          return buildToolOutput({
+            success,
+            message,
+            input
+          });
         }
       },
     });
