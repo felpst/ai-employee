@@ -71,8 +71,8 @@ describe('AI Agent Browser', () => {
                 { "method": "loadUrl", "params": { "url": "https://trello.com/" } },
                 {
                     "method": "dataExtraction", "params": {
-                        "container": "div.board-tile-details-name", "saveOn": "boards", "properties": [
-                            { "name": 'boardName', "selector": 'div' },
+                        "container": "#content > div > div.js-boards-page > div > div > div > div > div > div > div > div:nth-child(4) > div > div:nth-child(2) > ul", "saveOn": "boards", "properties": [
+                            { "name": 'boardName', "selector": 'div.board-tile-details-name' },
 
                         ]
                     }
@@ -93,7 +93,7 @@ describe('AI Agent Browser', () => {
             "steps": [
                 {
                     "method": "dataExtraction", "params": {
-                        "container": '[data-testid="list-wrapper"]', "saveOn": "lists-cards", "properties": [
+                        "container": '#board', "saveOn": "lists-cards", "properties": [
                             { "name": 'id', "attribute": 'data-list-id' },
                             { "name": 'class', "attribute": 'class' },
                             { "name": 'name', "selector": '[data-testid="list-name"]' },
@@ -264,15 +264,15 @@ describe('AI Agent Browser', () => {
 
             ],
         },
-    ]
-    const email = process.env.TRELLO_USERNAME
-    const password = process.env.TRELLO_PASSWORD
+    ];
+    const email = process.env.TRELLO_USERNAME;
+    const password = process.env.TRELLO_PASSWORD;
 
     // TODO: switch to personal email for testing
     const memory = `
     Trello:
     - Email: ${email}
-    - Password: ${password}`
+    - Password: ${password}`;
 
     const browserAgent = new BrowserAgent(skills, memory, { _id: 'testaiemployee' } as IAIEmployee);
 
@@ -283,71 +283,71 @@ describe('AI Agent Browser', () => {
     test('Trello login', async () => {
         const result = await browserAgent.executorAgent.invoke({
             input: 'Login on Trello'
-        })
-        console.log(JSON.stringify(result))
+        });
+        console.log(JSON.stringify(result));
     });
 
     test('Trello click on board', async () => {
         const result = await browserAgent.executorAgent.invoke({
             input: 'Go to Product Roadmap board'
-        })
-        console.log(JSON.stringify(result))
+        });
+        console.log(JSON.stringify(result));
     });
 
     test('Trello list all boards', async () => {
         const result = await browserAgent.executorAgent.invoke({
             input: 'List All boards'
-        })
-        console.log(JSON.stringify(result))
+        });
+        console.log(JSON.stringify(result));
     });
 
     test('Trello list all lists and cards', async () => {
         const result = await browserAgent.executorAgent.invoke({
             input: 'Go to Product Roadmap board list all lists and cards'
-        })
-        console.log(JSON.stringify(result))
+        });
+        console.log(JSON.stringify(result));
     });
 
     test('Trello delete card', async () => {
         const result = await browserAgent.executorAgent.invoke({
             input: "Go to Product Roadmap board and delete teste renato card"
-        })
-        console.log(JSON.stringify(result))
+        });
+        console.log(JSON.stringify(result));
     });
     test('Trello add member to card', async () => {
         const result = await browserAgent.executorAgent.invoke({
             input: 'Go to Product Roadmap board and to Teste Renato card and add Linecker member'
-        })
-        console.log(JSON.stringify(result))
+        });
+        console.log(JSON.stringify(result));
     });
     test('Trello remove member from card', async () => {
         const result = await browserAgent.executorAgent.invoke({
             input: 'Go to Product Roadmap board and to Teste Renato card and remove Renato member'
-        })
-        console.log(JSON.stringify(result))
+        });
+        console.log(JSON.stringify(result));
     });
     test('Trello add new tag', async () => {
         const result = await browserAgent.executorAgent.invoke({
             input: 'Go to Product Roadmap board and to Teste Renato card and add new tag Bugs'
-        })
-        console.log(JSON.stringify(result))
+        });
+        console.log(JSON.stringify(result));
     });
     test('Trello remove tag', async () => {
         const result = await browserAgent.executorAgent.invoke({
             input: "Go to Product Roadmap board and to 'teste renato' card and remove tag Bugs"
-        })
-        console.log(JSON.stringify(result))
+        });
+        console.log(JSON.stringify(result));
     });
     test('Trello move card', async () => {
         const result = await browserAgent.executorAgent.invoke({
             input: 'Go to Product Roadmap board and to Teste Renato card and move it to Developing list'
-        })
-        console.log(JSON.stringify(result))
+        });
+        console.log(JSON.stringify(result));
     });
     test('Trello create a card', async () => {
         const result = await browserAgent.executorAgent.invoke({
             input: 'Go to Product Roadmap board and create a "Test Create Card" card in Backlog list'
-        })
-        console.log(JSON.stringify(result))
+        });
+        console.log(JSON.stringify(result));
     });
 });
