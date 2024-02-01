@@ -242,10 +242,7 @@ export class WebBrowser implements BrowserActions {
     }
   }
 
-  async dataExtraction({
-    container,
-    properties,
-    saveOn,
+  async dataExtraction({container,properties,saveOn,
   }: {
     container: string;
     properties: DataExtractionProperty[];
@@ -264,10 +261,11 @@ export class WebBrowser implements BrowserActions {
       for (const property of properties) {
         if (!property.selector && property.attribute) {
           //TODO: GET ATRIBUTES IS NOT WORK
-          rowData[property.name] =
-            (await containerElement.getAttribute(property.attribute)) || null;
+          rowData[property.name] = (await containerElement.getAttribute(property.attribute)) || null;
         } else if (property.selector) {
+
           if (!property.type) property.type = 'string';
+
           try {
             let elements: WebElement[];
             try {
@@ -275,6 +273,8 @@ export class WebBrowser implements BrowserActions {
                 By.css(property.selector)
               );
             } catch (_) { }
+
+            const element = elements && elements.length > 0 ? elements[0] : null; 
             
             if (property.innerAttribute) {
               const attributeValue = await element.getAttribute(property.innerAttribute);
@@ -539,7 +539,7 @@ export class WebBrowser implements BrowserActions {
   
     await this.inputText({ selector: inputSelector, content: callResult.output });
   
-    await this.click({ selector: buttonSelector });
+    await this.click({ selector: buttonSelector, ignoreNotExists: false });
   
   }
 
