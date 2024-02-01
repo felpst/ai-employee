@@ -1,7 +1,7 @@
 import { DynamicStructuredTool } from 'langchain/tools';
 import { z } from 'zod';
 import { IElementFindOptions, elementSchema } from '../common/element-schema';
-import { WebBrowserToolSettings } from '../web-browser.toolkit';
+import { WebBrowserToolSettings, buildToolOutput } from '../web-browser.toolkit';
 
 export type ScrollPageProps = {
   direction: 'Vertical' | 'Horizontal';
@@ -19,13 +19,22 @@ export class WebBrowserScrollPageTool extends DynamicStructuredTool {
         // direction: z.enum(['Vertical', 'Horizontal']).optional().describe("scroll direction"),
       }),
       func: async ({ pixels, direction }: IElementFindOptions & ScrollPageProps) => {
+        const input = { pixels };
+        let success = false;
+        let message: string;
+
         try {
+          success = await settings.browser.scroll({ pixels });
 
-          await settings.browser.scroll({ pixels });
-
-          return `Scrolled ${pixels}px successfully.`;
+          message = `Scrolled ${pixels}px!`;
         } catch (error) {
-          return error.message;
+          message = error.message;
+        } finally {
+          return buildToolOutput({
+            success,
+            message,
+            input,
+          });
         }
       },
     });

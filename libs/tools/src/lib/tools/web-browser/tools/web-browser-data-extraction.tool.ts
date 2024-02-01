@@ -1,6 +1,7 @@
 import { DynamicStructuredTool } from 'langchain/tools';
-import { WebBrowserToolSettings } from '../web-browser.toolkit';
+import { WebBrowserToolSettings, buildToolOutput } from '../web-browser.toolkit';
 import { z } from 'zod';
+import { DataExtractionParams, EveryType } from '@cognum/browser';
 
 export class WebBrowserExtractDataTool extends DynamicStructuredTool {
   constructor(settings: WebBrowserToolSettings) {
@@ -15,10 +16,15 @@ export class WebBrowserExtractDataTool extends DynamicStructuredTool {
           selectorId: z.string().describe('selector-id attribute of the property for the first item.'),
           attribute: z.string().describe('the data attribute to be used instead value.').optional(),
           required: z.boolean().describe('indicator that property is required.').optional(),
-          type: z.enum(['string', 'number', 'boolean', 'any']).describe('property type.').optional()
-        })).describe('definition of the properties to be extracted.')
+          type: z.enum(EveryType).describe('property type.').optional()
+        })).describe('definition of the properties to be extracted.'),
+        saveOn: z.string().describe('browser memory key where to save data on.').optional()
       }),
       func: async ({ selectorId, properties }) => {
+        let message: string;
+        let result: string;
+        let input: DataExtractionParams;
+
         try {
           const container = settings.browser.page.getSelectorById(selectorId);
 
@@ -34,14 +40,19 @@ export class WebBrowserExtractDataTool extends DynamicStructuredTool {
               .join(' > ');
           }
 
-          console.log(JSON.stringify({ container, properties }, null, 2));
+          input = { container, properties };
 
-          const extractData = await settings.browser.dataExtraction({ container, properties });
-
-          const json = JSON.stringify(extractData);
-          return json;
+          result = await settings.browser.dataExtraction(input);
+          message = 'The data was extracted!';
         } catch (error) {
-          return error.message;
+          message = error.message;
+        } finally {
+          return buildToolOutput({
+            success: !!result,
+            message,
+            input,
+            result
+          });
         }
       },
     });

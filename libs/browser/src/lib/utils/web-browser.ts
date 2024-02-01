@@ -318,13 +318,15 @@ export class WebBrowser implements BrowserActions {
       if (isValid) data.push(rowData);
     }
 
+    console.log(data);
+
     // Save data on browser memory
     if (saveOn) {
       this.saveMemory({ key: saveOn, value: data });
     }
 
     return `Data extraction completed: ${data.length} rows. ${saveOn ? `Saved on memory key: "${saveOn}".` : ''
-      }\nFirst ${data.length > 20 ? 20 : data.length} results: \n\`\`\`json\n${JSON.stringify(data.slice(0, 20), null, 2)}\n\`\`\``;
+      }\nFirst ${data.length > 5 ? 5 : data.length} results: \n\`\`\`json\n${JSON.stringify(data.slice(0, 5), null, 2)}\n\`\`\``;
   }
 
   async untilElementIsVisible({ selector }: { selector: string; }) {

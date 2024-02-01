@@ -1,6 +1,6 @@
 import { DynamicStructuredTool } from 'langchain/tools';
 import { z } from 'zod';
-import { WebBrowserToolSettings } from '../web-browser.toolkit';
+import { WebBrowserToolSettings, buildToolOutput } from '../web-browser.toolkit';
 
 export class WebBrowserInputTextTool extends DynamicStructuredTool {
   constructor(settings: WebBrowserToolSettings) {
@@ -16,13 +16,24 @@ export class WebBrowserInputTextTool extends DynamicStructuredTool {
         content,
         selectorId,
       }) => {
+        let success = false;
+        let message: string;
+        let input: { selector: string, content: string; };
+
         try {
           const selector = settings.browser.page.getSelectorById(selectorId);
-          await settings.browser.inputText({ selector, content });
+          input = { selector, content };
+          success = await settings.browser.inputText(input);
 
-          return `Input ${content} was successfully done in element "${selector}"`;
+          message = `Input was done!`;
         } catch (error) {
-          return error.message;
+          message = error.message;
+        } finally {
+          return buildToolOutput({
+            success,
+            message,
+            input
+          });
         }
       },
     });

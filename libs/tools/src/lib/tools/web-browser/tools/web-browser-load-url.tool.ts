@@ -1,6 +1,6 @@
 import { DynamicStructuredTool } from 'langchain/tools';
 import { z } from 'zod';
-import { WebBrowserToolSettings } from '../web-browser.toolkit';
+import { WebBrowserToolSettings, buildToolOutput } from '../web-browser.toolkit';
 
 export class WebBrowserLoadUrlTool extends DynamicStructuredTool {
   constructor(settings: WebBrowserToolSettings) {
@@ -12,12 +12,24 @@ export class WebBrowserLoadUrlTool extends DynamicStructuredTool {
         url: z.string().describe("valid url to load page on web browser"),
       }),
       func: async ({ url }: { url: string; }) => {
-        try {
-          const currentUrl = await settings.browser.loadUrl({ url });
+        let message: string;
+        let result: string;
+        const input = { url };
 
-          return `Page loaded on web browser: ${currentUrl}`;
+        try {
+          result = await settings.browser.loadUrl(input);
+          message = 'Page loaded!';
         } catch (error) {
-          return error.message;
+          message = error.message;
+        } finally {
+          return buildToolOutput({
+            success: !!result,
+            message,
+            input,
+            ...(result && {
+              result: `Current page is now "${result}"`
+            })
+          });
         }
       },
     });
