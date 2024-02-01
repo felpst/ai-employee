@@ -81,6 +81,7 @@ export interface DataExtractionProperty {
   params?: any;
   selector?: string;
   attribute?: string;
+  innerAttribute?: string;
   required?: boolean;
   type?: (typeof EveryType)[number];
 }

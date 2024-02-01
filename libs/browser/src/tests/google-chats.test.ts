@@ -2,7 +2,8 @@ import 'dotenv/config';
 import { BrowserAgent } from "../lib/browser";
 import { Skill } from "../lib/browser.interfaces";
 import { IAIEmployee } from '@cognum/interfaces';
-import * as treeify from 'treeify';
+import { DatabaseHelper } from '@cognum/helpers';
+import { AIEmployeeRepository } from '@cognum/ai-employee';
 
 describe('AI Agent Browser', () => {
   jest.setTimeout(600000);
@@ -87,9 +88,49 @@ describe('AI Agent Browser', () => {
         { "method": "switchToDefaultContent" },
       ],
       "successMessage": "Message sent: {message}."
+    },
+    {
+      "name": "Read and reply messages on Google Chat",
+      "description": "Use this to read and reply messages on Google Chat.",
+      "inputs": {
+        "roomType": {
+          "type": "string",
+          "description": "Type of the room (dm or space)"
+        },
+        "roomId": {
+          "type": "string",
+          "description": "Room ID"
+        },
+        "email": {
+          "type": "string",
+          "description": "Email on Google account."
+        },
+        "password": {
+          "type": "string",
+          "description": "Password on Google account."
+        }
+      },
+      "steps": [
+        
+        { "method": "loadUrl", "params": { "url": "https://mail.google.com/chat/u/0/#chat/{roomType}/{roomId}" }, "successMessage": "Room selected: {roomId}." },
+        { "method": "switchToFrame", "params": { "selector": 'iframe.aAtlvd.bl', "sleep": 5000, } },
+        { "method": "dataExtraction", "params": { "container": "div.SvOPqd > c-wiz", "saveOn": "messages", "properties": [
+          { "name": "name", "selector": "span.ZTmjQb.Z4BnXb",  "innerAttribute": 'data-name' },
+          { "name": "email", "selector": "span.ZTmjQb.Z4BnXb", "innerAttribute": 'data-hovercard-id' },
+          { "name": "messageContent", "selector": "div.Zc1Emd.QIJiHb", "type": "text" },
+          { "name": "timestamp", "selector": "span.FvYVyf", "innerAttribute": "data-absolute-timestamp" },
+        ]}},
+        { "method": "switchToDefaultContent" },
+        { "method": "saveOnFile", "params": { "fileName": "google-chats-messages", "memoryKey": "messages" } },
+        { "method": "if", "params": { "condition": "browserMemory.messages[browserMemory.messages.length - 1].email != browserMemory.email", "steps": [
+            {"method": "replyMessages", "params": {
+              "messagesKey": "messages", 
+              "inputSelector":'div[role="textbox"]', 
+              "buttonSelector": "button[aria-label='Send message']"}}
+        ]}},
+
+      ]
     }
-    // TODO - Read messages
-    // TODO - Open unread room
   ]
   const email = process.env.GOOGLE_EMAIL
   const password = process.env.GOOGLE_PASSWORD
@@ -99,15 +140,32 @@ describe('AI Agent Browser', () => {
     Google:
     - Email: ${email}
     - Password: ${password}
-    - RoomType: space
-    - RoomId: AAAAeXMMTpY
+    - RoomType: dm
+    - RoomId: q-YlX0AAAAE
     - Message: Test message - Hello World!
     `
 
-  const browserAgent = new BrowserAgent(skills, memory, { _id: 'testaiemployee' } as IAIEmployee);
+  const aiEmployeeRepo = new AIEmployeeRepository('654e4dace7a619a279bf9a55');
+  const testEmployeeId = '659ed3258928300525d06484';
+  const browserAgent = new BrowserAgent(skills, memory, { _id: testEmployeeId } as IAIEmployee);
+  let aiEmployee;
 
   beforeAll(async () => {
+    await DatabaseHelper.connect(process.env.MONGO_URL);
+    // await aiEmployeeRepo.delete(testEmployeeId);
+    aiEmployee = (await aiEmployeeRepo.create({
+      _id: testEmployeeId,
+      name: 'Adam',
+      role: 'Software Engineer',
+      tools: [],
+    })) as IAIEmployee;
+    
     await browserAgent.seed();
+  });
+
+  afterAll(async () => {
+    await aiEmployeeRepo.delete(testEmployeeId);
+    await DatabaseHelper.disconnect();
   });
 
   test('Google login', async () => {
@@ -136,6 +194,14 @@ describe('AI Agent Browser', () => {
       input: 'Send message on Google Chat'
     })
     console.log(JSON.stringify(result))
+  });
+
+  test('Read message', async () => {
+    const result = await browserAgent.executorAgent.invoke({
+      input: 'Read message on Google Chat'
+    })
+    console.log(JSON.stringify(result))
+
   });
 
 });

@@ -1,4 +1,4 @@
-import { IWebBrowserOptions } from '@cognum/interfaces';
+import { IAIEmployee, IAIEmployeeCall, IWebBrowserOptions } from '@cognum/interfaces';
 import * as chromedriver from 'chromedriver';
 import { ProxyPlugin } from 'selenium-chrome-proxy-plugin';
 import {
@@ -19,18 +19,25 @@ import * as fs from 'fs';
 import * as path from 'path';
 import * as os from 'os';
 import { Key } from './press-key.interface';
+
+import { AIEmployee } from '@cognum/ai-employee';
 import BrowserPage from './browser-page';
 
 export class WebBrowser implements BrowserActions {
   driver: WebDriver;
   memory: any = {};
+
+  aiEmployeeId: string;
+
   page: BrowserPage;
 
   constructor() {
     this.page = new BrowserPage(this);
   }
 
+
   async open(options: IWebBrowserOptions = {}) {
+    this.aiEmployeeId = options.aiEmployeeId;
     try {
       console.log('Starting chrome driver...');
 
@@ -235,10 +242,7 @@ export class WebBrowser implements BrowserActions {
     }
   }
 
-  async dataExtraction({
-    container,
-    properties,
-    saveOn,
+  async dataExtraction({container,properties,saveOn,
   }: {
     container: string;
     properties: DataExtractionProperty[];
@@ -257,10 +261,11 @@ export class WebBrowser implements BrowserActions {
       for (const property of properties) {
         if (!property.selector && property.attribute) {
           //TODO: GET ATRIBUTES IS NOT WORK
-          rowData[property.name] =
-            (await containerElement.getAttribute(property.attribute)) || null;
+          rowData[property.name] = (await containerElement.getAttribute(property.attribute)) || null;
         } else if (property.selector) {
+
           if (!property.type) property.type = 'string';
+
           try {
             let elements: WebElement[];
             try {
@@ -269,34 +274,42 @@ export class WebBrowser implements BrowserActions {
               );
             } catch (_) { }
 
-            switch (property.type) {
-              case 'boolean':
-                rowData[property.name] =
-                  (await elements[0].isDisplayed()) || false;
-                break;
-              case 'array':
-                const name = property.name;
-                rowData[name] = await Promise.all(elements.map(async (element) => {
-                  return await element.getText();
-                })) || [];
-                break;
+            const element = elements && elements.length > 0 ? elements[0] : null; 
+            
+            if (property.innerAttribute) {
+              const attributeValue = await element.getAttribute(property.innerAttribute);
+              rowData[property.name] = attributeValue || null;
+            } else {
+              switch (property.type) {
+                case 'boolean':
+                  rowData[property.name] =
+                    (await elements[0].isDisplayed()) || false;
+                  break;
+                case 'array':
+                  const name = property.name;
+                  rowData[name] = await Promise.all(elements.map(async (element) => {
+                    return await element.getText();
+                  })) || [];
+                  break;
 
-              default:
-                if (property.selector && property.attribute) {
-                  if (elements.length > 1) {
-                    console.log(elements.length, 'elements');
-                    rowData[property.name] = await Promise.all(elements.map(async (element) => {
-                      return await element.getAttribute(property.attribute);
-                    })) || [];
+                default:
+                  if (property.selector && property.attribute) {
+                    if (elements.length > 1) {
+                      console.log(elements.length, 'elements');
+                      rowData[property.name] = await Promise.all(elements.map(async (element) => {
+                        return await element.getAttribute(property.attribute);
+                      })) || [];
+                    } else {
+                      rowData[property.name] =
+                        (await elements[0].getAttribute(property.attribute)) ||
+                        null;
+                    }
                   } else {
-                    rowData[property.name] =
-                      (await elements[0].getAttribute(property.attribute)) ||
-                      null;
+                    rowData[property.name] = (await elements[0].getText()) || null;
                   }
-                } else {
-                  rowData[property.name] = (await elements[0].getText()) || null;
-                }
-                break;
+                  break;
+              }
+
             }
           } catch (error) {
             rowData[property.name] = null;
@@ -391,7 +404,6 @@ export class WebBrowser implements BrowserActions {
 
     await this.updateMemory();
     let response: any;
-
     // Evaluate condition
     const func = `const browserMemory = JSON.parse('${JSON.stringify(
       this.memory
@@ -493,6 +505,46 @@ export class WebBrowser implements BrowserActions {
     this.memory['currentUrl'] = await this.driver.getCurrentUrl();
   }
 
+
+  async replyMessages({messagesKey, inputSelector, buttonSelector} : {messagesKey: string, inputSelector: string, buttonSelector: string}) {
+  
+    const aiEmployee: IAIEmployee = await AIEmployee.findOne({ _id: this.aiEmployeeId });
+    const lastMessage = this.memory[messagesKey].pop()
+    
+    const message = await aiEmployee.call({
+      input: lastMessage.messageContent,
+      user: {
+        _id: aiEmployee._id,
+        name: lastMessage.name,
+        email: lastMessage.email
+      },
+      context: {
+        chatChannel: 'chat',
+        chatMessages: this.memory[messagesKey].map((message) => ({
+          sender: `${message.name} - ${message.email}`,
+          content: message.messageContent 
+        }))
+      }
+    })
+    
+    const callResult: IAIEmployeeCall = await new Promise((resolve, reject) => {
+      try {
+        message.run().subscribe(message => {
+          if (message.status === 'done') { resolve(message); }
+        })
+      } catch (error) {
+        reject(error);
+      }
+    });
+  
+    await this.inputText({ selector: inputSelector, content: callResult.output });
+  
+    await this.click({ selector: buttonSelector, ignoreNotExists: false });
+  
+  }
+
+
+
   private async _findElementByText(
     text: string,
     tagName: string = '*'
@@ -505,4 +557,5 @@ export class WebBrowser implements BrowserActions {
       throw new Error(`Element not found with this text: ${text}`);
     }
   }
+
 }
