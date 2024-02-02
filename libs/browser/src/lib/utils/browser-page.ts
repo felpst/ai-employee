@@ -1,6 +1,5 @@
 import { WebBrowser } from './web-browser';
 import { JSDOM, VirtualConsole } from 'jsdom';
-import { By } from 'selenium-webdriver';
 import prettier from 'prettier';
 
 const ELEMENT_OUT_OF_VIEW_ATTR = 'is-out-of-view';
@@ -17,7 +16,7 @@ export default class BrowserPage {
   }
 
   async getElementHtml(selector: string): Promise<string> {
-    const el = await this.browser.driver.findElement(By.css(selector));
+    const el = await this.browser.driver.findElement({ css: selector });
     const html = await el.getAttribute('outerHTML');
 
     const element = this._DOMParse(html);
