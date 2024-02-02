@@ -26,7 +26,15 @@ export class WebBrowserExtractDataTool extends DynamicStructuredTool {
         let input: DataExtractionParams;
 
         try {
-          const container = settings.browser.page.getSelectorById(selectorId);
+          let container = settings.browser.page.getSelectorById(selectorId);
+
+          const containerEl = await settings.browser.driver.findElement({ css: container });
+          let hasTBody = false;
+          if (await containerEl.getTagName() === 'table') {
+            hasTBody = !!(await containerEl.findElement({ tagName: 'tbody' })
+              .then(r => r)
+              .catch(() => null));
+          }
 
           for (const prop of properties) {
             const propSelector = settings.browser.page.getSelectorById(prop.selectorId);
@@ -34,11 +42,11 @@ export class WebBrowserExtractDataTool extends DynamicStructuredTool {
 
             delete prop['selectorId'];
 
-            prop['selector'] = selector
-              .split(' > ')
-              .map(tag => tag.split(':')[0]) // remove child specification
+            prop['selector'] = selector.split(' > ')
+              .slice(hasTBody ? 3 : 2) // explained on next if
               .join(' > ');
           }
+          if (hasTBody) container += ' > tbody'; // change container context to inside table body
 
           input = { container, properties };
 
