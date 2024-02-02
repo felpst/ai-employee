@@ -2,7 +2,6 @@ import 'dotenv/config';
 import { BrowserAgent } from "../lib/browser";
 import { DatabaseHelper } from '@cognum/helpers';
 import mongoose, { Model, Schema } from 'mongoose';
-import { BrowserLearnerAgent } from '../lib/agents/learner.agent';
 
 const programScheduleExtractionSteps = [{
   "action": {
@@ -306,46 +305,87 @@ const linkedinExtractLeadsSteps = [
 
 const linkedinLoginSteps = [
   {
-    action: {
-      tool: "Web Browser Load Page",
-      toolInput: {
-        url: "https://www.linkedin.com/login"
+    "action": {
+      "tool": "Web Browser Load Url",
+      "toolInput": {
+        "url": "https://www.linkedin.com/login"
       },
-      log: "Self Locate: I am on a new tab page in the browser, as indicated by the page title \"Nova guia\" and the URL \"chrome://new-tab-page/\".\nThought: Since I am on a new tab page, I need to load the LinkedIn login page to proceed with the login process.\n\nAction:\n```\n{\n  \"action\": \"Web Browser Load Page\",\n  \"action_input\"\: {\n    \"url\": \"https://www.linkedin.com/login\"\n  }\n}\n```\n"
+      "log": "Self Locate: I am on a new tab page in the browser, as indicated by the page title \"Nova guia\" and the URL \"chrome://new-tab-page/\".\n\nThought: To log in to LinkedIn, I need to navigate to the LinkedIn website first. I will use the Web Browser Load Url tool to load the LinkedIn login page.\n\nAction:\n```json\n{\n  \"action\": \"Web Browser Load Url\",\n  \"action_input\": {\n    \"url\": \"https://www.linkedin.com/login\"\n  }\n}\n```\n\n"
     },
-    observation: "Page loaded on web browser: https://www.linkedin.com/login"
+    "observation": "Success: Page loaded!\n\nService Input:\n```json\n{\n  \"url\": \"https://www.linkedin.com/login\"\n}\n```\n\nService Response: Current page is now \"https://www.linkedin.com/login\""
   },
   {
-    action: {
-      tool: "Web Browser Input Text",
-      toolInput: {
-        textValue: "aiemployee@cognum.ai",
-        selectorId: 96
+    "action": {
+      "tool": "Web Browser Input Text",
+      "toolInput": {
+        "content": "aiemployee@cognum.ai",
+        "selectorId": 33
       },
-      log: "Self Locate: I am on the LinkedIn login page, as indicated by the page title \"Entrar ou cadastrar-se no LinkedIn | LinkedIn\" and the current URL in the browser tab \"https://www.linkedin.com/login\".\nThought: Since I am on the LinkedIn login page, I need to input the provided test credentials into the email and password fields and then click the login button to perform the login action.\n\nAction:\n```\n{\n  \"action\": \"Web Browser Input Text\",\n  \"action_input\"\: {\n    \"textValue\": \"aiemployee@cognum.ai\",\n    \"selectorId\": 96\n  }\n}\n```\n\n"
+      "log": "Self Locate: I am on the LinkedIn login page, as indicated by the page title \"Entrar ou cadastrar-se no LinkedIn | LinkedIn\" and the current URL \"https://www.linkedin.com/login\".\n\nThought: Now that I am on the LinkedIn login page, I need to input the provided test credentials into the appropriate fields and then click the login button.\n\nAction:\n```json\n{\n  \"action\": \"Web Browser Input Text\",\n  \"action_input\": {\n    \"content\": \"aiemployee@cognum.ai\",\n    \"selectorId\": 33\n  }\n}\n```\n\n"
     },
-    observation: "Input aiemployee@cognum.ai was successfully done in element \"#username\""
+    "observation": "Success: Input was done!\n\nService Input:\n```json\n{\n  \"selector\": \"#username\",\n  \"content\": \"aiemployee@cognum.ai\"\n}\n```"
   },
   {
-    action: {
-      tool: "Web Browser Input Text",
-      toolInput: {
-        textValue: "gWHT#TDBtw7Z#,@",
-        selectorId: 122
+    "action": {
+      "tool": "Web Browser Input Text",
+      "toolInput": {
+        "content": "gWHT#TDBtw7Z#,@",
+        "selectorId": 59
       },
-      log: "Action:\n```\n{\n  \"action\": \"Web Browser Input Text\",\n  \"action_input\"\: {\n    \"textValue\": \"gWHT#TDBtw7Z#,@\",\n    \"selectorId\": 122\n  }\n}\n```\n\n"
+      "log": "Action:\n```json\n{\n  \"action\": \"Web Browser Input Text\",\n  \"action_input\": {\n    \"content\": \"gWHT#TDBtw7Z#,@\",\n    \"selectorId\": 59\n  }\n}\n```\n\n"
     },
-    observation: "Input gWHT#TDBtw7Z#,@ was successfully done in element \"#password\""
+    "observation": "Success: Input was done!\n\nService Input:\n```json\n{\n  \"selector\": \"#password\",\n  \"content\": \"gWHT#TDBtw7Z#,@\"\n}\n```"
   },
   {
-    action: {
-      tool: "Web Browser Click",
-      toolInput: {
-        selectorId: 128
+    "action": {
+      "tool": "Web Browser Click",
+      "toolInput": {
+        "selectorId": 65
       },
-      log: "Action:\n```\n{\n  \"action\": \"Web Browser Click\",\n  \"action_input\"\: {\n    \"selectorId\": 128\n  }\n}\n```"
+      "log": "Action:\n```json\n{\n  \"action\": \"Web Browser Click\",\n  \"action_input\": {\n    \"selectorId\": 65\n  }\n}\n```\n\n\n\n"
     },
-    observation: "The element \"#organic-div > form:nth-child(2) > div:nth-child(30) > button:nth-child(1)\" was clicked"
+    "observation": "Success: The element was clicked!\n\nService Input:\n```json\n{\n  \"selector\": \"#organic-div > form > div:nth-child(30) > button\",\n  \"ignoreNotExists\": false\n}\n```"
+  }
+];
+
+const w3TableExtractionSteps = [
+  {
+    "action": {
+      "tool": "Web Browser Load Url",
+      "toolInput": {
+        "url": "https://www.w3schools.com/html/html_tables.asp"
+      },
+      "log": "Self Locate: I am currently on a new tab page in the browser, as indicated by the page title \"Nova guia\" and the URL \"chrome://new-tab-page/\".\nThought: To extract the table from the W3Schools Example page, I first need to navigate to the URL provided by the user.\nAction:\n```\n{\n  \"action\": \"Web Browser Load Url\",\n  \"action_input\": {\n    \"url\": \"https://www.w3schools.com/html/html_tables.asp\"\n  }\n}\n```"
+    },
+    "observation": "Success: Page loaded!\n\nService Input:\n```json\n{\n  \"url\": \"https://www.w3schools.com/html/html_tables.asp\"\n}\n```\n\nService Response: Current page is now \"https://www.w3schools.com/html/html_tables.asp\""
+  },
+  {
+    "action": {
+      "tool": "Web Browser Data Extraction",
+      "toolInput": {
+        "selectorId": 1322,
+        "properties": [
+          {
+            "name": "Company",
+            "selectorId": "1329",
+            "type": "string"
+          },
+          {
+            "name": "Contact",
+            "selectorId": "1330",
+            "type": "string"
+          },
+          {
+            "name": "Country",
+            "selectorId": "1331",
+            "type": "string"
+          }
+        ],
+        "saveOn": "extractedTableData"
+      },
+      "log": "Self Locate: I am on the W3Schools HTML Tables page, as indicated by the page title \"HTML Tables\" and the current URL in the browser tab \"https://www.w3schools.com/html/html_tables.asp\".\nThought: Now that I am on the correct page, I can proceed to extract the data from the example table with the id \"customers\".\nAction:\n```\n{\n  \"action\": \"Web Browser Data Extraction\",\n  \"action_input\": {\n    \"selectorId\": 1322,\n    \"properties\": [\n      {\n        \"name\": \"Company\",\n        \"selectorId\": \"1329\",\n        \"type\": \"string\"\n      },\n      {\n        \"name\": \"Contact\",\n        \"selectorId\": \"1330\",\n        \"type\": \"string\"\n      },\n      {\n        \"name\": \"Country\",\n        \"selectorId\": \"1331\",\n        \"type\": \"string\"\n      }\n    ],\n    \"saveOn\": \"extractedTableData\"\n  }\n}\n```\n"
+    },
+    "observation": "Success: The data was extracted!\n\nService Input:\n```json\n{\n  \"container\": \"#customers > tbody\",\n  \"properties\": [\n    {\n      \"name\": \"Company\",\n      \"type\": \"string\",\n      \"selector\": \"td:nth-child(1)\"\n    },\n    {\n      \"name\": \"Contact\",\n      \"type\": \"string\",\n      \"selector\": \"td:nth-child(2)\"\n    },\n    {\n      \"name\": \"Country\",\n      \"type\": \"string\",\n      \"selector\": \"td:nth-child(3)\"\n    }\n  ]\n}\n```\n\nService Response: Data extraction completed: 6 rows. \nFirst 5 results: \n```json\n[\n  {\n    \"Company\": \"Alfreds Futterkiste\",\n    \"Contact\": \"Maria Anders\",\n    \"Country\": \"Germany\"\n  },\n  {\n    \"Company\": \"Centro comercial Moctezuma\",\n    \"Contact\": \"Francisco Chang\",\n    \"Country\": \"Mexico\"\n  },\n  {\n    \"Company\": \"Ernst Handel\",\n    \"Contact\": \"Roland Mendel\",\n    \"Country\": \"Austria\"\n  },\n  {\n    \"Company\": \"Island Trading\",\n    \"Contact\": \"Helen Bennett\",\n    \"Country\": \"UK\"\n  },\n  {\n    \"Company\": \"Laughing Bacchus Winecellars\",\n    \"Contact\": \"Yoshi Tannamuri\",\n    \"Country\": \"Canada\"\n  }\n]\n```"
   }
 ];
 
@@ -363,14 +403,7 @@ describe('Skill Learning test', () => {
   jest.setTimeout(600000);
 
   test('Should learn Xandr Login', async () => {
-    const browserAgent = new BrowserAgent([], `Xandr:
-    - Username: AIEmployee
-    - Password: gWHT#TDBtw7Z#,@
-
-    Microsoft:
-    - Email: aiemployee@cognum.ai
-    - Password: gWHT#TDBtw7Z#,@
-`);
+    const browserAgent = new BrowserAgent();
     await browserAgent.seed();
 
     const countBefore = await skillModel.count();
@@ -390,7 +423,7 @@ describe('Skill Learning test', () => {
   });
 
   test('Should learn Linkedin Lead Extraction and make a loop for repeating actions', async () => {
-    const browserAgent = new BrowserAgent([], '');
+    const browserAgent = new BrowserAgent();
     await browserAgent.seed();
 
     const countBefore = await skillModel.count();
@@ -410,12 +443,12 @@ describe('Skill Learning test', () => {
   });
 
   test('Should learn Linkedin Login and with an if condition', async () => {
-    const browserAgent = new BrowserLearnerAgent('');
+    const browserAgent = new BrowserAgent();
     await browserAgent.seed();
 
     const countBefore = await skillModel.count();
     try {
-      const result = await browserAgent.invoke({
+      const result = await browserAgent.learnerAgent.invoke({
         task: 'Login to LinkedIn',
         steps: linkedinLoginSteps
       });
@@ -430,14 +463,34 @@ describe('Skill Learning test', () => {
   });
 
   test('Should learn Record programs schedule extraction', async () => {
-    const browserAgent = new BrowserLearnerAgent('');
+    const browserAgent = new BrowserAgent();
     await browserAgent.seed();
 
     const countBefore = await skillModel.count();
     try {
-      const result = await browserAgent.invoke({
+      const result = await browserAgent.learnerAgent.invoke({
         task: 'Extraia a programação da Record',
         steps: programScheduleExtractionSteps
+      });
+
+      console.log(result);
+    } catch (error) {
+      console.error(error);
+    }
+    const countAfter = await skillModel.count();
+
+    expect(countAfter).toBe(countBefore + 1);
+  });
+
+  test('Should learn W3 Table Example extraction', async () => {
+    const browserAgent = new BrowserAgent();
+    await browserAgent.seed();
+
+    const countBefore = await skillModel.count();
+    try {
+      const result = await browserAgent.learnerAgent.invoke({
+        task: 'Extract W3Schools Example table https://www.w3schools.com/html/html_tables.asp',
+        steps: w3TableExtractionSteps
       });
 
       console.log(result);
