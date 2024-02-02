@@ -25,6 +25,7 @@ export const SkillStepMethod = [
   'pressKey',
   'clickByText',
   'elementScroll',
+  'clickByCoordinates',
 ] as const;
 
 export interface Skill {
@@ -140,5 +141,10 @@ export abstract class BrowserActions
     pixels: number;
     direction: 'vertical' | 'horizontal';
     useCurrentScroll: boolean;
+  }): void;
+  abstract clickByCoordinates(params: {
+    x: number;
+    y: number;
+    sleep?: number;
   }): void;
 }
