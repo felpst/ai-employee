@@ -35,7 +35,6 @@ export class WebBrowser implements BrowserActions {
     this.page = new BrowserPage(this);
   }
 
-
   async open(options: IWebBrowserOptions = {}) {
     this.aiEmployeeId = options.aiEmployeeId;
     try {
@@ -103,12 +102,12 @@ export class WebBrowser implements BrowserActions {
 
   async loadUrl({ url }: { url: string; }): Promise<string> {
     await this.driver.get(url).then(async () =>
-      await this.driver.wait(async () => {
-        const readyState = await this.driver.executeScript('return document.readyState');
-        return readyState === 'complete';
-      }, 10000)
-        .then()
-        .catch()
+        await this.driver.wait(async () => {
+            const readyState = await this.driver.executeScript('return document.readyState');
+            return readyState === 'complete';
+          }, 10000)
+          .then()
+          .catch()
     );
 
     return this.getCurrentUrl();
@@ -125,7 +124,7 @@ export class WebBrowser implements BrowserActions {
   }: {
     selector: string;
     sleep?: number;
-    ignoreNotExists: boolean;
+    ignoreNotExists?: boolean;
   }) {
     try {
       const element = await this._findElement(selector);
@@ -164,7 +163,20 @@ export class WebBrowser implements BrowserActions {
     }
   }
 
-  async selectOption({ selector, value }: { selector: string; value: string; }) {
+  async clickByCoordinates({
+    x,
+    y,
+    sleep
+  }: {
+    x: number;
+    y: number;
+    sleep?: number;
+  }) {
+    await this.driver.actions().move({ x, y }).click().perform();
+    if (sleep) await this.driver.sleep(sleep);
+  }
+
+  async selectOption({ selector, value }: { selector: string; value: string }) {
     const element = await this._findElement(selector);
     await element.findElement(By.css(`option[value="${value}"]`)).click();
   }
@@ -274,8 +286,8 @@ export class WebBrowser implements BrowserActions {
               );
             } catch (_) { }
 
-            const element = elements && elements.length > 0 ? elements[0] : null; 
-            
+            const element = elements && elements.length > 0 ? elements[0] : null;
+
             if (property.innerAttribute) {
               const attributeValue = await element.getAttribute(property.innerAttribute);
               rowData[property.name] = attributeValue || null;
@@ -288,8 +300,8 @@ export class WebBrowser implements BrowserActions {
                 case 'array':
                   const name = property.name;
                   rowData[name] = await Promise.all(elements.map(async (element) => {
-                    return await element.getText();
-                  })) || [];
+                        return await element.getText();
+                      })) || [];
                   break;
 
                 default:
@@ -297,8 +309,8 @@ export class WebBrowser implements BrowserActions {
                     if (elements.length > 1) {
                       console.log(elements.length, 'elements');
                       rowData[property.name] = await Promise.all(elements.map(async (element) => {
-                        return await element.getAttribute(property.attribute);
-                      })) || [];
+                            return await element.getAttribute(property.attribute);
+                          })) || [];
                     } else {
                       rowData[property.name] =
                         (await elements[0].getAttribute(property.attribute)) ||
@@ -348,7 +360,7 @@ export class WebBrowser implements BrowserActions {
     }
 
     return `Data extraction completed: ${data.length} rows. ${saveOn ? `Saved on memory key: "${saveOn}".` : ''
-      }\nFirst ${data.length > 5 ? 5 : data.length} results: \n\`\`\`json\n${JSON.stringify(data.slice(0, 5), null, 2)}\n\`\`\``;
+    }\nFirst ${data.length > 5 ? 5 : data.length} results: \n\`\`\`json\n${JSON.stringify(data.slice(0, 5), null, 2)}\n\`\`\``;
   }
 
   async untilElementIsVisible({ selector }: { selector: string; }) {
@@ -507,10 +519,10 @@ export class WebBrowser implements BrowserActions {
 
 
   async replyMessages({messagesKey, inputSelector, buttonSelector} : {messagesKey: string, inputSelector: string, buttonSelector: string}) {
-  
+
     const aiEmployee: IAIEmployee = await AIEmployee.findOne({ _id: this.aiEmployeeId });
     const lastMessage = this.memory[messagesKey].pop()
-    
+
     const message = await aiEmployee.call({
       input: lastMessage.messageContent,
       user: {
@@ -522,11 +534,11 @@ export class WebBrowser implements BrowserActions {
         chatChannel: 'chat',
         chatMessages: this.memory[messagesKey].map((message) => ({
           sender: `${message.name} - ${message.email}`,
-          content: message.messageContent 
+          content: message.messageContent
         }))
       }
     })
-    
+
     const callResult: IAIEmployeeCall = await new Promise((resolve, reject) => {
       try {
         message.run().subscribe(message => {
@@ -536,11 +548,11 @@ export class WebBrowser implements BrowserActions {
         reject(error);
       }
     });
-  
+
     await this.inputText({ selector: inputSelector, content: callResult.output });
-  
+
     await this.click({ selector: buttonSelector, ignoreNotExists: false });
-  
+
   }
 
 
