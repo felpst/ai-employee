@@ -19,7 +19,7 @@ export class WebBrowserScrollPageTool extends DynamicStructuredTool {
         // direction: z.enum(['Vertical', 'Horizontal']).optional().describe("scroll direction"),
       }),
       func: async ({ pixels, direction }: IElementFindOptions & ScrollPageProps) => {
-        const input = { pixels };
+        const params = { pixels };
         let success = false;
         let message: string;
 
@@ -33,7 +33,10 @@ export class WebBrowserScrollPageTool extends DynamicStructuredTool {
           return buildToolOutput({
             success,
             message,
-            input,
+            action: {
+              method: settings.browser.scroll.name,
+              params
+            },
           });
         }
       },

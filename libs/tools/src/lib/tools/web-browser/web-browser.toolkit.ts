@@ -12,16 +12,18 @@ export interface WebBrowserToolSettings {
 }
 
 export interface WebBrowserToolOutput {
-  success: boolean,
-  message: string,
-  input?: object,
+  success: boolean;
+  message: string;
+  action: {
+    method: string;
+    params: object;
+  };
   result?: string;
 }
 
-export function buildToolOutput({ success, message, input, result }: WebBrowserToolOutput) {
+export function buildToolOutput({ success, message, action: step, result }: WebBrowserToolOutput) {
   let res = `${success ? 'Success' : 'Error'}: ${message}`;
-  if (input)
-    res += `\n\nService Input:\n\`\`\`json\n${JSON.stringify(input, null, 2)}\n\`\`\``;
+  res += `\n\nStep performed:\n\`\`\`json\n${JSON.stringify(step, null, 2)}\n\`\`\``;
   if (result)
     res += `\n\nService Response: ${result}`;
 
