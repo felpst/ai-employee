@@ -166,7 +166,7 @@ export class WebBrowser implements BrowserActions {
   async clickByCoordinates({
     x,
     y,
-    sleep
+    sleep,
   }: {
     x: number;
     y: number;
@@ -193,8 +193,10 @@ export class WebBrowser implements BrowserActions {
     selector: string;
     content: string;
   }) {
+    // Removing characters outside the BMP table (😊🌞)
+    const _content = content.replace(/[\uD800-\uDFFF]./g, '').replace(/\s{2,}/g, ' ');
     const element = await this._findElement(selector);
-    await element.sendKeys(content);
+    await element.sendKeys(_content);
     return true;
   }
 

@@ -20,7 +20,6 @@ describe('AI Agent Browser', () => {
       ],
       successMessage: 'WhatsApp log in completed successfully!',
     },
-
     {
       name: 'List all conversations on WhatsApp Web',
       description: 'Use it to list all conversations on WhatsApp Web.',
@@ -68,7 +67,6 @@ describe('AI Agent Browser', () => {
       ],
       successMessage: 'WhatsApp conversations listed successfully!',
     },
-
     {
       name: 'Search a conversation on WhatsApp Web',
       description: 'Use it to search an conversation on WhatsApp Web.',
@@ -98,9 +96,39 @@ describe('AI Agent Browser', () => {
       ],
       successMessage: 'WhatsApp conversation search completed successfully!',
     },
+    {
+      name: 'Send a message on WhatsApp Web',
+      description: 'Use it to send a message on WhatsApp Web.',
+      inputs: {
+        message: {
+          type: 'string',
+          description: 'Message to send on WhatsApp Web.',
+        },
+      },
+      steps: [
+        {
+          method: 'inputText',
+          params: {
+            selector:
+              '#main > footer > div:nth-child(1) > div > span:nth-child(2) > div > div:nth-child(2) > div:nth-child(1) > div > div:nth-child(1)',
+            content: '{message}',
+            sleep: 1500,
+          },
+        },
+        { method: 'sleep', params: { time: 2000 } },
+        {
+          method: 'click',
+          params: {
+            selector:
+              '#main > footer > div:nth-child(1) > div > span:nth-child(2) > div > div:nth-child(2) > div:nth-child(2) > button',
+          },
+        },
+      ],
+      successMessage: 'Sending a message on WhatsApp completed successfully!',
+    },
   ];
 
-  const conversation = 'Linecker Amorim';
+  const conversation = 'Wermeson Rocha';
 
   const memory = `
     WhatsApp Web:
@@ -125,16 +153,24 @@ describe('AI Agent Browser', () => {
   });
 
   test('List all conversations on WhatsApp Web', async () => {
-    const resultLogin = await browserAgent.executorAgent.invoke({
+    const resultList = await browserAgent.executorAgent.invoke({
       input: 'Log in on WhatsApp Web and list all conversations',
     });
-    console.log(resultLogin);
+    console.log(resultList);
   });
 
   test('Search a conversation on WhatsApp Web', async () => {
-    const resultLogin = await browserAgent.executorAgent.invoke({
+    const resultSearch = await browserAgent.executorAgent.invoke({
       input: 'Log in on WhatsApp Web and search a conversation',
     });
-    console.log(resultLogin);
+    console.log(resultSearch);
+  });
+
+  test('Send a message on WhatsApp Web', async () => {
+    const resultSendMessage = await browserAgent.executorAgent.invoke({
+      input:
+        'Log in to WhatsApp Web, search a conversation, send a polite good morning message and greetings',
+    });
+    console.log(resultSendMessage);
   });
 });
