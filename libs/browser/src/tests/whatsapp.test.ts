@@ -128,7 +128,7 @@ describe('AI Agent Browser', () => {
     },
   ];
 
-  const conversation = 'Linecker Amorim';
+  const conversation = 'Wermeson Rocha';
 
   const memory = `
     WhatsApp Web:
@@ -169,7 +169,7 @@ describe('AI Agent Browser', () => {
   test('Send a message on WhatsApp Web', async () => {
     const resultSendMessage = await browserAgent.executorAgent.invoke({
       input:
-        'Log in to WhatsApp Web, search for the "Wermeson Rocha" conversation, send a polite good morning message and greetings',
+        'Log in to WhatsApp Web, search a conversation, send a polite good morning message and greetings',
     });
     console.log(resultSendMessage);
   });
