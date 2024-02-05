@@ -242,19 +242,14 @@ export class WebBrowser implements BrowserActions {
     }
   }
 
-  async dataExtraction({container,properties,saveOn,
-  }: {
-    container: string;
-    properties: DataExtractionProperty[];
-    saveOn?: string;
-  }) {
+  async dataExtraction({container,properties,saveOn,}: {container: string;properties: DataExtractionProperty[]; saveOn?: string;}) {
     await this.sleep({ time: 5000 });
 
     let data = [];
 
     const containerEl = await this._findElement(container);
     const containerChildren = await containerEl.findElements(By.xpath('./*'));
-    console.log('containerChildren', containerChildren);
+    // console.log('containerChildren', containerChildren);
 
     for (const containerElement of containerChildren) {
       const rowData = {};
