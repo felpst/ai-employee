@@ -49,7 +49,6 @@ describe('AI Agent Browser', () => {
         { method: 'click', params: { selector: '#loginBtn', sleep: 2000 } },
       ],
     },
-
     {
       name: 'Log in with Google Account to HubSpot',
       description: 'Use this to login on HubSpot with your Google Account.',
@@ -138,7 +137,6 @@ describe('AI Agent Browser', () => {
         },
       ],
     },
-
     {
       name: 'New Customer Registration in HubSpot',
       description: 'Use it to create a new customer in HubSpot.',
@@ -236,6 +234,23 @@ describe('AI Agent Browser', () => {
       ],
       successMessage: 'Customer added successfully!',
     },
+    {
+      name: 'List reports in HubSpot',
+      description: 'Use it to list all reports in HubSpot.',
+      inputs: {},
+      steps: [
+        {
+          method: 'click',
+          params: { selector: '#reports-and-data-toggle' },
+        },
+        { method: 'sleep', params: { time: 1000 } },
+        {
+          method: 'click',
+          params: { selector: '#reports-list-v5-ia' },
+        },
+      ],
+      successMessage: 'Reports listed successfully!',
+    },
   ];
 
   const email = process.env.GOOGLE_EMAIL;
@@ -284,6 +299,13 @@ describe('AI Agent Browser', () => {
   test('Create a new Customer', async () => {
     const resultLogin = await browserAgent.executorAgent.invoke({
       input: 'Login to Hubspot using Google account and create a new Customer',
+    });
+    console.log(resultLogin);
+  });
+
+  test('List all reports', async () => {
+    const resultLogin = await browserAgent.executorAgent.invoke({
+      input: 'Login to Hubspot using Google account and list all reports',
     });
     console.log(resultLogin);
   });
