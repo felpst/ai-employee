@@ -60,7 +60,7 @@ export class WebBrowser implements BrowserActions {
       chromeOptions.addArguments('--window-size=1366,768');
       console.log(profileDirectory);
 
-      chromeOptions.addArguments('--user-data-dir=' + profileDirectory);
+      // chromeOptions.addArguments('--user-data-dir=' + profileDirectory);
 
       const prefs = {
         'profile.default_content_setting_values.media_stream_camera': 1,
@@ -111,6 +111,11 @@ export class WebBrowser implements BrowserActions {
         .catch()
     );
 
+    try {
+      const inputs = await this._findElements('input');
+      inputs.forEach(input => input.clear());
+    } catch (_) { }
+
     return this.getCurrentUrl();
   }
 
@@ -155,6 +160,8 @@ export class WebBrowser implements BrowserActions {
       const element = await this._findElementByText(text, tagName);
       await element.click();
       if (sleep) await this.driver.sleep(sleep);
+
+      return true;
     } catch (error) {
       if (
         !ignoreNotExists ||
@@ -242,7 +249,7 @@ export class WebBrowser implements BrowserActions {
     }
   }
 
-  async dataExtraction({container,properties,saveOn,
+  async dataExtraction({ container, properties, saveOn,
   }: {
     container: string;
     properties: DataExtractionProperty[];
@@ -254,7 +261,6 @@ export class WebBrowser implements BrowserActions {
 
     const containerEl = await this._findElement(container);
     const containerChildren = await containerEl.findElements(By.xpath('./*'));
-    console.log('containerChildren', containerChildren);
 
     for (const containerElement of containerChildren) {
       const rowData = {};
@@ -274,8 +280,8 @@ export class WebBrowser implements BrowserActions {
               );
             } catch (_) { }
 
-            const element = elements && elements.length > 0 ? elements[0] : null; 
-            
+            const element = elements && elements.length > 0 ? elements[0] : null;
+
             if (property.innerAttribute) {
               const attributeValue = await element.getAttribute(property.innerAttribute);
               rowData[property.name] = attributeValue || null;
@@ -295,7 +301,6 @@ export class WebBrowser implements BrowserActions {
                 default:
                   if (property.selector && property.attribute) {
                     if (elements.length > 1) {
-                      console.log(elements.length, 'elements');
                       rowData[property.name] = await Promise.all(elements.map(async (element) => {
                         return await element.getAttribute(property.attribute);
                       })) || [];
@@ -317,8 +322,6 @@ export class WebBrowser implements BrowserActions {
         }
       }
 
-      console.log('rowData', JSON.stringify(rowData));
-
       let isValid = false;
       // Check if have at least one value
       for (const value of Object.values(rowData)) {
@@ -335,12 +338,9 @@ export class WebBrowser implements BrowserActions {
           break;
         }
       }
-      console.log('rowDataisValid', isValid, JSON.stringify(rowData));
 
       if (isValid) data.push(rowData);
     }
-
-    console.log(data);
 
     // Save data on browser memory
     if (saveOn) {
@@ -435,12 +435,35 @@ export class WebBrowser implements BrowserActions {
         );
       }
 
-      console.log('instruction', JSON.stringify(step));
+      console.log('skill step', JSON.stringify(step, null, 2));
       response = (await this[method](params as any)) || response;
 
       if (step.successMessage)
         response =
           (await this.parseResponse(step.successMessage, inputs)) || response;
+
+      if (step.method === 'click') await this.driver.sleep(2000);
+
+      // await page to be loaded
+      await this.driver.wait(async () => {
+        const readyState = await this.driver.executeScript('return document.readyState');
+        return readyState === 'complete';
+      }, 10000);
+
+      await this.driver.wait(async () => {
+        const networkIdle = await this.driver.executeScript<boolean>(() => {
+          const requestsBefore = performance.getEntriesByType('resource')
+            .length;
+
+          return new Promise(r => setTimeout(r, 1000)).then(() => {
+            const requestsAfter = performance.getEntriesByType('resource')
+              .length;
+
+            return requestsBefore === requestsAfter;
+          });
+        });
+        return networkIdle;
+      }, 30000).catch(() => console.warn('Timeout reached waiting internal page load. Some resources might be incomplete.'));
     }
 
     return response;
@@ -462,7 +485,7 @@ export class WebBrowser implements BrowserActions {
   }
 
   async parseResponse(response: string, memory: any = this.memory) {
-    console.log('parseResponse', response);
+    console.log('step response', response);
 
     if (!response || typeof response !== 'string') return;
     return response.replace(/{(.*?)}/g, (match, inputKey) => {
@@ -506,11 +529,11 @@ export class WebBrowser implements BrowserActions {
   }
 
 
-  async replyMessages({messagesKey, inputSelector, buttonSelector} : {messagesKey: string, inputSelector: string, buttonSelector: string}) {
-  
+  async replyMessages({ messagesKey, inputSelector, buttonSelector }: { messagesKey: string, inputSelector: string, buttonSelector: string; }) {
+
     const aiEmployee: IAIEmployee = await AIEmployee.findOne({ _id: this.aiEmployeeId });
-    const lastMessage = this.memory[messagesKey].pop()
-    
+    const lastMessage = this.memory[messagesKey].pop();
+
     const message = await aiEmployee.call({
       input: lastMessage.messageContent,
       user: {
@@ -522,25 +545,25 @@ export class WebBrowser implements BrowserActions {
         chatChannel: 'chat',
         chatMessages: this.memory[messagesKey].map((message) => ({
           sender: `${message.name} - ${message.email}`,
-          content: message.messageContent 
+          content: message.messageContent
         }))
       }
-    })
-    
+    });
+
     const callResult: IAIEmployeeCall = await new Promise((resolve, reject) => {
       try {
         message.run().subscribe(message => {
           if (message.status === 'done') { resolve(message); }
-        })
+        });
       } catch (error) {
         reject(error);
       }
     });
-  
+
     await this.inputText({ selector: inputSelector, content: callResult.output });
-  
+
     await this.click({ selector: buttonSelector, ignoreNotExists: false });
-  
+
   }
 
 
