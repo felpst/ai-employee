@@ -6,6 +6,7 @@ import { WebBrowserScrollPageTool } from "./tools/web-browser-scroll-page.tool";
 import { WebBrowserExtractDataTool } from "./tools/web-browser-data-extraction.tool";
 import { KeyPressTool } from "./tools/web-browser-press-key";
 import { WebBrowser } from '@cognum/browser';
+import { WebBrowserSelectOption } from './tools/web-browser-select.tool';
 
 export interface WebBrowserToolSettings {
   browser: WebBrowser;
@@ -38,5 +39,6 @@ export function WebBrowserToolkit(settings: WebBrowserToolSettings): DynamicStru
     new WebBrowserScrollPageTool(settings),
     new WebBrowserExtractDataTool(settings),
     new KeyPressTool(settings),
+    new WebBrowserSelectOption(settings),
   ];
 }

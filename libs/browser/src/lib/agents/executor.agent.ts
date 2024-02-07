@@ -22,7 +22,7 @@ export class BrowserExecutorAgent {
     private webBrowser: WebBrowser,
     private skills: Skill[] = [],
     private memory: String = ''
-  ) {}
+  ) { }
 
   async seed() {
     const prompt = await pull<ChatPromptTemplate>(
@@ -57,7 +57,23 @@ export class BrowserExecutorAgent {
 
   async invoke({ input }) {
     if (!this.agent) throw new Error("Agent not seeded");
-    const result = await this.agentExecutor.invoke( { input } );
+    const result = await this.agentExecutor.invoke({ input }, {
+      callbacks: [{
+        handleLLMEnd(output) {
+          const [[generated]] = output.generations;
+          console.log('agent output', { output: generated.text });
+        },
+        handleToolError(error) {
+          console.error('tool error', error);
+        },
+        handleToolEnd(output) {
+          console.log('tool output', output);
+        },
+        handleToolStart(tool, input, runId, parentRunId, tags, metadata, name) {
+          console.log('calling tool', { tool: name, input });
+        },
+      }]
+    });
     return result;
   }
 
