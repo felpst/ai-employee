@@ -514,7 +514,6 @@ export class WebBrowser implements BrowserActions {
     this.memory['currentUrl'] = await this.driver.getCurrentUrl();
   }
 
-
   async replyMessages({messagesKey, inputSelector, buttonSelector} : {messagesKey: string, inputSelector: string, buttonSelector: string}) {
 
     const aiEmployee: IAIEmployee = await AIEmployee.findOne({ _id: this.aiEmployeeId });
@@ -547,12 +546,8 @@ export class WebBrowser implements BrowserActions {
     });
 
     await this.inputText({ selector: inputSelector, content: callResult.output });
-
     await this.click({ selector: buttonSelector, ignoreNotExists: false });
-
   }
-
-
 
   private async _findElementByText(
     text: string,
