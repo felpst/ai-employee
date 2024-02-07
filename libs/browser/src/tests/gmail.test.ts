@@ -42,8 +42,32 @@ describe('AI Agent Browser', () => {
                 { "name": 'subject', "selector": 'td.xY.a4W div.xT > div.y6 > span > span', "type": "text" },
                 { "name": 'date', "selector": 'td.xW.xY > span', "innerAttribute": "title"},
               ]}},
-            { "method": "saveOnFile", "params": { "fileName": "gmail-emails", "memoryKey": "emails" } }
+              { "method": "saveOnFile", "params": { "fileName": "gmail-emails", "memoryKey": "emails" } }
             ],
+            "successMessage": "Emails available: {emails}."
+        },
+        {
+          "name": "Search emails on Gmail",
+          "description": "Use this to search emails on Gmail.",
+          "inputs": {
+            "search": {
+              "type": "string",
+              "description": "Search term."
+            }
+          },
+          "steps": [
+            { "method": "loadUrl", "params": { "url": "https://mail.google.com/" } },
+            { "method": "inputText", "params": { "selector": "input[aria-label='Search in mail']", "content": "{search}" } },
+            { "method": "pressKey", "params": { "key": "Enter", "sleep": 5000  }, },
+            { "method": "dataExtraction", "params" : { "container": "div.ae4.UI.aZ6.id > div.Cp > div > table.F.cf.zt > tbody ", "saveOn": "emails", "properties": [
+              { "name": 'from', "selector": 'td.yX.xY div.yW > span > span', "innerAttribute": "email" },
+              { "name": 'subject', "selector": 'span.bog > span', "type": "text" },
+              { "name": 'date', "selector": 'td.xW.xY > span', "innerAttribute": "title"},
+            ]}},
+            {"method": "saveOnFile", "params": { "fileName": "gmail-emails", "memoryKey": "emails" } }
+          ],
+          "successMessage": "Emails available: {emails}."
+          
         }
     ];
 
@@ -54,25 +78,33 @@ describe('AI Agent Browser', () => {
     Google:
     - Email: ${email}
     - Password: ${password}
+    - Search: "Giseli Oliveira"
     `;
 
     const browserAgent = new BrowserAgent(skills, memory, { _id: 'testaiemployee',} as IAIEmployee);
     
     beforeAll(async () => {
-        await browserAgent.seed();
+      await browserAgent.seed();
     });
 
     test('Google login', async () => {
-        const result = await browserAgent.executorAgent.invoke({
-          input: 'Login on Google',
-        });
-        console.log(JSON.stringify(result));
+      const result = await browserAgent.executorAgent.invoke({
+        input: 'Login on Google',
+      });
+      console.log(JSON.stringify(result));
     });
 
     test('List emails on Gmail', async () => {
-        const result = await browserAgent.executorAgent.invoke({
-          input: 'List emails on Gmail',
-        });
-        console.log(JSON.stringify(result));
+      const result = await browserAgent.executorAgent.invoke({
+        input: 'List emails on Gmail',
+      });
+      console.log(JSON.stringify(result));
+    });
+
+    test('Search emails on Gmail', async () => {
+      const result = await browserAgent.executorAgent.invoke({
+        input: 'Search emails on Gmail',
+      });
+      console.log(JSON.stringify(result));
     });
 });
