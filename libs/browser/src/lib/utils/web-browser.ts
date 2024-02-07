@@ -35,7 +35,6 @@ export class WebBrowser implements BrowserActions {
     this.page = new BrowserPage(this);
   }
 
-
   async open(options: IWebBrowserOptions = {}) {
     this.aiEmployeeId = options.aiEmployeeId;
     try {
@@ -130,7 +129,7 @@ export class WebBrowser implements BrowserActions {
   }: {
     selector: string;
     sleep?: number;
-    ignoreNotExists: boolean;
+    ignoreNotExists?: boolean;
   }) {
     try {
       const element = await this._findElement(selector);
@@ -171,6 +170,19 @@ export class WebBrowser implements BrowserActions {
     }
   }
 
+  async clickByCoordinates({
+    x,
+    y,
+    sleep,
+  }: {
+    x: number;
+    y: number;
+    sleep?: number;
+  }) {
+    await this.driver.actions().move({ x, y }).click().perform();
+    if (sleep) await this.driver.sleep(sleep);
+  }
+
   async selectOption({ selector, value }: { selector: string; value: string; }) {
     const element = await this._findElement(selector);
     await element.findElement(By.css(`option[value="${value}"]`)).click();
@@ -188,8 +200,10 @@ export class WebBrowser implements BrowserActions {
     selector: string;
     content: string;
   }) {
+    // Removing characters outside the BMP table (😊🌞)
+    const _content = content.replace(/[\uD800-\uDFFF]./g, '').replace(/\s{2,}/g, ' ');
     const element = await this._findElement(selector);
-    await element.sendKeys(content);
+    await element.sendKeys(_content);
     return true;
   }
 
@@ -563,10 +577,7 @@ export class WebBrowser implements BrowserActions {
     await this.inputText({ selector: inputSelector, content: callResult.output });
 
     await this.click({ selector: buttonSelector, ignoreNotExists: false });
-
   }
-
-
 
   private async _findElementByText(
     text: string,
