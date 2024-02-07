@@ -2,7 +2,7 @@ import { MongoDBAtlasVectorSearch } from "@langchain/community/vectorstores/mong
 import { EmbeddingsModel } from '@cognum/llm';
 import { Collection, MongoClient } from "mongodb";
 import { Skill } from '../browser.interfaces';
-import { Document } from 'langchain/document';
+import { Document } from '@langchain/core/documents';
 
 
 export default class SkillVectorDB extends MongoDBAtlasVectorSearch {

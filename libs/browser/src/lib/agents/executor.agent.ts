@@ -5,14 +5,13 @@ import type { ChatPromptTemplate } from "@langchain/core/prompts";
 import { RunnableSequence } from "@langchain/core/runnables";
 import { ChatModel } from "@cognum/llm";
 import { WebBrowser } from "../utils/web-browser";
-import { Calculator } from "langchain/tools/calculator";
 import { Skill } from "../browser.interfaces";
 import { Schema, z } from "zod";
 import {
   DynamicTool,
   DynamicStructuredTool,
 } from "@langchain/community/tools/dynamic";
-import { SystemMessage } from "langchain/schema";
+import { SystemMessage } from "@langchain/core/messages";
 
 export class BrowserExecutorAgent {
   private agent: RunnableSequence;

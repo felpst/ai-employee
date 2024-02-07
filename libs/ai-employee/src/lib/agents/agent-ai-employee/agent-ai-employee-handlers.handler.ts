@@ -1,7 +1,9 @@
 import { CallProcess } from "@cognum/interfaces";
 import { BaseCallbackHandler } from "@langchain/core/callbacks/base";
 import { Serialized } from "langchain/load/serializable";
-import { AgentAction, AgentFinish, ChainValues, LLMResult } from "langchain/schema";
+import { AgentAction, AgentFinish } from "@langchain/core/agents";
+import { ChainValues } from "@langchain/core/utils/types";
+import { LLMResult } from '@langchain/core/outputs';
 
 export class AgentAIEmployeeHandlers extends BaseCallbackHandler {
   name = "AgentAIEmployeeHandler";

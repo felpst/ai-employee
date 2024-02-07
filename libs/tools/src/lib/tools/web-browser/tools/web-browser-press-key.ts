@@ -1,4 +1,4 @@
-import { DynamicStructuredTool } from 'langchain/tools';
+import { DynamicStructuredTool } from '@langchain/core/tools';
 import { z } from 'zod';
 import { Key } from '../keyup-emiter/keyup-emiter.interface';
 import { WebBrowserToolSettings, buildToolOutput } from '../web-browser.toolkit';

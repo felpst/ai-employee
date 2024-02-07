@@ -1,4 +1,4 @@
-import { DynamicStructuredTool } from 'langchain/tools';
+import { DynamicStructuredTool } from '@langchain/core/tools';
 import { z } from 'zod';
 import { InternetResearchService } from './internet-research.service';
 import { SummarizationService } from "./summarization.service";
@@ -20,7 +20,7 @@ export class InternetResearchTool extends DynamicStructuredTool {
           const summarizationService = new SummarizationService();
 
           const result = await internetResearchService.search(query);
-          if(!result) return 'No results found';
+          if (!result) return 'No results found';
 
           await summarizationService.start();
           const summarized = await summarizationService.summarize(result, query);

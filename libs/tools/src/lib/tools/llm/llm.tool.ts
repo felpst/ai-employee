@@ -1,5 +1,5 @@
 import { ChatModel } from "@cognum/llm";
-import { DynamicTool } from "langchain/tools";
+import { DynamicTool } from "@langchain/core/tools";
 
 export class LlmTool extends DynamicTool {
   constructor() {
@@ -14,12 +14,12 @@ export class LlmTool extends DynamicTool {
         try {
           const model = new ChatModel();
           const result = await model.invoke(input);
-          console.log("result: ", result)
+          console.log("result: ", result);
           return result.content;
         } catch (error) {
           return error.message;
         }
       }
-    })
+    });
   }
 }

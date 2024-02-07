@@ -1,5 +1,5 @@
 import { calendar_v3 } from 'googleapis';
-import { DynamicStructuredTool } from 'langchain/tools';
+import { DynamicStructuredTool } from '@langchain/core/tools';
 import { z } from 'zod';
 import { GoogleCalendarToolkitSettings } from './google-calendar.interfaces';
 import { GoogleCalendarService } from './google-calendar.service';
@@ -43,7 +43,7 @@ export class GoogleCalendarCreateEventTool extends DynamicStructuredTool {
               timeZone: settings.user.timezone,
             },
             attendees,
-          }
+          };
           const createEvent = await googleCalendarService.createEvent(options);
           return createEvent;
         } catch (error) {

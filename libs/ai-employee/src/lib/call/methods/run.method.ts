@@ -7,8 +7,8 @@ import {
 import { ChatModel } from '@cognum/llm';
 import { WebBrowser } from '@cognum/tools';
 import { StructuredOutputParser } from 'langchain/output_parsers';
-import { PromptTemplate } from 'langchain/prompts';
-import { RunnableSequence } from 'langchain/schema/runnable';
+import { PromptTemplate } from '@langchain/core/prompts';
+import { RunnableSequence } from '@langchain/core/runnables';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { z } from 'zod';
 import { GeneralAgent } from '../../agents/general';
@@ -89,7 +89,7 @@ export function run(): Observable<IAIEmployeeCall> {
     if ((call.aiEmployee as IAIEmployee).resources.browser) {
       try {
         (call.aiEmployee as IAIEmployee).resources.browser.close();
-      } catch (error) {}
+      } catch (error) { }
     }
   }
 

@@ -1,4 +1,4 @@
-import { DynamicStructuredTool, Tool } from 'langchain/tools';
+import { DynamicStructuredTool, Tool } from '@langchain/core/tools';
 import { FileManagerService } from './file-manager.service';
 import { FileManagerCreateTool } from './tools/file-manager-create.tool';
 import { FileManagerReadTool } from './tools/file-manager-read.tool';

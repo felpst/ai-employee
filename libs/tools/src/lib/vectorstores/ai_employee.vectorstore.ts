@@ -1,5 +1,5 @@
 import { EmbeddingsModel } from '@cognum/llm';
-import { Document } from 'langchain/document';
+import { Document } from '@langchain/core/documents';
 import { OpenAI } from 'langchain/llms/openai';
 import { SelfQueryRetriever } from 'langchain/retrievers/self_query';
 import { ChromaTranslator } from 'langchain/retrievers/self_query/chroma';
@@ -10,7 +10,7 @@ export class AIEmployeeVectorStore {
   directoryPath: string;
   vectorStore: FaissStore;
 
-  constructor(data: { directoryPath: string }) {
+  constructor(data: { directoryPath: string; }) {
     this.directoryPath = `stores/${data.directoryPath}`;
   }
 

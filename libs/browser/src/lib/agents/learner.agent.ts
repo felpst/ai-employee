@@ -1,8 +1,8 @@
 import { ChatModel } from "@cognum/llm";
 import { AgentExecutor, createStructuredChatAgent } from "langchain/agents";
-import { ChatPromptTemplate, HumanMessagePromptTemplate, SystemMessagePromptTemplate } from "langchain/prompts";
-import { SystemMessage } from "langchain/schema";
-import { DynamicStructuredTool } from 'langchain/tools';
+import { ChatPromptTemplate, HumanMessagePromptTemplate, SystemMessagePromptTemplate } from "@langchain/core/prompts";
+import { SystemMessage } from "@langchain/core/messages";
+import { DynamicStructuredTool } from '@langchain/core/tools';
 import { z } from 'zod';
 import { Skill, EveryType, SkillStepMethod } from '../browser.interfaces';
 import fs from 'fs';

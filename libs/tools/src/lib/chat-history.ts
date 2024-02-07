@@ -1,4 +1,4 @@
-import { DynamicTool } from 'langchain/tools';
+import { DynamicTool } from '@langchain/core/tools';
 import { AIEmployeeMemory } from './memories/ai_employee.memory';
 
 export class ChatHistoryTool extends DynamicTool {

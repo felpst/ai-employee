@@ -3,7 +3,7 @@
 // import { Callbacks } from 'langchain/callbacks';
 // import { LLMChain } from 'langchain/chains';
 // import { Document } from 'langchain/document';
-// import { PromptTemplate } from 'langchain/prompts';
+// import { PromptTemplate } from '@langchain/core/prompts';
 // import { AttributeInfo } from 'langchain/schema/query_constructor';
 // import { AIEmployeeVectorStore } from '../vectorstores/ai_employee.vectorstore';
 // import { IChatRoom } from '@cognum/chat';

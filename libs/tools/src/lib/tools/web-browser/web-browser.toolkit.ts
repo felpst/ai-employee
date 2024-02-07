@@ -1,4 +1,4 @@
-import { DynamicStructuredTool, Tool } from "langchain/tools";
+import { DynamicStructuredTool, Tool } from "@langchain/core/tools";
 import { WebBrowserLoadUrlTool } from "./tools/web-browser-load-url.tool";
 import { WebBrowserInputTextTool } from "./tools/web-browser-input-text.tool";
 import { WebBrowserClickTool } from "./tools/web-browser-click.tool";

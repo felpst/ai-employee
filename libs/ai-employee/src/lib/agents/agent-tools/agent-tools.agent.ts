@@ -3,8 +3,8 @@ import { ChatModel } from "@cognum/llm";
 import { AgentExecutor, initializeAgentExecutorWithOptions } from "langchain/agents";
 import { Serialized } from "langchain/load/serializable";
 import { BufferMemory } from "langchain/memory";
-import { MessagesPlaceholder } from "langchain/prompts";
-import { ChainValues } from "langchain/schema";
+import { MessagesPlaceholder } from "@langchain/core/prompts";
+import { ChainValues } from "@langchain/core/utils/types";
 import { BehaviorSubject } from "rxjs";
 import { AIEmployeeTools } from "../../tools/ai-employee-tools";
 
@@ -13,7 +13,7 @@ export interface IAgentToolsOptions {
   input: string;
   context?: any;
   aiEmployee: IAIEmployee;
-  intentions: string[]
+  intentions: string[];
 }
 
 export class AgentTools {
@@ -69,10 +69,10 @@ export class AgentTools {
           status: 'running',
           startAt: new Date(),
           endAt: null
-        }
+        };
         stepIndex = call.steps.push(step);
-        await call.save()
-        $call.next(call)
+        await call.save();
+        $call.next(call);
       },
       // handleLLMStart: (llm: Serialized, prompts: string[]) => {
       //   console.log('handleLLMStart');
@@ -90,9 +90,9 @@ export class AgentTools {
         step.endAt = new Date();
 
         // Update call
-        call.steps[stepIndex - 1] = step
-        await call.save()
-        $call.next(call)
+        call.steps[stepIndex - 1] = step;
+        await call.save();
+        $call.next(call);
       },
       // handleAgentAction(action: AgentAction, runId: string, parentRunId?: string, tags?: string[]): void | Promise<void> {
       //   // Escolheu a ferramenta para execução
@@ -111,10 +111,10 @@ export class AgentTools {
           status: 'running',
           startAt: new Date(),
           endAt: null
-        }
+        };
         stepIndex = call.steps.push(step);
-        await call.save()
-        $call.next(call)
+        await call.save();
+        $call.next(call);
       },
       handleToolEnd: async (output: string, runId: string, parentRunId?: string, tags?: string[]) => {
         // Finalizou a execução da ferramenta
@@ -126,9 +126,9 @@ export class AgentTools {
         step.endAt = new Date();
 
         // Update call
-        call.steps[stepIndex - 1] = step
-        await call.save()
-        $call.next(call)
+        call.steps[stepIndex - 1] = step;
+        await call.save();
+        $call.next(call);
       },
       handleToolError: async (err: any, runId: string, parentRunId?: string, tags?: string[]) => {
         // Erro na execução da ferramenta
@@ -140,18 +140,18 @@ export class AgentTools {
         step.endAt = new Date();
 
         // Update call
-        call.steps[stepIndex - 1] = step
-        await call.save()
-        $call.next(call)
+        call.steps[stepIndex - 1] = step;
+        await call.save();
+        $call.next(call);
       }
-    }]
+    }];
 
     try {
       const chainValues = await this._executor.call({ input }, callbacks);
       const response = chainValues.output;
       return response;
     } catch (error) {
-      console.error('[AgentTools Call]', error.message)
+      console.error('[AgentTools Call]', error.message);
       return error.message;
     }
   }

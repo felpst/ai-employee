@@ -2,7 +2,7 @@ import { IChatMessage, IChatRoom } from "@cognum/interfaces";
 import { ChatModel } from "@cognum/llm";
 import { Callbacks } from "@langchain/core/callbacks/manager";
 import { LLMChain } from "langchain/chains";
-import { PromptTemplate } from "langchain/prompts";
+import { PromptTemplate } from "@langchain/core/prompts";
 
 export class ChatHelper {
   static async generateChatName(chatRoom: IChatRoom, messages: IChatMessage[], callbacks?: Callbacks | any) {

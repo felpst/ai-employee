@@ -1,6 +1,6 @@
 import { EmbeddingsModel } from '@cognum/llm';
-import { Document } from 'langchain/document';
-import { Tool } from 'langchain/tools';
+import { Document } from '@langchain/core/documents';
+import { Tool } from '@langchain/core/tools';
 import { FaissStore } from 'langchain/vectorstores/faiss';
 
 export class ToolsHelper {

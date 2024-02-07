@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { DynamicTool } from 'langchain/tools';
+import { DynamicTool } from '@langchain/core/tools';
 import { SQLConnectorToolSettings } from './sql-connector.interfaces';
 
 export class SQLConnectorTool extends DynamicTool {

@@ -1,6 +1,6 @@
 
 import axios from 'axios';
-import { DynamicTool } from 'langchain/tools';
+import { DynamicTool } from '@langchain/core/tools';
 import { CSVAssistantToolSettings } from './';
 import { Knowledge } from '@cognum/models';
 

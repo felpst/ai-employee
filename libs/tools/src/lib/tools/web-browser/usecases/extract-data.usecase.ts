@@ -1,7 +1,7 @@
 import { ChatModel } from '@cognum/llm';
 import { StructuredOutputParser } from 'langchain/output_parsers';
-import { PromptTemplate } from "langchain/prompts";
-import { RunnableSequence } from 'langchain/schema/runnable';
+import { PromptTemplate } from "@langchain/core/prompts";
+import { RunnableSequence } from '@langchain/core/runnables';
 import { z } from 'zod';
 import WebBrowserUtils from '../web-browser-utils';
 import { WebBrowser } from '@cognum/browser';

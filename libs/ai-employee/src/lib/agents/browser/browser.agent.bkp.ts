@@ -3,7 +3,7 @@ import { ChatModel } from "@cognum/llm";
 import { WebBrowser, WebBrowserService, WebBrowserToolkit } from "@cognum/tools";
 import { AgentExecutor, initializeAgentExecutorWithOptions } from "langchain/agents";
 import { BufferMemory } from "langchain/memory";
-import { MessagesPlaceholder } from "langchain/prompts";
+import { MessagesPlaceholder } from "@langchain/core/prompts";
 import { BehaviorSubject } from "rxjs";
 
 export interface IBrowserlAgentOptions {
@@ -18,7 +18,7 @@ export interface IBrowserlAgentOutput {
 }
 
 export class BrowserAgent {
-  private _executor: AgentExecutor
+  private _executor: AgentExecutor;
 
   async init(): Promise<void> {
     const model = new ChatModel();
@@ -27,7 +27,7 @@ export class BrowserAgent {
     const webBrowser = new WebBrowser();
     await webBrowser.start({ headless: false });
     const webBrowserService = new WebBrowserService(webBrowser);
-    const tools = WebBrowserToolkit({ webBrowserService })
+    const tools = WebBrowserToolkit({ webBrowserService });
 
     // Executor
     this._executor = await initializeAgentExecutorWithOptions(tools, model, {

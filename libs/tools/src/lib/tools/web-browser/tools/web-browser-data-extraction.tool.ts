@@ -1,4 +1,4 @@
-import { DynamicStructuredTool } from 'langchain/tools';
+import { DynamicStructuredTool } from '@langchain/core/tools';
 import { WebBrowserToolSettings, buildToolOutput } from '../web-browser.toolkit';
 import { z } from 'zod';
 import { DataExtractionParams, EveryType } from '@cognum/browser';
