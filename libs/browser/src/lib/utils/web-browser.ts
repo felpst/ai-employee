@@ -59,7 +59,7 @@ export class WebBrowser implements BrowserActions {
       chromeOptions.addArguments('--window-size=1366,768');
       console.log(profileDirectory);
 
-      // chromeOptions.addArguments('--user-data-dir=' + profileDirectory);
+      chromeOptions.addArguments('--user-data-dir=' + profileDirectory);
 
       const prefs = {
         'profile.default_content_setting_values.media_stream_camera': 1,
@@ -102,12 +102,12 @@ export class WebBrowser implements BrowserActions {
 
   async loadUrl({ url }: { url: string; }): Promise<string> {
     await this.driver.get(url).then(async () =>
-      await this.driver.wait(async () => {
-        const readyState = await this.driver.executeScript('return document.readyState');
-        return readyState === 'complete';
-      }, 10000)
-        .then()
-        .catch()
+        await this.driver.wait(async () => {
+            const readyState = await this.driver.executeScript('return document.readyState');
+            return readyState === 'complete';
+          }, 10000)
+          .then()
+          .catch()
     );
 
     try {
@@ -202,7 +202,7 @@ export class WebBrowser implements BrowserActions {
   }) {
     // Removing characters outside the BMP table (😊🌞)
     const _content = content.replace(/[\uD800-\uDFFF]./g, '').replace(/\s{2,}/g, ' ');
-    const element = await this._findElement(selector);
+        const element = await this._findElement(selector);
     await element.sendKeys(_content);
     return true;
   }
@@ -283,7 +283,6 @@ export class WebBrowser implements BrowserActions {
           //TODO: GET ATRIBUTES IS NOT WORK
           rowData[property.name] = (await containerElement.getAttribute(property.attribute)) || null;
         } else if (property.selector) {
-
           if (!property.type) property.type = 'string';
 
           try {
@@ -308,16 +307,16 @@ export class WebBrowser implements BrowserActions {
                 case 'array':
                   const name = property.name;
                   rowData[name] = await Promise.all(elements.map(async (element) => {
-                    return await element.getText();
-                  })) || [];
+                        return await element.getText();
+                      })) || [];
                   break;
 
                 default:
                   if (property.selector && property.attribute) {
                     if (elements.length > 1) {
-                      rowData[property.name] = await Promise.all(elements.map(async (element) => {
-                        return await element.getAttribute(property.attribute);
-                      })) || [];
+                            rowData[property.name] = await Promise.all(elements.map(async (element) => {
+                            return await element.getAttribute(property.attribute);
+                          })) || [];
                     } else {
                       rowData[property.name] =
                         (await elements[0].getAttribute(property.attribute)) ||
@@ -328,7 +327,6 @@ export class WebBrowser implements BrowserActions {
                   }
                   break;
               }
-
             }
           } catch (error) {
             rowData[property.name] = null;
@@ -362,7 +360,7 @@ export class WebBrowser implements BrowserActions {
     }
 
     return `Data extraction completed: ${data.length} rows. ${saveOn ? `Saved on memory key: "${saveOn}".` : ''
-      }\nFirst ${data.length > 5 ? 5 : data.length} results: \n\`\`\`json\n${JSON.stringify(data.slice(0, 5), null, 2)}\n\`\`\``;
+    }\nFirst ${data.length > 5 ? 5 : data.length} results: \n\`\`\`json\n${JSON.stringify(data.slice(0, 5), null, 2)}\n\`\`\``;
   }
 
   async untilElementIsVisible({ selector }: { selector: string; }) {
@@ -422,7 +420,9 @@ export class WebBrowser implements BrowserActions {
     const func = `const browserMemory = JSON.parse('${JSON.stringify(
       this.memory
     )}'); ${condition};`;
-    const isValid = eval(func);
+    const _func = func.replace(/\n|\\n|\r|\\r/g, ' ');
+
+    const isValid = eval(_func);
 
     if (isValid) {
       response = await this.runSteps(steps);
@@ -552,13 +552,13 @@ export class WebBrowser implements BrowserActions {
       input: lastMessage.messageContent,
       user: {
         _id: aiEmployee._id,
-        name: lastMessage.name,
-        email: lastMessage.email
+        name: lastMessage.name ?? aiEmployee.name,
+        email: lastMessage.email ?? aiEmployee.getEmail(),
       },
       context: {
         chatChannel: 'chat',
         chatMessages: this.memory[messagesKey].map((message) => ({
-          sender: `${message.name} - ${message.email}`,
+          sender: message.email? `${message.name} - ${message.email}` : message.name,
           content: message.messageContent
         }))
       }
@@ -591,5 +591,4 @@ export class WebBrowser implements BrowserActions {
       throw new Error(`Element not found with this text: ${text}`);
     }
   }
-
 }
