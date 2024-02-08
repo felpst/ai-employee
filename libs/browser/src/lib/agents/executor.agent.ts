@@ -82,7 +82,7 @@ export class BrowserExecutorAgent {
     for (const skill of skills) {
       // Schema
       const props = {};
-      for (const prop of Object.keys(skill.inputs)) {
+      for (const prop of Object.keys(skill.inputs || {})) {
         const input = skill.inputs[prop];
         props[prop] = z[input.type as any]().describe(input.description);
       }

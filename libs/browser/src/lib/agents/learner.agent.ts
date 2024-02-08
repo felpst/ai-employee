@@ -183,8 +183,7 @@ class SkillLearningTool extends DynamicStructuredTool {
             type: z.enum(EveryType).describe('type of the parameter variable.'),
             description: z.string().describe('description of the parameter variable.')
           })).optional()
-          .describe('dynamic steps inputs.')
-          .default({}),
+          .describe('dynamic steps inputs.'),
         successMessage: z.string().optional().describe('success message for skill execution.')
       }),
       func: async (skill: Skill) => {
