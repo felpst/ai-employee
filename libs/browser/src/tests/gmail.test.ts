@@ -2,6 +2,8 @@ import 'dotenv/config';
 import { BrowserAgent } from '../lib/browser';
 import { Skill } from '../lib/browser.interfaces';
 import { IAIEmployee } from '@cognum/interfaces';
+import { AIEmployeeRepository } from '@cognum/ai-employee';
+import { DatabaseHelper } from '@cognum/helpers';
 
 describe('AI Agent Browser', () => {
     jest.setTimeout(600000);
@@ -94,8 +96,34 @@ describe('AI Agent Browser', () => {
           { "method": "click", "params": { "selector": 'div.T-I.J-J5-Ji.aoO.T-I-atl.L3', "sleep": 5000  } }
         ],
         "successMessage": "Email sent!"
+      },
+      {
+        "name": "Read and reply email on Gmail",
+        "description": "Use this to read and reply email on Gmail.",
+        "inputs": {
+          "emailToReplay": {
+            "type": "string",
+            "description": "Email address."
+          }
+        },
+        "steps": [
+          { "method": "loadUrl", "params": { "url": "https://mail.google.com/" } },
+          { "method": "click", "params": {  "selector": "tr.zA:has(span.bA4 > span[email='{emailToReplay}'])", "sleep": 5000  } },
+          { "method": "click", "params": {  "selector": "span.ams.bkH"  } },
+          { "method": "dataExtraction",  "params": { "container": "div.nH.g.id", "saveOn": "emailsToReply", "properties": [
+            {"name": "from", "selector": "span.gD", "innerAttribute": "email"},
+            {"name": "subject", "selector": "h2.hP", "type": "text"},
+            {"name": "content", "selector": "div.a3s.aiL", "type": "text"},
+          ]}},
+          {"method": "saveOnFile", "params": { "fileName": "gmail-email", "memoryKey": "emailsToReply", "sleep": 5000 } },
+          {"method": "replyEmails", "params": {
+            "emailsKey": "emailsToReply",
+            "inputSelector": 'div[aria-label="Message Body"]',
+            "buttonSelector": 'div[aria-label="Send"]'
+          }}
+        ],
+        "successMessage": "Email replied!"
       }
-
     ];
 
     const email = process.env.GOOGLE_EMAIL;
@@ -109,12 +137,28 @@ describe('AI Agent Browser', () => {
     - To: "aiemployee+656f2003c01b342ae1059ee9@cognum.ai"
     - Subject: "Test email"
     - Content: "This is a test email. Please ignore it."
+    - EmailToReplay: "alinem_oliveira@yahoo.com"
     `;
 
-    const browserAgent = new BrowserAgent(skills, memory, { _id: 'testaiemployee',} as IAIEmployee);
-    
+    const aiEmployeeRepo = new AIEmployeeRepository('654e4dace7a619a279bf9a55');
+    const testEmployeeId = '659ed3258928300525d06484';
+    const browserAgent = new BrowserAgent(skills, memory, { _id: testEmployeeId,} as IAIEmployee);
+    let aiEmployee;
+
     beforeAll(async () => {
+      await DatabaseHelper.connect(process.env.MONGO_URL);
+      aiEmployee = (await aiEmployeeRepo.create({
+        _id: testEmployeeId,
+        name: 'Adam',
+        role: 'Software Engineer',
+        tools: [],
+      })) as IAIEmployee;
       await browserAgent.seed();
+    });
+
+    afterAll(async () => {
+      await aiEmployeeRepo.delete(testEmployeeId);
+      await DatabaseHelper.disconnect();
     });
 
     test('Google login', async () => {
@@ -144,4 +188,12 @@ describe('AI Agent Browser', () => {
       });
       console.log(JSON.stringify(result));
     });
+
+    test('Read and reply email on Gmail', async () => {
+      const result = await browserAgent.executorAgent.invoke({
+        input: 'Read and reply email on Gmail',
+      });
+      console.log(JSON.stringify(result));
+    });
+
 });

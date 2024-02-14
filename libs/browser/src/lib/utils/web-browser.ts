@@ -544,8 +544,42 @@ export class WebBrowser implements BrowserActions {
         reject(error);
       }
     });
-
     await this.inputText({ selector: inputSelector, content: callResult.output });
+    await this.click({ selector: buttonSelector, ignoreNotExists: false });
+  }
+
+  async replyEmails({emailsKey, inputSelector, buttonSelector} : {emailsKey: string, inputSelector: string, buttonSelector: string}) {
+    const aiEmployee: IAIEmployee = await AIEmployee.findOne({ _id: this.aiEmployeeId });
+    console.log('aiEmployee', aiEmployee)
+    const lastEmail = this.memory[emailsKey].pop()
+
+
+    const message = await aiEmployee.call({
+      input: lastEmail.content,
+      user: {
+        _id: aiEmployee._id,
+        name: lastEmail.email,
+        email: lastEmail.email
+      },
+      context: {
+        chatChannel: 'chat',
+        chatMessages: this.memory[emailsKey].map((email) => ({
+          from: email.email,
+          subject: email.subject,
+          content: email.content
+        }))
+      }
+    })
+    const callResult: IAIEmployeeCall = await new Promise((resolve, reject) => {
+      try {
+        message.run().subscribe(message => {
+          if (message.status === 'done') { resolve(message); }
+        })
+      } catch (error) {
+        reject(error);
+      }
+    });
+    await this.inputText({ selector: inputSelector, content: callResult.output});
     await this.click({ selector: buttonSelector, ignoreNotExists: false });
   }
 
