@@ -26,6 +26,8 @@ export const SkillStepMethod = [
   'clickByText',
   'elementScroll',
   'clickByCoordinates',
+  'replyMessages',
+  'replyEmails',
 ] as const;
 
 export interface Skill {
@@ -146,5 +148,15 @@ export abstract class BrowserActions
     x: number;
     y: number;
     sleep?: number;
+  }): void;
+  abstract replyMessages(params: {
+    messagesKey: string;
+    inputSelector: string;
+    buttonSelector: string;
+  }): void;
+  abstract replyEmails(params: {
+    emailsKey: string;
+    inputSelector: string;
+    buttonSelector: string;
   }): void;
 }
