@@ -186,19 +186,23 @@ export class WebBrowser implements BrowserActions {
     await this.driver.actions().doubleClick(element).perform();
   }
 
-  async inputText({
-    selector,
-    content,
-  }: {
-    selector: string;
-    content: string;
-  }) {
+  async inputText({selector, content,}: {selector: string; content: string;}) {
     // Removing characters outside the BMP table (😊🌞)
     const _content = content.replace(/[\uD800-\uDFFF]./g, '').replace(/\s{2,}/g, ' ');
     const element = await this._findElement(selector);
+
+    // Get the current text in the input field
+    const currentText = await element.getAttribute('value');
+
+    // If there is any text in the input field, clear it
+    if (currentText) {
+      await element.sendKeys(Key.Control, "a", Key.Backspace);
+    }
+
+    // Send the new text to the input field
     await element.sendKeys(_content);
     return true;
-  }
+}
 
   async sleep({ time }: { time: number; }) {
     await this.driver.sleep(time);
@@ -595,5 +599,16 @@ export class WebBrowser implements BrowserActions {
       throw new Error(`Element not found with this text: ${text}`);
     }
   }
+
+  async switchToTab({index}: {index: number}) {
+    await this.sleep({ time: 7000 });
+    const handles = await this.driver.getAllWindowHandles();
+    if (index >= 0 && index < handles.length) {
+      await this.driver.switchTo().window(handles[index]);
+    } else {
+      throw new Error(`Invalid tab index: ${index}`);
+    }
+  }
+
 
 }

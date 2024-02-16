@@ -28,6 +28,7 @@ export const SkillStepMethod = [
   'clickByCoordinates',
   'replyMessages',
   'replyEmails',
+  'switchToTab',
 ] as const;
 
 export interface Skill {
@@ -159,4 +160,5 @@ export abstract class BrowserActions
     inputSelector: string;
     buttonSelector: string;
   }): void;
+  abstract switchToTab(params: { index: number }): void;
 }
