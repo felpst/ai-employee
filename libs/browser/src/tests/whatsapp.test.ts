@@ -25,8 +25,8 @@ describe('AI Agent Browser', () => {
       successMessage: 'WhatsApp log in completed successfully!',
     },
     {
-      name: 'List all conversations on WhatsApp Web',
-      description: 'Use it to list all conversations on WhatsApp Web.',
+      name: 'List conversations on WhatsApp Web',
+      description: 'Use it to list conversations on WhatsApp Web.',
       inputs: {},
       steps: [
         { method: 'loadUrl', params: { url: 'https://web.whatsapp.com/' } },
@@ -39,16 +39,35 @@ describe('AI Agent Browser', () => {
               {
                 method: 'dataExtraction',
                 params: {
-                  container:
-                    'div[role="listitem"] > div.g0rxnol2 > div[role="row"]',
-                  saveOn: 'chats',
+                  container: '#pane-side > div:nth-child(1) > div > div',
+                  saveOn: 'whatsApp-chats',
                   properties: [
                     {
                       name: 'name',
                       selector:
-                        'div > div:nth-child(2) > div:nth-child(1) > div:nth-child(1) > div > span',
+                        'div > div:nth-child(2) > div:nth-child(1) > div > div > span',
                       type: 'string',
                       required: true,
+                    },
+                    {
+                      name: 'date',
+                      selector:
+                        'div > div:nth-child(2) > div:nth-child(1) > div:nth-child(2) > span',
+                      type: 'string',
+                      required: true,
+                    },
+                    {
+                      name: 'lastMessage',
+                      selector:
+                        'div > div:nth-child(2) > div:nth-child(2) > div > span',
+                      type: 'string',
+                      required: true,
+                    },
+                    {
+                      name: 'unread',
+                      selector:
+                        'div > div:nth-child(2) > div:nth-child(2) > div:nth-child(2) > span > div > span',
+                      innerAttribute: 'aria-label',
                     },
                   ],
                 },
@@ -68,7 +87,10 @@ describe('AI Agent Browser', () => {
         },
         {
           method: 'saveOnFile',
-          params: { fileName: 'whatsApp-chats', memoryKey: 'chats' },
+          params: {
+            fileName: 'whatsApp-chats',
+            memoryKey: 'whatsApp-chats',
+          },
         },
       ],
       successMessage: 'WhatsApp conversations listed successfully!',
@@ -159,80 +181,50 @@ describe('AI Agent Browser', () => {
     {
       name: 'Read and reply messages on WhatsApp Web',
       description: 'Use this to read and reply messages on WhatsApp Web.',
-      inputs: {
-        conversation: {
-          type: 'string',
-          description: 'Conversation on WhatsApp.',
-        },
-      },
+      inputs: {},
       steps: [
         { method: 'loadUrl', params: { url: 'https://web.whatsapp.com/' } },
         { method: 'sleep', params: { time: 4000 } },
         {
-          method: 'inputText',
-          params: {
-            selector: '[contenteditable="true"]',
-            content: '{conversation}',
-            sleep: 1500,
-          },
-        },
-        { method: 'sleep', params: { time: 2000 } },
-        {
-          method: 'clickByCoordinates',
-          params: {
-            x: 0,
-            y: 179,
-          },
-        },
-        { method: 'sleep', params: { time: 1000 } },
-        {
           method: 'dataExtraction',
           params: {
-            container:
-              '#main > div._3B19s > div > div._5kRIK > div.n5hs2j7m.oq31bsqd.gx1rr48f.qh5tioqs',
-            saveOn: 'messages',
+            container: '#pane-side > div:nth-child(1) > div > div',
+            saveOn: 'whatsApp-chats',
             properties: [
               {
                 name: 'name',
                 selector:
-                  'div > div:nth-child(1) > div.UzMP7 > div._1BOF7 > span',
-                innerAttribute: 'aria-label',
+                  'div > div:nth-child(2) > div:nth-child(1) > div > div > span',
+                type: 'string',
+                required: true,
               },
               {
-                name: 'messageContent',
+                name: 'lastMessage',
                 selector:
-                  'div > div:nth-child(1) > div.UzMP7 > div._1BOF7 > div > div:nth-child(1) > div.copyable-text > div:nth-child(1) > span > span',
-                type: 'text',
+                  'div > div:nth-child(2) > div:nth-child(2) > div > span',
+                type: 'string',
+                required: true,
+              },
+              {
+                name: 'unread',
+                selector:
+                  'div > div:nth-child(2) > div:nth-child(2) > div:nth-child(2) > span > div > span',
+                innerAttribute: 'aria-label',
               },
             ],
           },
         },
         {
           method: 'saveOnFile',
-          params: { fileName: 'whatsApp-messages', memoryKey: 'messages' },
+          params: { fileName: 'whatsApp-chats', memoryKey: 'whatsApp-chats' },
         },
-
         {
-          method: 'if',
-          params: {
-            condition:
-              'browserMemory.messages[browserMemory.messages.length - 1]?.name && browserMemory.messages[browserMemory.messages.length - 1].name.includes(browserMemory.inputs.conversation)',
-            steps: [
-              {
-                method: 'replyMessages',
-                params: {
-                  messagesKey: 'messages',
-                  inputSelector:
-                    '#main > footer > div:nth-child(1) > div > span:nth-child(2) > div > div:nth-child(2) > div:nth-child(1) > div > div:nth-child(1)',
-                  buttonSelector:
-                    '#main > footer > div:nth-child(1) > div > span:nth-child(2) > div > div:nth-child(2) > div:nth-child(2) > button',
-                },
-              },
-            ],
-          },
+          method: 'replyWhatsApp',
+          params: { whatsKey: 'whatsApp-chats' },
         },
       ],
-      successMessage: 'Read and reply a message on WhatsApp completed successfully!',
+      successMessage:
+        'Read and reply messages on WhatsApp completed successfully!',
     },
   ];
 
@@ -280,9 +272,9 @@ describe('AI Agent Browser', () => {
     console.log(resultLogin);
   });
 
-  test('List all conversations on WhatsApp Web', async () => {
+  test('List conversations on WhatsApp Web', async () => {
     const resultList = await browserAgent.executorAgent.invoke({
-      input: 'List all conversations on WhatsApp Web',
+      input: 'List conversations on WhatsApp Web',
     });
     console.log(resultList);
   });
@@ -302,9 +294,9 @@ describe('AI Agent Browser', () => {
     console.log(resultSendMessage);
   });
 
-  test('Read message on WhatsApp Web', async () => {
+  test('Read messages on WhatsApp Web', async () => {
     const result = await browserAgent.executorAgent.invoke({
-      input: 'Read a message from a conversation on WhatsApp Web',
+      input: 'Read and reply messages on WhatsApp Web',
     });
     console.log(JSON.stringify(result));
   });
