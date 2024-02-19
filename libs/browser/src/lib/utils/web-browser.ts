@@ -102,12 +102,12 @@ export class WebBrowser implements BrowserActions {
 
   async loadUrl({ url }: { url: string; }): Promise<string> {
     await this.driver.get(url).then(async () =>
-      await this.driver.wait(async () => {
-        const readyState = await this.driver.executeScript('return document.readyState');
-        return readyState === 'complete';
-      }, 10000)
-        .then()
-        .catch()
+        await this.driver.wait(async () => {
+            const readyState = await this.driver.executeScript('return document.readyState');
+            return readyState === 'complete';
+          }, 10000)
+          .then()
+          .catch()
     );
 
     return this.getCurrentUrl();
@@ -204,7 +204,7 @@ export class WebBrowser implements BrowserActions {
     // Send the new text to the input field
     await element.sendKeys(_content);
     return true;
-}
+  }
 
   async sleep({ time }: { time: number; }) {
     await this.driver.sleep(time);
@@ -306,16 +306,16 @@ export class WebBrowser implements BrowserActions {
                 case 'array':
                   const name = property.name;
                   rowData[name] = await Promise.all(elements.map(async (element) => {
-                    return await element.getText();
-                  })) || [];
+                        return await element.getText();
+                      })) || [];
                   break;
 
                 default:
                   if (property.selector && property.attribute) {
                     if (elements.length > 1) {
                       rowData[property.name] = await Promise.all(elements.map(async (element) => {
-                        return await element.getAttribute(property.attribute);
-                      })) || [];
+                            return await element.getAttribute(property.attribute);
+                          })) || [];
                     } else {
                       rowData[property.name] =
                         (await elements[0].getAttribute(property.attribute)) ||
@@ -359,7 +359,7 @@ export class WebBrowser implements BrowserActions {
     }
 
     return `Data extraction completed: ${data.length} rows. ${saveOn ? `Saved on memory key: "${saveOn}".` : ''
-      }\nFirst ${data.length > 5 ? 5 : data.length} results: \n\`\`\`json\n${JSON.stringify(data.slice(0, 5), null, 2)}\n\`\`\``;
+    }\nFirst ${data.length > 5 ? 5 : data.length} results: \n\`\`\`json\n${JSON.stringify(data.slice(0, 5), null, 2)}\n\`\`\``;
   }
 
   async untilElementIsVisible({ selector }: { selector: string; }) {
@@ -378,17 +378,17 @@ export class WebBrowser implements BrowserActions {
   async saveOnFile({
     fileName,
     memoryKey,
-  }: {
+      }: {
     fileName: string;
     memoryKey: string;
-  }) {
+      }) {
     const data = this.memory[memoryKey];
     if (!data) throw new Error(`Memory key not found: ${memoryKey}`);
     fs.writeFileSync(
       'tmp/' + fileName + '.json',
       JSON.stringify(data, null, 2)
     );
-  }
+    }
 
   async loop({
     times,
@@ -464,19 +464,19 @@ export class WebBrowser implements BrowserActions {
       }, 10000);
 
       await this.driver.wait(async () => {
-        const networkIdle = await this.driver.executeScript<boolean>(() => {
-          const requestsBefore = performance.getEntriesByType('resource')
+          const networkIdle = await this.driver.executeScript<boolean>(() => {
+            const requestsBefore = performance.getEntriesByType('resource')
             .length;
 
-          return new Promise(r => setTimeout(r, 1000)).then(() => {
-            const requestsAfter = performance.getEntriesByType('resource')
+            return new Promise(r => setTimeout(r, 1000)).then(() => {
+              const requestsAfter = performance.getEntriesByType('resource')
               .length;
 
-            return requestsBefore === requestsAfter;
+              return requestsBefore === requestsAfter;
+            });
           });
-        });
-        return networkIdle;
-      }, 30000).catch(() => console.warn('Timeout reached waiting internal page load. Some resources might be incomplete.'));
+          return networkIdle;
+        }, 30000).catch(() => console.warn('Timeout reached waiting internal page load. Some resources might be incomplete.'));
     }
 
     return response;
@@ -582,22 +582,21 @@ export class WebBrowser implements BrowserActions {
     console.log('aiEmployee', aiEmployee);
     const lastEmail = this.memory[emailsKey].pop();
 
-
     const message = await aiEmployee.call({
       input: lastEmail.content,
       user: {
         _id: aiEmployee._id,
         name: lastEmail.email,
-        email: lastEmail.email
+        email: lastEmail.email,
       },
       context: {
         chatChannel: 'chat',
         chatMessages: this.memory[emailsKey].map((email) => ({
           from: email.email,
           subject: email.subject,
-          content: email.content
-        }))
-      }
+          content: email.content,
+        })),
+      },
     });
     const callResult: IAIEmployeeCall = await new Promise((resolve, reject) => {
       try {
@@ -610,6 +609,16 @@ export class WebBrowser implements BrowserActions {
     });
     await this.inputText({ selector: inputSelector, content: callResult.output });
     await this.click({ selector: buttonSelector, ignoreNotExists: false });
+  }
+
+  async replyWhatsApp({ whatsKey }: { whatsKey: string }) {
+    const messages = this.memory[whatsKey] as {
+      name: string;
+      unread: string;
+    }[];
+    const unread = messages.filter(({ unread }) => !!unread);
+    const promises = unread.map(async ({ name }) => this._replyWhatsAppContact(name));
+    await Promise.all(promises);
   }
 
   private async _findElementByText(
@@ -625,8 +634,7 @@ export class WebBrowser implements BrowserActions {
     }
   }
 
-
-  async switchToTab({index}: {index: number}) {
+  async switchToTab({ index }: { index: number }) {
     await this.sleep({ time: 7000 });
     const handles = await this.driver.getAllWindowHandles();
     if (index >= 0 && index < handles.length) {
@@ -636,4 +644,57 @@ export class WebBrowser implements BrowserActions {
     }
   }
 
+  private async _replyWhatsAppContact(contact: string) {
+    const messagesContainer =
+      '#main > div._3B19s > div > div._5kRIK > div.n5hs2j7m.oq31bsqd.gx1rr48f.qh5tioqs';
+    const inputMessageSelector =
+      '#main > footer > div:nth-child(1) > div > span:nth-child(2) > div > div:nth-child(2) > div:nth-child(1) > div > div:nth-child(1)';
+    const sendButtonSelector =
+      '#main > footer > div:nth-child(1) > div > span:nth-child(2) > div > div:nth-child(2) > div:nth-child(2) > button';
+    const dataExtractionProps = [
+      {
+        name: 'name',
+        selector: 'div > div:nth-child(1) > div.UzMP7 > div._1BOF7 > span',
+        innerAttribute: 'aria-label',
+      },
+      {
+        name: 'messageContent',
+        selector:
+          'div > div:nth-child(1) > div.UzMP7 > div._1BOF7 > div > div:nth-child(1) > div.copyable-text > div:nth-child(1) > span > span',
+      },
+    ];
+
+    await this.clickByText({
+      tagName: 'span',
+      text: contact,
+      sleep: 2000,
+    });
+
+    await this.dataExtraction({
+      container: messagesContainer,
+      properties: dataExtractionProps,
+      saveOn: 'messages',
+    });
+
+    await this.saveOnFile({
+      fileName: 'whatsApp-messages',
+      memoryKey: 'messages',
+    });
+
+    const messages = this.memory['messages'] as {
+      name: string;
+      messageContent: string;
+    }[];
+    const lastMessage = messages[messages.length - 1];
+
+    if (lastMessage.name.includes(contact)) {
+      await this.replyMessages({
+        messagesKey: 'messages',
+        inputSelector: inputMessageSelector,
+        buttonSelector: sendButtonSelector,
+      });
+    }
+
+    await this.saveMemory({ key: 'messages', value: [] });
+  }
 }

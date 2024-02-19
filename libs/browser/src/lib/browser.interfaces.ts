@@ -29,6 +29,7 @@ export const SkillStepMethod = [
   'replyMessages',
   'replyEmails',
   'switchToTab',
+  'replyWhatsApp',
 ] as const;
 
 export interface Skill {
@@ -161,4 +162,5 @@ export abstract class BrowserActions
     buttonSelector: string;
   }): void;
   abstract switchToTab(params: { index: number }): void;
+  abstract replyWhatsApp(params: { whatsKey: string }): void;
 }
