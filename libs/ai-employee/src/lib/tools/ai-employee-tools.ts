@@ -3,18 +3,18 @@ import { ToolsHelper } from "@cognum/helpers";
 import { IAIEmployee, IToolSettings, IUser } from "@cognum/interfaces";
 import { ChatModel, EmbeddingsModel } from "@cognum/llm";
 import { GoogleCalendarToolkit, KnowledgeRetrieverTool, LinkedInFindLeadsTool, MailToolSettings, MailToolkit, PythonTool, RandomNumberTool, SQLConnectorTool, WebBrowserToolkit } from "@cognum/tools";
-import { Document } from "langchain/document";
+import { Document } from "@langchain/core/documents";
 import { ContextualCompressionRetriever } from "langchain/retrievers/contextual_compression";
 import { LLMChainExtractor } from "langchain/retrievers/document_compressors/chain_extract";
-import { DynamicStructuredTool, SerpAPI, Tool } from "langchain/tools";
+import { DynamicStructuredTool, Tool } from "@langchain/core/tools";
 import { Calculator } from "langchain/tools/calculator";
-import { HNSWLib } from "langchain/vectorstores/hnswlib";
+import { HNSWLib } from "@langchain/community/vectorstores/hnswlib";
 import { INTENTIONS } from "../utils/intent-classifier/intent-classifier.util";
 import { Knowledge } from "@cognum/models";
 
 export class AIEmployeeTools {
 
-  static async intetionTools(options: { aiEmployee: IAIEmployee; intentions?: string[]; user: Partial<IUser> }) {
+  static async intetionTools(options: { aiEmployee: IAIEmployee; intentions?: string[]; user: Partial<IUser>; }) {
     let { intentions, aiEmployee } = options;
     if (!intentions) intentions = [];
 
@@ -26,21 +26,21 @@ export class AIEmployeeTools {
         }
         return false;
       })
-      .map(tool => ({ id: tool.id, }))
-    
+      .map(tool => ({ id: tool.id, }));
+
     const filteredToolsSettings = aiEmployee.tools.filter(toolSettings => {
       if (options.user) toolSettings.options.user = options.user;
       const tool = ToolsHelper.get(toolSettings.id);
-      
+
       if (!tool) return false;
-    
+
       for (const intetion of tool.intentions || []) {
         if (intentions.includes(intetion)) return true;
       }
       return false;
-    })
-    
-    const toolsSettings = [...commonTools, ...filteredToolsSettings]
+    });
+
+    const toolsSettings = [...commonTools, ...filteredToolsSettings];
     const tools: any[] = AIEmployeeTools.get(toolsSettings);
 
     // Resource: Knowledge Retriever
@@ -49,8 +49,8 @@ export class AIEmployeeTools {
       .select('openaiFileId')
       .lean();
     const openaiFileIds = knowledges.map(({ openaiFileId }) => openaiFileId);
-    const toolkit = [new KnowledgeRetrieverTool({ openaiFileIds })]
-    tools.push(...toolkit)
+    const toolkit = [new KnowledgeRetrieverTool({ openaiFileIds })];
+    tools.push(...toolkit);
 
     // Resource: Web browser
     if (aiEmployee.resources?.browser && intentions?.includes(INTENTIONS.TASK_EXECUTION)) {
@@ -61,7 +61,7 @@ export class AIEmployeeTools {
     // Resource: AI Employee Email
     if (!tools.find(tool => tool.metadata.id === 'mail')) {
       const mailToolkit = MailToolkit(AIEmployeeTools.MailToolkitSettings(aiEmployee)) as Tool[];
-      tools.push(...mailToolkit)
+      tools.push(...mailToolkit);
     }
 
     return tools;
@@ -89,16 +89,16 @@ export class AIEmployeeTools {
         send: true,
         read: true,
       }
-    }
+    };
   }
 
   static get(toolsSettings: IToolSettings[] = []): Tool[] {
     const tools: Tool[] = [];
     for (const toolSettings of toolsSettings) {
-      const tool = AIEmployeeTools.initTool(toolSettings) as Tool[]
+      const tool = AIEmployeeTools.initTool(toolSettings) as Tool[];
       if (tool) tools.push(...tool);
     }
-    return tools
+    return tools;
   }
 
   static initTool(toolSettings: IToolSettings): DynamicStructuredTool[] | Tool[] {
@@ -121,7 +121,7 @@ export class AIEmployeeTools {
       case 'sql-connector':
         return [new SQLConnectorTool(toolSettings.options)];
       case 'linkedin-lead-scraper':
-        return [new LinkedInFindLeadsTool(toolSettings.options)]
+        return [new LinkedInFindLeadsTool(toolSettings.options)];
       case 'google-calendar':
         return GoogleCalendarToolkit(toolSettings.options);
       case 'llm':
@@ -141,9 +141,9 @@ export class AIEmployeeTools {
           tool: tool.metadata.tool || undefined,
           schema: JSON.stringify(tool.schema || {}),
         }
-      })
-    })
-    console.log({ docs: docs.map(doc => doc.pageContent) })
+      });
+    });
+    console.log({ docs: docs.map(doc => doc.pageContent) });
 
     // Create a vector store from the documents.
     const vectorStore = await HNSWLib.fromDocuments(docs, new EmbeddingsModel());
@@ -152,7 +152,7 @@ export class AIEmployeeTools {
       baseRetriever: vectorStore.asRetriever(3),
     });
 
-    const formattedInput = `Goal: Which tools are relevant to execute this task?\nTask: ${input}\n\nUse context below to help you to choose the best tool:\n${formattedToolsContext}`
+    const formattedInput = `Goal: Which tools are relevant to execute this task?\nTask: ${input}\n\nUse context below to help you to choose the best tool:\n${formattedToolsContext}`;
     console.log({ formattedInput });
 
 
@@ -164,7 +164,7 @@ export class AIEmployeeTools {
       retrievedDocs = [
         { pageContent: '', metadata: { id: 'mail', tool: 'send' } },
         { pageContent: '', metadata: { id: 'knowledge-retriever' } },
-      ]
+      ];
     }
 
     // Filter tools by retrieved docs
@@ -173,10 +173,10 @@ export class AIEmployeeTools {
       if (retrievedDocs.find(doc => doc.metadata.id === tool.metadata.id)) {
         if (tool.metadata.tool) {
           if (retrievedDocs.find(doc => doc.metadata.tool === tool.metadata.tool)) {
-            filteredTools.push(tool)
+            filteredTools.push(tool);
           }
         } else {
-          filteredTools.push(tool)
+          filteredTools.push(tool);
         }
       }
     }

@@ -218,7 +218,8 @@ export default class BrowserPage {
 
       document.querySelectorAll('body *').forEach((element) => {
         if (!isInViewPort(element) || !element.checkVisibility())
-          element.setAttribute(elOutOfViewAttrName, 'true');
+          if (element.tagName.toLowerCase() !== 'option') // avoid hiding selector options
+            element.setAttribute(elOutOfViewAttrName, 'true');
       });
 
       // prevent making parent of visible elements invisible (for some specific cases)

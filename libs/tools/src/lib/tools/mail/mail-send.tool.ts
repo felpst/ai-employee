@@ -1,4 +1,4 @@
-import { DynamicStructuredTool } from 'langchain/tools';
+import { DynamicStructuredTool } from '@langchain/core/tools';
 import { z } from 'zod';
 import { MailData, MailToolSettings } from './mail.interfaces';
 import { MailService } from './mail.service';
@@ -32,7 +32,7 @@ export class MailSendTool extends DynamicStructuredTool {
             cc: cc?.join(', '),
             bcc: bcc?.join(', '),
             text: message,
-          }
+          };
           await mailService.sendMarkdown(emailData);
           return 'Email sent successfully.';
         } catch (error) {

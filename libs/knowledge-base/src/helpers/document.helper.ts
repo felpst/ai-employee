@@ -1,4 +1,4 @@
-import { Document as LangChainDoc } from 'langchain/document';
+import { Document as LangChainDoc } from '@langchain/core/documents';
 import { Document as MongoDoc } from 'mongodb';
 import ContextualTextSplitter from '../splitters/contextual-splitter';
 
@@ -42,5 +42,5 @@ export async function splitDocuments<T extends MongoDoc>(
     langChainDocs.push(data);
   }
 
-  return splitter.splitBySection(langChainDocs) as Promise<KnowledgeDocument[]>
+  return splitter.splitBySection(langChainDocs) as Promise<KnowledgeDocument[]>;
 }

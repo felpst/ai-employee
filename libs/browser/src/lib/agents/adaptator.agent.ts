@@ -103,6 +103,9 @@ export class BrowserAdaptatorAgent {
           handleToolEnd(output) {
             console.log('tool output', output);
           },
+          handleToolStart(tool, input, runId, parentRunId, tags, metadata, name) {
+            console.log('calling tool', { tool: name, input });
+          },
           awaitHandlers: true
         }
       ]

@@ -1,7 +1,7 @@
 import { RepositoryHelper } from '@cognum/helpers';
 import { IAIEmployeeCall, IJob } from "@cognum/interfaces";
 import { Job } from "@cognum/models";
-import { DynamicStructuredTool, Tool } from "langchain/tools";
+import { DynamicStructuredTool, Tool } from "@langchain/core/tools";
 import { ObjectId } from "mongodb";
 import { CronService } from '../cron';
 import { SchedulerService } from '../scheduler/scheduler.service';
@@ -24,7 +24,7 @@ export class JobService {
     job.createdBy = this.settings.user?._id;
     job.updatedBy = this.settings.user?._id;
 
-    await this.schedulerRun(job)
+    await this.schedulerRun(job);
 
     // Create Job
     return await new RepositoryHelper(Job, this.settings.user?._id).create(job) as IJob;
@@ -54,7 +54,7 @@ export class JobService {
 
       if (job.scheduler.frequency) {
         const result = await CronService.fromText(job.scheduler.frequency);
-        job.scheduler.runOnce = result.runOnce
+        job.scheduler.runOnce = result.runOnce;
         job.scheduler.schedule = result.formattedCron;
         job.scheduler.frequency = result.formattedInput;
         if (result.date) {
@@ -69,7 +69,7 @@ export class JobService {
       }
 
     } catch (error) {
-      console.error('JobService.schedulerRun: ', error)
+      console.error('JobService.schedulerRun: ', error);
     }
   }
 
@@ -115,7 +115,7 @@ export class JobService {
           },
         }
       },
-    })
+    });
 
     // Run
     const callResult: IAIEmployeeCall = await new Promise((resolve, reject) => {
@@ -124,7 +124,7 @@ export class JobService {
           if (call.status === 'done') {
             resolve(call);
           }
-        })
+        });
       } catch (error) {
         reject(error);
       }
@@ -153,6 +153,6 @@ export class JobService {
       new JobRunWithFrequencyTool(this.settings),
       new JobRunOnceTool(this.settings),
       new JobRunPeriodTool(this.settings),
-    ]
+    ];
   }
 }

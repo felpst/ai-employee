@@ -1,7 +1,7 @@
 import { ChatModel } from '@cognum/llm';
 import { SqlDatabaseChain } from 'langchain/chains/sql_db';
 import { SqlDatabase } from 'langchain/sql_db';
-import { DynamicTool } from 'langchain/tools';
+import { DynamicTool } from '@langchain/core/tools';
 import { DataSource } from 'typeorm';
 
 export class DatabaseConnect extends DynamicTool {

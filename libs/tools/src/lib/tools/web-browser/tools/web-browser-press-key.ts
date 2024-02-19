@@ -1,4 +1,4 @@
-import { DynamicStructuredTool } from 'langchain/tools';
+import { DynamicStructuredTool } from '@langchain/core/tools';
 import { z } from 'zod';
 import { Key } from '../keyup-emiter/keyup-emiter.interface';
 import { WebBrowserToolSettings, buildToolOutput } from '../web-browser.toolkit';
@@ -16,9 +16,7 @@ export class KeyPressTool extends DynamicStructuredTool {
         // ).optional()
       }),
       func: async ({ key, combination }) => {
-        key = Key[key as any];
-
-        const input = { key };
+        const params = { key };
         let success = false;
         let message: string;
         // combination = combination?.map((key: string) => Key[key as any]);
@@ -33,7 +31,10 @@ export class KeyPressTool extends DynamicStructuredTool {
           return buildToolOutput({
             success,
             message,
-            input,
+            action: {
+              method: settings.browser.pressKey.name,
+              params
+            },
           });
         }
       },

@@ -1,5 +1,5 @@
 import { IDataSource } from '@cognum/interfaces';
-import { Document } from 'langchain/document';
+import { Document } from '@langchain/core/documents';
 import { PDFLoader } from 'langchain/document_loaders/fs/pdf';
 
 export class DataConnection {

@@ -1,5 +1,5 @@
 import { calendar_v3 } from 'googleapis';
-import { DynamicStructuredTool } from 'langchain/tools';
+import { DynamicStructuredTool } from '@langchain/core/tools';
 import { z } from 'zod';
 import { GoogleCalendarToolkitSettings } from './google-calendar.interfaces';
 import { GoogleCalendarService } from './google-calendar.service';
@@ -45,7 +45,7 @@ export class GoogleCalendarUpdateEventTool extends DynamicStructuredTool {
               timeZone: settings.user.timezone
             },
             attendees,
-          }
+          };
           const updateEvent = await googleCalendarService.updateEvent(eventId, options);
           return updateEvent;
         } catch (error) {

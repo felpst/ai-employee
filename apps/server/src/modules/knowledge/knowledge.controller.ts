@@ -5,8 +5,8 @@ import { Knowledge } from '@cognum/models';
 import { CronService, KnowledgeRetrieverService, SchedulerService } from '@cognum/tools';
 import { NextFunction, Request, Response } from 'express';
 import { LLMChain } from 'langchain/chains';
-import { Document } from 'langchain/document';
-import { PromptTemplate } from 'langchain/prompts';
+import { Document } from '@langchain/core/documents';
+import { PromptTemplate } from '@langchain/core/prompts';
 import mongoose from 'mongoose';
 import ModelController from '../../controllers/model.controller';
 

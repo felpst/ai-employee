@@ -1,5 +1,5 @@
 import { calendar_v3 } from 'googleapis';
-import { DynamicStructuredTool } from 'langchain/tools';
+import { DynamicStructuredTool } from '@langchain/core/tools';
 import { z } from 'zod';
 import { GoogleCalendarToolkitSettings } from './google-calendar.interfaces';
 import { GoogleCalendarService } from './google-calendar.service';
@@ -25,11 +25,11 @@ export class GoogleCalendarListEventsTool extends DynamicStructuredTool {
             maxResults,
             orderBy,
             timeZone: settings.user.timezone
-          }
+          };
           const eventList = await googleCalendarService.listEvents(options);
           return "Events list: \n```json\n" + eventList + "\n```";
         } catch (error) {
-          console.error(error)
+          console.error(error);
           return error.message;
         }
       },

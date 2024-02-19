@@ -1,5 +1,5 @@
 import { KnowledgeRetrieverService } from '@cognum/tools';
-import { DynamicStructuredTool } from 'langchain/tools';
+import { DynamicStructuredTool } from '@langchain/core/tools';
 import { KnowledgeRetrieverToolSettings } from './knowledge-retriever.interfaces';
 import { z } from 'zod';
 

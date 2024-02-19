@@ -1,4 +1,4 @@
-import { DynamicStructuredTool } from 'langchain/tools';
+import { DynamicStructuredTool } from '@langchain/core/tools';
 import { WebBrowserToolSettings, buildToolOutput } from '../web-browser.toolkit';
 import { z } from 'zod';
 import { DataExtractionParams, EveryType } from '@cognum/browser';
@@ -23,7 +23,7 @@ export class WebBrowserExtractDataTool extends DynamicStructuredTool {
       func: async ({ selectorId, properties }) => {
         let message: string;
         let result: string;
-        let input: DataExtractionParams;
+        let params: DataExtractionParams;
 
         try {
           let container = settings.browser.page.getSelectorById(selectorId);
@@ -48,9 +48,9 @@ export class WebBrowserExtractDataTool extends DynamicStructuredTool {
           }
           if (hasTBody) container += ' > tbody'; // change container context to inside table body
 
-          input = { container, properties };
+          params = { container, properties };
 
-          result = await settings.browser.dataExtraction(input);
+          result = await settings.browser.dataExtraction(params);
           message = 'The data was extracted!';
         } catch (error) {
           message = error.message;
@@ -58,7 +58,10 @@ export class WebBrowserExtractDataTool extends DynamicStructuredTool {
           return buildToolOutput({
             success: !!result,
             message,
-            input,
+            action: {
+              method: settings.browser.dataExtraction.name,
+              params
+            },
             result
           });
         }

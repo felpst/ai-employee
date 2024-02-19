@@ -1,5 +1,5 @@
 import KnowledgeBase from '@cognum/knowledge-base';
-import { DynamicTool } from 'langchain/tools';
+import { DynamicTool } from '@langchain/core/tools';
 
 export class KnowledgeBaseTool extends DynamicTool {
   constructor(knowledgeWorkspaceId: string) {

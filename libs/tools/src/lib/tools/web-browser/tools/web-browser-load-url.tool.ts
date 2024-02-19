@@ -1,4 +1,4 @@
-import { DynamicStructuredTool } from 'langchain/tools';
+import { DynamicStructuredTool } from '@langchain/core/tools';
 import { z } from 'zod';
 import { WebBrowserToolSettings, buildToolOutput } from '../web-browser.toolkit';
 
@@ -14,10 +14,10 @@ export class WebBrowserLoadUrlTool extends DynamicStructuredTool {
       func: async ({ url }: { url: string; }) => {
         let message: string;
         let result: string;
-        const input = { url };
+        const params = { url };
 
         try {
-          result = await settings.browser.loadUrl(input);
+          result = await settings.browser.loadUrl(params);
           message = 'Page loaded!';
         } catch (error) {
           message = error.message;
@@ -25,7 +25,10 @@ export class WebBrowserLoadUrlTool extends DynamicStructuredTool {
           return buildToolOutput({
             success: !!result,
             message,
-            input,
+            action: {
+              method: settings.browser.loadUrl.name,
+              params
+            },
             ...(result && {
               result: `Current page is now "${result}"`
             })

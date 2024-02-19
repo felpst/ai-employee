@@ -4,8 +4,9 @@ import { ChatModel } from "@cognum/llm";
 import { AgentCall } from "@cognum/models";
 import { AgentExecutor, initializeAgentExecutorWithOptions } from "langchain/agents";
 import { BufferMemory, ChatMessageHistory } from "langchain/memory";
-import { BaseChatMessageHistory, LLMResult } from "langchain/schema";
-import { DynamicTool } from "langchain/tools";
+import { BaseChatMessageHistory } from "@langchain/core/chat_history";
+import { LLMResult } from '@langchain/core/outputs';
+import { DynamicTool } from "@langchain/core/tools";
 import * as _ from 'lodash';
 import { Subject } from "rxjs";
 import { AgentTools } from "../agent-tools/agent-tools.agent";
@@ -32,7 +33,7 @@ export class AgentAIEmployee implements IAgent {
       options: {
         workspaceId: this.aiEmployee.workspace
       }
-    })
+    });
 
     // Agent Tools
     this.agentTools = await new AgentTools(this.aiEmployee).init();
@@ -67,9 +68,9 @@ export class AgentAIEmployee implements IAgent {
     const toolsDescriptions = this.aiEmployee.tools.map(t => {
       const tool = ToolsHelper.get(t.id);
       if (!tool) return '';
-      return `${tool.name}: ${tool.description || ''}`
+      return `${tool.name}: ${tool.description || ''}`;
     }).join(', ').toLowerCase();
-    const description = `This tool has the ability to perform tasks such as: ${toolsDescriptions}. The input needs to be a question or instruction with information to perform the task.`
+    const description = `This tool has the ability to perform tasks such as: ${toolsDescriptions}. The input needs to be a question or instruction with information to perform the task.`;
 
     return [
       new DynamicTool({
@@ -92,7 +93,7 @@ export class AgentAIEmployee implements IAgent {
                   taskTokenUsage: 0,
                   startAt: new Date(),
                   endAt: null
-                }
+                };
                 call.tasks.push(task);
                 task.tool = metadata.id || tool['id'][2];
                 _updateCalls();
@@ -109,7 +110,7 @@ export class AgentAIEmployee implements IAgent {
                 }
                 _updateCalls();
               }
-            }]
+            }];
 
             const response = await this.agentTools.call(input, callbacks);
             if (task) task.output = response;
@@ -127,19 +128,19 @@ export class AgentAIEmployee implements IAgent {
           }
         }
       })
-    ]
+    ];
   }
 
   formatChatHistory(): BaseChatMessageHistory {
     const chatHistory = new ChatMessageHistory();
     for (const message of this.chatHistory || []) {
       if (message.role === 'user') {
-        chatHistory.addUserMessage(message.content)
+        chatHistory.addUserMessage(message.content);
       } else {
-        chatHistory.addAIChatMessage(message.content)
+        chatHistory.addAIChatMessage(message.content);
       }
     }
-    return chatHistory
+    return chatHistory;
   }
 
   async call(input: string, intent: string, callbacks: unknown[] = []): Promise<IAgentCall> {
@@ -155,12 +156,12 @@ export class AgentAIEmployee implements IAgent {
       endAt: null,
       createdBy: this.aiEmployee._id,
       updatedBy: this.aiEmployee._id,
-    }) as IAgentCall
+    }) as IAgentCall;
     this.calls.push(agentCall);
     this._updateCalls();
 
     const _updateCalls = this._updateCalls.bind(this);
-    const process = this.processes
+    const process = this.processes;
     const agentCallCallbacks = {
       handleLLMEnd() {
         agentCall.status = 'done';
@@ -174,7 +175,7 @@ export class AgentAIEmployee implements IAgent {
           _updateCalls();
         }
       }
-    }
+    };
 
     const chainValues = await this._executor.call({ input }, [...callbacks, this.handlers, agentCallCallbacks]);
     agentCall.output = chainValues.output;

@@ -1,4 +1,4 @@
-import { DynamicStructuredTool } from 'langchain/tools';
+import { DynamicStructuredTool } from '@langchain/core/tools';
 import { z } from 'zod';
 import { WebBrowserToolSettings, buildToolOutput } from '../web-browser.toolkit';
 
@@ -16,14 +16,14 @@ export class WebBrowserClickTool extends DynamicStructuredTool {
       }) => {
         let success = false;
         let message: string;
-        let input: { selector: string, ignoreNotExists: boolean; };
+        let params: { selector: string, ignoreNotExists: boolean; };
 
         try {
-          input = {
+          params = {
             selector: settings.browser.page.getSelectorById(selectorId),
             ignoreNotExists: false
           };
-          success = await settings.browser.click(input);
+          success = await settings.browser.click(params);
 
           message = 'The element was clicked!';
         } catch (error) {
@@ -32,7 +32,10 @@ export class WebBrowserClickTool extends DynamicStructuredTool {
           return buildToolOutput({
             success,
             message,
-            input
+            action: {
+              method: settings.browser.click.name,
+              params
+            }
           });
         }
       },

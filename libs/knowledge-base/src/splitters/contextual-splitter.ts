@@ -1,33 +1,33 @@
 import { ChatModel } from '@cognum/llm';
-import { Document } from 'langchain/document';
+import { Document } from '@langchain/core/documents';
 import { StructuredOutputParser } from 'langchain/output_parsers';
-import { ChatPromptTemplate, HumanMessagePromptTemplate, SystemMessagePromptTemplate } from 'langchain/prompts';
+import { ChatPromptTemplate, HumanMessagePromptTemplate, SystemMessagePromptTemplate } from '@langchain/core/prompts';
 import { RecursiveCharacterTextSplitter } from 'langchain/text_splitter';
 import { z } from 'zod';
 
 interface DocumentContextStructure {
-  documentName: string
+  documentName: string;
   sections: Array<{
-    name: string
-    startLine: number
-    endLine: number
-  }>
+    name: string;
+    startLine: number;
+    endLine: number;
+  }>;
 }
 
 export default class ContextualTextSplitter extends RecursiveCharacterTextSplitter {
   async splitBySection(documents: Document[]) {
     return Promise.all(documents.map(async (document) => {
-      document.pageContent = this.removeDoubleLineBreaks(document.pageContent)
+      document.pageContent = this.removeDoubleLineBreaks(document.pageContent);
 
-      const { documentName, sections: documentSections } = await this.generateContextualData(document.pageContent)
+      const { documentName, sections: documentSections } = await this.generateContextualData(document.pageContent);
 
-      const splitted: Document[] = []
+      const splitted: Document[] = [];
 
       for (const section of documentSections) {
-        const { name: sectionName, startLine, endLine } = section
-        const sectionParts: Document[] = []
+        const { name: sectionName, startLine, endLine } = section;
+        const sectionParts: Document[] = [];
 
-        const charsInSection = this.countCharactersInLines(document.pageContent, startLine, endLine)
+        const charsInSection = this.countCharactersInLines(document.pageContent, startLine, endLine);
         const sectionDocument = new Document({
           pageContent: this.getSectionContent(document.pageContent, startLine, endLine),
           metadata: {
@@ -39,14 +39,14 @@ export default class ContextualTextSplitter extends RecursiveCharacterTextSplitt
               }
             }
           }
-        })
+        });
 
         if (charsInSection > this.chunkSize) {
-          const slices = await this.splitDocuments([sectionDocument])
+          const slices = await this.splitDocuments([sectionDocument]);
           slices.forEach((slice, index) => {
             // define line coordinates for slices
-            const sliceStartLine = index === 0 ? startLine : slices[index - 1].metadata.loc.lines.to + 1
-            const sliceEndLine = index === slices.length - 1 ? endLine : sliceStartLine + slice.pageContent.split('\n').length
+            const sliceStartLine = index === 0 ? startLine : slices[index - 1].metadata.loc.lines.to + 1;
+            const sliceEndLine = index === slices.length - 1 ? endLine : sliceStartLine + slice.pageContent.split('\n').length;
 
             slice.metadata = {
               ...slice.metadata,
@@ -56,23 +56,23 @@ export default class ContextualTextSplitter extends RecursiveCharacterTextSplitt
                   to: sliceEndLine
                 }
               }
-            }
-          })
-          sectionParts.push(...slices)
+            };
+          });
+          sectionParts.push(...slices);
         } else {
-          sectionParts.push(sectionDocument)
+          sectionParts.push(sectionDocument);
         }
 
         sectionParts.forEach((part, partIndex) => {
-          const header = `${documentName} - ${sectionName}${sectionParts.length > 1 ? ` (Part ${partIndex + 1})` : ''}\n\n---\n\n`
-          part.pageContent = header + part.pageContent
-        })
+          const header = `${documentName} - ${sectionName}${sectionParts.length > 1 ? ` (Part ${partIndex + 1})` : ''}\n\n---\n\n`;
+          part.pageContent = header + part.pageContent;
+        });
 
-        splitted.push(...sectionParts)
+        splitted.push(...sectionParts);
       }
 
-      return splitted
-    })).then(arrayOfArray => arrayOfArray.flat())
+      return splitted;
+    })).then(arrayOfArray => arrayOfArray.flat());
   }
 
   private async generateContextualData(text: string): Promise<DocumentContextStructure> {
@@ -91,7 +91,7 @@ export default class ContextualTextSplitter extends RecursiveCharacterTextSplitt
           )
           .describe(`Array of the definition of document sections`),
       })
-    )
+    );
 
     const prompt = new ChatPromptTemplate({
       promptMessages: [
@@ -104,10 +104,10 @@ export default class ContextualTextSplitter extends RecursiveCharacterTextSplitt
       inputVariables: ["inputText"],
     });
 
-    const input = await prompt.format({ inputText: text })
+    const input = await prompt.format({ inputText: text });
 
 
-    const result = await model.invoke(input)
+    const result = await model.invoke(input);
     return this.tryParseDocumentStructure(result.content as string);
   }
 
@@ -116,11 +116,11 @@ export default class ContextualTextSplitter extends RecursiveCharacterTextSplitt
       const jsonStart = rawTextStructure.indexOf("{");
       const jsonEnd = rawTextStructure.lastIndexOf("}");
 
-      const jsonString = rawTextStructure.substring(jsonStart, jsonEnd + 1)
+      const jsonString = rawTextStructure.substring(jsonStart, jsonEnd + 1);
 
-      return JSON.parse(jsonString)
+      return JSON.parse(jsonString);
     } catch (error) {
-      throw new Error('It was not possible to parse document structure to JSON.')
+      throw new Error('It was not possible to parse document structure to JSON.');
     }
   }
 
@@ -140,7 +140,7 @@ export default class ContextualTextSplitter extends RecursiveCharacterTextSplitt
 
   private getSectionContent(text: string, startLine: number, endLine: number) {
     const lines = text.split('\n');
-    return lines.slice(startLine - 1, endLine).join('\n')
+    return lines.slice(startLine - 1, endLine).join('\n');
   }
 
   private removeDoubleLineBreaks(text: string): string {

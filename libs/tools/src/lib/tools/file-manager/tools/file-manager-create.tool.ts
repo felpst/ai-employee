@@ -1,4 +1,4 @@
-import { DynamicStructuredTool } from 'langchain/tools';
+import { DynamicStructuredTool } from '@langchain/community/tools/dynamic';
 import { z } from 'zod';
 import { FileManagerToolSettings } from '../file-manager.toolkit';
 

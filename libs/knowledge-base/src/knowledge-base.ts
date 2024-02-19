@@ -1,6 +1,6 @@
 import { EmbeddingsModel } from '@cognum/llm';
 import { MetricType } from '@zilliz/milvus2-sdk-node';
-import { Document } from 'langchain/document';
+import { Document } from '@langchain/core/documents';
 import { Milvus } from 'langchain/vectorstores/milvus';
 import { collectionConfig, milvusConfig } from './config/database-index.config';
 

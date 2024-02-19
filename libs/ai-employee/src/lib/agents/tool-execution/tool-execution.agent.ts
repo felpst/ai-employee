@@ -1,6 +1,6 @@
 import { ChatModel } from "@cognum/llm";
 import { AgentExecutor, initializeAgentExecutorWithOptions } from "langchain/agents";
-import { Tool } from "langchain/tools";
+import { Tool } from "@langchain/core/tools";
 
 export class ToolExecutionAgent {
   private _executor: AgentExecutor;
@@ -19,7 +19,7 @@ export class ToolExecutionAgent {
       const result = await this._executor.call({ input });
       return result.output;
     } catch (error) {
-      console.error('[Tool Execution Run]', error.message)
+      console.error('[Tool Execution Run]', error.message);
       return error.message;
     }
   }

@@ -1,4 +1,4 @@
-import { DynamicStructuredTool } from 'langchain/tools';
+import { DynamicStructuredTool } from '@langchain/core/tools';
 import { z } from 'zod';
 import { JobToolkitSettings } from '../job.interfaces';
 import { JobService } from '../job.service';
@@ -40,7 +40,7 @@ export class JobRunPeriodTool extends DynamicStructuredTool {
             context,
             scheduler,
             status: 'running'
-          })
+          });
           return 'Job create successfully: ```json\n' + JSON.stringify(job, null, 2) + '\n```';
         } catch (error) {
           console.error(error);

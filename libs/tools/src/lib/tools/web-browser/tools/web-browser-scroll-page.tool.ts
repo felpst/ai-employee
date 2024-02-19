@@ -1,4 +1,4 @@
-import { DynamicStructuredTool } from 'langchain/tools';
+import { DynamicStructuredTool } from '@langchain/core/tools';
 import { z } from 'zod';
 import { IElementFindOptions, elementSchema } from '../common/element-schema';
 import { WebBrowserToolSettings, buildToolOutput } from '../web-browser.toolkit';
@@ -19,7 +19,7 @@ export class WebBrowserScrollPageTool extends DynamicStructuredTool {
         // direction: z.enum(['Vertical', 'Horizontal']).optional().describe("scroll direction"),
       }),
       func: async ({ pixels, direction }: IElementFindOptions & ScrollPageProps) => {
-        const input = { pixels };
+        const params = { pixels };
         let success = false;
         let message: string;
 
@@ -33,7 +33,10 @@ export class WebBrowserScrollPageTool extends DynamicStructuredTool {
           return buildToolOutput({
             success,
             message,
-            input,
+            action: {
+              method: settings.browser.scroll.name,
+              params
+            },
           });
         }
       },

@@ -102,12 +102,12 @@ export class WebBrowser implements BrowserActions {
 
   async loadUrl({ url }: { url: string; }): Promise<string> {
     await this.driver.get(url).then(async () =>
-        await this.driver.wait(async () => {
-            const readyState = await this.driver.executeScript('return document.readyState');
-            return readyState === 'complete';
-          }, 10000)
-          .then()
-          .catch()
+      await this.driver.wait(async () => {
+        const readyState = await this.driver.executeScript('return document.readyState');
+        return readyState === 'complete';
+      }, 10000)
+        .then()
+        .catch()
     );
 
     return this.getCurrentUrl();
@@ -154,6 +154,8 @@ export class WebBrowser implements BrowserActions {
       const element = await this._findElementByText(text, tagName);
       await element.click();
       if (sleep) await this.driver.sleep(sleep);
+
+      return true;
     } catch (error) {
       if (
         !ignoreNotExists ||
@@ -176,7 +178,7 @@ export class WebBrowser implements BrowserActions {
     if (sleep) await this.driver.sleep(sleep);
   }
 
-  async selectOption({ selector, value }: { selector: string; value: string }) {
+  async selectOption({ selector, value }: { selector: string; value: string; }) {
     const element = await this._findElement(selector);
     await element.findElement(By.css(`option[value="${value}"]`)).click();
   }
@@ -260,14 +262,18 @@ export class WebBrowser implements BrowserActions {
     }
   }
 
-  async dataExtraction({container,properties,saveOn,}: {container: string;properties: DataExtractionProperty[]; saveOn?: string;}) {
+  async dataExtraction({ container, properties, saveOn,
+  }: {
+    container: string;
+    properties: DataExtractionProperty[];
+    saveOn?: string;
+  }) {
     await this.sleep({ time: 5000 });
 
     let data = [];
 
     const containerEl = await this._findElement(container);
     const containerChildren = await containerEl.findElements(By.xpath('./*'));
-    // console.log('containerChildren', containerChildren);
 
     for (const containerElement of containerChildren) {
       const rowData = {};
@@ -276,7 +282,6 @@ export class WebBrowser implements BrowserActions {
           //TODO: GET ATRIBUTES IS NOT WORK
           rowData[property.name] = (await containerElement.getAttribute(property.attribute)) || null;
         } else if (property.selector) {
-
           if (!property.type) property.type = 'string';
 
           try {
@@ -301,17 +306,16 @@ export class WebBrowser implements BrowserActions {
                 case 'array':
                   const name = property.name;
                   rowData[name] = await Promise.all(elements.map(async (element) => {
-                        return await element.getText();
-                      })) || [];
+                    return await element.getText();
+                  })) || [];
                   break;
 
                 default:
                   if (property.selector && property.attribute) {
                     if (elements.length > 1) {
-                      console.log(elements.length, 'elements');
                       rowData[property.name] = await Promise.all(elements.map(async (element) => {
-                            return await element.getAttribute(property.attribute);
-                          })) || [];
+                        return await element.getAttribute(property.attribute);
+                      })) || [];
                     } else {
                       rowData[property.name] =
                         (await elements[0].getAttribute(property.attribute)) ||
@@ -322,15 +326,12 @@ export class WebBrowser implements BrowserActions {
                   }
                   break;
               }
-
             }
           } catch (error) {
             rowData[property.name] = null;
           }
         }
       }
-
-      console.log('rowData', JSON.stringify(rowData));
 
       let isValid = false;
       // Check if have at least one value
@@ -348,12 +349,9 @@ export class WebBrowser implements BrowserActions {
           break;
         }
       }
-      console.log('rowDataisValid', isValid, JSON.stringify(rowData));
 
       if (isValid) data.push(rowData);
     }
-
-    console.log(data);
 
     // Save data on browser memory
     if (saveOn) {
@@ -361,7 +359,7 @@ export class WebBrowser implements BrowserActions {
     }
 
     return `Data extraction completed: ${data.length} rows. ${saveOn ? `Saved on memory key: "${saveOn}".` : ''
-    }\nFirst ${data.length > 5 ? 5 : data.length} results: \n\`\`\`json\n${JSON.stringify(data.slice(0, 5), null, 2)}\n\`\`\``;
+      }\nFirst ${data.length > 5 ? 5 : data.length} results: \n\`\`\`json\n${JSON.stringify(data.slice(0, 5), null, 2)}\n\`\`\``;
   }
 
   async untilElementIsVisible({ selector }: { selector: string; }) {
@@ -421,7 +419,9 @@ export class WebBrowser implements BrowserActions {
     const func = `const browserMemory = JSON.parse('${JSON.stringify(
       this.memory
     )}'); ${condition};`;
-    const isValid = eval(func);
+    const _func = func.replace(/\n|\\n|\r|\\r/g, ' ');
+
+    const isValid = eval(_func);
 
     if (isValid) {
       response = await this.runSteps(steps);
@@ -448,12 +448,35 @@ export class WebBrowser implements BrowserActions {
         );
       }
 
-      console.log('instruction', JSON.stringify(step));
+      console.log('skill step', JSON.stringify(step, null, 2));
       response = (await this[method](params as any)) || response;
 
       if (step.successMessage)
         response =
           (await this.parseResponse(step.successMessage, inputs)) || response;
+
+      if (step.method === 'click') await this.driver.sleep(2000);
+
+      // await page to be loaded
+      await this.driver.wait(async () => {
+        const readyState = await this.driver.executeScript('return document.readyState');
+        return readyState === 'complete';
+      }, 10000);
+
+      await this.driver.wait(async () => {
+        const networkIdle = await this.driver.executeScript<boolean>(() => {
+          const requestsBefore = performance.getEntriesByType('resource')
+            .length;
+
+          return new Promise(r => setTimeout(r, 1000)).then(() => {
+            const requestsAfter = performance.getEntriesByType('resource')
+              .length;
+
+            return requestsBefore === requestsAfter;
+          });
+        });
+        return networkIdle;
+      }, 30000).catch(() => console.warn('Timeout reached waiting internal page load. Some resources might be incomplete.'));
     }
 
     return response;
@@ -475,7 +498,7 @@ export class WebBrowser implements BrowserActions {
   }
 
   async parseResponse(response: string, memory: any = this.memory) {
-    console.log('parseResponse', response);
+    console.log('step response', response);
 
     if (!response || typeof response !== 'string') return;
     return response.replace(/{(.*?)}/g, (match, inputKey) => {
@@ -518,44 +541,46 @@ export class WebBrowser implements BrowserActions {
     this.memory['currentUrl'] = await this.driver.getCurrentUrl();
   }
 
-  async replyMessages({messagesKey, inputSelector, buttonSelector} : {messagesKey: string, inputSelector: string, buttonSelector: string}) {
+
+  async replyMessages({ messagesKey, inputSelector, buttonSelector }: { messagesKey: string, inputSelector: string, buttonSelector: string; }) {
 
     const aiEmployee: IAIEmployee = await AIEmployee.findOne({ _id: this.aiEmployeeId });
-    const lastMessage = this.memory[messagesKey].pop()
+    const lastMessage = this.memory[messagesKey].pop();
 
     const message = await aiEmployee.call({
       input: lastMessage.messageContent,
       user: {
         _id: aiEmployee._id,
-        name: lastMessage.name,
-        email: lastMessage.email
+        name: lastMessage.name ?? aiEmployee.name,
+        email: lastMessage.email ?? aiEmployee.getEmail(),
       },
       context: {
         chatChannel: 'chat',
         chatMessages: this.memory[messagesKey].map((message) => ({
-          sender: `${message.name} - ${message.email}`,
+          sender: message.email ? `${message.name} - ${message.email}` : message.name,
           content: message.messageContent
         }))
       }
-    })
+    });
 
     const callResult: IAIEmployeeCall = await new Promise((resolve, reject) => {
       try {
         message.run().subscribe(message => {
           if (message.status === 'done') { resolve(message); }
-        })
+        });
       } catch (error) {
         reject(error);
       }
     });
     await this.inputText({ selector: inputSelector, content: callResult.output });
+
     await this.click({ selector: buttonSelector, ignoreNotExists: false });
   }
 
-  async replyEmails({emailsKey, inputSelector, buttonSelector} : {emailsKey: string, inputSelector: string, buttonSelector: string}) {
+  async replyEmails({ emailsKey, inputSelector, buttonSelector }: { emailsKey: string, inputSelector: string, buttonSelector: string; }) {
     const aiEmployee: IAIEmployee = await AIEmployee.findOne({ _id: this.aiEmployeeId });
-    console.log('aiEmployee', aiEmployee)
-    const lastEmail = this.memory[emailsKey].pop()
+    console.log('aiEmployee', aiEmployee);
+    const lastEmail = this.memory[emailsKey].pop();
 
 
     const message = await aiEmployee.call({
@@ -573,17 +598,17 @@ export class WebBrowser implements BrowserActions {
           content: email.content
         }))
       }
-    })
+    });
     const callResult: IAIEmployeeCall = await new Promise((resolve, reject) => {
       try {
         message.run().subscribe(message => {
           if (message.status === 'done') { resolve(message); }
-        })
+        });
       } catch (error) {
         reject(error);
       }
     });
-    await this.inputText({ selector: inputSelector, content: callResult.output});
+    await this.inputText({ selector: inputSelector, content: callResult.output });
     await this.click({ selector: buttonSelector, ignoreNotExists: false });
   }
 
@@ -600,6 +625,7 @@ export class WebBrowser implements BrowserActions {
     }
   }
 
+
   async switchToTab({index}: {index: number}) {
     await this.sleep({ time: 7000 });
     const handles = await this.driver.getAllWindowHandles();
@@ -609,6 +635,5 @@ export class WebBrowser implements BrowserActions {
       throw new Error(`Invalid tab index: ${index}`);
     }
   }
-
 
 }
