@@ -49,6 +49,26 @@ describe('AI Agent Browser', () => {
             { "method": "pressKey", "params": { "key": "Enter", "sleep": 5000  } },
           
           ],
+        },
+        {
+          "name": "Create role on Google Colab",
+          "description": "Use this to create a role on Google Colab.",
+          "inputs": {
+            "notebookId": {
+              "type": "string",
+              "description": "Id of the notebook."
+            },
+            "code": {
+              "type": "string",
+              "description": "Code to write on Google Colab."
+            }
+          },
+          "steps": [
+            { "method": "loadUrl", "params": { "url": "https://colab.research.google.com/", "sleep": 5000 } },
+            { "method": "loadUrl", "params": { "url": "https://colab.research.google.com/drive/{notebookId}", "sleep": 5000 } },
+            { "method": "insertTextIntoElement", "params": { "selector": "div.view-line > span > span", "content": "{code}"}}
+          ],
+          "successMessage": "Role created successfully"
         }
 
     ];
@@ -60,12 +80,14 @@ describe('AI Agent Browser', () => {
     Google:
     - Email: ${email}
     - Password: ${password}
-    - Name of the new notebook: Test_notebook.ipynb
+    - Name of the notebook: Test_notebook.ipynb
+    - NotebookId: 1VwNb6A8Scs5r3f6Jrp-N9Yei6rPm2dgi
+    - Code to write: print('Hello World!')
     `
     const browserAgent = new BrowserAgent(skills, memory, { _id: 'testEmployeeId'} as IAIEmployee);
 
     beforeAll(async () => {
-        await browserAgent.seed();
+      await browserAgent.seed();
     });
 
     test('Google login', async () => {
@@ -76,9 +98,16 @@ describe('AI Agent Browser', () => {
     });
 
     test('Create a new notebook on Google Colab', async () => {
-        const result = await browserAgent.executorAgent.invoke({
-          input: 'Create a new notebook on Google Colab',
-        });
-        console.log(JSON.stringify(result));
+      const result = await browserAgent.executorAgent.invoke({
+        input: 'Create a new notebook on Google Colab',
+      });
+      console.log(JSON.stringify(result));
+    });
+
+    test('Create role on Google Colab', async () => {
+      const result = await browserAgent.executorAgent.invoke({
+        input: 'Create role on Google Colab',
+      });
+      console.log(JSON.stringify(result));
     });
 });

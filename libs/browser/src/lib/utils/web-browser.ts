@@ -204,7 +204,26 @@ export class WebBrowser implements BrowserActions {
     // Send the new text to the input field
     await element.sendKeys(_content);
     return true;
-}
+  }
+
+  async insertTextIntoElement({
+    selector,
+    content,
+  }: {
+    selector: string;
+    content: string;
+  }) {
+    await this.sleep({ time: 5000 });
+    let _content = content.replace(/[\uD800-\uDFFF]./g, '').replace(/\s{2,}/g, ' ');
+    console.log('Content: ' + _content)
+
+    await this.driver.executeScript(`
+      var element = document.querySelector('${selector}');
+      if (element) {
+        element.innerHTML = ${JSON.stringify(_content)};
+      }
+    `);
+  }
 
   async sleep({ time }: { time: number; }) {
     await this.driver.sleep(time);
@@ -625,7 +644,6 @@ export class WebBrowser implements BrowserActions {
     }
   }
 
-
   async switchToTab({index}: {index: number}) {
     await this.sleep({ time: 7000 });
     const handles = await this.driver.getAllWindowHandles();
@@ -635,5 +653,7 @@ export class WebBrowser implements BrowserActions {
       throw new Error(`Invalid tab index: ${index}`);
     }
   }
+
+  
 
 }

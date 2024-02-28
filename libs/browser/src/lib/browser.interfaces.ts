@@ -29,6 +29,7 @@ export const SkillStepMethod = [
   'replyMessages',
   'replyEmails',
   'switchToTab',
+  'insertTextIntoElement'
 ] as const;
 
 export interface Skill {
@@ -161,4 +162,8 @@ export abstract class BrowserActions
     buttonSelector: string;
   }): void;
   abstract switchToTab(params: { index: number }): void;
+  abstract insertTextIntoElement(params: {
+    selector: string;
+    content: string;
+  }): void;
 }
