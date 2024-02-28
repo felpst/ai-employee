@@ -29,6 +29,7 @@ export const SkillStepMethod = [
   'replyMessages',
   'replyEmails',
   'switchToTab',
+  'insertTextIntoElement'
   'replyWhatsApp',
 ] as const;
 
@@ -162,5 +163,10 @@ export abstract class BrowserActions
     buttonSelector: string;
   }): void;
   abstract switchToTab(params: { index: number }): void;
+  abstract insertTextIntoElement(params: {
+    selector: string;
+    content: string;
+  }): void;
   abstract replyWhatsApp(params: { whatsKey: string }): void;
+
 }

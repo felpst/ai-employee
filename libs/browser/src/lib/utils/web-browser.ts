@@ -206,6 +206,26 @@ export class WebBrowser implements BrowserActions {
     return true;
   }
 
+  async insertTextIntoElement({
+    selector,
+    content,
+  }: {
+    selector: string;
+    content: string;
+  }) {
+    await this.sleep({ time: 5000 });
+    let _content = content.replace(/[\uD800-\uDFFF]./g, '').replace(/\s{2,}/g, ' ');
+    console.log('Content: ' + _content)
+
+    await this.driver.executeScript(`
+      var element = document.querySelector('${selector}');
+      if (element) {
+        element.innerHTML = ${JSON.stringify(_content)};
+      }
+    `);
+  }
+
+
   async sleep({ time }: { time: number; }) {
     await this.driver.sleep(time);
   }
@@ -634,7 +654,8 @@ export class WebBrowser implements BrowserActions {
     }
   }
 
-  async switchToTab({ index }: { index: number }) {
+
+  async switchToTab({index}: {index: number}) {
     await this.sleep({ time: 7000 });
     const handles = await this.driver.getAllWindowHandles();
     if (index >= 0 && index < handles.length) {
@@ -643,6 +664,7 @@ export class WebBrowser implements BrowserActions {
       throw new Error(`Invalid tab index: ${index}`);
     }
   }
+
 
   private async _replyWhatsAppContact(contact: string) {
     const messagesContainer =
@@ -697,4 +719,5 @@ export class WebBrowser implements BrowserActions {
 
     await this.saveMemory({ key: 'messages', value: [] });
   }
+
 }
