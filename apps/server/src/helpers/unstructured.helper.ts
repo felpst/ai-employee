@@ -6,7 +6,7 @@ import { HNSWLib } from 'langchain/vectorstores/hnswlib';
 export class Unstructured {
   async loader() {
     const options = {
-      apiKey: '***REMOVED***',
+      apiKey: 'P8hrTcTpvQ3qDRIhT3x9sKJypztw1e',
     };
 
     const loader = new UnstructuredLoader('linecker.html', options);
