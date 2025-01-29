@@ -10,6 +10,13 @@ services:
       - 4200:4200
     networks:
       - cognum_network
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - SERPAPI_API_KEY=${SERPAPI_API_KEY}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_HOST=${DB_HOST}
+      - DB_USER=${DB_USER}
+      - DB_NAME=${DB_NAME}
 
   server:
     extends:
@@ -25,6 +32,13 @@ services:
       - cognum_network
     env_file:
       - ./apps/server/.env
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - SERPAPI_API_KEY=${SERPAPI_API_KEY}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_HOST=${DB_HOST}
+      - DB_USER=${DB_USER}
+      - DB_NAME=${DB_NAME}
 
   mongodb:
     image: mongo:7-jammy
@@ -39,9 +53,9 @@ services:
     ports:
       - '5432:5432'
     environment:
-      POSTGRES_DB: Chinook
-      POSTGRES_PASSWORD: password
-      POSTGRES_USER: renato
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_USER: ${DB_USER}
     volumes:
       - ./Chinook.sql:/docker-entrypoint-initdb.d/Chinook.sql
 
