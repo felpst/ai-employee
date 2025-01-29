@@ -44,19 +44,30 @@ testem.log
 .DS_Store
 Thumbs.db
 
+# Angular
 .angular
+
+# Environment Variables and Secrets
 .env
+.env.*
+*.env
 *.yaml
+oauth2.keys.json
 cognum.secrets.json
 credentials.json
-docs
+xandr*.json
 
-#python
+# SSL Keys and Certificates
+**/.ssl/*
+**/ssl/*
+*.pem
+*.key
+*.crt
+
+# Python
 .venv
 *.pyc
 __pycache__/
 
-#json keys
-oauth2.keys.json
-.nx
-xandr*.json
+# Documentation
+docs
